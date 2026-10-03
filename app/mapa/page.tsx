@@ -1,4 +1,4 @@
-import MapaAgricola from "../../components/MapaAgricola";
+import MapaAgricolaClient from "../../components/MapaAgricolaClient";
 
 export default function MapaPage() {
   return (
@@ -46,7 +46,7 @@ export default function MapaPage() {
 
           </div>
 
-          <MapaAgricola />
+          <MapaAgricolaClient />
 
         </div>
       </section>
