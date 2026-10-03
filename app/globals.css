@@ -426,81 +426,77 @@ input {
    RESPONSIVIDADE
 ========================= */
 
-@media (max-width: 900px) {
-  .main-nav {
-    gap: 14px;
-  }
+/* =========================
+   MENU MOBILE
+========================= */
 
-  .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;
-  }
+.mobile-menu-button {
+  display: none;
+  border: none;
+  background: transparent;
+  color: var(--verde);
+  font-size: 28px;
+  cursor: pointer;
+  padding: 6px;
+  line-height: 1;
 }
 
+/* =========================
+   MENU MOBILE
+========================= */
+
 @media (max-width: 650px) {
-  .container {
-    padding: 0 18px;
-  }
 
   .header-content {
-    min-height: 68px;
+    position: relative;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+  }
+
+  .mobile-menu-button:hover {
+    background: var(--verde-suave);
   }
 
   .main-nav {
     display: none;
-  }
-
-  .hero {
-    padding: 65px 0;
-  }
-
-  .hero h1 {
-    font-size: 42px;
-  }
-
-  .hero p {
-    font-size: 16px;
-  }
-
-  .search-form {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
     flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: #ffffff;
+    border-top: 1px solid var(--borda);
+    border-bottom: 1px solid var(--borda);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.10);
+    padding: 8px 18px 14px;
   }
 
-  .section {
-    padding: 55px 0;
+  .main-nav.mobile-menu-open {
+    display: flex;
   }
 
-  .section-title {
-    font-size: 29px;
+  .main-nav a {
+    display: block;
+    width: 100%;
+    padding: 13px 10px;
+    border-radius: 8px;
+    font-size: 15px;
   }
 
-  .cards-grid {
-    grid-template-columns: 1fr;
+  .main-nav a:hover {
+    background: var(--verde-suave);
+    color: var(--verde);
   }
 
-  .page-header {
-    padding: 45px 0;
-  }
-
-  .page-header h1 {
-    font-size: 34px;
-  }
-
-  .cta {
-    padding: 30px 22px;
-  }
-
-  .cta h2 {
-    font-size: 27px;
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
 }
 /* ================================
    MAPA AGRÍCOLA
