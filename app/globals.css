@@ -449,7 +449,12 @@ input {
 
   .header-content {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
+
+  /* BOTÃO ☰ */
 
   .mobile-menu-button {
     display: flex;
@@ -457,12 +462,20 @@ input {
     justify-content: center;
     width: 44px;
     height: 44px;
+    border: none;
     border-radius: 8px;
+    background: transparent;
+    color: var(--verde);
+    font-size: 28px;
+    cursor: pointer;
+    flex-shrink: 0;
   }
 
   .mobile-menu-button:hover {
     background: var(--verde-suave);
   }
+
+  /* MENU PRINCIPAL */
 
   .main-nav {
     display: none;
@@ -470,29 +483,134 @@ input {
     top: 100%;
     left: 0;
     right: 0;
+    z-index: 9999;
+
     flex-direction: column;
     align-items: stretch;
-    gap: 0;
+    gap: 2px;
+
     background: #ffffff;
+
     border-top: 1px solid var(--borda);
     border-bottom: 1px solid var(--borda);
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.10);
-    padding: 8px 18px 14px;
+
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+
+    padding: 10px 14px 16px;
   }
+
+  /* QUANDO O MENU ESTÁ ABERTO */
 
   .main-nav.mobile-menu-open {
     display: flex;
   }
 
-  .main-nav a {
-    display: block;
+  /* LINKS NORMAIS */
+
+  .main-nav > a {
+    display: flex;
+    align-items: center;
+
     width: 100%;
-    padding: 13px 10px;
+
+    padding: 13px 12px;
+
     border-radius: 8px;
+
     font-size: 15px;
+    font-weight: 600;
+
+    text-decoration: none;
   }
 
-  .main-nav a:hover {
+  .main-nav > a:hover {
+    background: var(--verde-suave);
+    color: var(--verde);
+  }
+
+  /* DROPDOWNS */
+
+  .nav-dropdown {
+    width: 100%;
+  }
+
+  /* BOTÕES DOS DROPDOWNS */
+
+  .nav-dropdown-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: 13px 12px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: inherit;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+
+    text-align: left;
+
+    cursor: pointer;
+  }
+
+  .nav-dropdown-button:hover {
+    background: var(--verde-suave);
+    color: var(--verde);
+  }
+
+  /* SETA */
+
+  .nav-dropdown-button span {
+    font-size: 13px;
+    transition: transform 0.2s ease;
+  }
+
+  /* SUBMENU */
+
+  .nav-dropdown-menu {
+    display: none;
+
+    width: 100%;
+
+    padding: 4px 0 6px 12px;
+
+    background: #f8faf8;
+
+    border-radius: 8px;
+  }
+
+  /* SUBMENU ABERTO */
+
+  .nav-dropdown-menu.dropdown-aberto {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* LINKS DO SUBMENU */
+
+  .nav-dropdown-menu a {
+    display: block;
+
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+
+    text-decoration: none;
+  }
+
+  .nav-dropdown-menu a:hover {
     background: var(--verde-suave);
     color: var(--verde);
   }
