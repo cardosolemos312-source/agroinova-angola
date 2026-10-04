@@ -15822,3 +15822,326 @@ input {
     width: 100%;
   }
 }
+
+/* =========================================================
+   CORREÇÃO DEFINITIVA — MENU MOBILE AGROINOVA
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  /* HEADER */
+  .site-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+  }
+
+  .header-content {
+    position: relative;
+    min-height: 70px;
+  }
+
+  /* BOTÃO */
+  .mobile-menu-button {
+    position: relative;
+    z-index: 1100 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* =====================================================
+     MENU PRINCIPAL
+     ===================================================== */
+
+  .main-nav {
+    display: none !important;
+
+    position: absolute !important;
+
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+
+    width: 100% !important;
+
+    max-height: calc(100vh - 70px) !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    flex-direction: column !important;
+    align-items: stretch !important;
+
+    gap: 0 !important;
+
+    padding: 10px 14px 20px !important;
+
+    background: #ffffff !important;
+
+    border-top: 1px solid #e2e8e3 !important;
+    border-bottom: 1px solid #e2e8e3 !important;
+
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
+
+    z-index: 1050 !important;
+  }
+
+  /* MENU ABERTO */
+
+  .main-nav.mobile-menu-open {
+    display: flex !important;
+  }
+
+  /* =====================================================
+     LINKS PRINCIPAIS
+     ===================================================== */
+
+  .main-nav > a {
+    display: flex !important;
+
+    align-items: center;
+
+    width: 100% !important;
+
+    min-height: 48px;
+
+    padding: 13px 12px !important;
+
+    color: #17221b !important;
+
+    background: transparent !important;
+
+    font-family: Arial, Helvetica, sans-serif !important;
+
+    font-size: 15px !important;
+
+    font-weight: 600 !important;
+
+    line-height: 1.4 !important;
+
+    text-decoration: none !important;
+
+    white-space: normal !important;
+
+    border-radius: 8px;
+  }
+
+  .main-nav > a:hover,
+  .main-nav > a:active {
+    background: #edf8f0 !important;
+    color: #166534 !important;
+  }
+
+  /* =====================================================
+     GRUPOS DROPDOWN
+     ===================================================== */
+
+  .main-nav .nav-dropdown {
+    display: block !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+  }
+
+  /* =====================================================
+     BOTÕES DOS DROPDOWNS
+     ===================================================== */
+
+  .main-nav .nav-dropdown-button {
+    display: flex !important;
+
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100% !important;
+
+    min-height: 48px;
+
+    margin: 0 !important;
+
+    padding: 13px 12px !important;
+
+    border: 0 !important;
+
+    border-radius: 8px;
+
+    background: transparent !important;
+
+    color: #17221b !important;
+
+    font-family: Arial, Helvetica, sans-serif !important;
+
+    font-size: 15px !important;
+
+    font-weight: 600 !important;
+
+    line-height: 1.4 !important;
+
+    text-align: left;
+
+    cursor: pointer;
+  }
+
+  .main-nav .nav-dropdown-button:hover,
+  .main-nav .nav-dropdown-button:active {
+    background: #edf8f0 !important;
+    color: #166534 !important;
+  }
+
+  /* TEXTO DOS BOTÕES */
+
+  .main-nav .nav-dropdown-button > span:first-child {
+    display: inline-block !important;
+
+    visibility: visible !important;
+
+    opacity: 1 !important;
+
+    color: #17221b !important;
+
+    font-family: Arial, Helvetica, sans-serif !important;
+
+    font-size: 15px !important;
+
+    font-weight: 600 !important;
+
+    line-height: 1.4 !important;
+  }
+
+  /* SETA */
+
+  .main-nav .nav-dropdown-button .dropdown-arrow {
+    display: inline-block !important;
+
+    visibility: visible !important;
+
+    opacity: 1 !important;
+
+    flex-shrink: 0;
+
+    margin-left: 10px;
+
+    color: #166534 !important;
+
+    font-size: 10px !important;
+
+    font-weight: 700 !important;
+
+    transform: none !important;
+  }
+
+  /* =====================================================
+     SUBMENU FECHADO
+     ===================================================== */
+
+  .main-nav .nav-dropdown-menu {
+    display: none !important;
+
+    position: static !important;
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    max-height: none !important;
+
+    margin: 0 !important;
+
+    padding: 4px 0 8px 14px !important;
+
+    flex-direction: column !important;
+
+    gap: 0 !important;
+
+    transform: none !important;
+
+    opacity: 1 !important;
+
+    visibility: visible !important;
+
+    pointer-events: auto !important;
+
+    background: #f7faf7 !important;
+
+    border: 0 !important;
+
+    border-radius: 8px !important;
+
+    box-shadow: none !important;
+  }
+
+  /* =====================================================
+     SUBMENU ABERTO
+     ===================================================== */
+
+  .main-nav .nav-dropdown-menu.dropdown-aberto {
+    display: flex !important;
+  }
+
+  /* =====================================================
+     LINKS DOS SUBMENUS
+     ===================================================== */
+
+  .main-nav .nav-dropdown-menu a {
+    display: flex !important;
+
+    align-items: center;
+
+    width: 100% !important;
+
+    min-height: 44px;
+
+    padding: 11px 14px !important;
+
+    color: #23412c !important;
+
+    background: transparent !important;
+
+    font-family: Arial, Helvetica, sans-serif !important;
+
+    font-size: 14px !important;
+
+    font-weight: 500 !important;
+
+    line-height: 1.4 !important;
+
+    text-decoration: none !important;
+
+    white-space: normal !important;
+
+    border-left: 3px solid #d5e7d9 !important;
+
+    border-radius: 0 7px 7px 0 !important;
+
+    visibility: visible !important;
+
+    opacity: 1 !important;
+  }
+
+  .main-nav .nav-dropdown-menu a:hover,
+  .main-nav .nav-dropdown-menu a:active {
+    background: #eaf5ed !important;
+
+    color: #166534 !important;
+
+    border-left-color: #166534 !important;
+  }
+
+  /* =====================================================
+     IMPORTANTE:
+     NO DEIXAR O HOVER DO DESKTOP
+     ABRIR/INTERFERIR NO MOBILE
+     ===================================================== */
+
+  .nav-dropdown:hover .nav-dropdown-menu {
+    display: none !important;
+  }
+
+  .nav-dropdown:hover .nav-dropdown-menu.dropdown-aberto {
+    display: flex !important;
+  }
+}
