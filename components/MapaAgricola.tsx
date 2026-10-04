@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,80 +12,85 @@ import {
 
 import "leaflet/dist/leaflet.css";
 
+import {
+  provinciasAngola,
+} from "../data/provincias-angola";
+
 export default function MapaAgricola() {
-  const [provincias, setProvincias] = useState<any>(null);
+  const [provincias, setProvincias] =
+    useState<any>(null);
+
+  const [erro, setErro] =
+    useState(false);
 
   const router = useRouter();
 
+  /*
+   * =========================================
+   * CARREGAR GEOJSON
+   * =========================================
+   */
+
   useEffect(() => {
-    fetch("/Angola_Provincias.geojson")
-      .then((res) => {
-        if (!res.ok) {
+    async function carregarMapa() {
+      try {
+        setErro(false);
+
+        const resposta = await fetch(
+          "/Angola_Provincias.geojson"
+        );
+
+        if (!resposta.ok) {
           throw new Error(
-            "Não foi possível carregar o GeoJSON."
+            "Não foi possível carregar o mapa."
           );
         }
 
-        return res.json();
-      })
-      .then((data) => {
-        console.log("================================");
-        console.log("GEOJSON CARREGADO");
-        console.log(data);
+        const data =
+          await resposta.json();
 
         if (
-          data.features &&
-          data.features.length > 0
+          !data.features ||
+          data.features.length === 0
         ) {
-          console.log(
-            "================================"
-          );
-
-          console.log(
-            "PROPRIEDADES DA PRIMEIRA PROVÍNCIA:"
-          );
-
-          console.log(
-            data.features[0].properties
-          );
-
-          console.log(
-            "================================"
+          throw new Error(
+            "O GeoJSON não contém províncias."
           );
         }
 
+        console.log(
+          "MAPA CARREGADO:",
+          data.features.length,
+          "províncias"
+        );
+
         setProvincias(data);
-      })
-      .catch((error) => {
+
+      } catch (error) {
         console.error(
           "ERRO AO CARREGAR O MAPA:",
           error
         );
-      });
+
+        setErro(true);
+      }
+    }
+
+    carregarMapa();
   }, []);
 
   /*
-   * Obtém o nome da província a partir
-   * das propriedades do GeoJSON.
+   * =========================================
+   * OBTER NOME DA PROVÍNCIA
+   * =========================================
    */
-  function obterNomeProvincia(feature: any) {
+
+  function obterNomeProvincia(
+    feature: any
+  ): string {
     const propriedades =
       feature?.properties || {};
 
-    console.log(
-      "================================"
-    );
-
-    console.log(
-      "PROPRIEDADES DA PROVÍNCIA:"
-    );
-
-    console.log(propriedades);
-
-    /*
-     * Tentamos diferentes campos possíveis
-     * encontrados em ficheiros GeoJSON.
-     */
     const possiveisNomes = [
       propriedades.PROVINCIA,
       propriedades.Provincia,
@@ -110,30 +116,21 @@ export default function MapaAgricola() {
           nome.trim() !== ""
       );
 
-    console.log(
-      "NOME ENCONTRADO:",
-      nomeEncontrado
-    );
-
-    console.log(
-      "================================"
-    );
-
     return String(
-      nomeEncontrado || "Província"
-    );
+      nomeEncontrado ||
+        "Província"
+    ).trim();
   }
 
   /*
-   * Converte o nome da província
-   * para o formato usado nas URLs.
-   *
-   * Exemplo:
-   * Huambo → huambo
-   * Huíla → huila
-   * Cuanza Norte → cuanza-norte
+   * =========================================
+   * CRIAR SLUG
+   * =========================================
    */
-  function criarSlug(nome: string) {
+
+  function criarSlug(
+    nome: string
+  ): string {
     return nome
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -143,142 +140,303 @@ export default function MapaAgricola() {
   }
 
   /*
-   * Estilo normal da província.
+   * =========================================
+   * ENCONTRAR PROVÍNCIA
+   * =========================================
    */
-  function estiloProvincia() {
+
+  function encontrarProvincia(
+    nome: string
+  ) {
+    const slug =
+      criarSlug(nome);
+
+    return provinciasAngola.find(
+      (provincia) =>
+        provincia.slug === slug
+    );
+  }
+
+  /*
+   * =========================================
+   * ESTILO NORMAL DA PROVÍNCIA
+   * =========================================
+   */
+
+  function estiloProvincia(
+    feature?: any
+  ) {
+    if (!feature) {
+      return {
+        color: "#166534",
+        weight: 2,
+        fillColor: "#86efac",
+        fillOpacity: 0.55,
+      };
+    }
+
+    const nome =
+      obterNomeProvincia(feature);
+
+    const provincia =
+      encontrarProvincia(nome);
+
+    /*
+     * Existem dados oficiais comparáveis
+     * no ICAPP 2024/2025.
+     */
+    if (
+      provincia?.dadosICAPP2024_2025
+    ) {
+      return {
+        color: "#166534",
+        weight: 2,
+        fillColor: "#4ade80",
+        fillOpacity: 0.60,
+      };
+    }
+
+    /*
+     * Província existe, mas a fonte
+     * não possui dados directamente
+     * comparáveis para a actual divisão.
+     */
     return {
-      color: "#166534",
+      color: "#64748b",
       weight: 2,
-      fillColor: "#86efac",
-      fillOpacity: 0.55,
+      fillColor: "#cbd5e1",
+      fillOpacity: 0.70,
     };
   }
 
   /*
-   * Quando o cursor passa sobre a província.
+   * =========================================
+   * ESTILO AO PASSAR O CURSOR
+   * =========================================
    */
-  function quandoPassar(event: any) {
-    event.target.setStyle({
-      weight: 4,
-      color: "#14532d",
-      fillColor: "#4ade80",
-      fillOpacity: 0.85,
-    });
-  }
 
-  /*
-   * Quando o cursor sai da província.
-   */
-  function quandoSair(event: any) {
-    event.target.setStyle(
-      estiloProvincia()
-    );
-  }
-
-  /*
-   * Quando o utilizador clica na província.
-   */
-  function quandoClicar(event: any) {
-    console.log(
-      "================================"
-    );
-
-    console.log(
-      "CLIQUE DETECTADO!"
-    );
-
+  function quandoPassar(
+    event: any
+  ) {
     const feature =
       event.target.feature;
-
-    console.log(
-      "FEATURE CLICADA:",
-      feature
-    );
 
     const nome =
       obterNomeProvincia(feature);
 
-    console.log(
-      "NOME DA PROVÍNCIA:",
-      nome
-    );
+    const provincia =
+      encontrarProvincia(nome);
 
-    const slug =
-      criarSlug(nome);
+    /*
+     * Mantemos cores diferentes
+     * de acordo com a disponibilidade
+     * dos dados.
+     */
+    if (
+      provincia?.dadosICAPP2024_2025
+    ) {
+      event.target.setStyle({
+        weight: 4,
+        color: "#14532d",
+        fillColor: "#22c55e",
+        fillOpacity: 0.90,
+      });
+    } else {
+      event.target.setStyle({
+        weight: 4,
+        color: "#334155",
+        fillColor: "#94a3b8",
+        fillOpacity: 0.90,
+      });
+    }
 
-    console.log(
-      "SLUG GERADO:",
-      slug
-    );
+    if (
+      event.target.bringToFront
+    ) {
+      event.target.bringToFront();
+    }
+  }
 
-    console.log(
-      "ENDEREÇO:",
-      `/mapa/${slug}`
-    );
+  /*
+   * =========================================
+   * SAIR DO CURSOR
+   * =========================================
+   */
 
-    console.log(
-      "================================"
-    );
-
-    router.push(
-      `/mapa/${slug}`
+  function quandoSair(
+    event: any
+  ) {
+    event.target.setStyle(
+      estiloProvincia(
+        event.target.feature
+      )
     );
   }
 
   /*
-   * Configuração de cada província
-   * quando o GeoJSON é carregado.
+   * =========================================
+   * CLIQUE
+   * =========================================
    */
+
+  function quandoClicar(
+    event: any
+  ) {
+    const feature =
+      event.target.feature;
+
+    const nome =
+      obterNomeProvincia(feature);
+
+    const provincia =
+      encontrarProvincia(nome);
+
+    if (!provincia) {
+      console.warn(
+        "Província não reconhecida:",
+        nome
+      );
+
+      return;
+    }
+
+    console.log(
+      "PROVÍNCIA SELECIONADA:",
+      provincia.nome
+    );
+
+    console.log(
+      "SLUG:",
+      provincia.slug
+    );
+
+    router.push(
+      `/mapa/${provincia.slug}`
+    );
+  }
+
+  /*
+   * =========================================
+   * CONFIGURAÇÃO DE CADA PROVÍNCIA
+   * =========================================
+   */
+
   function cadaProvincia(
     feature: any,
     layer: any
   ) {
-    console.log(
-      "================================"
-    );
-
-    console.log(
-      "NOVA PROVÍNCIA CARREGADA"
-    );
-
-    console.log(
-      "PROPRIEDADES:"
-    );
-
-    console.log(
-      feature?.properties
-    );
-
     const nome =
       obterNomeProvincia(feature);
 
-    console.log(
-      "NOME MOSTRADO NO MAPA:",
-      nome
-    );
+    const provincia =
+      encontrarProvincia(nome);
 
-    console.log(
-      "================================"
-    );
+    let estadoDados =
+      "Dados provinciais não disponíveis";
+
+    if (
+      provincia?.dadosICAPP2024_2025
+    ) {
+      estadoDados =
+        "Dados oficiais disponíveis";
+    }
 
     /*
-     * Nome da província no mapa.
+     * Tooltip com nome + estado dos dados.
      */
-    layer.bindTooltip(nome, {
-      permanent: true,
-      direction: "center",
-      className: "nome-provincia",
-    });
+    layer.bindTooltip(
+      `
+        <div class="mapa-tooltip">
+
+          <strong>
+            ${nome}
+          </strong>
+
+          <span class="${
+            provincia?.dadosICAPP2024_2025
+              ? "mapa-status-disponivel"
+              : "mapa-status-indisponivel"
+          }">
+            ${estadoDados}
+          </span>
+
+        </div>
+      `,
+      {
+        permanent: true,
+        direction: "center",
+        className:
+          "nome-provincia",
+      }
+    );
 
     /*
-     * Eventos do mapa.
+     * Eventos.
      */
     layer.on({
-      mouseover: quandoPassar,
-      mouseout: quandoSair,
-      click: quandoClicar,
+      mouseover:
+        quandoPassar,
+
+      mouseout:
+        quandoSair,
+
+      click:
+        quandoClicar,
     });
+
+    /*
+     * Verificação no console.
+     */
+    if (!provincia) {
+      console.warn(
+        "GeoJSON contém uma província não encontrada na lista oficial:",
+        nome
+      );
+    }
   }
+
+  /*
+   * =========================================
+   * CARREGAMENTO
+   * =========================================
+   */
+
+  if (!provincias && !erro) {
+    return (
+      <div className="mapa-container">
+
+        <div className="mapa-loading">
+          A carregar o mapa de Angola...
+        </div>
+
+      </div>
+    );
+  }
+
+  /*
+   * =========================================
+   * ERRO
+   * =========================================
+   */
+
+  if (erro) {
+    return (
+      <div className="mapa-container">
+
+        <div className="mapa-loading">
+          Não foi possível carregar o mapa
+          de Angola.
+        </div>
+
+      </div>
+    );
+  }
+
+  /*
+   * =========================================
+   * MAPA
+   * =========================================
+   */
 
   return (
     <div className="mapa-container">
@@ -295,15 +453,48 @@ export default function MapaAgricola() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {provincias && (
-          <GeoJSON
-            data={provincias}
-            style={estiloProvincia}
-            onEachFeature={cadaProvincia}
-          />
-        )}
+        <GeoJSON
+          data={provincias}
+          style={estiloProvincia}
+          onEachFeature={
+            cadaProvincia
+          }
+        />
 
       </MapContainer>
+
+
+      {/* =====================================
+          LEGENDA
+      ====================================== */}
+
+      <div className="mapa-legenda">
+
+        <div className="mapa-legenda-titulo">
+          Disponibilidade dos dados
+        </div>
+
+        <div className="mapa-legenda-item">
+
+          <span className="mapa-legenda-cor disponivel" />
+
+          <span>
+            Dados oficiais disponíveis
+          </span>
+
+        </div>
+
+        <div className="mapa-legenda-item">
+
+          <span className="mapa-legenda-cor indisponivel" />
+
+          <span>
+            Dados não disponíveis nesta fonte
+          </span>
+
+        </div>
+
+      </div>
 
     </div>
   );

@@ -39,12 +39,17 @@ const provincias = [
   "Zaire",
 ];
 
-function criarSlug(nome) {
-  return nome
+function normalizarTexto(texto) {
+  return String(texto ?? "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
     .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+}
+
+function criarSlug(nome) {
+  return normalizarTexto(nome)
     .replace(/\s+/g, "-");
 }
 
@@ -57,10 +62,43 @@ function numero(valor) {
     return null;
   }
 
+  if (typeof valor === "number") {
+    return Number.isFinite(valor)
+      ? valor
+      : null;
+  }
+
+  const texto = String(valor)
+    .trim()
+    .replace(/\s/g, "");
+
+  if (texto === "") {
+    return null;
+  }
+
+  if (
+    texto.includes(",") &&
+    !texto.includes(".")
+  ) {
+    const resultado = Number(
+      texto.replace(",", ".")
+    );
+
+    return Number.isFinite(resultado)
+      ? resultado
+      : null;
+  }
+
+  if (/^-?\d+\.\d{1,2}$/.test(texto)) {
+    const resultado = Number(texto);
+
+    return Number.isFinite(resultado)
+      ? resultado
+      : null;
+  }
+
   const resultado = Number(
-    String(valor)
-      .replace(/\./g, "")
-      .replace(",", ".")
+    texto.replace(/\./g, "")
   );
 
   return Number.isFinite(resultado)
@@ -80,9 +118,7 @@ async function baixarExcel() {
     "A consultar o ficheiro oficial do INE..."
   );
 
-  const resposta = await fetch(
-    URL_EXCEL_INE
-  );
+  const resposta = await fetch(URL_EXCEL_INE);
 
   if (!resposta.ok) {
     throw new Error(
@@ -90,8 +126,7 @@ async function baixarExcel() {
     );
   }
 
-  const dados =
-    await resposta.arrayBuffer();
+  const dados = await resposta.arrayBuffer();
 
   fs.mkdirSync(
     path.dirname(ficheiroExcel),
@@ -111,8 +146,7 @@ async function baixarExcel() {
 }
 
 function lerQuadro(workbook, nome) {
-  const folha =
-    workbook.Sheets[nome];
+  const folha = workbook.Sheets[nome];
 
   if (!folha) {
     throw new Error(
@@ -133,43 +167,36 @@ function encontrarLinhaProvincia(
   linhas,
   provincia
 ) {
+  const provinciaNormalizada =
+    normalizarTexto(provincia);
+
   return linhas.find(
     (linha) =>
-      String(linha[0] ?? "")
-        .trim()
-        .toLowerCase() ===
-      provincia
-        .trim()
-        .toLowerCase()
+      normalizarTexto(linha[0]) ===
+      provinciaNormalizada
   );
 }
 
 function extrairDados() {
-  const workbook =
-    XLSX.readFile(
-      ficheiroExcel
-    );
-
-  console.log("");
-  console.log(
-    "Folhas encontradas:"
+  const workbook = XLSX.readFile(
+    ficheiroExcel
   );
 
+  console.log("");
+  console.log("Folhas encontradas:");
   console.log(
     workbook.SheetNames.join(", ")
   );
 
-  const quadro2 =
-    lerQuadro(
-      workbook,
-      "Quadro_2"
-    );
+  const quadro2 = lerQuadro(
+    workbook,
+    "Quadro_2"
+  );
 
-  const quadro4 =
-    lerQuadro(
-      workbook,
-      "Quadro_4"
-    );
+  const quadro4 = lerQuadro(
+    workbook,
+    "Quadro_4"
+  );
 
   const resultado = {};
 
@@ -190,7 +217,6 @@ function extrairDados() {
       console.log(
         `⚠ ${provincia}: não encontrada no Quadro 2`
       );
-
       continue;
     }
 
@@ -198,30 +224,8 @@ function extrairDados() {
       console.log(
         `⚠ ${provincia}: não encontrada no Quadro 4`
       );
-
       continue;
     }
-
-    /*
-      QUADRO 2
-
-      [0] Província
-      [1] Total
-      [2] EAF
-      [3] EAE
-      [4] % EAF
-      [5] % EAE
-    */
-
-    /*
-      QUADRO 4
-
-      [0] Província
-      [1] Nº explorações
-      [2] Culturas temporárias
-      [3] Culturas permanentes
-      [4] Total
-    */
 
     const total =
       numero(linha2[1]);
@@ -260,13 +264,10 @@ function extrairDados() {
       console.log(
         `⚠ ${provincia}: dados incompletos`
       );
-
       continue;
     }
 
-    resultado[
-      criarSlug(provincia)
-    ] = {
+    resultado[criarSlug(provincia)] = {
       provincia,
       fonte: "INE — ICAPP",
       periodo: "2024/2025",
@@ -296,28 +297,22 @@ function extrairDados() {
         areaTotal,
     };
 
-    console.log(
-      `✓ ${provincia}`
-    );
+    console.log(`✓ ${provincia}`);
   }
 
   return resultado;
 }
 
 function gerarTypeScript(dados) {
-  const conteudo =
-`export interface DadosAgricolasProvincia {
+  const conteudo = `export interface DadosAgricolasProvincia {
   provincia: string;
   fonte: string;
   periodo: string;
-
   exploracoesProdutoras: number;
   exploracoesFamiliares: number;
   exploracoesEmpresariais: number;
-
   percentualFamiliares: number;
   percentualEmpresariais: number;
-
   areaCulturasTemporarias: number;
   areaCulturasPermanentes: number;
   areaPlantadaTotal: number;
@@ -326,11 +321,7 @@ function gerarTypeScript(dados) {
 export const dadosAgricolas: Record<
   string,
   DadosAgricolasProvincia
-> = ${JSON.stringify(
-  dados,
-  null,
-  2
-)};
+> = ${JSON.stringify(dados, null, 2)};
 `;
 
   fs.mkdirSync(
@@ -379,46 +370,38 @@ async function executar() {
     console.log(
       "======================================"
     );
-
     console.log(
       "ATUALIZAÇÃO CONCLUÍDA"
     );
-
     console.log(
       "Fonte: Instituto Nacional de Estatística"
     );
-
     console.log(
       "Período: ICAPP 2024/2025"
     );
-
     console.log(
       "Dados fictícios: NÃO"
     );
-
     console.log(
       "======================================"
     );
-
     console.log("");
   } catch (erro) {
     console.error("");
     console.error(
       "======================================"
     );
-
     console.error(
       "ATUALIZAÇÃO NÃO REALIZADA"
     );
-
     console.error(
-      erro.message
+      erro instanceof Error
+        ? erro.message
+        : String(erro)
     );
-
     console.error(
       "Os dados existentes foram preservados."
     );
-
     console.error(
       "======================================"
     );
