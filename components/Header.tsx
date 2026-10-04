@@ -27,7 +27,6 @@ export default function Header() {
     <header className="site-header">
       <div className="container header-content">
 
-        {/* LOGÓTIPO */}
         <Link
           href="/"
           className="logo"
@@ -48,7 +47,6 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* BOTÃO MOBILE */}
         <button
           type="button"
           className="mobile-menu-button"
@@ -60,7 +58,6 @@ export default function Header() {
           {menuAberto ? "✕" : "☰"}
         </button>
 
-        {/* MENU PRINCIPAL */}
         <nav
           id="menu-principal"
           className={`main-nav ${
@@ -68,17 +65,11 @@ export default function Header() {
           }`}
         >
 
-          {/* INÍCIO */}
-          <Link
-            href="/"
-            onClick={fecharMenu}
-          >
+          <Link href="/" onClick={fecharMenu}>
             Início
           </Link>
 
-          {/* PRODUÇÃO */}
           <div className="nav-dropdown">
-
             <button
               type="button"
               className="nav-dropdown-button"
@@ -86,8 +77,8 @@ export default function Header() {
               aria-expanded={dropdownAberto === "producao"}
             >
               <span>Produção</span>
-              <span>
-                {dropdownAberto === "producao" ? "▴" : "▾"}
+              <span className="dropdown-arrow">
+                {dropdownAberto === "producao" ? "▲" : "▼"}
               </span>
             </button>
 
@@ -99,30 +90,28 @@ export default function Header() {
               }`}
             >
               <Link href="/agricultura" onClick={fecharMenu}>
-                🌾 Agricultura
+                 Agricultura
               </Link>
 
               <Link href="/pecuaria" onClick={fecharMenu}>
-                🐄 Pecuária
+                Pecuária
               </Link>
 
               <Link href="/pesca" onClick={fecharMenu}>
-                🐟 Pesca
+                Pesca
               </Link>
 
               <Link href="/solos" onClick={fecharMenu}>
-                🌱 Solos
+                Solos
               </Link>
 
               <Link href="/clima" onClick={fecharMenu}>
-                ☁️ Clima
+                Clima
               </Link>
             </div>
           </div>
 
-          {/* CONHECIMENTO */}
           <div className="nav-dropdown">
-
             <button
               type="button"
               className="nav-dropdown-button"
@@ -130,8 +119,8 @@ export default function Header() {
               aria-expanded={dropdownAberto === "conhecimento"}
             >
               <span>Conhecimento</span>
-              <span>
-                {dropdownAberto === "conhecimento" ? "▴" : "▾"}
+              <span className="dropdown-arrow">
+                {dropdownAberto === "conhecimento" ? "▲" : "▼"}
               </span>
             </button>
 
@@ -143,26 +132,24 @@ export default function Header() {
               }`}
             >
               <Link href="/investigacao" onClick={fecharMenu}>
-                🔬 Investigação
+                Investigação
               </Link>
 
               <Link href="/tecnologias" onClick={fecharMenu}>
-                ⚙️ Tecnologias
+                Tecnologias
               </Link>
 
               <Link href="/biblioteca" onClick={fecharMenu}>
-                📚 Biblioteca
+                Biblioteca
               </Link>
 
               <Link href="/agroacademia" onClick={fecharMenu}>
-                🎓 AgroAcademia
+                AgroAcademia
               </Link>
             </div>
           </div>
 
-          {/* DADOS E MAPAS */}
           <div className="nav-dropdown">
-
             <button
               type="button"
               className="nav-dropdown-button"
@@ -170,8 +157,8 @@ export default function Header() {
               aria-expanded={dropdownAberto === "dados"}
             >
               <span>Dados & Mapas</span>
-              <span>
-                {dropdownAberto === "dados" ? "▴" : "▾"}
+              <span className="dropdown-arrow">
+                {dropdownAberto === "dados" ? "▲" : "▼"}
               </span>
             </button>
 
@@ -183,29 +170,25 @@ export default function Header() {
               }`}
             >
               <Link href="/dados" onClick={fecharMenu}>
-                📊 Dados
+                Dados
               </Link>
 
               <Link href="/mapa" onClick={fecharMenu}>
-                🗺️ Mapa Agrícola
+                Mapa Agrícola
               </Link>
 
               <Link href="/directorio" onClick={fecharMenu}>
-                👨‍🌾 Directório
+                Directório
               </Link>
 
               <Link href="/agroia" onClick={fecharMenu}>
-                🤖 AGROIA
+                AGROIA
               </Link>
             </div>
           </div>
 
-          {/* NOTÍCIAS */}
-          <Link
-            href="/noticias"
-            onClick={fecharMenu}
-          >
-            📰 Notícias
+          <Link href="/noticias" onClick={fecharMenu}>
+            Notícias
           </Link>
 
         </nav>

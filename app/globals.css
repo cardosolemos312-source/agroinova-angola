@@ -2945,9 +2945,12 @@ input {
 }
 
 .nav-dropdown:hover .nav-dropdown-button span {
-  transform: rotate(180deg);
+  transform: none;
 }
 
+.nav-dropdown:hover .nav-dropdown-button .dropdown-arrow {
+  transform: none;
+}
 .nav-dropdown-menu {
   position: absolute;
   top: calc(100% + 18px);
@@ -8473,5 +8476,7349 @@ input {
   .main-nav .nav-dropdown-menu a:hover {
     background: var(--verde-suave);
     color: var(--verde);
+  }
+}
+/* =========================================================
+   AJUSTE FINAL — MENU PRINCIPAL AGROINOVA
+   ========================================================= */
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.main-nav > a,
+.main-nav .nav-dropdown-button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: #17221b;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.main-nav > a {
+  display: inline-flex;
+  align-items: center;
+}
+
+.main-nav .nav-dropdown-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.main-nav .nav-dropdown-button span {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.main-nav .nav-dropdown-button .dropdown-arrow {
+  font-size: 9px;
+  font-weight: 700;
+  transform: none !important;
+  transition: none !important;
+}
+
+.main-nav > a:hover,
+.main-nav .nav-dropdown-button:hover {
+  color: #166534;
+  transform: none !important;
+}
+
+.nav-dropdown:hover .nav-dropdown-button span {
+  transform: none !important;
+}
+
+/* =========================================================
+   ORIENTAÇÃO TÉCNICA — BOVINOS
+   ========================================================= */
+
+.orientacao-page {
+  background: #f7faf8;
+  min-height: 100vh;
+}
+
+.orientacao-hero {
+  background: linear-gradient(135deg, #14532d 0%, #166534 55%, #15803d 100%);
+  color: #fff;
+  padding: 72px 0 64px;
+}
+
+.orientacao-hero .container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.orientacao-kicker {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #bbf7d0;
+}
+
+.orientacao-hero h1 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(38px, 5vw, 64px);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -2px;
+}
+
+.orientacao-hero p {
+  max-width: 720px;
+  margin: 22px 0 0;
+  color: #dcfce7;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* CONTEXTO */
+
+.orientacao-contexto {
+  max-width: 1180px;
+  margin: -28px auto 0;
+  padding: 0 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.orientacao-contexto-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.orientacao-contexto-card {
+  background: #fff;
+  border: 1px solid #e2e8e4;
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 8px 30px rgba(20, 83, 45, 0.08);
+}
+
+.orientacao-contexto-card span {
+  display: block;
+  margin-bottom: 7px;
+  color: #647067;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.orientacao-contexto-card strong {
+  color: #17221b;
+  font-size: 16px;
+}
+
+/* SEÇÕES */
+
+.orientacao-section {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 72px 24px;
+}
+
+.orientacao-section-header {
+  max-width: 760px;
+  margin-bottom: 34px;
+}
+
+.orientacao-section-number {
+  display: block;
+  margin-bottom: 9px;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.orientacao-section h2 {
+  margin: 0 0 12px;
+  color: #17221b;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.orientacao-section-header p {
+  margin: 0;
+  color: #647067;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* TEMAS */
+
+.orientacao-temas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.orientacao-tema-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 245px;
+  padding: 28px;
+  background: #fff;
+  border: 1px solid #e2e8e4;
+  border-radius: 18px;
+  text-decoration: none;
+  box-shadow: 0 5px 20px rgba(23, 34, 27, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.orientacao-tema-card:hover {
+  transform: translateY(-4px);
+  border-color: #86efac;
+  box-shadow: 0 14px 35px rgba(20, 83, 45, 0.12);
+}
+
+.orientacao-tema-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  border-radius: 14px;
+  background: #f0fdf4;
+  font-size: 25px;
+}
+
+.orientacao-tema-card h3 {
+  margin: 0 0 9px;
+  color: #17221b;
+  font-size: 21px;
+}
+
+.orientacao-tema-card p {
+  margin: 0;
+  color: #647067;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.orientacao-tema-link {
+  margin-top: auto;
+  padding-top: 20px;
+  color: #15803d;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* PROFISSIONAIS */
+
+.orientacao-pessoas {
+  background: #fff;
+  border-top: 1px solid #e8eee9;
+  border-bottom: 1px solid #e8eee9;
+}
+
+.orientacao-pessoas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.orientacao-pessoa-card {
+  overflow: hidden;
+  background: #f8faf9;
+  border: 1px solid #e2e8e4;
+  border-radius: 18px;
+}
+
+.orientacao-pessoa-foto {
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8f5eb;
+  font-size: 55px;
+}
+
+.orientacao-pessoa-content {
+  padding: 24px;
+}
+
+.orientacao-pessoa-tipo {
+  display: block;
+  margin-bottom: 8px;
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.orientacao-pessoa-content h3 {
+  margin: 0 0 5px;
+  color: #17221b;
+  font-size: 20px;
+}
+
+.orientacao-pessoa-content p {
+  margin: 0 0 14px;
+  color: #647067;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.orientacao-pessoa-status {
+  display: inline-flex;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #ecfdf3;
+  color: #166534;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* AGROIA */
+
+.orientacao-agroia {
+  padding: 76px 24px;
+  background: #f0fdf4;
+}
+
+.orientacao-agroia-box {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 42px;
+  border: 1px solid #bbf7d0;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 10px 40px rgba(20, 83, 45, 0.08);
+}
+
+.orientacao-agroia-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.orientacao-agroia-icon {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: #dcfce7;
+  font-size: 28px;
+}
+
+.orientacao-agroia h2 {
+  margin: 0 0 8px;
+  color: #14532d;
+  font-size: 30px;
+}
+
+.orientacao-agroia p {
+  margin: 0;
+  color: #647067;
+  line-height: 1.7;
+}
+
+.orientacao-agroia-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.orientacao-agroia-field label {
+  display: block;
+  margin-bottom: 7px;
+  color: #37443b;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.orientacao-agroia-field select {
+  width: 100%;
+  height: 46px;
+  padding: 0 13px;
+  border: 1px solid #d5ded8;
+  border-radius: 10px;
+  background: #fff;
+  color: #17221b;
+  font: inherit;
+}
+
+.orientacao-agroia-button {
+  margin-top: 22px;
+  padding: 13px 22px;
+  border: 0;
+  border-radius: 10px;
+  background: #166534;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.orientacao-agroia-button:hover {
+  background: #14532d;
+  transform: translateY(-1px);
+}
+
+.orientacao-agroia-nota {
+  margin-top: 18px !important;
+  font-size: 12px !important;
+  color: #6b756e !important;
+}
+
+/* FONTES */
+
+.orientacao-fontes {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 30px;
+  align-items: center;
+  padding: 32px;
+  background: #fff;
+  border: 1px solid #e2e8e4;
+  border-radius: 18px;
+}
+
+.orientacao-fontes h3 {
+  margin: 0 0 8px;
+  color: #17221b;
+  font-size: 20px;
+}
+
+.orientacao-fontes p {
+  margin: 0;
+  color: #647067;
+  line-height: 1.6;
+}
+
+.orientacao-fontes-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: #166534;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* DIRECTÓRIO */
+
+.orientacao-directorio {
+  margin-top: 30px;
+  padding: 46px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #14532d, #166534);
+  color: #fff;
+  text-align: center;
+}
+
+.orientacao-directorio span {
+  display: block;
+  margin-bottom: 10px;
+  color: #bbf7d0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.orientacao-directorio h2 {
+  margin: 0 0 12px;
+  color: #fff;
+}
+
+.orientacao-directorio p {
+  max-width: 680px;
+  margin: 0 auto 24px;
+  color: #dcfce7;
+  line-height: 1.7;
+}
+
+.orientacao-directorio a {
+  display: inline-flex;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #fff;
+  color: #166534;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 900px) {
+  .orientacao-temas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .orientacao-pessoas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .orientacao-agroia-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .orientacao-hero {
+    padding: 50px 0 54px;
+  }
+
+  .orientacao-hero .container,
+  .orientacao-section {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .orientacao-hero h1 {
+    font-size: 38px;
+    letter-spacing: -1px;
+  }
+
+  .orientacao-hero p {
+    font-size: 15px;
+  }
+
+  .orientacao-contexto {
+    padding: 0 18px;
+  }
+
+  .orientacao-contexto-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .orientacao-section {
+    padding-top: 52px;
+    padding-bottom: 52px;
+  }
+
+  .orientacao-temas {
+    grid-template-columns: 1fr;
+  }
+
+  .orientacao-tema-card {
+    min-height: auto;
+  }
+
+  .orientacao-agroia {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .orientacao-agroia-box {
+    padding: 26px 20px;
+  }
+
+  .orientacao-agroia-header {
+    flex-direction: column;
+  }
+
+  .orientacao-fontes {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .orientacao-directorio {
+    padding: 34px 22px;
+  }
+}
+
+/* =========================================================
+   ORIENTAÇÕES DE BOVINOS
+   ========================================================= */
+
+.orientacoes-bovinos-page {
+  min-height: 100vh;
+  background: #f7faf8;
+  color: #17221b;
+}
+
+/* HERO */
+
+.orientacoes-bovinos-hero {
+  background: linear-gradient(135deg, #14532d 0%, #166534 55%, #15803d 100%);
+  color: #ffffff;
+  padding: 34px 0 68px;
+}
+
+.orientacoes-bovinos-hero .container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.orientacoes-voltar {
+  display: inline-flex;
+  margin-bottom: 42px;
+  color: #dcfce7;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.orientacoes-voltar:hover {
+  color: #ffffff;
+}
+
+.orientacoes-kicker {
+  display: block;
+  margin-bottom: 15px;
+  color: #bbf7d0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.orientacoes-bovinos-hero h1 {
+  max-width: 780px;
+  margin: 0;
+  font-size: clamp(42px, 6vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -2.5px;
+  font-weight: 800;
+}
+
+.orientacoes-bovinos-hero p {
+  max-width: 700px;
+  margin: 25px 0 0;
+  color: #dcfce7;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* SELECÇÃO */
+
+.orientacoes-selecao {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  max-width: 760px;
+  margin-top: 38px;
+}
+
+.orientacoes-selecao > div {
+  padding: 20px 22px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+}
+
+.orientacoes-selecao span {
+  display: block;
+  margin-bottom: 7px;
+  color: #bbf7d0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.orientacoes-selecao strong {
+  color: #ffffff;
+  font-size: 16px;
+}
+
+/* CABEÇALHOS */
+
+.orientacoes-heading {
+  max-width: 760px;
+  margin-bottom: 34px;
+}
+
+.orientacoes-heading > span {
+  display: block;
+  margin-bottom: 10px;
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.orientacoes-heading h2 {
+  margin: 0 0 12px;
+  color: #17221b;
+  font-size: clamp(30px, 4vw, 43px);
+  line-height: 1.12;
+  letter-spacing: -1.2px;
+}
+
+.orientacoes-heading p {
+  margin: 0;
+  color: #647067;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* TEMAS */
+
+.orientacoes-temas {
+  padding: 76px 0;
+  background: #ffffff;
+}
+
+.orientacoes-temas .container,
+.orientacoes-especialistas .container,
+.orientacoes-fontes .container,
+.orientacoes-apoio .container,
+.orientacoes-agroia .container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.orientacoes-temas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.orientacoes-tema-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 245px;
+  padding: 28px;
+  border: 1px solid #e2e8e4;
+  border-radius: 18px;
+  background: #ffffff;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 5px 20px rgba(23, 34, 27, 0.045);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.orientacoes-tema-card:hover {
+  transform: translateY(-5px);
+  border-color: #86efac;
+  box-shadow: 0 15px 35px rgba(20, 83, 45, 0.12);
+}
+
+.orientacoes-tema-icon {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  background: #f0fdf4;
+  font-size: 26px;
+}
+
+.orientacoes-tema-card h3 {
+  margin: 0 0 9px;
+  color: #17221b;
+  font-size: 21px;
+}
+
+.orientacoes-tema-card p {
+  margin: 0;
+  color: #647067;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.orientacoes-tema-card strong {
+  margin-top: auto;
+  padding-top: 20px;
+  color: #15803d;
+  font-size: 13px;
+}
+
+/* ESPECIALISTAS */
+
+.orientacoes-especialistas {
+  padding: 76px 0;
+  background: #f7faf8;
+  border-top: 1px solid #e8eee9;
+}
+
+.orientacoes-perfis-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.orientacoes-perfil {
+  overflow: hidden;
+  border: 1px solid #e1e8e3;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 5px 20px rgba(23, 34, 27, 0.04);
+}
+
+.orientacoes-foto {
+  height: 205px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eaf6ed;
+  font-size: 58px;
+}
+
+.orientacoes-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.orientacoes-perfil-conteudo {
+  padding: 25px;
+}
+
+.orientacoes-perfil-tipo {
+  display: block;
+  margin-bottom: 9px;
+  color: #15803d;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.orientacoes-perfil-conteudo h3 {
+  margin: 0 0 6px;
+  color: #17221b;
+  font-size: 20px;
+}
+
+.orientacoes-perfil-conteudo > strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #37443b;
+  font-size: 14px;
+}
+
+.orientacoes-perfil-conteudo small {
+  display: block;
+  margin-bottom: 16px;
+  color: #647067;
+  font-size: 12px;
+}
+
+.orientacoes-perfil-conteudo p {
+  margin: 0 0 18px;
+  color: #647067;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.orientacoes-perfil-estado {
+  display: inline-flex;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #ecfdf3;
+  color: #166534;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* AGROIA */
+
+.orientacoes-agroia {
+  padding: 78px 0;
+  background: #f0fdf4;
+}
+
+.agroia-box {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 24px;
+  padding: 42px;
+  border: 1px solid #bbf7d0;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 12px 40px rgba(20, 83, 45, 0.08);
+}
+
+.agroia-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 17px;
+  background: #dcfce7;
+  font-size: 30px;
+}
+
+.agroia-conteudo > span {
+  display: block;
+  margin-bottom: 9px;
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.agroia-conteudo h2 {
+  margin: 0 0 12px;
+  color: #14532d;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.agroia-conteudo > p {
+  max-width: 760px;
+  margin: 0;
+  color: #647067;
+  line-height: 1.7;
+}
+
+.agroia-contexto {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.agroia-contexto > div {
+  padding: 17px;
+  border: 1px solid #e1e8e3;
+  border-radius: 12px;
+  background: #f8faf9;
+}
+
+.agroia-contexto span {
+  display: block;
+  margin-bottom: 7px;
+  color: #647067;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.agroia-contexto strong {
+  color: #17221b;
+  font-size: 14px;
+}
+
+.agroia-btn {
+  margin-top: 22px;
+  padding: 13px 21px;
+  border: 0;
+  border-radius: 10px;
+  background: #166534;
+  color: #ffffff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.agroia-btn:hover {
+  background: #14532d;
+}
+
+.agroia-aviso {
+  display: block;
+  margin-top: 14px;
+  color: #6b756e;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* FONTES */
+
+.orientacoes-fontes {
+  padding: 76px 0;
+  background: #ffffff;
+}
+
+.orientacoes-fontes-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 30px;
+  border: 1px solid #e2e8e4;
+  border-radius: 18px;
+  background: #f8faf9;
+}
+
+.orientacoes-fontes-box > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.orientacoes-fontes-box > div > span {
+  font-size: 32px;
+}
+
+.orientacoes-fontes-box strong {
+  display: block;
+  margin-bottom: 7px;
+  color: #17221b;
+  font-size: 18px;
+}
+
+.orientacoes-fontes-box p {
+  max-width: 650px;
+  margin: 0;
+  color: #647067;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.orientacoes-fontes-box > a,
+.orientacoes-apoio a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: #166534;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* APOIO */
+
+.orientacoes-apoio {
+  padding: 70px 0;
+  background: linear-gradient(135deg, #14532d, #166534);
+  color: #ffffff;
+}
+
+.orientacoes-apoio .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.orientacoes-apoio > .container > div > span {
+  display: block;
+  margin-bottom: 9px;
+  color: #bbf7d0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.orientacoes-apoio h2 {
+  margin: 0 0 10px;
+  color: #ffffff;
+  font-size: 34px;
+}
+
+.orientacoes-apoio p {
+  max-width: 680px;
+  margin: 0;
+  color: #dcfce7;
+  line-height: 1.7;
+}
+
+.orientacoes-apoio a {
+  background: #ffffff;
+  color: #166534;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 900px) {
+  .orientacoes-temas-grid,
+  .orientacoes-perfis-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .agroia-contexto {
+    grid-template-columns: 1fr;
+  }
+
+  .orientacoes-fontes-box,
+  .orientacoes-apoio .container {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .orientacoes-bovinos-hero {
+    padding: 25px 0 50px;
+  }
+
+  .orientacoes-bovinos-hero .container,
+  .orientacoes-temas .container,
+  .orientacoes-especialistas .container,
+  .orientacoes-fontes .container,
+  .orientacoes-apoio .container,
+  .orientacoes-agroia .container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .orientacoes-voltar {
+    margin-bottom: 30px;
+  }
+
+  .orientacoes-bovinos-hero h1 {
+    font-size: 39px;
+    letter-spacing: -1.5px;
+  }
+
+  .orientacoes-bovinos-hero p {
+    font-size: 15px;
+  }
+
+  .orientacoes-selecao {
+    grid-template-columns: 1fr;
+  }
+
+  .orientacoes-temas,
+  .orientacoes-especialistas {
+    padding: 55px 0;
+  }
+
+  .orientacoes-temas-grid,
+  .orientacoes-perfis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .agroia-box {
+    grid-template-columns: 1fr;
+    padding: 28px 22px;
+  }
+
+  .orientacoes-agroia {
+    padding: 55px 0;
+  }
+
+  .orientacoes-fontes {
+    padding: 55px 0;
+  }
+
+  .orientacoes-fontes-box {
+    padding: 24px;
+  }
+
+  .orientacoes-apoio {
+    padding: 55px 0;
+  }
+
+  .orientacoes-apoio h2 {
+    font-size: 29px;
+  }
+}
+/* =========================================================
+   AGROINOVA ANGOLA
+   PÁGINAS DE ORIENTAÇÃO DE BOVINOS
+   ========================================================= */
+
+.pagina-orientacao {
+  background: #f5f8f5;
+  color: #24352a;
+  min-height: 100vh;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.pagina-orientacao .orientacao-hero {
+  background: linear-gradient(135deg, #173f2a 0%, #23633d 55%, #2f7d4b 100%);
+  color: #ffffff;
+  padding: 34px 0 52px;
+}
+
+.pagina-orientacao .orientacao-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 34px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.pagina-orientacao .orientacao-breadcrumb a {
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.pagina-orientacao .orientacao-breadcrumb a:hover {
+  color: #ffffff;
+}
+
+.pagina-orientacao .orientacao-breadcrumb strong {
+  color: #ffffff;
+}
+
+.pagina-orientacao .orientacao-hero-content {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  max-width: 900px;
+}
+
+.pagina-orientacao .orientacao-hero-icon {
+  width: 92px;
+  height: 92px;
+  flex: 0 0 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 48px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.pagina-orientacao .orientacao-eyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #cfe8d7;
+}
+
+.pagina-orientacao .orientacao-hero h1 {
+  margin: 0 0 12px;
+  color: #ffffff;
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.05;
+  font-weight: 800;
+}
+
+.pagina-orientacao .orientacao-hero p {
+  max-width: 720px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   CONTEXTO
+   ========================================================= */
+
+.pagina-orientacao .orientacao-contexto-section {
+  padding: 34px 0 10px;
+}
+
+.pagina-orientacao .orientacao-contexto-card {
+  background: #ffffff;
+  border: 1px solid #e2e9e3;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 8px 28px rgba(28, 56, 39, 0.07);
+}
+
+.pagina-orientacao .orientacao-contexto-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.pagina-orientacao .orientacao-contexto-heading > span {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #edf7ef;
+  font-size: 20px;
+}
+
+.pagina-orientacao .orientacao-contexto-heading strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #193b27;
+  font-size: 17px;
+}
+
+.pagina-orientacao .orientacao-contexto-heading p {
+  margin: 0;
+  color: #68756d;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.pagina-orientacao .orientacao-seletores {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.pagina-orientacao .orientacao-seletor label {
+  display: block;
+  margin-bottom: 8px;
+  color: #34473a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pagina-orientacao .orientacao-seletor select {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid #d5dfd7;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #25362b;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.pagina-orientacao .orientacao-seletor select:hover {
+  border-color: #7fa88a;
+}
+
+.pagina-orientacao .orientacao-seletor select:focus {
+  border-color: #34794b;
+  box-shadow: 0 0 0 3px rgba(52, 121, 75, 0.12);
+}
+
+/* =========================================================
+   CABEÇALHOS DE SECÇÃO
+   ========================================================= */
+
+.pagina-orientacao .orientacao-conhecimento,
+.pagina-orientacao .orientacao-profissionais,
+.pagina-orientacao .orientacao-agroia-section {
+  padding: 58px 0;
+}
+
+.pagina-orientacao .orientacao-section-heading,
+.pagina-orientacao .orientacao-agroia-heading {
+  max-width: 720px;
+  margin-bottom: 28px;
+}
+
+.pagina-orientacao .orientacao-section-heading > span,
+.pagina-orientacao .orientacao-agroia-heading > span {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #34794b;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.pagina-orientacao .orientacao-section-heading h2,
+.pagina-orientacao .orientacao-agroia-heading h2 {
+  margin: 0 0 10px;
+  color: #193b27;
+  font-size: clamp(25px, 4vw, 34px);
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.pagina-orientacao .orientacao-section-heading p,
+.pagina-orientacao .orientacao-agroia-heading p {
+  margin: 0;
+  color: #69766e;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* =========================================================
+   CARDS DE CONHECIMENTO
+   ========================================================= */
+
+.pagina-orientacao .orientacao-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.pagina-orientacao .orientacao-info-card {
+  min-height: 230px;
+  padding: 25px;
+  background: #ffffff;
+  border: 1px solid #e0e8e1;
+  border-radius: 18px;
+  box-shadow: 0 7px 24px rgba(27, 55, 38, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pagina-orientacao .orientacao-info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(27, 55, 38, 0.1);
+}
+
+.pagina-orientacao .orientacao-info-card > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 20px;
+  border-radius: 14px;
+  background: #edf7ef;
+  font-size: 27px;
+}
+
+.pagina-orientacao .orientacao-info-card h3 {
+  margin: 0 0 10px;
+  color: #203c2b;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.pagina-orientacao .orientacao-info-card p {
+  margin: 0;
+  color: #68756d;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   PROFISSIONAIS
+   ========================================================= */
+
+.pagina-orientacao .orientacao-profissionais {
+  background: #ffffff;
+}
+
+.pagina-orientacao .orientacao-profissionais-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.pagina-orientacao .perfil-orientacao-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 21px;
+  background: #f8faf8;
+  border: 1px solid #e1e8e2;
+  border-radius: 17px;
+}
+
+.pagina-orientacao .perfil-orientacao-avatar {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #eaf4ed;
+  font-size: 28px;
+}
+
+.pagina-orientacao .perfil-orientacao-card span {
+  display: block;
+  margin-bottom: 5px;
+  color: #428057;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.pagina-orientacao .perfil-orientacao-card h3 {
+  margin: 0 0 7px;
+  color: #203a2a;
+  font-size: 16px;
+}
+
+.pagina-orientacao .perfil-orientacao-card p {
+  margin: 0;
+  color: #6c786f;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   AGROIA
+   ========================================================= */
+
+.pagina-orientacao .orientacao-agroia-section {
+  background: #f1f7f2;
+}
+
+.pagina-orientacao .orientacao-agroia-heading {
+  text-align: center;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pagina-orientacao .orientacao-agroia-card {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 38px 32px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #d9e6dc;
+  border-radius: 22px;
+  box-shadow: 0 12px 34px rgba(28, 64, 42, 0.08);
+}
+
+.pagina-orientacao .orientacao-agroia-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 18px;
+  border-radius: 20px;
+  background: #e9f5ec;
+  font-size: 34px;
+}
+
+.pagina-orientacao .orientacao-agroia-card h3 {
+  margin: 0 0 12px;
+  color: #1b4d2d;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.pagina-orientacao .orientacao-agroia-card p {
+  margin: 8px 0;
+  color: #68766d;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.pagina-orientacao .orientacao-agroia-card strong {
+  color: #274f34;
+}
+
+/* =========================================================
+   NAVEGAÇÃO
+   ========================================================= */
+
+.pagina-orientacao .orientacao-navegacao {
+  padding: 0 0 55px;
+  background: #f1f7f2;
+}
+
+.pagina-orientacao .btn-voltar-orientacoes {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
+  background: #2d7044;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.pagina-orientacao .btn-voltar-orientacoes:hover {
+  background: #225a35;
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   PÁGINA NÃO ENCONTRADA
+   ========================================================= */
+
+.pagina-orientacao .orientacao-nao-encontrada {
+  max-width: 650px;
+  margin: 80px auto;
+  padding: 45px 30px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e0e8e1;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(30, 55, 38, 0.07);
+}
+
+.pagina-orientacao .orientacao-nao-encontrada-icon {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 45px;
+}
+
+.pagina-orientacao .orientacao-nao-encontrada h1 {
+  margin: 0 0 10px;
+  color: #203b2b;
+  font-size: 28px;
+}
+
+.pagina-orientacao .orientacao-nao-encontrada p {
+  margin: 0 0 25px;
+  color: #69766d;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .pagina-orientacao .orientacao-info-grid,
+  .pagina-orientacao .orientacao-profissionais-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pagina-orientacao .orientacao-info-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 650px) {
+  .pagina-orientacao .orientacao-hero {
+    padding: 25px 0 38px;
+  }
+
+  .pagina-orientacao .orientacao-breadcrumb {
+    margin-bottom: 25px;
+    font-size: 12px;
+  }
+
+  .pagina-orientacao .orientacao-hero-content {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .pagina-orientacao .orientacao-hero-icon {
+    width: 68px;
+    height: 68px;
+    flex-basis: 68px;
+    border-radius: 18px;
+    font-size: 35px;
+  }
+
+  .pagina-orientacao .orientacao-hero h1 {
+    font-size: 34px;
+  }
+
+  .pagina-orientacao .orientacao-hero p {
+    font-size: 14px;
+  }
+
+  .pagina-orientacao .orientacao-contexto-card {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .pagina-orientacao .orientacao-seletores {
+    grid-template-columns: 1fr;
+  }
+
+  .pagina-orientacao .orientacao-conhecimento,
+  .pagina-orientacao .orientacao-profissionais,
+  .pagina-orientacao .orientacao-agroia-section {
+    padding: 42px 0;
+  }
+
+  .pagina-orientacao .orientacao-section-heading h2,
+  .pagina-orientacao .orientacao-agroia-heading h2 {
+    font-size: 26px;
+  }
+
+  .pagina-orientacao .perfil-orientacao-card {
+    padding: 18px;
+  }
+
+  .pagina-orientacao .orientacao-agroia-card {
+    padding: 30px 20px;
+  }
+}
+
+/* =========================================================
+   AGROINOVA ANGOLA
+   DOSSIÊ TÉCNICO — MILHO
+   ========================================================= */
+
+.pagina-milho {
+  background: #f5f7f4;
+  color: #17231b;
+}
+
+.milho-container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.milho-hero {
+  background:
+    linear-gradient(135deg, #10271a 0%, #173a24 55%, #1e4b2e 100%);
+  color: #fff;
+  padding: 34px 0 76px;
+}
+
+.milho-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 56px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+}
+
+.milho-breadcrumb a {
+  color: #dcebdd;
+  text-decoration: none;
+}
+
+.milho-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.milho-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.8fr);
+  gap: 70px;
+  align-items: center;
+}
+
+.milho-kicker,
+.milho-section-label {
+  margin: 0 0 14px;
+  color: #4d7658;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.milho-hero .milho-kicker {
+  color: #a9c5ae;
+}
+
+.milho-hero h1 {
+  margin: 0;
+  font-size: clamp(54px, 7vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+  font-weight: 800;
+}
+
+.milho-nome-cientifico {
+  margin: 18px 0 0;
+  color: #c6d7c9;
+  font-size: 20px;
+}
+
+.milho-hero-texto {
+  max-width: 720px;
+  margin: 28px 0 0;
+  color: #e1ebe2;
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.milho-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin-top: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.milho-meta div {
+  padding: 20px;
+  background: rgba(13, 39, 23, 0.7);
+}
+
+.milho-meta strong,
+.milho-meta span {
+  display: block;
+}
+
+.milho-meta strong {
+  margin-bottom: 6px;
+  color: #9fbea6;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.milho-meta span {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.milho-hero-documento {
+  min-height: 390px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
+}
+
+.milho-documento-topo {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  color: #b8cdbb;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.milho-documento-corpo {
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 34px;
+}
+
+.milho-documento-corpo p {
+  margin: 0 0 14px;
+  color: #9fbea6;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.milho-documento-corpo strong {
+  max-width: 330px;
+  color: #fff;
+  font-size: 34px;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.milho-documento-corpo small {
+  max-width: 320px;
+  margin-top: 22px;
+  color: #c2d1c5;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.milho-introducao {
+  padding: 92px 0;
+  background: #fff;
+}
+
+.milho-introducao-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 100px;
+}
+
+.milho-introducao h2,
+.milho-titulo-seccao h2,
+.milho-angola h2,
+.milho-rodape h2 {
+  margin: 0;
+  color: #15251a;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.milho-introducao-grid > div:last-child {
+  padding-top: 8px;
+}
+
+.milho-introducao-grid p {
+  margin: 0 0 22px;
+  color: #526057;
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+.milho-seccoes {
+  padding: 90px 0;
+}
+
+.milho-titulo-seccao {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  align-items: flex-end;
+  margin-bottom: 42px;
+}
+
+.milho-titulo-seccao > p {
+  max-width: 420px;
+  margin: 0;
+  color: #66736a;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.milho-seccoes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.milho-secao-card {
+  min-height: 275px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border: 1px solid #dfe6df;
+  background: #fff;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.milho-secao-card:hover {
+  transform: translateY(-3px);
+  border-color: #a9bba9;
+  box-shadow: 0 16px 35px rgba(20, 45, 27, 0.08);
+}
+
+.milho-secao-numero {
+  margin-bottom: 35px;
+  color: #729077;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.milho-secao-card h3 {
+  margin: 0 0 12px;
+  color: #203124;
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.milho-secao-card p {
+  margin: 0;
+  color: #68746b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.milho-secao-card button,
+.milho-referencia button {
+  margin-top: auto;
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #356640;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.milho-secao-card button:hover,
+.milho-referencia button:hover {
+  text-decoration: underline;
+}
+
+.milho-angola {
+  padding: 90px 0;
+  background: #eaf0eb;
+}
+
+.milho-angola-box {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.milho-angola h2 {
+  margin-bottom: 26px;
+}
+
+.milho-angola p {
+  color: #526057;
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.milho-factos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: #cdd8cf;
+  border: 1px solid #cdd8cf;
+}
+
+.milho-factos div {
+  min-height: 130px;
+  padding: 25px;
+  background: #f7f9f7;
+}
+
+.milho-factos strong {
+  display: block;
+  margin-bottom: 10px;
+  color: #244b2d;
+  font-size: 24px;
+}
+
+.milho-factos span {
+  display: block;
+  color: #69756d;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.milho-investigadores {
+  padding: 95px 0;
+  background: #fff;
+}
+
+.milho-investigadores-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.milho-investigador-card {
+  overflow: hidden;
+  border: 1px solid #dfe6df;
+  background: #f8faf8;
+}
+
+.milho-foto-investigador {
+  height: 290px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(
+      135deg,
+      #dce6dd 0%,
+      #eef3ee 50%,
+      #d3dfd5 100%
+    );
+}
+
+.milho-foto-investigador > div {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #94a696;
+  color: #647468;
+}
+
+.milho-foto-investigador span {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.milho-foto-investigador small {
+  margin-top: 7px;
+  font-size: 11px;
+}
+
+.milho-investigador-info {
+  padding: 24px;
+}
+
+.milho-investigador-info h3 {
+  margin: 0;
+  color: #1e3023;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.milho-investigador-funcao {
+  margin: 9px 0 18px;
+  color: #477052;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.milho-investigador-info > p:last-child {
+  margin: 0;
+  color: #69756d;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.milho-nota-autores {
+  margin-top: 24px;
+  padding: 24px 28px;
+  border-left: 3px solid #53785b;
+  background: #f2f6f2;
+}
+
+.milho-nota-autores strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #28442e;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.milho-nota-autores p {
+  max-width: 900px;
+  margin: 0;
+  color: #66736a;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.milho-referencias {
+  padding: 95px 0;
+  background: #f5f7f4;
+}
+
+.milho-referencias-lista {
+  border-top: 1px solid #dce4dd;
+}
+
+.milho-referencia {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 35px;
+  align-items: center;
+  padding: 27px 0;
+  border-bottom: 1px solid #dce4dd;
+}
+
+.milho-referencia-ano {
+  color: #5b7b61;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.milho-referencia h3 {
+  margin: 0 0 7px;
+  color: #26372a;
+  font-size: 17px;
+}
+
+.milho-referencia p {
+  margin: 0 0 4px;
+  color: #5f6d63;
+  font-size: 13px;
+}
+
+.milho-referencia span {
+  color: #7a857d;
+  font-size: 11px;
+}
+
+.milho-referencia button {
+  margin: 0;
+}
+
+.milho-rodape {
+  padding: 75px 0;
+  background: #12291a;
+  color: #fff;
+}
+
+.milho-rodape .milho-section-label {
+  color: #9eb9a4;
+}
+
+.milho-rodape h2 {
+  max-width: 700px;
+  color: #fff;
+}
+
+.milho-rodape .milho-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  align-items: center;
+}
+
+.milho-rodape a {
+  flex-shrink: 0;
+  padding: 14px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.milho-rodape a:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ---------------------------------------------------------
+   RESPONSIVO
+   --------------------------------------------------------- */
+
+@media (max-width: 1050px) {
+  .milho-seccoes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .milho-investigadores-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .milho-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .milho-hero-documento {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 800px) {
+  .milho-introducao-grid,
+  .milho-angola-box {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .milho-seccoes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .milho-titulo-seccao {
+    display: block;
+  }
+
+  .milho-titulo-seccao > p {
+    margin-top: 20px;
+  }
+
+  .milho-rodape .milho-container {
+    display: block;
+  }
+
+  .milho-rodape a {
+    display: inline-block;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .milho-container {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .milho-hero {
+    padding: 24px 0 55px;
+  }
+
+  .milho-breadcrumb {
+    margin-bottom: 40px;
+  }
+
+  .milho-hero h1 {
+    font-size: 58px;
+  }
+
+  .milho-hero-texto {
+    font-size: 16px;
+  }
+
+  .milho-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .milho-hero-documento {
+    min-height: 300px;
+  }
+
+  .milho-documento-corpo {
+    min-height: 240px;
+    padding: 25px;
+  }
+
+  .milho-documento-corpo strong {
+    font-size: 27px;
+  }
+
+  .milho-introducao,
+  .milho-seccoes,
+  .milho-angola,
+  .milho-investigadores,
+  .milho-referencias {
+    padding: 65px 0;
+  }
+
+  .milho-seccoes-grid,
+  .milho-investigadores-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .milho-factos {
+    grid-template-columns: 1fr;
+  }
+
+  .milho-referencia {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .milho-referencia button {
+    margin-top: 10px;
+  }
+}
+/* =========================================================
+   AGROINOVA ANGOLA — DOSSIÊ TÉCNICO DO MILHO
+   ========================================================= */
+
+.pagina-milho {
+  background: #f5f7f4;
+  color: #17231b;
+}
+
+.milho-container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* HERO */
+
+.milho-hero {
+  background: linear-gradient(135deg, #10271a 0%, #173a24 55%, #1e4b2e 100%);
+  color: #fff;
+  padding: 34px 0 76px;
+}
+
+.milho-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 56px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+}
+
+.milho-breadcrumb a {
+  color: #dcebdd;
+  text-decoration: none;
+}
+
+.milho-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.milho-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.8fr);
+  gap: 70px;
+  align-items: center;
+}
+
+.milho-kicker,
+.milho-section-label {
+  margin: 0 0 14px;
+  color: #4d7658;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.milho-hero .milho-kicker {
+  color: #a9c5ae;
+}
+
+.milho-hero h1 {
+  margin: 0;
+  font-size: clamp(54px, 7vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+  font-weight: 800;
+}
+
+.milho-nome-cientifico {
+  margin: 18px 0 0;
+  color: #c6d7c9;
+  font-size: 20px;
+}
+
+.milho-hero-texto {
+  max-width: 720px;
+  margin: 28px 0 0;
+  color: #e1ebe2;
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.milho-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin-top: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.milho-meta div {
+  padding: 20px;
+  background: rgba(13, 39, 23, 0.7);
+}
+
+.milho-meta strong,
+.milho-meta span {
+  display: block;
+}
+
+.milho-meta strong {
+  margin-bottom: 6px;
+  color: #9fbea6;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.milho-meta span {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* DOCUMENTO */
+
+.milho-hero-documento {
+  min-height: 390px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
+}
+
+.milho-documento-topo {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  color: #b8cdbb;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.milho-documento-corpo {
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 34px;
+}
+
+.milho-documento-corpo p {
+  margin: 0 0 14px;
+  color: #9fbea6;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.milho-documento-corpo strong {
+  max-width: 330px;
+  color: #fff;
+  font-size: 34px;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.milho-documento-corpo small {
+  max-width: 320px;
+  margin-top: 22px;
+  color: #c2d1c5;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* INTRODUÇÃO */
+
+.milho-introducao {
+  padding: 92px 0;
+  background: #fff;
+}
+
+.milho-introducao-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 100px;
+}
+
+.milho-introducao h2,
+.milho-titulo-seccao h2,
+.milho-angola h2,
+.milho-rodape h2 {
+  margin: 0;
+  color: #15251a;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.milho-introducao-grid > div:last-child {
+  padding-top: 8px;
+}
+
+.milho-introducao-grid p {
+  margin: 0 0 22px;
+  color: #526057;
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+/* CONTEÚDO */
+
+.milho-seccoes {
+  padding: 90px 0;
+}
+
+.milho-titulo-seccao {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  align-items: flex-end;
+  margin-bottom: 42px;
+}
+
+.milho-titulo-seccao > p {
+  max-width: 420px;
+  margin: 0;
+  color: #66736a;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.milho-seccoes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.milho-secao-card {
+  min-height: 275px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border: 1px solid #dfe6df;
+  background: #fff;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.milho-secao-card:hover {
+  transform: translateY(-3px);
+  border-color: #a9bba9;
+  box-shadow: 0 16px 35px rgba(20, 45, 27, 0.08);
+}
+
+.milho-secao-numero {
+  margin-bottom: 35px;
+  color: #729077;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.milho-secao-card h3 {
+  margin: 0 0 12px;
+  color: #203124;
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.milho-secao-card p {
+  margin: 0;
+  color: #68746b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.milho-secao-card button,
+.milho-referencia button {
+  margin-top: auto;
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #356640;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.milho-secao-card button:hover,
+.milho-referencia button:hover {
+  text-decoration: underline;
+}
+
+/* ANGOLA */
+
+.milho-angola {
+  padding: 90px 0;
+  background: #eaf0eb;
+}
+
+.milho-angola-box {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.milho-angola h2 {
+  margin-bottom: 26px;
+}
+
+.milho-angola p {
+  color: #526057;
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.milho-factos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: #cdd8cf;
+  border: 1px solid #cdd8cf;
+}
+
+.milho-factos div {
+  min-height: 130px;
+  padding: 25px;
+  background: #f7f9f7;
+}
+
+.milho-factos strong {
+  display: block;
+  margin-bottom: 10px;
+  color: #244b2d;
+  font-size: 24px;
+}
+
+.milho-factos span {
+  display: block;
+  color: #69756d;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* INVESTIGADORES */
+
+.milho-investigadores {
+  padding: 95px 0;
+  background: #fff;
+}
+
+.milho-investigadores-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.milho-investigador-card {
+  overflow: hidden;
+  border: 1px solid #dfe6df;
+  background: #f8faf8;
+}
+
+.milho-foto-investigador {
+  height: 290px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    #dce6dd 0%,
+    #eef3ee 50%,
+    #d3dfd5 100%
+  );
+}
+
+.milho-foto-investigador > div {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #94a696;
+  color: #647468;
+}
+
+.milho-foto-investigador span {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.milho-foto-investigador small {
+  margin-top: 7px;
+  font-size: 11px;
+}
+
+.milho-investigador-info {
+  padding: 24px;
+}
+
+.milho-investigador-info h3 {
+  margin: 0;
+  color: #1e3023;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.milho-investigador-funcao {
+  margin: 9px 0 18px;
+  color: #477052;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.milho-investigador-info > p:last-child {
+  margin: 0;
+  color: #69756d;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.milho-nota-autores {
+  margin-top: 24px;
+  padding: 24px 28px;
+  border-left: 3px solid #53785b;
+  background: #f2f6f2;
+}
+
+.milho-nota-autores strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #28442e;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.milho-nota-autores p {
+  max-width: 900px;
+  margin: 0;
+  color: #66736a;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* REFERÊNCIAS */
+
+.milho-referencias {
+  padding: 95px 0;
+  background: #f5f7f4;
+}
+
+.milho-referencias-lista {
+  border-top: 1px solid #dce4dd;
+}
+
+.milho-referencia {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 35px;
+  align-items: center;
+  padding: 27px 0;
+  border-bottom: 1px solid #dce4dd;
+}
+
+.milho-referencia-ano {
+  color: #5b7b61;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.milho-referencia h3 {
+  margin: 0 0 7px;
+  color: #26372a;
+  font-size: 17px;
+}
+
+.milho-referencia p {
+  margin: 0 0 4px;
+  color: #5f6d63;
+  font-size: 13px;
+}
+
+.milho-referencia span {
+  color: #7a857d;
+  font-size: 11px;
+}
+
+.milho-referencia button {
+  margin: 0;
+}
+
+/* RODAPÉ */
+
+.milho-rodape {
+  padding: 75px 0;
+  background: #12291a;
+  color: #fff;
+}
+
+.milho-rodape .milho-section-label {
+  color: #9eb9a4;
+}
+
+.milho-rodape h2 {
+  max-width: 700px;
+  color: #fff;
+}
+
+.milho-rodape .milho-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  align-items: center;
+}
+
+.milho-rodape a {
+  flex-shrink: 0;
+  padding: 14px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.milho-rodape a:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1050px) {
+  .milho-seccoes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .milho-investigadores-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .milho-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .milho-hero-documento {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 800px) {
+  .milho-introducao-grid,
+  .milho-angola-box {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .milho-seccoes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .milho-titulo-seccao {
+    display: block;
+  }
+
+  .milho-titulo-seccao > p {
+    margin-top: 20px;
+  }
+
+  .milho-rodape .milho-container {
+    display: block;
+  }
+
+  .milho-rodape a {
+    display: inline-block;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .milho-container {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .milho-hero {
+    padding: 24px 0 55px;
+  }
+
+  .milho-breadcrumb {
+    margin-bottom: 40px;
+  }
+
+  .milho-hero h1 {
+    font-size: 58px;
+  }
+
+  .milho-hero-texto {
+    font-size: 16px;
+  }
+
+  .milho-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .milho-hero-documento {
+    min-height: 300px;
+  }
+
+  .milho-documento-corpo {
+    min-height: 240px;
+    padding: 25px;
+  }
+
+  .milho-documento-corpo strong {
+    font-size: 27px;
+  }
+
+  .milho-introducao,
+  .milho-seccoes,
+  .milho-angola,
+  .milho-investigadores,
+  .milho-referencias {
+    padding: 65px 0;
+  }
+
+  .milho-seccoes-grid,
+  .milho-investigadores-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .milho-factos {
+    grid-template-columns: 1fr;
+  }
+
+  .milho-referencia {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .milho-referencia button {
+    margin-top: 10px;
+  }
+}
+
+/* ============================================================
+   AGROINOVA ANGOLA
+   PÁGINA AGRICULTURA
+   /agricultura
+   ============================================================ */
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+.agricultura-page {
+  min-height: 100vh;
+  background: #f5f7f5;
+  color: #1b2b20;
+}
+
+.agricultura-page *,
+.agricultura-page *::before,
+.agricultura-page *::after {
+  box-sizing: border-box;
+}
+
+.agricultura-container {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.agricultura-page a {
+  text-decoration: none;
+}
+
+.agricultura-page button,
+.agricultura-page input {
+  font-family: inherit;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.agricultura-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      135deg,
+      #123720 0%,
+      #1b4b2a 48%,
+      #286239 100%
+    );
+  color: #ffffff;
+  padding: 78px 0 92px;
+}
+
+.agricultura-hero::before {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  top: -300px;
+  right: -150px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.agricultura-hero::after {
+  content: "";
+  position: absolute;
+  width: 430px;
+  height: 430px;
+  bottom: -310px;
+  left: -210px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.agricultura-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+}
+
+.agricultura-kicker {
+  display: inline-block;
+  margin-bottom: 19px;
+  padding: 8px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  color: #d6e6da;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  line-height: 1;
+}
+
+.agricultura-hero h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(42px, 6vw, 68px);
+  font-weight: 800;
+  letter-spacing: -2.5px;
+  line-height: 1.02;
+}
+
+.agricultura-hero-content > p {
+  max-width: 760px;
+  margin: 25px 0 0;
+  color: #e1ece3;
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.agricultura-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.agricultura-hero-meta span {
+  position: relative;
+  margin-right: 28px;
+  padding-right: 28px;
+  color: #d2e2d5;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.agricultura-hero-meta span:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #8eb99a;
+  transform: translateY(-50%);
+}
+
+/* ============================================================
+   LABELS
+   ============================================================ */
+
+.agricultura-label {
+  display: block;
+  margin-bottom: 12px;
+  color: #327044;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  line-height: 1.3;
+}
+
+/* ============================================================
+   PESQUISA
+   ============================================================ */
+
+.agricultura-pesquisa {
+  position: relative;
+  z-index: 5;
+  margin-top: -38px;
+  padding-bottom: 20px;
+}
+
+.agricultura-pesquisa-box {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 45px;
+  align-items: center;
+  padding: 34px 38px;
+  background: #ffffff;
+  border: 1px solid #dce5de;
+  border-radius: 9px;
+  box-shadow: 0 16px 40px rgba(25, 54, 34, 0.11);
+}
+
+.agricultura-pesquisa-box h2 {
+  margin: 0 0 10px;
+  color: #1d2e22;
+  font-size: 27px;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.agricultura-pesquisa-box p {
+  margin: 0;
+  color: #69746d;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.agricultura-search {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 5px;
+  border: 1px solid #cfdad2;
+  border-radius: 6px;
+  background: #f9fbf9;
+}
+
+.agricultura-search input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 15px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #233328;
+  font-size: 14px;
+}
+
+.agricultura-search input::placeholder {
+  color: #8a958d;
+}
+
+.agricultura-search button {
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 4px;
+  background: #28633a;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.agricultura-search button:hover {
+  background: #1e512e;
+}
+
+/* ============================================================
+   CABEÇALHOS DAS SECÇÕES
+   ============================================================ */
+
+.agricultura-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 35px;
+  margin-bottom: 31px;
+}
+
+.agricultura-section-heading > div {
+  max-width: 760px;
+}
+
+.agricultura-section-heading h2 {
+  margin: 0 0 12px;
+  color: #1d2d22;
+  font-size: 31px;
+  font-weight: 780;
+  letter-spacing: -0.7px;
+  line-height: 1.18;
+}
+
+.agricultura-section-heading p {
+  max-width: 720px;
+  margin: 0;
+  color: #69746d;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.agricultura-section-heading.centered {
+  display: block;
+  text-align: center;
+}
+
+.agricultura-section-heading.centered > div {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.agricultura-section-heading.centered p {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* ============================================================
+   CONTADOR
+   ============================================================ */
+
+.agricultura-count {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border: 1px solid #d6e0d8;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #536259;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   CULTURAS
+   ============================================================ */
+
+.agricultura-culturas {
+  padding: 65px 0 78px;
+  background: #f5f7f5;
+}
+
+.agricultura-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.agricultura-filtro {
+  padding: 9px 15px;
+  border: 1px solid #d1dcd4;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #536158;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.agricultura-filtro:hover {
+  border-color: #3b774d;
+  color: #28623a;
+}
+
+.agricultura-filtro.active {
+  border-color: #28633a;
+  background: #28633a;
+  color: #ffffff;
+}
+
+/* ============================================================
+   GRID DAS CULTURAS
+   ============================================================ */
+
+.agricultura-culturas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.agricultura-cultura-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 355px;
+  padding: 22px;
+  border: 1px solid #dce4de;
+  border-radius: 8px;
+  background: #ffffff;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.agricultura-cultura-card:hover {
+  border-color: #b9cdbd;
+  box-shadow: 0 14px 30px rgba(29, 61, 39, 0.09);
+  transform: translateY(-4px);
+}
+
+.agricultura-cultura-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 27px;
+}
+
+.agricultura-cultura-grupo {
+  display: inline-block;
+  color: #3b754c;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.agricultura-cultura-numero {
+  color: #a0aaa3;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.agricultura-cultura-card h3 {
+  margin: 0 0 5px;
+  color: #1e3024;
+  font-size: 23px;
+  font-weight: 780;
+  line-height: 1.2;
+}
+
+.agricultura-nome-cientifico {
+  margin: 0 0 18px;
+  color: #718078;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.agricultura-cultura-descricao {
+  margin: 0;
+  color: #66726a;
+  font-size: 13px;
+  line-height: 1.68;
+}
+
+.agricultura-cultura-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 19px;
+}
+
+.agricultura-cultura-tags span {
+  padding: 5px 8px;
+  border: 1px solid #e0e6e1;
+  border-radius: 3px;
+  background: #f7f9f7;
+  color: #68756c;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.agricultura-cultura-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: auto;
+  padding-top: 21px;
+  color: #28633a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.agricultura-cultura-link span {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.agricultura-cultura-link:hover span {
+  transform: translateX(4px);
+}
+
+/* ============================================================
+   MANUAIS
+   ============================================================ */
+
+.agricultura-manuais {
+  padding: 75px 0;
+  background: #edf2ee;
+}
+
+.agricultura-link-geral {
+  flex-shrink: 0;
+  color: #28633a;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.agricultura-link-geral:hover {
+  text-decoration: underline;
+}
+
+.agricultura-manuais-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 19px;
+}
+
+.agricultura-manual-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 310px;
+  padding: 27px;
+  border: 1px solid #d9e2db;
+  border-radius: 8px;
+  background: #ffffff;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.agricultura-manual-card:hover {
+  box-shadow: 0 12px 27px rgba(29, 59, 38, 0.08);
+  transform: translateY(-3px);
+}
+
+.agricultura-manual-tipo {
+  margin-bottom: 21px;
+  color: #3a744b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+}
+
+.agricultura-manual-card h3 {
+  margin: 0 0 17px;
+  color: #213126;
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.agricultura-manual-card p {
+  margin: 0;
+  color: #69756d;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.agricultura-manual-card p strong {
+  color: #3b4940;
+}
+
+.agricultura-manual-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.agricultura-manual-meta span {
+  padding: 5px 8px;
+  border-radius: 3px;
+  background: #f0f4f1;
+  color: #647168;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.agricultura-manual-link {
+  margin-top: auto;
+  padding-top: 25px;
+  color: #28633a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.agricultura-manual-link:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   AUTORES / INVESTIGADORES
+   ============================================================ */
+
+.agricultura-autores {
+  padding: 78px 0;
+  background: #ffffff;
+}
+
+.agricultura-autores-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.agricultura-autor-card {
+  overflow: hidden;
+  border: 1px solid #dce4de;
+  border-radius: 8px;
+  background: #f8faf8;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.agricultura-autor-card:hover {
+  box-shadow: 0 12px 28px rgba(28, 58, 37, 0.09);
+  transform: translateY(-3px);
+}
+
+.agricultura-autor-foto {
+  width: 100%;
+  height: 245px;
+  overflow: hidden;
+  background: #e4ebe5;
+}
+
+.agricultura-autor-foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.3s ease;
+}
+
+.agricultura-autor-card:hover .agricultura-autor-foto img {
+  transform: scale(1.025);
+}
+
+.agricultura-autor-info {
+  padding: 19px;
+}
+
+.agricultura-autor-info > span {
+  display: block;
+  margin-bottom: 7px;
+  color: #377449;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.agricultura-autor-info h3 {
+  margin: 0 0 9px;
+  color: #213126;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.agricultura-autor-info p {
+  min-height: 42px;
+  margin: 0;
+  color: #6b766e;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.agricultura-autor-info button {
+  margin-top: 17px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #28633a;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.agricultura-autor-info button:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   ÁREAS TÉCNICAS
+   ============================================================ */
+
+.agricultura-areas {
+  padding: 78px 0;
+  background: #f3f6f3;
+}
+
+.agricultura-areas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 37px;
+}
+
+.agricultura-area-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 145px;
+  padding: 24px;
+  border: 1px solid #dce4de;
+  border-radius: 7px;
+  background: #ffffff;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.agricultura-area-card:hover {
+  border-color: #b9cdbd;
+  box-shadow: 0 10px 23px rgba(28, 58, 37, 0.07);
+  transform: translateY(-3px);
+}
+
+.agricultura-area-card strong {
+  margin-bottom: 11px;
+  color: #24352a;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.agricultura-area-card span {
+  color: #6b776e;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BLOCO FINAL
+   ============================================================ */
+
+.agricultura-final {
+  padding: 72px 0;
+  background:
+    linear-gradient(
+      135deg,
+      #193f26 0%,
+      #235a32 100%
+    );
+  color: #ffffff;
+}
+
+.agricultura-final .agricultura-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.agricultura-final .agricultura-label {
+  margin-bottom: 14px;
+  color: #a8c9af;
+}
+
+.agricultura-final h2 {
+  max-width: 760px;
+  margin: 0 0 15px;
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 780;
+  letter-spacing: -0.7px;
+  line-height: 1.2;
+}
+
+.agricultura-final p {
+  max-width: 720px;
+  margin: 0;
+  color: #d7e6da;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.agricultura-final-link {
+  flex-shrink: 0;
+  padding: 13px 19px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 5px;
+  background: #ffffff;
+  color: #214d2c;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.agricultura-final-link:hover {
+  background: #edf4ef;
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   RESPONSIVIDADE — TABLET
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .agricultura-culturas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .agricultura-autores-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .agricultura-manuais-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .agricultura-areas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ============================================================
+   RESPONSIVIDADE — TABLET PEQUENO
+   ============================================================ */
+
+@media (max-width: 850px) {
+  .agricultura-container {
+    width: min(100% - 30px, 1200px);
+  }
+
+  .agricultura-hero {
+    padding: 62px 0 78px;
+  }
+
+  .agricultura-pesquisa-box {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 29px;
+  }
+
+  .agricultura-section-heading {
+    display: block;
+  }
+
+  .agricultura-count {
+    display: inline-block;
+    margin-top: 16px;
+  }
+
+  .agricultura-link-geral {
+    display: inline-block;
+    margin-top: 17px;
+  }
+
+  .agricultura-final .agricultura-container {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 27px;
+  }
+}
+
+/* ============================================================
+   RESPONSIVIDADE — MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .agricultura-container {
+    width: calc(100% - 24px);
+  }
+
+  .agricultura-hero {
+    padding: 52px 0 68px;
+  }
+
+  .agricultura-kicker {
+    font-size: 9px;
+    letter-spacing: 1.1px;
+  }
+
+  .agricultura-hero h1 {
+    font-size: 43px;
+    letter-spacing: -1.5px;
+  }
+
+  .agricultura-hero-content > p {
+    margin-top: 20px;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .agricultura-hero-meta {
+    display: block;
+    margin-top: 26px;
+  }
+
+  .agricultura-hero-meta span {
+    display: inline-block;
+    margin-right: 0;
+    margin-bottom: 9px;
+    padding-right: 0;
+    font-size: 12px;
+  }
+
+  .agricultura-hero-meta span:not(:last-child)::after {
+    display: none;
+  }
+
+  /* Pesquisa */
+
+  .agricultura-pesquisa {
+    margin-top: -25px;
+  }
+
+  .agricultura-pesquisa-box {
+    padding: 24px 20px;
+  }
+
+  .agricultura-pesquisa-box h2 {
+    font-size: 23px;
+  }
+
+  .agricultura-pesquisa-box p {
+    font-size: 13px;
+  }
+
+  .agricultura-search {
+    display: block;
+    padding: 5px;
+  }
+
+  .agricultura-search input {
+    display: block;
+    width: 100%;
+    height: 48px;
+  }
+
+  .agricultura-search button {
+    display: block;
+    width: 100%;
+    height: 46px;
+  }
+
+  /* Secções */
+
+  .agricultura-intro {
+    padding-top: 50px;
+  }
+
+  .agricultura-section-heading h2 {
+    font-size: 26px;
+  }
+
+  .agricultura-section-heading p {
+    font-size: 13px;
+  }
+
+  /* Filtros */
+
+  .agricultura-filtros {
+    gap: 6px;
+  }
+
+  .agricultura-filtro {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
+  /* Culturas */
+
+  .agricultura-culturas {
+    padding: 48px 0 58px;
+  }
+
+  .agricultura-culturas-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .agricultura-cultura-card {
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .agricultura-cultura-card h3 {
+    font-size: 21px;
+  }
+
+  /* Manuais */
+
+  .agricultura-manuais {
+    padding: 55px 0;
+  }
+
+  .agricultura-manuais-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .agricultura-manual-card {
+    min-height: 0;
+    padding: 22px;
+  }
+
+  /* Autores */
+
+  .agricultura-autores {
+    padding: 58px 0;
+  }
+
+  .agricultura-autores-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .agricultura-autor-foto {
+    height: 270px;
+  }
+
+  /* Áreas */
+
+  .agricultura-areas {
+    padding: 58px 0;
+  }
+
+  .agricultura-areas-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .agricultura-area-card {
+    min-height: 0;
+  }
+
+  /* Final */
+
+  .agricultura-final {
+    padding: 55px 0;
+  }
+
+  .agricultura-final h2 {
+    font-size: 26px;
+  }
+
+  .agricultura-final p {
+    font-size: 13px;
+  }
+
+  .agricultura-final-link {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   MOBILE MUITO PEQUENO
+   ============================================================ */
+
+@media (max-width: 380px) {
+  .agricultura-container {
+    width: calc(100% - 20px);
+  }
+
+  .agricultura-hero h1 {
+    font-size: 38px;
+  }
+
+  .agricultura-pesquisa-box {
+    padding: 20px 16px;
+  }
+
+  .agricultura-cultura-card,
+  .agricultura-manual-card,
+  .agricultura-autor-info,
+  .agricultura-area-card {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+}
+
+/* ============================================================
+   AGRICULTURA — PÁGINA PRINCIPAL
+   AGROINOVA ANGOLA
+   ============================================================ */
+
+.agricultura-page {
+  min-height: 100vh;
+  background: #f5f7f5;
+  color: #1c2b20;
+}
+
+.agricultura-page *,
+.agricultura-page *::before,
+.agricultura-page *::after {
+  box-sizing: border-box;
+}
+
+.agricultura-container {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.agricultura-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 78px 0 90px;
+  background: linear-gradient(135deg, #123720, #1c4c2a 55%, #28623a);
+  color: #fff;
+}
+
+.agricultura-hero::before {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  top: -300px;
+  right: -170px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 50%;
+}
+
+.agricultura-hero::after {
+  content: "";
+  position: absolute;
+  width: 430px;
+  height: 430px;
+  bottom: -310px;
+  left: -220px;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 50%;
+}
+
+.agricultura-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+}
+
+.agricultura-kicker {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 8px 13px;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 4px;
+  color: #d8e8dc;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.agricultura-hero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(44px, 6vw, 70px);
+  font-weight: 800;
+  letter-spacing: -2.5px;
+  line-height: 1;
+}
+
+.agricultura-hero-content > p {
+  max-width: 760px;
+  margin: 25px 0 0;
+  color: #e2ece4;
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.agricultura-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+
+.agricultura-hero-meta span {
+  position: relative;
+  margin-right: 27px;
+  padding-right: 27px;
+  color: #d1e2d5;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.agricultura-hero-meta span:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #8db698;
+  transform: translateY(-50%);
+}
+
+/* ============================================================
+   LABEL
+   ============================================================ */
+
+.agricultura-label {
+  display: block;
+  margin-bottom: 11px;
+  color: #327044;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+/* ============================================================
+   PESQUISA
+   ============================================================ */
+
+.agricultura-pesquisa {
+  position: relative;
+  z-index: 5;
+  margin-top: -38px;
+  padding-bottom: 20px;
+}
+
+.agricultura-pesquisa-box {
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 45px;
+  align-items: center;
+  padding: 34px 38px;
+  background: #fff;
+  border: 1px solid #dce5de;
+  border-radius: 9px;
+  box-shadow: 0 16px 40px rgba(25,54,34,.11);
+}
+
+.agricultura-pesquisa-box h2 {
+  margin: 0 0 10px;
+  color: #1d2e22;
+  font-size: 27px;
+  line-height: 1.2;
+}
+
+.agricultura-pesquisa-box p {
+  margin: 0;
+  color: #69746d;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.agricultura-search {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 5px;
+  border: 1px solid #cfdad2;
+  border-radius: 6px;
+  background: #f9fbf9;
+}
+
+.agricultura-search input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 15px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #233328;
+  font-size: 14px;
+}
+
+.agricultura-search input::placeholder {
+  color: #8a958d;
+}
+
+.agricultura-search button {
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 23px;
+  border: 0;
+  border-radius: 4px;
+  background: #28633a;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.agricultura-search button:hover {
+  background: #1e512e;
+}
+
+/* ============================================================
+   CABEÇALHOS
+   ============================================================ */
+
+.agricultura-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 35px;
+  margin-bottom: 30px;
+}
+
+.agricultura-section-heading > div {
+  max-width: 760px;
+}
+
+.agricultura-section-heading h2 {
+  margin: 0 0 12px;
+  color: #1d2d22;
+  font-size: 31px;
+  font-weight: 780;
+  letter-spacing: -.7px;
+  line-height: 1.18;
+}
+
+.agricultura-section-heading p {
+  max-width: 720px;
+  margin: 0;
+  color: #69746d;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.agricultura-section-heading.centered {
+  display: block;
+  text-align: center;
+}
+
+.agricultura-section-heading.centered > div {
+  margin: 0 auto;
+}
+
+.agricultura-count {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border: 1px solid #d6e0d8;
+  border-radius: 4px;
+  background: #fff;
+  color: #536259;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   CULTURAS
+   ============================================================ */
+
+.agricultura-culturas {
+  padding: 65px 0 78px;
+  background: #f5f7f5;
+}
+
+.agricultura-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.agricultura-filtro {
+  padding: 9px 15px;
+  border: 1px solid #d1dcd4;
+  border-radius: 4px;
+  background: #fff;
+  color: #536158;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.agricultura-filtro:hover {
+  border-color: #3b774d;
+  color: #28623a;
+}
+
+.agricultura-filtro.active {
+  border-color: #28633a;
+  background: #28633a;
+  color: #fff;
+}
+
+/* ============================================================
+   CARDS DAS CULTURAS
+   ============================================================ */
+
+.agricultura-culturas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 18px;
+}
+
+.agricultura-cultura-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 355px;
+  padding: 22px;
+  border: 1px solid #dce4de;
+  border-radius: 8px;
+  background: #fff;
+  transition: .2s ease;
+}
+
+.agricultura-cultura-card:hover {
+  border-color: #b9cdbd;
+  box-shadow: 0 14px 30px rgba(29,61,39,.09);
+  transform: translateY(-4px);
+}
+
+.agricultura-cultura-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 27px;
+}
+
+.agricultura-cultura-grupo {
+  color: #3b754c;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .9px;
+  text-transform: uppercase;
+}
+
+.agricultura-cultura-numero {
+  color: #a0aaa3;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.agricultura-cultura-card h3 {
+  margin: 0 0 5px;
+  color: #1e3024;
+  font-size: 23px;
+  font-weight: 780;
+}
+
+.agricultura-nome-cientifico {
+  margin: 0 0 18px;
+  color: #718078;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.agricultura-cultura-descricao {
+  margin: 0;
+  color: #66726a;
+  font-size: 13px;
+  line-height: 1.68;
+}
+
+.agricultura-cultura-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 19px;
+}
+
+.agricultura-cultura-tags span {
+  padding: 5px 8px;
+  border: 1px solid #e0e6e1;
+  border-radius: 3px;
+  background: #f7f9f7;
+  color: #68756c;
+  font-size: 10px;
+}
+
+.agricultura-cultura-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 21px;
+  color: #28633a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.agricultura-cultura-link span {
+  font-size: 16px;
+  transition: transform .2s ease;
+}
+
+.agricultura-cultura-link:hover span {
+  transform: translateX(4px);
+}
+
+/* ============================================================
+   MANUAIS
+   ============================================================ */
+
+.agricultura-manuais {
+  padding: 75px 0;
+  background: #edf2ee;
+}
+
+.agricultura-link-geral {
+  flex-shrink: 0;
+  color: #28633a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.agricultura-link-geral:hover {
+  text-decoration: underline;
+}
+
+.agricultura-manuais-grid {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 19px;
+}
+
+.agricultura-manual-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 310px;
+  padding: 27px;
+  border: 1px solid #d9e2db;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.agricultura-manual-tipo {
+  margin-bottom: 21px;
+  color: #3a744b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+}
+
+.agricultura-manual-card h3 {
+  margin: 0 0 17px;
+  color: #213126;
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+.agricultura-manual-card p {
+  margin: 0;
+  color: #69756d;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.agricultura-manual-card p strong {
+  color: #3b4940;
+}
+
+.agricultura-manual-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.agricultura-manual-meta span {
+  padding: 5px 8px;
+  border-radius: 3px;
+  background: #f0f4f1;
+  color: #647168;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.agricultura-manual-link {
+  margin-top: auto;
+  padding-top: 25px;
+  color: #28633a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.agricultura-manual-link:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   AUTORES
+   ============================================================ */
+
+.agricultura-autores {
+  padding: 78px 0;
+  background: #fff;
+}
+
+.agricultura-autores-grid {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 18px;
+}
+
+.agricultura-autor-card {
+  overflow: hidden;
+  border: 1px solid #dce4de;
+  border-radius: 8px;
+  background: #f8faf8;
+  transition: .2s ease;
+}
+
+.agricultura-autor-card:hover {
+  box-shadow: 0 12px 28px rgba(28,58,37,.09);
+  transform: translateY(-3px);
+}
+
+.agricultura-autor-foto {
+  width: 100%;
+  height: 245px;
+  overflow: hidden;
+  background: #e4ebe5;
+}
+
+.agricultura-autor-foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.agricultura-autor-info {
+  padding: 19px;
+}
+
+.agricultura-autor-info > span {
+  display: block;
+  margin-bottom: 7px;
+  color: #377449;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+}
+
+.agricultura-autor-info h3 {
+  margin: 0 0 9px;
+  color: #213126;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.agricultura-autor-info p {
+  min-height: 42px;
+  margin: 0;
+  color: #6b766e;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.agricultura-autor-info button {
+  margin-top: 17px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #28633a;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.agricultura-autor-info button:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   ÁREAS TÉCNICAS
+   ============================================================ */
+
+.agricultura-areas {
+  padding: 78px 0;
+  background: #f3f6f3;
+}
+
+.agricultura-areas-grid {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 16px;
+  margin-top: 37px;
+}
+
+.agricultura-area-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 145px;
+  padding: 24px;
+  border: 1px solid #dce4de;
+  border-radius: 7px;
+  background: #fff;
+  transition: .2s ease;
+}
+
+.agricultura-area-card:hover {
+  border-color: #b9cdbd;
+  box-shadow: 0 10px 23px rgba(28,58,37,.07);
+  transform: translateY(-3px);
+}
+
+.agricultura-area-card strong {
+  margin-bottom: 11px;
+  color: #24352a;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.agricultura-area-card span {
+  color: #6b776e;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   FINAL
+   ============================================================ */
+
+.agricultura-final {
+  padding: 72px 0;
+  background: linear-gradient(135deg,#193f26,#235a32);
+  color: #fff;
+}
+
+.agricultura-final .agricultura-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.agricultura-final .agricultura-label {
+  color: #a8c9af;
+}
+
+.agricultura-final h2 {
+  max-width: 760px;
+  margin: 0 0 15px;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 780;
+  line-height: 1.2;
+}
+
+.agricultura-final p {
+  max-width: 720px;
+  margin: 0;
+  color: #d7e6da;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.agricultura-final-link {
+  flex-shrink: 0;
+  padding: 13px 19px;
+  border-radius: 5px;
+  background: #fff;
+  color: #214d2c;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.agricultura-final-link:hover {
+  background: #edf4ef;
+}
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .agricultura-culturas-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+
+  .agricultura-autores-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+
+  .agricultura-manuais-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+
+  .agricultura-areas-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+}
+
+@media (max-width: 850px) {
+  .agricultura-container {
+    width: min(100% - 30px,1200px);
+  }
+
+  .agricultura-pesquisa-box {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .agricultura-section-heading {
+    display: block;
+  }
+
+  .agricultura-count {
+    display: inline-block;
+    margin-top: 15px;
+  }
+
+  .agricultura-link-geral {
+    display: inline-block;
+    margin-top: 16px;
+  }
+
+  .agricultura-final .agricultura-container {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 28px;
+  }
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .agricultura-container {
+    width: calc(100% - 24px);
+  }
+
+  .agricultura-hero {
+    padding: 53px 0 70px;
+  }
+
+  .agricultura-hero h1 {
+    font-size: 43px;
+    letter-spacing: -1.5px;
+  }
+
+  .agricultura-hero-content > p {
+    font-size: 15px;
+  }
+
+  .agricultura-hero-meta {
+    display: block;
+  }
+
+  .agricultura-hero-meta span {
+    display: block;
+    margin: 0 0 8px;
+    padding: 0;
+  }
+
+  .agricultura-hero-meta span::after {
+    display: none !important;
+  }
+
+  .agricultura-pesquisa {
+    margin-top: -26px;
+  }
+
+  .agricultura-pesquisa-box {
+    padding: 24px 20px;
+  }
+
+  .agricultura-pesquisa-box h2 {
+    font-size: 23px;
+  }
+
+  .agricultura-search {
+    display: block;
+  }
+
+  .agricultura-search input {
+    display: block;
+    width: 100%;
+    height: 48px;
+  }
+
+  .agricultura-search button {
+    display: block;
+    width: 100%;
+    height: 46px;
+  }
+
+  .agricultura-section-heading h2 {
+    font-size: 26px;
+  }
+
+  .agricultura-filtros {
+    gap: 6px;
+  }
+
+  .agricultura-filtro {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
+  .agricultura-culturas {
+    padding: 50px 0 60px;
+  }
+
+  .agricultura-culturas-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .agricultura-cultura-card {
+    min-height: 0;
+  }
+
+  .agricultura-manuais {
+    padding: 58px 0;
+  }
+
+  .agricultura-manuais-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .agricultura-manual-card {
+    min-height: 0;
+  }
+
+  .agricultura-autores {
+    padding: 60px 0;
+  }
+
+  .agricultura-autores-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .agricultura-autor-foto {
+    height: 280px;
+  }
+
+  .agricultura-areas {
+    padding: 60px 0;
+  }
+
+  .agricultura-areas-grid {
+    grid-template-columns: 1fr;
+    margin-top: 28px;
+  }
+
+  .agricultura-final {
+    padding: 58px 0;
+  }
+
+  .agricultura-final h2 {
+    font-size: 26px;
+  }
+
+  .agricultura-final-link {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   MOBILE PEQUENO
+   ============================================================ */
+
+@media (max-width: 380px) {
+  .agricultura-container {
+    width: calc(100% - 20px);
+  }
+
+  .agricultura-hero h1 {
+    font-size: 38px;
+  }
+
+  .agricultura-pesquisa-box {
+    padding: 20px 16px;
+  }
+
+  .agricultura-cultura-card,
+  .agricultura-manual-card,
+  .agricultura-autor-info,
+  .agricultura-area-card {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+}
+
+/* ============================================================
+   BIBLIOTECA — AGROINOVA ANGOLA
+   ============================================================ */
+
+.biblioteca-page {
+  min-height: 100vh;
+  background: #f5f7f5;
+  color: #1d2c22;
+}
+
+.biblioteca-page *,
+.biblioteca-page *::before,
+.biblioteca-page *::after {
+  box-sizing: border-box;
+}
+
+.biblioteca-container {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.biblioteca-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 82px 0 92px;
+  background: linear-gradient(
+    135deg,
+    #123720 0%,
+    #1b4b2a 55%,
+    #28613a 100%
+  );
+  color: #fff;
+}
+
+.biblioteca-hero::before {
+  content: "";
+  position: absolute;
+  width: 560px;
+  height: 560px;
+  top: -330px;
+  right: -170px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+.biblioteca-hero::after {
+  content: "";
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  bottom: -320px;
+  left: -230px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+}
+
+.biblioteca-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+}
+
+.biblioteca-kicker {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 8px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  color: #d8e8dc;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.biblioteca-hero h1 {
+  max-width: 850px;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(43px, 6vw, 68px);
+  font-weight: 800;
+  letter-spacing: -2.5px;
+  line-height: 1.03;
+}
+
+.biblioteca-hero-content > p {
+  max-width: 760px;
+  margin: 25px 0 0;
+  color: #e1ece4;
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.biblioteca-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+
+.biblioteca-hero-meta span {
+  position: relative;
+  margin-right: 27px;
+  padding-right: 27px;
+  color: #d1e2d5;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.biblioteca-hero-meta span:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #8db698;
+  transform: translateY(-50%);
+}
+
+/* ============================================================
+   LABEL
+   ============================================================ */
+
+.biblioteca-label {
+  display: block;
+  margin-bottom: 11px;
+  color: #327044;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+/* ============================================================
+   PESQUISA
+   ============================================================ */
+
+.biblioteca-pesquisa {
+  position: relative;
+  z-index: 5;
+  margin-top: -38px;
+  padding-bottom: 20px;
+}
+
+.biblioteca-pesquisa-box {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 45px;
+  align-items: center;
+  padding: 34px 38px;
+  border: 1px solid #dce5de;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(25, 54, 34, 0.11);
+}
+
+.biblioteca-pesquisa-box h2 {
+  margin: 0 0 10px;
+  color: #1d2e22;
+  font-size: 27px;
+  line-height: 1.2;
+}
+
+.biblioteca-pesquisa-box p {
+  margin: 0;
+  color: #69746d;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.biblioteca-search {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 5px;
+  border: 1px solid #cfdad2;
+  border-radius: 6px;
+  background: #f9fbf9;
+}
+
+.biblioteca-search input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 15px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #233328;
+  font-size: 14px;
+}
+
+.biblioteca-search input::placeholder {
+  color: #8a958d;
+}
+
+.biblioteca-search button {
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 23px;
+  border: 0;
+  border-radius: 4px;
+  background: #28633a;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.biblioteca-search button:hover {
+  background: #1e512e;
+}
+
+/* ============================================================
+   CABEÇALHOS
+   ============================================================ */
+
+.biblioteca-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 35px;
+  margin-bottom: 30px;
+}
+
+.biblioteca-section-heading > div {
+  max-width: 760px;
+}
+
+.biblioteca-section-heading h2 {
+  margin: 0 0 12px;
+  color: #1d2d22;
+  font-size: 31px;
+  font-weight: 780;
+  letter-spacing: -0.7px;
+  line-height: 1.18;
+}
+
+.biblioteca-section-heading p {
+  max-width: 720px;
+  margin: 0;
+  color: #69746d;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.biblioteca-section-heading.centered {
+  display: block;
+  text-align: center;
+}
+
+.biblioteca-section-heading.centered > div {
+  margin: 0 auto;
+}
+
+.biblioteca-section-heading.centered > .biblioteca-label {
+  margin-bottom: 11px;
+}
+
+.biblioteca-heading-row {
+  align-items: flex-end;
+}
+
+.biblioteca-count {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border: 1px solid #d6e0d8;
+  border-radius: 4px;
+  background: #fff;
+  color: #536259;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   CATEGORIAS
+   ============================================================ */
+
+.biblioteca-categorias {
+  padding: 65px 0 78px;
+  background: #f5f7f5;
+}
+
+.biblioteca-categorias-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.biblioteca-categoria-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 205px;
+  padding: 25px;
+  border: 1px solid #dce4de;
+  border-radius: 8px;
+  background: #fff;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.biblioteca-categoria-card:hover {
+  border-color: #b9cdbd;
+  box-shadow: 0 14px 30px rgba(29, 61, 39, 0.09);
+  transform: translateY(-4px);
+}
+
+.biblioteca-categoria-icon {
+  display: block;
+  font-size: 31px;
+  line-height: 1;
+}
+
+.biblioteca-categoria-card h3 {
+  margin: 18px 0 8px;
+  color: #213126;
+  font-size: 18px;
+  font-weight: 760;
+}
+
+.biblioteca-categoria-card p {
+  margin: 0;
+  color: #68746c;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.biblioteca-categoria-link {
+  margin-top: auto;
+  padding-top: 19px;
+  color: #28633a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* ============================================================
+   DOCUMENTOS
+   ============================================================ */
+
+.biblioteca-documentos {
+  padding: 78px 0;
+  background: #fff;
+}
+
+.biblioteca-documentos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 19px;
+}
+
+.biblioteca-documento-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 385px;
+  padding: 27px;
+  border: 1px solid #dce4de;
+  border-radius: 8px;
+  background: #f9fbf9;
+  transition: 0.2s ease;
+}
+
+.biblioteca-documento-card:hover {
+  border-color: #b9cdbd;
+  box-shadow: 0 14px 30px rgba(29, 61, 39, 0.09);
+  transform: translateY(-4px);
+}
+
+.biblioteca-documento-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 19px;
+}
+
+.biblioteca-documento-top span {
+  color: #347348;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.biblioteca-documento-top small {
+  color: #8a958e;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.biblioteca-documento-card h3 {
+  margin: 0 0 10px;
+  color: #213126;
+  font-size: 19px;
+  line-height: 1.38;
+}
+
+.biblioteca-documento-instituicao {
+  margin: 0;
+  color: #3b754c;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.biblioteca-documento-descricao {
+  margin: 17px 0 0;
+  color: #69756d;
+  font-size: 12px;
+  line-height: 1.68;
+}
+
+.biblioteca-documento-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 18px;
+}
+
+.biblioteca-documento-tags span {
+  padding: 5px 8px;
+  border: 1px solid #dfe6e1;
+  border-radius: 3px;
+  background: #fff;
+  color: #68756c;
+  font-size: 10px;
+}
+
+.biblioteca-documento-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 20px;
+  color: #7b867e;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.biblioteca-documento-link {
+  display: inline-block;
+  margin-top: 17px;
+  color: #28633a;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.biblioteca-documento-link:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   ÁREAS
+   ============================================================ */
+
+.biblioteca-areas {
+  padding: 78px 0;
+  background: #edf2ee;
+}
+
+.biblioteca-areas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 37px;
+}
+
+.biblioteca-area-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 125px;
+  padding: 21px;
+  border: 1px solid #d8e1da;
+  border-radius: 7px;
+  background: #fff;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.biblioteca-area-card:hover {
+  border-color: #b9cdbd;
+  box-shadow: 0 10px 23px rgba(28, 58, 37, 0.07);
+  transform: translateY(-3px);
+}
+
+.biblioteca-area-card strong {
+  color: #24352a;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.biblioteca-area-card span {
+  margin-top: 15px;
+  color: #28633a;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+/* ============================================================
+   ANGOLA
+   ============================================================ */
+
+.biblioteca-angola {
+  padding: 78px 0;
+  background: #fff;
+}
+
+.biblioteca-angola-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  padding: 46px;
+  border: 1px solid #dce4de;
+  border-radius: 9px;
+  background: #f4f8f4;
+}
+
+.biblioteca-angola-content > div {
+  max-width: 760px;
+}
+
+.biblioteca-angola h2 {
+  margin: 0 0 16px;
+  color: #203126;
+  font-size: 31px;
+  font-weight: 780;
+  line-height: 1.2;
+}
+
+.biblioteca-angola p {
+  margin: 0;
+  color: #69756d;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.biblioteca-angola-link {
+  flex-shrink: 0;
+  padding: 13px 19px;
+  border-radius: 5px;
+  background: #28633a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.biblioteca-angola-link:hover {
+  background: #1e512e;
+}
+
+/* ============================================================
+   REPOSITÓRIO
+   ============================================================ */
+
+.biblioteca-repositorio {
+  padding: 78px 0;
+  background: #f3f6f3;
+}
+
+.biblioteca-repositorio-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  padding: 48px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #183d25, #28613a);
+  color: #fff;
+}
+
+.biblioteca-repositorio-box > div {
+  max-width: 760px;
+}
+
+.biblioteca-repositorio-box .biblioteca-label {
+  color: #a8c9af;
+}
+
+.biblioteca-repositorio-box h2 {
+  margin: 0 0 16px;
+  color: #fff;
+  font-size: 31px;
+  font-weight: 780;
+  line-height: 1.22;
+}
+
+.biblioteca-repositorio-box p {
+  margin: 0;
+  color: #d7e6da;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.biblioteca-repositorio-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin-top: 22px;
+}
+
+.biblioteca-repositorio-lista span {
+  color: #dbe9de;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.biblioteca-publicar-link {
+  flex-shrink: 0;
+  padding: 14px 21px;
+  border-radius: 5px;
+  background: #fff;
+  color: #214d2c;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.biblioteca-publicar-link:hover {
+  background: #edf4ef;
+}
+
+/* ============================================================
+   INSTITUIÇÕES
+   ============================================================ */
+
+.biblioteca-instituicoes {
+  padding: 78px 0;
+  background: #fff;
+}
+
+.biblioteca-instituicoes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 35px;
+}
+
+.biblioteca-instituicoes-grid div {
+  padding: 18px 20px;
+  border: 1px solid #dce4de;
+  border-radius: 6px;
+  background: #f8faf8;
+  color: #455249;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ============================================================
+   FINAL
+   ============================================================ */
+
+.biblioteca-final {
+  padding: 72px 0;
+  background: linear-gradient(135deg, #193f26, #235a32);
+  color: #fff;
+}
+
+.biblioteca-final-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.biblioteca-final-content > div {
+  max-width: 760px;
+}
+
+.biblioteca-final .biblioteca-label {
+  color: #a8c9af;
+}
+
+.biblioteca-final h2 {
+  margin: 0 0 15px;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 780;
+  line-height: 1.2;
+}
+
+.biblioteca-final p {
+  margin: 0;
+  color: #d7e6da;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.biblioteca-final-link {
+  flex-shrink: 0;
+  padding: 13px 19px;
+  border-radius: 5px;
+  background: #fff;
+  color: #214d2c;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.biblioteca-final-link:hover {
+  background: #edf4ef;
+}
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .biblioteca-categorias-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .biblioteca-documentos-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .biblioteca-areas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .biblioteca-instituicoes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ============================================================
+   TABLET PEQUENO
+   ============================================================ */
+
+@media (max-width: 850px) {
+  .biblioteca-container {
+    width: min(100% - 30px, 1200px);
+  }
+
+  .biblioteca-pesquisa-box {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .biblioteca-section-heading {
+    display: block;
+  }
+
+  .biblioteca-count {
+    display: inline-block;
+    margin-top: 15px;
+  }
+
+  .biblioteca-angola-content,
+  .biblioteca-repositorio-box,
+  .biblioteca-final-content {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 28px;
+  }
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .biblioteca-container {
+    width: calc(100% - 24px);
+  }
+
+  .biblioteca-hero {
+    padding: 53px 0 70px;
+  }
+
+  .biblioteca-hero h1 {
+    font-size: 42px;
+    letter-spacing: -1.5px;
+  }
+
+  .biblioteca-hero-content > p {
+    font-size: 15px;
+  }
+
+  .biblioteca-hero-meta {
+    display: block;
+  }
+
+  .biblioteca-hero-meta span {
+    display: block;
+    margin: 0 0 8px;
+    padding: 0;
+  }
+
+  .biblioteca-hero-meta span::after {
+    display: none !important;
+  }
+
+  .biblioteca-pesquisa {
+    margin-top: -26px;
+  }
+
+  .biblioteca-pesquisa-box {
+    padding: 24px 20px;
+  }
+
+  .biblioteca-pesquisa-box h2 {
+    font-size: 23px;
+  }
+
+  .biblioteca-search {
+    display: block;
+    padding: 5px;
+  }
+
+  .biblioteca-search input {
+    display: block;
+    width: 100%;
+    height: 48px;
+  }
+
+  .biblioteca-search button {
+    display: block;
+    width: 100%;
+    height: 46px;
+  }
+
+  .biblioteca-section-heading h2 {
+    font-size: 26px;
+  }
+
+  .biblioteca-categorias {
+    padding: 50px 0 60px;
+  }
+
+  .biblioteca-categorias-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .biblioteca-categoria-card {
+    min-height: 180px;
+  }
+
+  .biblioteca-documentos {
+    padding: 60px 0;
+  }
+
+  .biblioteca-documentos-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .biblioteca-documento-card {
+    min-height: 0;
+  }
+
+  .biblioteca-areas {
+    padding: 60px 0;
+  }
+
+  .biblioteca-areas-grid {
+    grid-template-columns: 1fr;
+    margin-top: 28px;
+  }
+
+  .biblioteca-angola {
+    padding: 60px 0;
+  }
+
+  .biblioteca-angola-content {
+    padding: 28px 22px;
+  }
+
+  .biblioteca-angola h2 {
+    font-size: 26px;
+  }
+
+  .biblioteca-angola-link {
+    width: 100%;
+    text-align: center;
+  }
+
+  .biblioteca-repositorio {
+    padding: 60px 0;
+  }
+
+  .biblioteca-repositorio-box {
+    padding: 30px 22px;
+  }
+
+  .biblioteca-repositorio-box h2 {
+    font-size: 26px;
+  }
+
+  .biblioteca-publicar-link {
+    width: 100%;
+    text-align: center;
+  }
+
+  .biblioteca-instituicoes {
+    padding: 60px 0;
+  }
+
+  .biblioteca-instituicoes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .biblioteca-final {
+    padding: 58px 0;
+  }
+
+  .biblioteca-final h2 {
+    font-size: 26px;
+  }
+
+  .biblioteca-final-link {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   MOBILE PEQUENO
+   ============================================================ */
+
+@media (max-width: 380px) {
+  .biblioteca-container {
+    width: calc(100% - 20px);
+  }
+
+  .biblioteca-hero h1 {
+    font-size: 37px;
+  }
+
+  .biblioteca-pesquisa-box {
+    padding: 20px 16px;
+  }
+
+  .biblioteca-categoria-card,
+  .biblioteca-documento-card,
+  .biblioteca-angola-content,
+  .biblioteca-repositorio-box {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+}
+/* ============================================================
+   PUBLICAR — REPOSITÓRIO AGROINOVA ANGOLA
+   ============================================================ */
+
+.publicar-page {
+  min-height: 100vh;
+  background: #f5f7f5;
+  color: #1d2c22;
+}
+
+.publicar-page *,
+.publicar-page *::before,
+.publicar-page *::after {
+  box-sizing: border-box;
+}
+
+.publicar-container {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* HERO */
+
+.publicar-hero {
+  padding: 78px 0 88px;
+  background: linear-gradient(
+    135deg,
+    #123720 0%,
+    #1b4b2a 55%,
+    #28613a 100%
+  );
+  color: #fff;
+}
+
+.publicar-hero > .publicar-container {
+  max-width: 950px;
+  margin-left: max(20px, calc((100% - 1200px) / 2));
+}
+
+.publicar-kicker {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 8px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  color: #d8e8dc;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.publicar-hero h1 {
+  max-width: 900px;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(42px, 6vw, 64px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.05;
+}
+
+.publicar-hero p {
+  max-width: 760px;
+  margin: 25px 0 0;
+  color: #dfece2;
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+/* LABEL */
+
+.publicar-label {
+  display: block;
+  margin-bottom: 11px;
+  color: #327044;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+/* INFORMAÇÃO */
+
+.publicar-info {
+  padding: 78px 0;
+  background: #fff;
+}
+
+.publicar-heading {
+  max-width: 760px;
+  margin-bottom: 40px;
+}
+
+.publicar-heading h2 {
+  margin: 0 0 13px;
+  color: #1d2d22;
+  font-size: 32px;
+  font-weight: 780;
+  line-height: 1.2;
+}
+
+.publicar-heading p {
+  margin: 0;
+  color: #69746d;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.publicar-passos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.publicar-passo {
+  min-height: 210px;
+  padding: 25px;
+  border: 1px solid #dce4de;
+  border-radius: 8px;
+  background: #f8faf8;
+}
+
+.publicar-passo > span {
+  display: block;
+  margin-bottom: 22px;
+  color: #327044;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.publicar-passo h3 {
+  margin: 0 0 9px;
+  color: #213126;
+  font-size: 17px;
+}
+
+.publicar-passo p {
+  margin: 0;
+  color: #69746d;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* FORMULÁRIO */
+
+.publicar-form-section {
+  padding: 80px 0;
+  background: #f3f6f3;
+}
+
+.publicar-form-box {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 45px;
+  border: 1px solid #dce4de;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 15px 40px rgba(25, 54, 34, 0.07);
+}
+
+.publicar-form-header {
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e2e8e3;
+}
+
+.publicar-form-header h2 {
+  margin: 0 0 10px;
+  color: #1d2d22;
+  font-size: 32px;
+  font-weight: 780;
+}
+
+.publicar-form-header p {
+  margin: 0;
+  color: #69746d;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* CAMPOS */
+
+.publicar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.publicar-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.publicar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.publicar-field label {
+  color: #26372c;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.publicar-field input,
+.publicar-field select,
+.publicar-field textarea {
+  width: 100%;
+  border: 1px solid #ccd8ce;
+  border-radius: 5px;
+  outline: none;
+  background: #fbfcfb;
+  color: #26352b;
+  font-family: inherit;
+  font-size: 13px;
+  transition: 0.2s ease;
+}
+
+.publicar-field input,
+.publicar-field select {
+  height: 48px;
+  padding: 0 14px;
+}
+
+.publicar-field textarea {
+  min-height: 160px;
+  padding: 13px 14px;
+  resize: vertical;
+  line-height: 1.65;
+}
+
+.publicar-field input::placeholder,
+.publicar-field textarea::placeholder {
+  color: #929c95;
+}
+
+.publicar-field input:focus,
+.publicar-field select:focus,
+.publicar-field textarea:focus {
+  border-color: #4b875b;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(50, 112, 68, 0.08);
+}
+
+.publicar-field small {
+  color: #7c8780;
+  font-size: 11px;
+}
+
+/* UPLOAD */
+
+.publicar-upload {
+  padding: 18px;
+  border: 1px dashed #b9c9bc;
+  border-radius: 6px;
+  background: #f7faf7;
+}
+
+.publicar-upload input {
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.publicar-upload p {
+  margin: 9px 0 0;
+  color: #7a857d;
+  font-size: 11px;
+}
+
+/* DECLARAÇÃO */
+
+.publicar-declaracao {
+  padding: 17px;
+  border: 1px solid #dce4de;
+  border-radius: 6px;
+  background: #f7faf7;
+}
+
+.publicar-declaracao label {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  cursor: pointer;
+}
+
+.publicar-declaracao input {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: #28633a;
+}
+
+.publicar-declaracao span {
+  color: #59655d;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* SUBMIT */
+
+.publicar-submit {
+  padding-top: 8px;
+}
+
+.publicar-submit button {
+  min-height: 48px;
+  padding: 0 25px;
+  border: 0;
+  border-radius: 5px;
+  background: #28633a;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.publicar-submit button:hover {
+  background: #1e512e;
+  transform: translateY(-1px);
+}
+
+.publicar-submit p {
+  margin: 12px 0 0;
+  color: #7b867e;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* AVISO */
+
+.publicar-aviso {
+  padding: 70px 0;
+  background: #fff;
+}
+
+.publicar-aviso-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 45px;
+  padding: 42px;
+  border: 1px solid #dce4de;
+  border-radius: 9px;
+  background: #f4f8f4;
+}
+
+.publicar-aviso-box > div {
+  max-width: 760px;
+}
+
+.publicar-aviso-box h2 {
+  margin: 0 0 13px;
+  color: #203126;
+  font-size: 27px;
+  font-weight: 780;
+}
+
+.publicar-aviso-box p {
+  margin: 0;
+  color: #69756d;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.publicar-voltar {
+  flex-shrink: 0;
+  padding: 13px 19px;
+  border-radius: 5px;
+  background: #28633a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.publicar-voltar:hover {
+  background: #1e512e;
+}
+
+/* TABLET */
+
+@media (max-width: 1000px) {
+  .publicar-passos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* TABLET PEQUENO */
+
+@media (max-width: 800px) {
+  .publicar-container {
+    width: min(100% - 30px, 1200px);
+  }
+
+  .publicar-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .publicar-aviso-box {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .publicar-container {
+    width: calc(100% - 24px);
+  }
+
+  .publicar-hero {
+    padding: 52px 0 68px;
+  }
+
+  .publicar-hero > .publicar-container {
+    margin-left: auto;
+  }
+
+  .publicar-hero h1 {
+    font-size: 40px;
+    letter-spacing: -1.5px;
+  }
+
+  .publicar-hero p {
+    font-size: 15px;
+  }
+
+  .publicar-info {
+    padding: 58px 0;
+  }
+
+  .publicar-heading h2 {
+    font-size: 27px;
+  }
+
+  .publicar-passos {
+    grid-template-columns: 1fr;
+  }
+
+  .publicar-passo {
+    min-height: auto;
+  }
+
+  .publicar-form-section {
+    padding: 58px 0;
+  }
+
+  .publicar-form-box {
+    padding: 27px 20px;
+  }
+
+  .publicar-form-header h2 {
+    font-size: 27px;
+  }
+
+  .publicar-aviso {
+    padding: 55px 0;
+  }
+
+  .publicar-aviso-box {
+    padding: 28px 21px;
+  }
+
+  .publicar-aviso-box h2 {
+    font-size: 24px;
+  }
+
+  .publicar-voltar {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* MOBILE PEQUENO */
+
+@media (max-width: 380px) {
+  .publicar-container {
+    width: calc(100% - 20px);
+  }
+
+  .publicar-hero h1 {
+    font-size: 36px;
+  }
+
+  .publicar-form-box {
+    padding: 23px 16px;
+  }
+}
+
+/* =========================================================
+   ADMINISTRAÇÃO — SUBMISSÕES DO REPOSITÓRIO
+   ========================================================= */
+
+.admin-submissoes-page {
+  min-height: 100vh;
+  background: #f5f7f6;
+  color: #17231d;
+  padding-bottom: 80px;
+}
+
+.admin-submissoes-header {
+  background: #173d2a;
+  color: #ffffff;
+  padding: 70px 24px 65px;
+}
+
+.admin-submissoes-header > div {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.admin-kicker {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #b9d7c3;
+}
+
+.admin-submissoes-header h1 {
+  margin: 0;
+  max-width: 800px;
+  font-size: clamp(34px, 5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.admin-submissoes-header p {
+  max-width: 680px;
+  margin: 20px 0 0;
+  color: #dcebe1;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   INDICADORES
+   ========================================================= */
+
+.admin-indicadores {
+  width: min(1180px, calc(100% - 48px));
+  margin: -32px auto 45px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  position: relative;
+  z-index: 2;
+}
+
+.admin-indicador {
+  background: #ffffff;
+  border: 1px solid #e2e9e4;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(20, 50, 35, 0.08);
+}
+
+.admin-indicador span {
+  display: block;
+  margin-bottom: 8px;
+  color: #64736a;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.admin-indicador strong {
+  display: block;
+  color: #173d2a;
+  font-size: 34px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   LISTA
+   ========================================================= */
+
+.admin-lista {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.admin-lista-header {
+  margin-bottom: 24px;
+}
+
+.admin-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #527361;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.admin-lista-header h2 {
+  margin: 0;
+  color: #173d2a;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+
+/* =========================================================
+   ESTADO VAZIO
+   ========================================================= */
+
+.admin-vazio {
+  background: #ffffff;
+  border: 1px solid #e2e9e4;
+  border-radius: 18px;
+  padding: 50px 30px;
+  text-align: center;
+}
+
+.admin-vazio h3 {
+  margin: 0 0 10px;
+  color: #173d2a;
+  font-size: 22px;
+}
+
+.admin-vazio p {
+  margin: 0;
+  color: #69776f;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.admin-tabela {
+  display: grid;
+  gap: 20px;
+}
+
+.admin-card {
+  background: #ffffff;
+  border: 1px solid #e0e7e2;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 8px 24px rgba(20, 50, 35, 0.05);
+}
+
+.admin-card-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.admin-id {
+  color: #718078;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.admin-estado {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.estado-analise {
+  background: #fff4d8;
+  color: #86620a;
+}
+
+.estado-aprovada {
+  background: #e2f5e8;
+  color: #23713c;
+}
+
+.estado-rejeitada {
+  background: #fde7e7;
+  color: #9a3030;
+}
+
+.admin-card h3 {
+  margin: 0 0 25px;
+  color: #173d2a;
+  font-size: 25px;
+  line-height: 1.35;
+}
+
+
+/* =========================================================
+   DETALHES
+   ========================================================= */
+
+.admin-detalhes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  padding: 22px 0;
+  border-top: 1px solid #e8ede9;
+  border-bottom: 1px solid #e8ede9;
+}
+
+.admin-detalhes div {
+  min-width: 0;
+}
+
+.admin-detalhes span {
+  display: block;
+  margin-bottom: 5px;
+  color: #7a877f;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-detalhes strong {
+  display: block;
+  color: #26372d;
+  font-size: 14px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+
+/* =========================================================
+   RESUMO
+   ========================================================= */
+
+.admin-resumo {
+  padding: 24px 0;
+}
+
+.admin-resumo > span,
+.admin-documento span:first-child {
+  display: block;
+  margin-bottom: 8px;
+  color: #527361;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.admin-resumo p {
+  margin: 0;
+  color: #59675f;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+
+/* =========================================================
+   DOCUMENTO
+   ========================================================= */
+
+.admin-documento {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px;
+  background: #f5f8f6;
+  border: 1px solid #e1e9e3;
+  border-radius: 12px;
+}
+
+.admin-documento strong {
+  display: block;
+  color: #26372d;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.admin-documento > span:last-child {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: #173d2a;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   ACÇÕES
+   ========================================================= */
+
+.admin-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.admin-acoes button {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid #d8e1db;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #31503e;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.admin-acoes button:disabled {
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .admin-indicadores {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-detalhes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+  .admin-submissoes-header {
+    padding: 50px 20px 55px;
+  }
+
+  .admin-submissoes-header h1 {
+    font-size: 36px;
+  }
+
+  .admin-submissoes-header p {
+    font-size: 15px;
+  }
+
+  .admin-indicadores {
+    width: calc(100% - 32px);
+    margin-top: -25px;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .admin-indicador {
+    padding: 18px;
+    border-radius: 13px;
+  }
+
+  .admin-indicador strong {
+    font-size: 28px;
+  }
+
+  .admin-lista {
+    width: calc(100% - 32px);
+  }
+
+  .admin-lista-header h2 {
+    font-size: 25px;
+  }
+
+  .admin-card {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .admin-card-topo {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-card h3 {
+    font-size: 21px;
+  }
+
+  .admin-detalhes {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .admin-documento {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-acoes {
+    flex-direction: column;
+  }
+
+  .admin-acoes button {
+    width: 100%;
+  }
+
+}
+/* =========================================================
+   LOGIN ADMINISTRATIVO
+   ========================================================= */
+
+.admin-login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: #f4f7f5;
+}
+
+.admin-login-box {
+  width: min(460px, 100%);
+  background: #ffffff;
+  border: 1px solid #e0e8e2;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(20, 50, 35, 0.1);
+}
+
+.admin-login-header {
+  margin-bottom: 30px;
+}
+
+.admin-login-kicker {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #527361;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.admin-login-header h1 {
+  margin: 0;
+  color: #173d2a;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.admin-login-header p {
+  margin: 12px 0 0;
+  color: #68766e;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.admin-login-form {
+  display: grid;
+  gap: 20px;
+}
+
+.admin-login-field {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-login-field label {
+  color: #26372d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-login-field input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d5dfd8;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #17231d;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.admin-login-field input:focus {
+  border-color: #527361;
+  box-shadow: 0 0 0 3px rgba(82, 115, 97, 0.1);
+}
+
+.admin-login-form button {
+  min-height: 50px;
+  border: 0;
+  border-radius: 9px;
+  background: #173d2a;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.admin-login-form button:hover {
+  background: #22583c;
+}
+
+.admin-login-form button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.admin-login-erro {
+  margin-bottom: 20px;
+  padding: 13px 15px;
+  border: 1px solid #f0caca;
+  border-radius: 9px;
+  background: #fff1f1;
+  color: #9a3030;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.admin-login-aviso {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5ebe7;
+  color: #78847d;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .admin-login-page {
+    padding: 20px 15px;
+  }
+
+  .admin-login-box {
+    padding: 28px 22px;
+    border-radius: 16px;
+  }
+
+  .admin-login-header h1 {
+    font-size: 28px;
+  }
+}
+
+/* =========================================================
+   REPOSITÓRIO AGROINOVA — PÁGINA DE DETALHE
+   ========================================================= */
+
+.repositorio-detalhe-page {
+  min-height: 100vh;
+  background: #f5f7f4;
+  color: #17251c;
+}
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.repositorio-detalhe-container,
+.repositorio-detalhe-grid {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.repositorio-detalhe-hero {
+  position: relative;
+  padding: 34px 0 76px;
+  background:
+    linear-gradient(
+      135deg,
+      #123c25 0%,
+      #1d6038 55%,
+      #2c7547 100%
+    );
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.repositorio-detalhe-hero::after {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -160px;
+  top: -190px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.repositorio-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 54px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.repositorio-voltar:hover {
+  color: #ffffff;
+}
+
+.repositorio-kicker {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: #b9e3c5;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.repositorio-tipo {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 13px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.repositorio-detalhe-hero h1 {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 0 22px;
+  font-size: clamp(2rem, 4.5vw, 3.7rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  font-weight: 800;
+}
+
+.repositorio-autor {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 7px;
+  color: #ffffff;
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.repositorio-instituicao {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.96rem;
+}
+
+/* =========================================================
+   CONTEÚDO
+   ========================================================= */
+
+.repositorio-detalhe-conteudo {
+  padding: 64px 0 90px;
+}
+
+.repositorio-detalhe-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 34px;
+  align-items: start;
+}
+
+/* =========================================================
+   BLOCOS PRINCIPAIS
+   ========================================================= */
+
+.repositorio-bloco {
+  padding: 34px;
+  margin-bottom: 24px;
+  border: 1px solid #e1e7e1;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(20, 50, 30, 0.05);
+}
+
+.repositorio-label {
+  display: block;
+  margin-bottom: 9px;
+  color: #2c7044;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.repositorio-bloco h2,
+.repositorio-ficha h2 {
+  margin: 0 0 20px;
+  color: #17251c;
+  font-size: 1.45rem;
+  line-height: 1.25;
+}
+
+.repositorio-resumo {
+  margin: 0;
+  color: #4c5b50;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+/* =========================================================
+   PALAVRAS-CHAVE
+   ========================================================= */
+
+.repositorio-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.repositorio-tags span {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 13px;
+  border-radius: 999px;
+  background: #edf5ee;
+  color: #28613b;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* =========================================================
+   DOCUMENTO
+   ========================================================= */
+
+.repositorio-documento {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 30px;
+  border-radius: 18px;
+  background: #173d26;
+  color: #ffffff;
+  box-shadow: 0 12px 32px rgba(17, 57, 34, 0.12);
+}
+
+.repositorio-documento .repositorio-label {
+  color: #a9d8b5;
+}
+
+.repositorio-documento h2 {
+  margin: 0 0 8px;
+  color: #ffffff;
+  font-size: 1.35rem;
+}
+
+.repositorio-documento p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.repositorio-documento-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.repositorio-btn-principal,
+.repositorio-btn-secundario {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 175px;
+  padding: 12px 18px;
+  border-radius: 9px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.repositorio-btn-principal {
+  background: #ffffff;
+  color: #173d26;
+}
+
+.repositorio-btn-principal:hover {
+  transform: translateY(-2px);
+  background: #eef7f0;
+}
+
+.repositorio-btn-secundario {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #ffffff;
+}
+
+.repositorio-btn-secundario:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================================
+   LATERAL
+   ========================================================= */
+
+.repositorio-detalhe-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.repositorio-ficha {
+  padding: 28px;
+  border: 1px solid #e1e7e1;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(20, 50, 30, 0.05);
+}
+
+.repositorio-ficha dl {
+  margin: 0;
+}
+
+.repositorio-ficha dl > div {
+  padding: 14px 0;
+  border-top: 1px solid #edf0ed;
+}
+
+.repositorio-ficha dl > div:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.repositorio-ficha dt {
+  margin-bottom: 5px;
+  color: #78837b;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.repositorio-ficha dd {
+  margin: 0;
+  color: #25342a;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   NOTA DE APROVAÇÃO
+   ========================================================= */
+
+.repositorio-nota {
+  padding: 24px;
+  border: 1px solid #cfe4d3;
+  border-radius: 16px;
+  background: #edf8ef;
+}
+
+.repositorio-nota strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #236238;
+  font-size: 0.95rem;
+}
+
+.repositorio-nota p {
+  margin: 0;
+  color: #4d6754;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .repositorio-detalhe-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .repositorio-detalhe-aside {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .repositorio-documento {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .repositorio-documento-acoes {
+    width: 100%;
+    flex-direction: row;
+  }
+
+  .repositorio-btn-principal,
+  .repositorio-btn-secundario {
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .repositorio-detalhe-container,
+  .repositorio-detalhe-grid {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .repositorio-detalhe-hero {
+    padding: 24px 0 52px;
+  }
+
+  .repositorio-voltar {
+    margin-bottom: 38px;
+  }
+
+  .repositorio-detalhe-hero h1 {
+    font-size: 2rem;
+  }
+
+  .repositorio-detalhe-conteudo {
+    padding: 38px 0 60px;
+  }
+
+  .repositorio-bloco,
+  .repositorio-ficha {
+    padding: 24px 20px;
+  }
+
+  .repositorio-documento {
+    padding: 24px 20px;
+  }
+
+  .repositorio-detalhe-aside {
+    display: flex;
+  }
+
+  .repositorio-documento-acoes {
+    flex-direction: column;
+  }
+
+  .repositorio-btn-principal,
+  .repositorio-btn-secundario {
+    width: 100%;
   }
 }

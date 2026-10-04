@@ -1,58 +1,258 @@
+import Link from "next/link";
+
+interface Cultura {
+  slug: string;
+  nome: string;
+  nomeCientifico: string;
+  grupo: string;
+  descricao: string;
+  temas: string[];
+}
+
+const culturas: Cultura[] = [
+  {
+    slug: "milho",
+    nome: "Milho",
+    nomeCientifico: "Zea mays L.",
+    grupo: "Cereais",
+    descricao:
+      "Informação técnica sobre produção, escolha de sementes, instalação da cultura, nutrição, maneio, sanidade, colheita e pós-colheita.",
+    temas: [
+      "Produção",
+      "Sementes",
+      "Nutrição",
+      "Pragas e doenças",
+    ],
+  },
+  {
+    slug: "mandioca",
+    nome: "Mandioca",
+    nomeCientifico: "Manihot esculenta Crantz",
+    grupo: "Raízes e tubérculos",
+    descricao:
+      "Orientações técnicas sobre material de plantio, instalação, nutrição, água, doenças, pragas, colheita e aproveitamento.",
+    temas: [
+      "Produção",
+      "Material de plantio",
+      "Sanidade",
+      "Pós-colheita",
+    ],
+  },
+  {
+    slug: "feijao",
+    nome: "Feijão",
+    nomeCientifico: "Phaseolus vulgaris L.",
+    grupo: "Leguminosas",
+    descricao:
+      "Conhecimento técnico sobre implantação, cultivares, fertilidade do solo, maneio, sanidade, colheita e conservação.",
+    temas: [
+      "Cultivo",
+      "Cultivares",
+      "Fertilização",
+      "Sanidade",
+    ],
+  },
+  {
+    slug: "soja",
+    nome: "Soja",
+    nomeCientifico: "Glycine max (L.) Merr.",
+    grupo: "Oleaginosas",
+    descricao:
+      "Informação técnica sobre implantação da cultura, variedades, nutrição, inoculação, maneio, sanidade e colheita.",
+    temas: [
+      "Produção",
+      "Variedades",
+      "Nutrição",
+      "Maneio",
+    ],
+  },
+  {
+    slug: "arroz",
+    nome: "Arroz",
+    nomeCientifico: "Oryza sativa L.",
+    grupo: "Cereais",
+    descricao:
+      "Orientações sobre produção de arroz, preparação do terreno, sementes, água, fertilização, sanidade e colheita.",
+    temas: [
+      "Produção",
+      "Irrigação",
+      "Sementes",
+      "Colheita",
+    ],
+  },
+  {
+    slug: "cafe",
+    nome: "Café",
+    nomeCientifico: "Coffea spp.",
+    grupo: "Culturas permanentes",
+    descricao:
+      "Conhecimento técnico sobre implantação, variedades, sombra, nutrição, poda, sanidade, colheita e processamento.",
+    temas: [
+      "Implantação",
+      "Maneio",
+      "Sanidade",
+      "Processamento",
+    ],
+  },
+  {
+    slug: "batata-doce",
+    nome: "Batata-doce",
+    nomeCientifico: "Ipomoea batatas (L.) Lam.",
+    grupo: "Raízes e tubérculos",
+    descricao:
+      "Informação sobre material de plantio, preparação do terreno, instalação, nutrição, sanidade e colheita.",
+    temas: [
+      "Produção",
+      "Plantio",
+      "Sanidade",
+      "Colheita",
+    ],
+  },
+  {
+    slug: "amendoim",
+    nome: "Amendoim",
+    nomeCientifico: "Arachis hypogaea L.",
+    grupo: "Oleaginosas",
+    descricao:
+      "Orientações sobre implantação, variedades, fertilidade, maneio da cultura, sanidade e colheita.",
+    temas: [
+      "Produção",
+      "Variedades",
+      "Fertilização",
+      "Colheita",
+    ],
+  },
+];
+
+const grupos = [
+  "Todas",
+  "Cereais",
+  "Leguminosas",
+  "Oleaginosas",
+  "Raízes e tubérculos",
+  "Culturas permanentes",
+];
+
+const manuais = [
+  {
+    titulo: "Maize Hybrid Seed Production Manual",
+    autores:
+      "John F. MacRobert; Peter Setimela; James Gethi; Mosisa Worku Regasa",
+    instituicao: "CIMMYT",
+    ano: "2014",
+    cultura: "Milho",
+  },
+  {
+    titulo: "Save and Grow: Cassava",
+    autores: "Reinhardt Howeler; NeBambi Lutaladio; Graeme Thomas",
+    instituicao: "FAO",
+    ano: "2013",
+    cultura: "Mandioca",
+  },
+  {
+    titulo:
+      "Produção informal de semente de feijão comum com qualidade",
+    autores: "Agostinho Dirceu Didonet",
+    instituicao: "Embrapa",
+    ano: "2013",
+    cultura: "Feijão",
+  },
+];
+
+const autores = [
+  {
+    nome: "John F. MacRobert",
+    funcao: "Investigador / especialista em produção de sementes",
+    instituicao: "CIMMYT",
+    foto: "/images/agricultura/autores/john-macrobert.jpg",
+  },
+  {
+    nome: "Peter Setimela",
+    funcao: "Investigador / especialista em sementes",
+    instituicao: "CIMMYT",
+    foto: "/images/agricultura/autores/peter-setimela.jpg",
+  },
+  {
+    nome: "Reinhardt Howeler",
+    funcao: "Investigador / especialista em mandioca e solos",
+    instituicao: "CIAT / FAO",
+    foto: "/images/agricultura/autores/reinhardt-howeler.jpg",
+  },
+  {
+    nome: "Agostinho Dirceu Didonet",
+    funcao: "Investigador em produção de sementes",
+    instituicao: "Embrapa",
+    foto: "/images/agricultura/autores/agostinho-didonet.jpg",
+  },
+];
 
 export default function AgriculturaPage() {
   return (
-    <main className="min-h-screen bg-gray-50 text-gray-900">
+    <main className="agricultura-page">
+
       {/* HERO */}
-      <section className="bg-green-800 text-white">
 
-        <div className="mx-auto max-w-7xl px-6 py-20">
+      <section className="agricultura-hero">
+        <div className="agricultura-container">
 
-          <div className="max-w-3xl">
+          <div className="agricultura-hero-content">
 
-            <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-green-300">
-              Agricultura em Angola
-            </p>
+            <span className="agricultura-kicker">
+              CENTRO DE CONHECIMENTO AGRÍCOLA
+            </span>
 
-            <h1 className="text-4xl font-bold leading-tight md:text-6xl">
-              Conhecimento para produzir,
-              <span className="block text-green-300">
-                inovar e transformar.
-              </span>
+            <h1>
+              Agricultura
             </h1>
 
-            <p className="mt-6 text-lg leading-8 text-green-50">
-              Encontre informações sobre culturas agrícolas, técnicas
-              de produção, boas práticas, inovação e desenvolvimento
-              sustentável do sector agrícola angolano.
+            <p>
+              Informação técnica, manuais e conhecimento científico
+              para apoiar a produção agrícola em Angola.
             </p>
+
+            <div className="agricultura-hero-meta">
+              <span>Produção agrícola</span>
+              <span>Orientações técnicas</span>
+              <span>Manuais</span>
+              <span>Referências científicas</span>
+            </div>
 
           </div>
 
         </div>
-
       </section>
 
 
       {/* PESQUISA */}
-      <section className="bg-white py-10">
 
-        <div className="mx-auto max-w-5xl px-6">
+      <section className="agricultura-pesquisa">
+        <div className="agricultura-container">
 
-          <div className="rounded-2xl border bg-gray-50 p-5">
+          <div className="agricultura-pesquisa-box">
 
-            <label className="mb-3 block text-sm font-semibold">
-              Pesquisar informação agrícola
-            </label>
+            <div>
+              <span className="agricultura-label">
+                BASE DE CONHECIMENTO
+              </span>
 
-            <div className="flex flex-col gap-3 md:flex-row">
+              <h2>
+                Encontre uma cultura agrícola
+              </h2>
+
+              <p>
+                Pesquise por cultura, grupo agrícola ou tema técnico.
+              </p>
+            </div>
+
+            <div className="agricultura-search">
 
               <input
-                type="text"
-                placeholder="Ex.: milho, mandioca, soja, café..."
-                className="flex-1 rounded-lg border border-gray-200 bg-white px-5 py-3 outline-none focus:border-green-600"
+                type="search"
+                placeholder="Pesquisar milho, mandioca, feijão, soja..."
+                aria-label="Pesquisar cultura agrícola"
               />
 
-              <button className="rounded-lg bg-green-700 px-7 py-3 font-semibold text-white hover:bg-green-800">
+              <button type="button">
                 Pesquisar
               </button>
 
@@ -61,287 +261,369 @@ export default function AgriculturaPage() {
           </div>
 
         </div>
-
       </section>
 
 
       {/* CULTURAS */}
-      <section className="py-20">
 
-        <div className="mx-auto max-w-7xl px-6">
+      <section className="agricultura-culturas">
+        <div className="agricultura-container">
 
-          <div className="max-w-2xl">
+          <div className="agricultura-section-heading">
 
-            <p className="text-sm font-bold uppercase tracking-wider text-green-700">
-              Culturas agrícolas
-            </p>
+            <div>
+              <span className="agricultura-label">
+                CULTURAS AGRÍCOLAS
+              </span>
 
-            <h2 className="mt-2 text-3xl font-bold">
-              Principais culturas
-            </h2>
+              <h2>
+                Biblioteca técnica de culturas
+              </h2>
 
-            <p className="mt-4 text-gray-600">
-              Explore informações básicas sobre diferentes culturas
-              agrícolas importantes para Angola.
-            </p>
+              <p>
+                Seleccione uma cultura para consultar a sua ficha
+                técnica, orientações de produção, referências e
+                materiais de apoio.
+              </p>
+            </div>
+
+            <span className="agricultura-count">
+              {culturas.length} culturas
+            </span>
 
           </div>
 
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="agricultura-filtros">
 
-            {/* MILHO */}
-            <div className="rounded-2xl border bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-
-              <div className="text-5xl">
-                🌽
-              </div>
-
-              <h3 className="mt-5 text-xl font-bold">
-                Milho
-              </h3>
-
-              <p className="mt-3 text-sm leading-6 text-gray-600">
-                Informação sobre produção, variedades, manejo,
-                pragas e boas práticas.
-              </p>
-
-              <button className="mt-5 font-semibold text-green-700">
-                Ver cultura →
+            {grupos.map((grupo, index) => (
+              <button
+                key={grupo}
+                type="button"
+                className={
+                  index === 0
+                    ? "agricultura-filtro active"
+                    : "agricultura-filtro"
+                }
+              >
+                {grupo}
               </button>
+            ))}
 
-            </div>
-
-
-            {/* MANDIOCA */}
-            <div className="rounded-2xl border bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-
-              <div className="text-5xl">
-                🌿
-              </div>
-
-              <h3 className="mt-5 text-xl font-bold">
-                Mandioca
-              </h3>
-
-              <p className="mt-3 text-sm leading-6 text-gray-600">
-                Características, produção, processamento e
-                aproveitamento da mandioca.
-              </p>
-
-              <button className="mt-5 font-semibold text-green-700">
-                Ver cultura →
-              </button>
-
-            </div>
+          </div>
 
 
-            {/* FEIJÃO */}
-            <div className="rounded-2xl border bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+          <div className="agricultura-culturas-grid">
 
-              <div className="text-5xl">
-                🫘
-              </div>
+            {culturas.map((cultura) => (
+              <article
+                key={cultura.slug}
+                className="agricultura-cultura-card"
+              >
 
-              <h3 className="mt-5 text-xl font-bold">
-                Feijão
-              </h3>
+                <div className="agricultura-cultura-top">
 
-              <p className="mt-3 text-sm leading-6 text-gray-600">
-                Técnicas de cultivo, variedades, manejo e
-                conservação da produção.
-              </p>
+                  <span className="agricultura-cultura-grupo">
+                    {cultura.grupo}
+                  </span>
 
-              <button className="mt-5 font-semibold text-green-700">
-                Ver cultura →
-              </button>
+                  <span className="agricultura-cultura-numero">
+                    CULTURA
+                  </span>
 
-            </div>
+                </div>
 
+                <h3>
+                  {cultura.nome}
+                </h3>
 
-            {/* SOJA */}
-            <div className="rounded-2xl border bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+                <p className="agricultura-nome-cientifico">
+                  {cultura.nomeCientifico}
+                </p>
 
-              <div className="text-5xl">
-                🌱
-              </div>
+                <p className="agricultura-cultura-descricao">
+                  {cultura.descricao}
+                </p>
 
-              <h3 className="mt-5 text-xl font-bold">
-                Soja
-              </h3>
+                <div className="agricultura-cultura-tags">
 
-              <p className="mt-3 text-sm leading-6 text-gray-600">
-                Informação sobre cultivo, produtividade,
-                manejo e tecnologias.
-              </p>
+                  {cultura.temas.map((tema) => (
+                    <span key={tema}>
+                      {tema}
+                    </span>
+                  ))}
 
-              <button className="mt-5 font-semibold text-green-700">
-                Ver cultura →
-              </button>
+                </div>
 
-            </div>
+                <Link
+                  href={`/agricultura/${cultura.slug}`}
+                  className="agricultura-cultura-link"
+                >
+                  Consultar cultura
+                  <span>→</span>
+                </Link>
+
+              </article>
+            ))}
 
           </div>
 
         </div>
-
       </section>
 
 
-      {/* ÁREAS DE CONHECIMENTO */}
-      <section className="bg-white py-20">
+      {/* MANUAIS */}
 
-        <div className="mx-auto max-w-7xl px-6">
+      <section className="agricultura-manuais">
+        <div className="agricultura-container">
 
-          <div className="text-center">
+          <div className="agricultura-section-heading">
 
-            <p className="text-sm font-bold uppercase tracking-wider text-green-700">
-              Conhecimento agrícola
-            </p>
+            <div>
+              <span className="agricultura-label">
+                BIBLIOTECA TÉCNICA
+              </span>
 
-            <h2 className="mt-2 text-3xl font-bold">
-              Encontre informação por área
-            </h2>
+              <h2>
+                Manuais e documentos de referência
+              </h2>
+
+              <p>
+                Materiais técnicos publicados por instituições
+                científicas e organismos especializados.
+              </p>
+            </div>
+
+            <Link
+              href="/biblioteca"
+              className="agricultura-link-geral"
+            >
+              Ver biblioteca →
+            </Link>
 
           </div>
 
 
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="agricultura-manuais-grid">
 
-            <div className="rounded-2xl bg-green-50 p-7">
+            {manuais.map((manual) => (
+              <article
+                key={manual.titulo}
+                className="agricultura-manual-card"
+              >
 
-              <div className="text-4xl">
-                🌱
-              </div>
+                <div className="agricultura-manual-tipo">
+                  MANUAL TÉCNICO
+                </div>
 
-              <h3 className="mt-5 text-xl font-bold">
-                Produção agrícola
-              </h3>
+                <h3>
+                  {manual.titulo}
+                </h3>
 
-              <p className="mt-3 leading-7 text-gray-600">
-                Técnicas de preparação do solo, plantio, manejo,
-                colheita e pós-colheita.
-              </p>
+                <p>
+                  <strong>Autores:</strong>{" "}
+                  {manual.autores}
+                </p>
 
-            </div>
+                <div className="agricultura-manual-meta">
+                  <span>{manual.instituicao}</span>
+                  <span>{manual.ano}</span>
+                  <span>{manual.cultura}</span>
+                </div>
 
+                <Link
+                  href="/biblioteca"
+                  className="agricultura-manual-link"
+                >
+                  Consultar documento →
+                </Link>
 
-            <div className="rounded-2xl bg-green-50 p-7">
-
-              <div className="text-4xl">
-                🐛
-              </div>
-
-              <h3 className="mt-5 text-xl font-bold">
-                Pragas e doenças
-              </h3>
-
-              <p className="mt-3 leading-7 text-gray-600">
-                Informação para identificação e gestão de problemas
-                que afectam as culturas.
-              </p>
-
-            </div>
-
-
-            <div className="rounded-2xl bg-green-50 p-7">
-
-              <div className="text-4xl">
-                💧
-              </div>
-
-              <h3 className="mt-5 text-xl font-bold">
-                Irrigação
-              </h3>
-
-              <p className="mt-3 leading-7 text-gray-600">
-                Conhecimentos sobre gestão da água e sistemas de
-                irrigação agrícola.
-              </p>
-
-            </div>
-
-
-            <div className="rounded-2xl bg-green-50 p-7">
-
-              <div className="text-4xl">
-                🌍
-              </div>
-
-              <h3 className="mt-5 text-xl font-bold">
-                Solos
-              </h3>
-
-              <p className="mt-3 leading-7 text-gray-600">
-                Informações sobre características, conservação e
-                fertilidade dos solos.
-              </p>
-
-            </div>
-
-
-            <div className="rounded-2xl bg-green-50 p-7">
-
-              <div className="text-4xl">
-                ☀️
-              </div>
-
-              <h3 className="mt-5 text-xl font-bold">
-                Clima
-              </h3>
-
-              <p className="mt-3 leading-7 text-gray-600">
-                Informação climática relevante para o planeamento
-                das actividades agrícolas.
-              </p>
-
-            </div>
-
-
-            <div className="rounded-2xl bg-green-50 p-7">
-
-              <div className="text-4xl">
-                🚜
-              </div>
-
-              <h3 className="mt-5 text-xl font-bold">
-                Mecanização
-              </h3>
-
-              <p className="mt-3 leading-7 text-gray-600">
-                Tecnologias e equipamentos utilizados na produção
-                agrícola moderna.
-              </p>
-
-            </div>
+              </article>
+            ))}
 
           </div>
 
         </div>
-
       </section>
 
 
-      {/* CTA */}
-      <section className="bg-green-700 py-20 text-white">
+      {/* AUTORES */}
 
-        <div className="mx-auto max-w-4xl px-6 text-center">
+      <section className="agricultura-autores">
+        <div className="agricultura-container">
 
-          <h2 className="text-3xl font-bold md:text-4xl">
-            O conhecimento começa com o acesso à informação.
-          </h2>
+          <div className="agricultura-section-heading">
 
-          <p className="mt-5 leading-7 text-green-100">
-            A AGROINOVA ANGOLA pretende reunir conhecimento agrícola
-            num único espaço digital.
-          </p>
+            <div>
+              <span className="agricultura-label">
+                CONTRIBUIÇÕES CIENTÍFICAS
+              </span>
 
-          <button className="mt-8 rounded-lg bg-white px-7 py-3 font-semibold text-green-800 hover:bg-gray-100">
-            Explorar conhecimento
-          </button>
+              <h2>
+                Investigadores e especialistas
+              </h2>
+
+              <p>
+                Pessoas cujos trabalhos e publicações contribuem
+                para o conhecimento técnico disponibilizado nesta
+                plataforma.
+              </p>
+            </div>
+
+          </div>
+
+
+          <div className="agricultura-autores-grid">
+
+            {autores.map((autor) => (
+              <article
+                key={autor.nome}
+                className="agricultura-autor-card"
+              >
+
+                <div className="agricultura-autor-foto">
+
+                  <img
+                    src={autor.foto}
+                    alt={`Fotografia de ${autor.nome}`}
+                  />
+
+                </div>
+
+                <div className="agricultura-autor-info">
+
+                  <span>
+                    {autor.instituicao}
+                  </span>
+
+                  <h3>
+                    {autor.nome}
+                  </h3>
+
+                  <p>
+                    {autor.funcao}
+                  </p>
+
+                  <button type="button">
+                    Ver contribuições
+                  </button>
+
+                </div>
+
+              </article>
+            ))}
+
+          </div>
 
         </div>
+      </section>
 
+
+      {/* ÁREAS TÉCNICAS */}
+
+      <section className="agricultura-areas">
+        <div className="agricultura-container">
+
+          <div className="agricultura-section-heading centered">
+
+            <div>
+              <span className="agricultura-label">
+                ORIENTAÇÕES TÉCNICAS
+              </span>
+
+              <h2>
+                Conhecimento organizado por tema
+              </h2>
+
+              <p>
+                Consulte conteúdos técnicos que atravessam
+                diferentes culturas agrícolas.
+              </p>
+            </div>
+
+          </div>
+
+
+          <div className="agricultura-areas-grid">
+
+            <Link href="/agricultura" className="agricultura-area-card">
+              <strong>Preparação do solo</strong>
+              <span>
+                Planeamento, mobilização e conservação.
+              </span>
+            </Link>
+
+            <Link href="/agricultura" className="agricultura-area-card">
+              <strong>Sementes e variedades</strong>
+              <span>
+                Qualidade, escolha e utilização de sementes.
+              </span>
+            </Link>
+
+            <Link href="/agricultura" className="agricultura-area-card">
+              <strong>Nutrição vegetal</strong>
+              <span>
+                Fertilidade, adubação e nutrição das culturas.
+              </span>
+            </Link>
+
+            <Link href="/agricultura" className="agricultura-area-card">
+              <strong>Pragas e doenças</strong>
+              <span>
+                Identificação, prevenção e maneio integrado.
+              </span>
+            </Link>
+
+            <Link href="/agricultura" className="agricultura-area-card">
+              <strong>Água e irrigação</strong>
+              <span>
+                Gestão da água e eficiência no uso.
+              </span>
+            </Link>
+
+            <Link href="/agricultura" className="agricultura-area-card">
+              <strong>Colheita e pós-colheita</strong>
+              <span>
+                Redução de perdas, conservação e qualidade.
+              </span>
+            </Link>
+
+          </div>
+
+        </div>
+      </section>
+
+
+      {/* FINAL */}
+
+      <section className="agricultura-final">
+        <div className="agricultura-container">
+
+          <div>
+            <span className="agricultura-label">
+              AGROINOVA ANGOLA
+            </span>
+
+            <h2>
+              Conhecimento técnico ao serviço
+              da agricultura angolana.
+            </h2>
+
+            <p>
+              Uma base nacional de conhecimento que aproxima
+              produtores, técnicos, investigadores, estudantes
+              e instituições do conhecimento agrícola.
+            </p>
+          </div>
+
+          <Link
+            href="/biblioteca"
+            className="agricultura-final-link"
+          >
+            Explorar biblioteca técnica →
+          </Link>
+
+        </div>
       </section>
 
     </main>

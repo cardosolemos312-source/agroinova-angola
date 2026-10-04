@@ -1,6 +1,7 @@
 
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 type Especie =
@@ -147,6 +148,19 @@ export default function PecuariaPage() {
     (item) => item.id === especieSelecionada
   );
 
+  const parametrosOrientacao =
+    `?provincia=${encodeURIComponent(
+      provincia
+    )}&finalidade=${encodeURIComponent(
+      finalidade
+    )}`;
+
+  const linkOrientacoes =
+    `/pecuaria/bovinos/orientacoes${parametrosOrientacao}`;
+
+  const linkOrientacao = (tema: string) =>
+    `/pecuaria/bovinos/orientacoes/${tema}${parametrosOrientacao}`;
+
   return (
     <main className="pecuaria-page">
 
@@ -177,12 +191,12 @@ export default function PecuariaPage() {
 
           <div className="pecuaria-hero-acoes">
 
-            <a
-              href="#painel"
+            <Link
+              href={linkOrientacoes}
               className="pecuaria-hero-btn principal"
             >
               Começar orientação
-            </a>
+            </Link>
 
             <a
               href="#apoio"
@@ -222,7 +236,6 @@ export default function PecuariaPage() {
             </p>
 
           </div>
-
 
           <div className="pecuaria-especies-selector">
 
@@ -393,7 +406,6 @@ export default function PecuariaPage() {
                   da sua exploração.
                 </p>
 
-
                 <div className="pecuaria-finalidades">
 
                   {finalidades.map(
@@ -457,9 +469,7 @@ export default function PecuariaPage() {
               </div>
 
               <span className="pecuaria-orientacao-local">
-
                 📍 {provincia}
-
               </span>
 
             </div>
@@ -484,9 +494,12 @@ export default function PecuariaPage() {
                   raças antes de escolher.
                 </p>
 
-                <button type="button">
+                <Link
+                  href={linkOrientacao("racas")}
+                  className="pecuaria-orientacao-link"
+                >
                   Ver raças →
-                </button>
+                </Link>
 
               </article>
 
@@ -507,9 +520,12 @@ export default function PecuariaPage() {
                   alimentos na região.
                 </p>
 
-                <button type="button">
+                <Link
+                  href={linkOrientacao("alimentacao")}
+                  className="pecuaria-orientacao-link"
+                >
                   Ver orientação →
-                </button>
+                </Link>
 
               </article>
 
@@ -530,9 +546,12 @@ export default function PecuariaPage() {
                   e bem-estar animal.
                 </p>
 
-                <button type="button">
+                <Link
+                  href={linkOrientacao("instalacoes")}
+                  className="pecuaria-orientacao-link"
+                >
                   Ver orientação →
-                </button>
+                </Link>
 
               </article>
 
@@ -553,9 +572,12 @@ export default function PecuariaPage() {
                   a saúde do efectivo.
                 </p>
 
-                <button type="button">
+                <Link
+                  href={linkOrientacao("sanidade")}
+                  className="pecuaria-orientacao-link"
+                >
                   Ver cuidados →
-                </button>
+                </Link>
 
               </article>
 
@@ -575,9 +597,12 @@ export default function PecuariaPage() {
                   selecção e gestão do efectivo.
                 </p>
 
-                <button type="button">
+                <Link
+                  href={linkOrientacao("reproducao")}
+                  className="pecuaria-orientacao-link"
+                >
                   Ver orientação →
-                </button>
+                </Link>
 
               </article>
 
@@ -597,9 +622,12 @@ export default function PecuariaPage() {
                   suficiente de água para os animais.
                 </p>
 
-                <button type="button">
+                <Link
+                  href={linkOrientacao("agua")}
+                  className="pecuaria-orientacao-link"
+                >
                   Ver orientação →
-                </button>
+                </Link>
 
               </article>
 
@@ -682,9 +710,12 @@ export default function PecuariaPage() {
                 de maneio.
               </p>
 
-              <button type="button">
+              <Link
+                href={linkOrientacao("racas")}
+                className="pecuaria-orientacao-link"
+              >
                 Explorar raças →
-              </button>
+              </Link>
 
             </article>
 
@@ -704,9 +735,12 @@ export default function PecuariaPage() {
                 utilizadas para produção de carne.
               </p>
 
-              <button type="button">
+              <Link
+                href={linkOrientacao("racas")}
+                className="pecuaria-orientacao-link"
+              >
                 Explorar raças →
-              </button>
+              </Link>
 
             </article>
 
@@ -727,9 +761,12 @@ export default function PecuariaPage() {
                 produtivos.
               </p>
 
-              <button type="button">
+              <Link
+                href={linkOrientacao("racas")}
+                className="pecuaria-orientacao-link"
+              >
                 Explorar raças →
-              </button>
+              </Link>
 
             </article>
 
@@ -1093,12 +1130,12 @@ export default function PecuariaPage() {
           </div>
 
 
-          <a
+          <Link
             href="/dados"
             className="pecuaria-dados-btn"
           >
             Explorar dados da Pecuária →
-          </a>
+          </Link>
 
         </div>
 

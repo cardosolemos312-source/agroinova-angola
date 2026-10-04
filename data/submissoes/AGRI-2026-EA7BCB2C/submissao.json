@@ -1,0 +1,28 @@
+{
+  "id": "AGRI-2026-EA7BCB2C",
+  "estado": "Aprovada",
+  "dataSubmissao": "2026-10-04T21:28:14.519Z",
+  "tipo": "artigo",
+  "titulo": "PRODUÇÃO AGRICOLA",
+  "autor": "LUCIANO SIMÕES LEMOS",
+  "instituicao": "AHAVA",
+  "email": "heythanlemossantos@gmail.com",
+  "orcid": "1234",
+  "area": "agricultura",
+  "provincia": "huambo",
+  "ano": "2023",
+  "palavrasChave": [
+    "milho",
+    "agricultura sustentável",
+    "agricultura familiar",
+    "Angola",
+    "produtividade"
+  ],
+  "resumo": "Este trabalho apresenta uma análise experimental sobre práticas sustentáveis aplicáveis à produção de milho, com atenção às condições da agricultura familiar em Angola. O estudo aborda aspectos relacionados com preparação do solo, escolha de sementes, gestão da água e adopção de boas práticas agrícolas.",
+  "documento": {
+    "nomeOriginal": "benjamim.pdf",
+    "nomeGuardado": "documento.pdf",
+    "tamanho": 538688,
+    "tipo": "application/pdf"
+  }
+}
