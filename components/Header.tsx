@@ -13,9 +13,14 @@ export default function Header() {
   }
 
   function alternarDropdown(nome: string) {
-    setDropdownAberto(
-      dropdownAberto === nome ? null : nome
+    setDropdownAberto((atual) =>
+      atual === nome ? null : nome
     );
+  }
+
+  function abrirMenu() {
+    setMenuAberto((atual) => !atual);
+    setDropdownAberto(null);
   }
 
   return (
@@ -47,22 +52,17 @@ export default function Header() {
         <button
           type="button"
           className="mobile-menu-button"
-          onClick={() => {
-            setMenuAberto(!menuAberto);
-            setDropdownAberto(null);
-          }}
-          aria-label={
-            menuAberto
-              ? "Fechar menu"
-              : "Abrir menu"
-          }
+          onClick={abrirMenu}
+          aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
           aria-expanded={menuAberto}
+          aria-controls="menu-principal"
         >
           {menuAberto ? "✕" : "☰"}
         </button>
 
-        {/* MENU */}
+        {/* MENU PRINCIPAL */}
         <nav
+          id="menu-principal"
           className={`main-nav ${
             menuAberto ? "mobile-menu-open" : ""
           }`}
@@ -82,12 +82,13 @@ export default function Header() {
             <button
               type="button"
               className="nav-dropdown-button"
-              onClick={() =>
-                alternarDropdown("producao")
-              }
+              onClick={() => alternarDropdown("producao")}
+              aria-expanded={dropdownAberto === "producao"}
             >
-              Produção
-              <span>▾</span>
+              <span>Produção</span>
+              <span>
+                {dropdownAberto === "producao" ? "▴" : "▾"}
+              </span>
             </button>
 
             <div
@@ -97,39 +98,24 @@ export default function Header() {
                   : ""
               }`}
             >
-              <Link
-                href="/agricultura"
-                onClick={fecharMenu}
-              >
-                Agricultura
+              <Link href="/agricultura" onClick={fecharMenu}>
+                🌾 Agricultura
               </Link>
 
-              <Link
-                href="/pecuaria"
-                onClick={fecharMenu}
-              >
-                Pecuária
+              <Link href="/pecuaria" onClick={fecharMenu}>
+                🐄 Pecuária
               </Link>
 
-              <Link
-                href="/pesca"
-                onClick={fecharMenu}
-              >
-                Pesca
+              <Link href="/pesca" onClick={fecharMenu}>
+                🐟 Pesca
               </Link>
 
-              <Link
-                href="/solos"
-                onClick={fecharMenu}
-              >
-                Solos
+              <Link href="/solos" onClick={fecharMenu}>
+                🌱 Solos
               </Link>
 
-              <Link
-                href="/clima"
-                onClick={fecharMenu}
-              >
-                Clima
+              <Link href="/clima" onClick={fecharMenu}>
+                ☁️ Clima
               </Link>
             </div>
           </div>
@@ -140,12 +126,13 @@ export default function Header() {
             <button
               type="button"
               className="nav-dropdown-button"
-              onClick={() =>
-                alternarDropdown("conhecimento")
-              }
+              onClick={() => alternarDropdown("conhecimento")}
+              aria-expanded={dropdownAberto === "conhecimento"}
             >
-              Conhecimento
-              <span>▾</span>
+              <span>Conhecimento</span>
+              <span>
+                {dropdownAberto === "conhecimento" ? "▴" : "▾"}
+              </span>
             </button>
 
             <div
@@ -155,32 +142,20 @@ export default function Header() {
                   : ""
               }`}
             >
-              <Link
-                href="/investigacao"
-                onClick={fecharMenu}
-              >
-                Investigação
+              <Link href="/investigacao" onClick={fecharMenu}>
+                🔬 Investigação
               </Link>
 
-              <Link
-                href="/tecnologias"
-                onClick={fecharMenu}
-              >
-                Tecnologias
+              <Link href="/tecnologias" onClick={fecharMenu}>
+                ⚙️ Tecnologias
               </Link>
 
-              <Link
-                href="/biblioteca"
-                onClick={fecharMenu}
-              >
-                Biblioteca
+              <Link href="/biblioteca" onClick={fecharMenu}>
+                📚 Biblioteca
               </Link>
 
-              <Link
-                href="/agroacademia"
-                onClick={fecharMenu}
-              >
-                AgroAcademia
+              <Link href="/agroacademia" onClick={fecharMenu}>
+                🎓 AgroAcademia
               </Link>
             </div>
           </div>
@@ -191,12 +166,13 @@ export default function Header() {
             <button
               type="button"
               className="nav-dropdown-button"
-              onClick={() =>
-                alternarDropdown("dados")
-              }
+              onClick={() => alternarDropdown("dados")}
+              aria-expanded={dropdownAberto === "dados"}
             >
-              Dados & Mapas
-              <span>▾</span>
+              <span>Dados & Mapas</span>
+              <span>
+                {dropdownAberto === "dados" ? "▴" : "▾"}
+              </span>
             </button>
 
             <div
@@ -206,32 +182,20 @@ export default function Header() {
                   : ""
               }`}
             >
-              <Link
-                href="/dados"
-                onClick={fecharMenu}
-              >
-                Dados
+              <Link href="/dados" onClick={fecharMenu}>
+                📊 Dados
               </Link>
 
-              <Link
-                href="/mapa"
-                onClick={fecharMenu}
-              >
-                Mapa Agrícola
+              <Link href="/mapa" onClick={fecharMenu}>
+                🗺️ Mapa Agrícola
               </Link>
 
-              <Link
-                href="/directorio"
-                onClick={fecharMenu}
-              >
-                Directório
+              <Link href="/directorio" onClick={fecharMenu}>
+                👨‍🌾 Directório
               </Link>
 
-              <Link
-                href="/agroia"
-                onClick={fecharMenu}
-              >
-                AGROIA
+              <Link href="/agroia" onClick={fecharMenu}>
+                🤖 AGROIA
               </Link>
             </div>
           </div>
@@ -241,7 +205,7 @@ export default function Header() {
             href="/noticias"
             onClick={fecharMenu}
           >
-            Notícias
+            📰 Notícias
           </Link>
 
         </nav>
