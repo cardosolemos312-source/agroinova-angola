@@ -19,11 +19,10 @@ type EspecieId =
   | "apicultura"
   | "aquacultura"
   | "helicicultura";
-
-type Secao = {
+  type Secao = {
   titulo: string;
   texto: string;
-  pontos: string[];
+  pontos?: string[];
 };
 
 type Tema = {
@@ -52,7 +51,6 @@ type RotaTema = {
   href: string;
   status: StatusRota;
 };
-
 /* ============================================================
    PROVÍNCIAS
 ============================================================ */

@@ -450,7 +450,6 @@ export const provinciasAngolaClima: string[] = [
 
 /* =========================================================
    CARACTERIZAÇÃO CLIMÁTICA
-   =========================================================
 
    IMPORTANTE:
    Esta camada não inventa médias provinciais.
@@ -609,7 +608,6 @@ export const provinciasClima: ProvinciaClima[] = [
 
 /* =========================================================
    INDICADORES NACIONAIS DE REFERÊNCIA
-   =========================================================
 
    Estes indicadores NÃO são valores provinciais.
 

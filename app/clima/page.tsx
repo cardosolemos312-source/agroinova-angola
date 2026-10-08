@@ -3353,7 +3353,7 @@ function ModalPrecipitacao() {
         referência. A plataforma agroclimática
         oficial apresenta, por exemplo,
         precipitação total e comparação com a
-        normal climatológica. :contentReference[oaicite:1]{index=1}
+        normal climatológica.
       </p>
     </>
   );
@@ -3423,7 +3423,7 @@ function ModalTemperatura() {
         pelo INAMET incluem indicadores como
         temperatura média, máxima e mínima,
         número de dias muito quentes, noites
-        tropicais e ondas de calor. :contentReference[oaicite:2]{index=2}
+        tropicais e ondas de calor.
       </p>
     </>
   );
@@ -3724,7 +3724,7 @@ function ModalSeca() {
         A plataforma de cenários climáticos do
         INAMET acompanha indicadores de dias muito
         quentes, ondas de calor, dias secos
-        consecutivos e índices de seca SPI. :contentReference[oaicite:4]{index=4}
+        consecutivos e índices de seca SPI.
       </p>
     </>
   );
@@ -3953,7 +3953,7 @@ function ModalMonitorizacao() {
         apresenta precipitação total baseada no
         ERA5, índice de água no solo e indicadores
         de saúde da vegetação para Cunene, Huíla
-        e Namibe. :contentReference[oaicite:8]{index=8}
+        e Namibe.
       </p>
     </>
   );
