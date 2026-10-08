@@ -54,14 +54,14 @@ type RotaTema = {
 };
 
 /* ============================================================
-   PROVÍNCIAS
+   PROV�NCIAS
 ============================================================ */
 
 const provincias = [
   "Angola",
   "Bengo",
   "Benguela",
-  "Bié",
+  "Bi�",
   "Cabinda",
   "Cuando",
   "Cubango",
@@ -69,7 +69,7 @@ const provincias = [
   "Cuanza Sul",
   "Cunene",
   "Huambo",
-  "Huíla",
+  "Hu�la",
   "Icolo e Bengo",
   "Luanda",
   "Lunda Norte",
@@ -78,7 +78,7 @@ const provincias = [
   "Moxico",
   "Moxico Leste",
   "Namibe",
-  "Uíge",
+  "U�ge",
   "Zaire",
 ];
 
@@ -87,19 +87,19 @@ const provincias = [
 ============================================================ */
 
 const finalidades = [
-  "Produção de carne",
-  "Produção de leite",
-  "Produção de ovos",
-  "Reprodução",
-  "Criação familiar",
-  "Produção comercial",
+  "Produ��o de carne",
+  "Produ��o de leite",
+  "Produ��o de ovos",
+  "Reprodu��o",
+  "Cria��o familiar",
+  "Produ��o comercial",
   "Animal de trabalho",
-  "Produção de mel",
+  "Produ��o de mel",
   "Aquacultura",
 ];
 
 /* ============================================================
-   ESPÉCIES
+   ESP�CIES
 ============================================================ */
 
 const especies: Especie[] = [
@@ -110,209 +110,209 @@ const especies: Especie[] = [
     grupo: "Grandes ruminantes",
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Cattle%20in%20Angola.jpg",
-    imagemFonte: "Wikimedia Commons — Cattle in Angola",
+    imagemFonte: "Wikimedia Commons � Cattle in Angola",
     resumo:
-      "Os bovinos constituem um dos principais grupos de animais de interesse económico, alimentar e social nos sistemas pecuários de Angola.",
+      "Os bovinos constituem um dos principais grupos de animais de interesse econ�mico, alimentar e social nos sistemas pecu�rios de Angola.",
     importancia:
-      "A produção bovina está relacionada com carne, leite, reprodução, tracção animal e conservação de recursos genéticos adaptados. A escolha dos animais deve considerar ambiente, alimentação, disponibilidade de Água, sanidade, finalidade produtiva e capacidade de maneio.",
+      "A produ��o bovina est� relacionada com carne, leite, reprodu��o, trac��o animal e conserva��o de recursos gen�ticos adaptados. A escolha dos animais deve considerar ambiente, alimenta��o, disponibilidade de �gua, sanidade, finalidade produtiva e capacidade de maneio.",
     realidade:
-      "Em Angola existem sistemas de criação muito distintos. Os recursos genéticos locais, incluindo populações associadas ao grupo Sanga, possuem interesse para adaptação e conservação. Estudos recentes têm analisado a diversidade genética de bovinos nativos no sul do país.",
+      "Em Angola existem sistemas de cria��o muito distintos. Os recursos gen�ticos locais, incluindo popula��es associadas ao grupo Sanga, possuem interesse para adapta��o e conserva��o. Estudos recentes t�m analisado a diversidade gen�tica de bovinos nativos no sul do pa�s.",
     temas: [
       {
         id: "racas",
-        nome: "Raças e genética",
-        descricao: "Recursos genéticos, adaptação e selecção.",
+        nome: "Ra�as e gen�tica",
+        descricao: "Recursos gen�ticos, adapta��o e selec��o.",
       },
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Pastagens, forragens e suplementação.",
+        nome: "Alimenta��o",
+        descricao: "Pastagens, forragens e suplementa��o.",
       },
       {
         id: "instalacoes",
-        nome: "Instalações",
+        nome: "Instala��es",
         descricao: "Abrigos, currais, sombra e maneio.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção, vigilância e controlo sanitário.",
+        descricao: "Preven��o, vigil�ncia e controlo sanit�rio.",
       },
       {
         id: "reproducao",
-        nome: "Reprodução",
-        descricao: "Selecção, reprodução e maneio reprodutivo.",
+        nome: "Reprodu��o",
+        descricao: "Selec��o, reprodu��o e maneio reprodutivo.",
       },
       {
         id: "agua",
-        nome: "Água",
-        descricao: "Disponibilidade e qualidade da Água.",
+        nome: "�gua",
+        descricao: "Disponibilidade e qualidade da �gua.",
       },
     ],
     secoes: [
       {
-        titulo: "Sistemas de produção",
+        titulo: "Sistemas de produ��o",
         texto:
-          "A produção bovina pode assumir diferentes formas, desde sistemas extensivos baseados em pastoreio até sistemas mais intensivos. A definição do sistema deve considerar disponibilidade de terra, Água, alimentação, mão de obra, mercado e objectivos produtivos.",
+          "A produ��o bovina pode assumir diferentes formas, desde sistemas extensivos baseados em pastoreio at� sistemas mais intensivos. A defini��o do sistema deve considerar disponibilidade de terra, �gua, alimenta��o, m�o de obra, mercado e objectivos produtivos.",
         pontos: [
-          "Definir a finalidade económica antes da aquisição dos animais.",
-          "Avaliar os recursos naturais disponíveis na exploração.",
-          "Registar origem, reprodução, sanidade e desempenho dos animais.",
+          "Definir a finalidade econ�mica antes da aquisi��o dos animais.",
+          "Avaliar os recursos naturais dispon�veis na explora��o.",
+          "Registar origem, reprodu��o, sanidade e desempenho dos animais.",
         ],
       },
       {
-        titulo: "Alimentação e pastagem",
+        titulo: "Alimenta��o e pastagem",
         texto:
-          "A alimentação determina grande parte do desempenho produtivo e reprodutivo. A utilização racional de pastagens deve considerar disponibilidade sazonal de forragem, composição vegetal, carga animal e acesso é Água.",
+          "A alimenta��o determina grande parte do desempenho produtivo e reprodutivo. A utiliza��o racional de pastagens deve considerar disponibilidade sazonal de forragem, composi��o vegetal, carga animal e acesso � �gua.",
         pontos: [
           "Avaliar a disponibilidade de pastagem ao longo do ano.",
-          "Planear reservas de forragem para a época seca.",
-          "Evitar sobrepastoreio e degradação da pastagem.",
+          "Planear reservas de forragem para a �poca seca.",
+          "Evitar sobrepastoreio e degrada��o da pastagem.",
         ],
       },
       {
-        titulo: "Água",
+        titulo: "�gua",
         texto:
-          "A Água deve estar disponível de forma regular e em condições adequadas de qualidade. A distância entre os animais e os pontos de abeberamento influencia o comportamento de pastoreio e a utilização das áreas da exploração.",
+          "A �gua deve estar dispon�vel de forma regular e em condi��es adequadas de qualidade. A dist�ncia entre os animais e os pontos de abeberamento influencia o comportamento de pastoreio e a utiliza��o das �reas da explora��o.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "A saúde do efectivo depende de prevenção, observação diária, biossegurança, controlo de parasitas, vacinação quando indicada pelas autoridades e acompanhamento veterinário. Sinais clínicos devem ser avaliados por profissional habilitado.",
+          "A sa�de do efectivo depende de preven��o, observa��o di�ria, biosseguran�a, controlo de parasitas, vacina��o quando indicada pelas autoridades e acompanhamento veterin�rio. Sinais cl�nicos devem ser avaliados por profissional habilitado.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A eficiência reprodutiva depende da condição corporal, nutrição, sanidade, idade, genética e maneio. O acompanhamento de cobrições, partos, abortos e intervalo entre partos permite melhorar a tomada de decisão.",
+          "A efici�ncia reprodutiva depende da condi��o corporal, nutri��o, sanidade, idade, gen�tica e maneio. O acompanhamento de cobri��es, partos, abortos e intervalo entre partos permite melhorar a tomada de decis�o.",
       },
       {
         titulo: "Bezerros",
         texto:
-          "O período neonatal é decisivo para a sobrevivência e desenvolvimento futuro. O acompanhamento da ingestão de colostro, higiene do parto, umbigo, alimentação e crescimento deve fazer parte do maneio.",
+          "O per�odo neonatal � decisivo para a sobreviv�ncia e desenvolvimento futuro. O acompanhamento da ingest�o de colostro, higiene do parto, umbigo, alimenta��o e crescimento deve fazer parte do maneio.",
       },
       {
-        titulo: "época seca",
+        titulo: "�poca seca",
         texto:
-          "A redução da disponibilidade de pastagem exige planeamento antecipado. A conservação de forragens, gestão da Água e selecção dos animais que permanecerão no efectivo são medidas importantes.",
+          "A redu��o da disponibilidade de pastagem exige planeamento antecipado. A conserva��o de forragens, gest�o da �gua e selec��o dos animais que permanecer�o no efectivo s�o medidas importantes.",
       },
       {
-        titulo: "época chuvosa",
+        titulo: "�poca chuvosa",
         texto:
-          "A época chuvosa altera a disponibilidade de pastagem e as condições ambientais. A maior disponibilidade de alimento não elimina a necessidade de vigilância sanitária, controlo de parasitas e gestão das instalações.",
+          "A �poca chuvosa altera a disponibilidade de pastagem e as condi��es ambientais. A maior disponibilidade de alimento n�o elimina a necessidade de vigil�ncia sanit�ria, controlo de parasitas e gest�o das instala��es.",
       },
       {
-        titulo: "Registos da exploração",
+        titulo: "Registos da explora��o",
         texto:
-          "Registos simples permitem transformar observações de campo em informação útil para gestão. Cada animal ou lote deve, quando possível, possuir identificação e histórico básico.",
+          "Registos simples permitem transformar observa��es de campo em informa��o �til para gest�o. Cada animal ou lote deve, quando poss�vel, possuir identifica��o e hist�rico b�sico.",
         pontos: [
           "Nascimento.",
           "Origem.",
-          "Reprodução.",
+          "Reprodu��o.",
           "Tratamentos.",
           "Mortalidade.",
           "Peso ou indicadores de crescimento.",
-          "Produção de leite quando aplicável.",
+          "Produ��o de leite quando aplic�vel.",
         ],
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "A pecuária bovina angolana apresenta diversidade regional e diferentes níveis de tecnificação. Não é adequado aplicar uma única recomendação a todas as províncias. A orientação deve partir das condições reais da exploração.",
+          "A pecu�ria bovina angolana apresenta diversidade regional e diferentes n�veis de tecnifica��o. N�o � adequado aplicar uma �nica recomenda��o a todas as prov�ncias. A orienta��o deve partir das condi��es reais da explora��o.",
       },
     ],
   },
 
   {
     id: "suinos",
-    nome: "Suínos",
-    singular: "suíno",
-    grupo: "Monogástricos",
+    nome: "Su�nos",
+    singular: "su�no",
+    grupo: "Monog�stricos",
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Pig.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "A suinicultura exige atenção integrada é genética, nutrição, instalações, reprodução, sanidade e biossegurança.",
+      "A suinicultura exige aten��o integrada � gen�tica, nutri��o, instala��es, reprodu��o, sanidade e biosseguran�a.",
     importancia:
-      "Os suínos apresentam potencial para produção de carne em sistemas familiares e comerciais. A eficiência depende da alimentação equilibrada, Água, controlo térmico, higiene, prevenção de doenças e organização dos lotes.",
+      "Os su�nos apresentam potencial para produ��o de carne em sistemas familiares e comerciais. A efici�ncia depende da alimenta��o equilibrada, �gua, controlo t�rmico, higiene, preven��o de doen�as e organiza��o dos lotes.",
     realidade:
-      "Em Angola, a suinicultura pode assumir diferentes escalas. A melhoria da biossegurança e do maneio é particularmente importante para reduzir perdas e proteger os investimentos dos produtores.",
+      "Em Angola, a suinicultura pode assumir diferentes escalas. A melhoria da biosseguran�a e do maneio � particularmente importante para reduzir perdas e proteger os investimentos dos produtores.",
     temas: [
       {
         id: "racas",
-        nome: "Raças e genética",
-        descricao: "Escolha genética e objectivo produtivo.",
+        nome: "Ra�as e gen�tica",
+        descricao: "Escolha gen�tica e objectivo produtivo.",
       },
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Nutrição por fase de produção.",
+        nome: "Alimenta��o",
+        descricao: "Nutri��o por fase de produ��o.",
       },
       {
         id: "instalacoes",
-        nome: "Instalações",
-        descricao: "Pisos, ventilação, higiene e conforto.",
+        nome: "Instala��es",
+        descricao: "Pisos, ventila��o, higiene e conforto.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção e vigilância sanitária.",
+        descricao: "Preven��o e vigil�ncia sanit�ria.",
       },
       {
         id: "agua",
-        nome: "Água",
-        descricao: "Acesso contínuo e qualidade.",
+        nome: "�gua",
+        descricao: "Acesso cont�nuo e qualidade.",
       },
     ],
     secoes: [
       {
         titulo: "Escolha dos animais",
         texto:
-          "A selecção deve considerar saúde, conformação, origem, histórico produtivo e objectivo do sistema. A compra de animais sem informação sanitária aumenta o risco de introdução de doenças.",
+          "A selec��o deve considerar sa�de, conforma��o, origem, hist�rico produtivo e objectivo do sistema. A compra de animais sem informa��o sanit�ria aumenta o risco de introdu��o de doen�as.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A alimentação deve acompanhar a fase fisiológica e produtiva. Crescimento, gestação, lactação e acabamento possuem necessidades distintas.",
+          "A alimenta��o deve acompanhar a fase fisiol�gica e produtiva. Crescimento, gesta��o, lacta��o e acabamento possuem necessidades distintas.",
       },
       {
-        titulo: "Instalações",
+        titulo: "Instala��es",
         texto:
-          "As instalações devem proporcionar ventilação, drenagem, higiene, espaço adequado e facilidade de limpeza. O excesso de calor pode afectar consumo, crescimento e reprodução.",
+          "As instala��es devem proporcionar ventila��o, drenagem, higiene, espa�o adequado e facilidade de limpeza. O excesso de calor pode afectar consumo, crescimento e reprodu��o.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A reprodução exige identificação das fêmeas, acompanhamento de cio, cobrição, gestação e parto. O histórico reprodutivo deve orientar a selecção dos animais.",
+          "A reprodu��o exige identifica��o das f�meas, acompanhamento de cio, cobri��o, gesta��o e parto. O hist�rico reprodutivo deve orientar a selec��o dos animais.",
       },
       {
-        titulo: "Biossegurança",
+        titulo: "Biosseguran�a",
         texto:
-          "A biossegurança reduz a probabilidade de entrada e disseminação de agentes infecciosos. Quarentena, higiene, controlo de visitantes e separação de lotes são componentes importantes.",
+          "A biosseguran�a reduz a probabilidade de entrada e dissemina��o de agentes infecciosos. Quarentena, higiene, controlo de visitantes e separa��o de lotes s�o componentes importantes.",
       },
       {
-        titulo: "Leitões",
+        titulo: "Leit�es",
         texto:
-          "Os leitões exigem atenção especial durante os primeiros dias de vida. Temperatura, colostro, higiene, alimentação e observação devem ser cuidadosamente acompanhados.",
+          "Os leit�es exigem aten��o especial durante os primeiros dias de vida. Temperatura, colostro, higiene, alimenta��o e observa��o devem ser cuidadosamente acompanhados.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "Programas sanitários devem ser definidos com profissionais veterinários e considerando as doenças relevantes na região.",
+          "Programas sanit�rios devem ser definidos com profissionais veterin�rios e considerando as doen�as relevantes na regi�o.",
       },
       {
-        titulo: "Comercialização",
+        titulo: "Comercializa��o",
         texto:
-          "A produção deve estar ligada ao mercado. Custos de alimentação, mortalidade, crescimento, preço de venda e transporte devem entrar no planeamento económico.",
+          "A produ��o deve estar ligada ao mercado. Custos de alimenta��o, mortalidade, crescimento, pre�o de venda e transporte devem entrar no planeamento econ�mico.",
       },
       {
-        titulo: "época quente",
+        titulo: "�poca quente",
         texto:
-          "Temperaturas elevadas aumentam o risco de stress térmico. Ventilação, disponibilidade de Água e redução de factores de stress são fundamentais.",
+          "Temperaturas elevadas aumentam o risco de stress t�rmico. Ventila��o, disponibilidade de �gua e redu��o de factores de stress s�o fundamentais.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "A suinicultura deve ser adaptada é escala da exploração, disponibilidade de alimentos e condições de mercado. Não existe um único modelo de produção adequado para todas as regiões.",
+          "A suinicultura deve ser adaptada � escala da explora��o, disponibilidade de alimentos e condi��es de mercado. N�o existe um �nico modelo de produ��o adequado para todas as regi�es.",
       },
     ],
   },
@@ -326,31 +326,31 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Goat.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "Os caprinos apresentam importância para sistemas familiares e comerciais devido é capacidade de utilização de diferentes recursos alimentares.",
+      "Os caprinos apresentam import�ncia para sistemas familiares e comerciais devido � capacidade de utiliza��o de diferentes recursos alimentares.",
     importancia:
-      "A criação caprina pode contribuir para carne, reprodução e rendimento familiar. A produtividade depende da alimentação, controlo de parasitas, Água, abrigo e selecção dos animais.",
+      "A cria��o caprina pode contribuir para carne, reprodu��o e rendimento familiar. A produtividade depende da alimenta��o, controlo de parasitas, �gua, abrigo e selec��o dos animais.",
     realidade:
-      "As condições ambientais de Angola variam significativamente. Sistemas de criação devem considerar disponibilidade de pastagem, época seca, pressão parasitária e acesso aos mercados.",
+      "As condi��es ambientais de Angola variam significativamente. Sistemas de cria��o devem considerar disponibilidade de pastagem, �poca seca, press�o parasit�ria e acesso aos mercados.",
     temas: [
       {
         id: "racas",
-        nome: "Raças e genética",
-        descricao: "Selecção e adaptação dos animais.",
+        nome: "Ra�as e gen�tica",
+        descricao: "Selec��o e adapta��o dos animais.",
       },
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Pastoreio, arbustos e suplementação.",
+        nome: "Alimenta��o",
+        descricao: "Pastoreio, arbustos e suplementa��o.",
       },
       {
         id: "instalacoes",
-        nome: "Instalações",
+        nome: "Instala��es",
         descricao: "Abrigos, pisos e higiene.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Parasitas e prevenção.",
+        descricao: "Parasitas e preven��o.",
       },
       {
         id: "cabritos",
@@ -360,59 +360,59 @@ const especies: Especie[] = [
       {
         id: "pastoreio",
         nome: "Pastoreio",
-        descricao: "Gestão das áreas de alimentação.",
+        descricao: "Gest�o das �reas de alimenta��o.",
       },
     ],
     secoes: [
       {
-        titulo: "Sistema de criação",
+        titulo: "Sistema de cria��o",
         texto:
-          "A criação pode ser extensiva, semi-intensiva ou mais intensiva. A escolha depende dos recursos disponíveis e da finalidade produtiva.",
+          "A cria��o pode ser extensiva, semi-intensiva ou mais intensiva. A escolha depende dos recursos dispon�veis e da finalidade produtiva.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "Caprinos utilizam uma diversidade de plantas, mas isso não significa que a alimentação possa ser deixada sem gestão. é necessário acompanhar disponibilidade e qualidade dos alimentos.",
+          "Caprinos utilizam uma diversidade de plantas, mas isso n�o significa que a alimenta��o possa ser deixada sem gest�o. � necess�rio acompanhar disponibilidade e qualidade dos alimentos.",
       },
       {
-        titulo: "Água",
+        titulo: "�gua",
         texto:
-          "A Água deve estar disponível em quantidade e qualidade adequadas. Em períodos quentes e secos, a gestão da Água torna-se ainda mais importante.",
+          "A �gua deve estar dispon�vel em quantidade e qualidade adequadas. Em per�odos quentes e secos, a gest�o da �gua torna-se ainda mais importante.",
       },
       {
         titulo: "Abrigo",
         texto:
-          "Abrigos devem proteger contra chuva, vento, radiação solar excessiva e humidade. O piso deve permitir drenagem e facilitar a higiene.",
+          "Abrigos devem proteger contra chuva, vento, radia��o solar excessiva e humidade. O piso deve permitir drenagem e facilitar a higiene.",
       },
       {
         titulo: "Parasitas",
         texto:
-          "Os parasitas internos e externos podem reduzir crescimento, reprodução e sobrevivência. O controlo deve basear-se em diagnóstico e orientação técnica, evitando uso indiscriminado de medicamentos.",
+          "Os parasitas internos e externos podem reduzir crescimento, reprodu��o e sobreviv�ncia. O controlo deve basear-se em diagn�stico e orienta��o t�cnica, evitando uso indiscriminado de medicamentos.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A selecção de reprodutores, condição corporal e registo dos partos ajudam a melhorar progressivamente o efectivo.",
+          "A selec��o de reprodutores, condi��o corporal e registo dos partos ajudam a melhorar progressivamente o efectivo.",
       },
       {
         titulo: "Cabritos",
         texto:
-          "A sobrevivência dos cabritos depende do colostro, higiene, alimentação, abrigo e acompanhamento do crescimento.",
+          "A sobreviv�ncia dos cabritos depende do colostro, higiene, alimenta��o, abrigo e acompanhamento do crescimento.",
       },
       {
         titulo: "Pastoreio",
         texto:
-          "A gestão do pastoreio reduz pressão sobre a vegetação e contribui para disponibilidade alimentar ao longo do ano.",
+          "A gest�o do pastoreio reduz press�o sobre a vegeta��o e contribui para disponibilidade alimentar ao longo do ano.",
       },
       {
-        titulo: "época seca",
+        titulo: "�poca seca",
         texto:
-          "A preparação para a época seca deve começar enquanto ainda existe disponibilidade de recursos. Reservas alimentares e gestão do efectivo são fundamentais.",
+          "A prepara��o para a �poca seca deve come�ar enquanto ainda existe disponibilidade de recursos. Reservas alimentares e gest�o do efectivo s�o fundamentais.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "Os caprinos possuem interesse particular em sistemas de menor escala, mas a produtividade não deve ser assumida como automática. O maneio determina grande parte dos resultados.",
+          "Os caprinos possuem interesse particular em sistemas de menor escala, mas a produtividade n�o deve ser assumida como autom�tica. O maneio determina grande parte dos resultados.",
       },
     ],
   },
@@ -426,31 +426,31 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Sheep.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "A ovinocultura combina produção de carne, reprodução e utilização de pastagens em diferentes sistemas.",
+      "A ovinocultura combina produ��o de carne, reprodu��o e utiliza��o de pastagens em diferentes sistemas.",
     importancia:
-      "A produção ovina requer equilíbrio entre alimentação, reprodução, sanidade, pastoreio e instalações. O maneio adequado dos cordeiros é determinante para a produtividade.",
+      "A produ��o ovina requer equil�brio entre alimenta��o, reprodu��o, sanidade, pastoreio e instala��es. O maneio adequado dos cordeiros � determinante para a produtividade.",
     realidade:
-      "A adaptação do sistema às condições locais é essencial. O produtor deve observar disponibilidade de pastagem, qualidade do abrigo, Água e pressão de parasitas.",
+      "A adapta��o do sistema �s condi��es locais � essencial. O produtor deve observar disponibilidade de pastagem, qualidade do abrigo, �gua e press�o de parasitas.",
     temas: [
       {
         id: "alimentacao",
-        nome: "Alimentação",
+        nome: "Alimenta��o",
         descricao: "Pastagens, forragens e suplementos.",
       },
       {
         id: "pastoreio",
         nome: "Pastoreio",
-        descricao: "Gestão do uso das áreas.",
+        descricao: "Gest�o do uso das �reas.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção e vigilância.",
+        descricao: "Preven��o e vigil�ncia.",
       },
       {
         id: "reproducao",
-        nome: "Reprodução",
-        descricao: "Selecção e maneio reprodutivo.",
+        nome: "Reprodu��o",
+        descricao: "Selec��o e maneio reprodutivo.",
       },
       {
         id: "cordeiros",
@@ -460,59 +460,59 @@ const especies: Especie[] = [
       {
         id: "abrigo",
         nome: "Abrigo",
-        descricao: "Protecção e higiene.",
+        descricao: "Protec��o e higiene.",
       },
     ],
     secoes: [
       {
         titulo: "Escolha do efectivo",
         texto:
-          "A selecção deve privilegiar animais saudáveis, adaptados ao sistema e com características produtivas compatíveis com o objectivo da exploração.",
+          "A selec��o deve privilegiar animais saud�veis, adaptados ao sistema e com caracter�sticas produtivas compat�veis com o objectivo da explora��o.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A qualidade da alimentação influencia crescimento, reprodução, produção e resistência a doenças.",
+          "A qualidade da alimenta��o influencia crescimento, reprodu��o, produ��o e resist�ncia a doen�as.",
       },
       {
         titulo: "Pastoreio",
         texto:
-          "A gestão da lotação e do tempo de utilização das áreas ajuda a conservar os recursos forrageiros.",
+          "A gest�o da lota��o e do tempo de utiliza��o das �reas ajuda a conservar os recursos forrageiros.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "A prevenção sanitária deve incluir observação dos animais, higiene, controlo de parasitas e assistência veterinária.",
+          "A preven��o sanit�ria deve incluir observa��o dos animais, higiene, controlo de parasitas e assist�ncia veterin�ria.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "O acompanhamento dos reprodutores, condição corporal e partos permite seleccionar animais mais eficientes.",
+          "O acompanhamento dos reprodutores, condi��o corporal e partos permite seleccionar animais mais eficientes.",
       },
       {
         titulo: "Cordeiros",
         texto:
-          "O nascimento exige atenção é ingestão de colostro, higiene, alimentação e protecção contra condições ambientais adversas.",
+          "O nascimento exige aten��o � ingest�o de colostro, higiene, alimenta��o e protec��o contra condi��es ambientais adversas.",
       },
       {
         titulo: "Abrigo",
         texto:
-          "O abrigo deve ser seco, ventilado e protegido contra condições climáticas adversas.",
+          "O abrigo deve ser seco, ventilado e protegido contra condi��es clim�ticas adversas.",
       },
       {
-        titulo: "Água",
+        titulo: "�gua",
         texto:
-          "O acesso regular é Água é essencial para o metabolismo, consumo alimentar e termorregulação.",
+          "O acesso regular � �gua � essencial para o metabolismo, consumo alimentar e termorregula��o.",
       },
       {
-        titulo: "época seca",
+        titulo: "�poca seca",
         texto:
-          "A produção deve ser planeada com reservas alimentares e controlo da carga animal.",
+          "A produ��o deve ser planeada com reservas alimentares e controlo da carga animal.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "A ovinocultura pode integrar sistemas familiares e comerciais, mas exige adaptação às condições ambientais e económicas de cada exploração.",
+          "A ovinocultura pode integrar sistemas familiares e comerciais, mas exige adapta��o �s condi��es ambientais e econ�micas de cada explora��o.",
       },
     ],
   },
@@ -526,83 +526,83 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Chicken.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "A avicultura exige controlo rigoroso de alimentação, Água, ambiente, higiene e biossegurança.",
+      "A avicultura exige controlo rigoroso de alimenta��o, �gua, ambiente, higiene e biosseguran�a.",
     importancia:
-      "A criação de galinhas pode estar orientada para carne ou ovos. A eficiência depende da genética, qualidade da ração, Água, temperatura, ventilação, iluminação, densidade e prevenção sanitária.",
+      "A cria��o de galinhas pode estar orientada para carne ou ovos. A efici�ncia depende da gen�tica, qualidade da ra��o, �gua, temperatura, ventila��o, ilumina��o, densidade e preven��o sanit�ria.",
     realidade:
-      "A avicultura angolana inclui diferentes escalas de produção. Sistemas comerciais necessitam de planeamento de custos e biossegurança, enquanto sistemas familiares requerem soluções ajustadas aos recursos locais.",
+      "A avicultura angolana inclui diferentes escalas de produ��o. Sistemas comerciais necessitam de planeamento de custos e biosseguran�a, enquanto sistemas familiares requerem solu��es ajustadas aos recursos locais.",
     temas: [
       {
         id: "corte",
         nome: "Frango de corte",
-        descricao: "Maneio orientado para produção de carne.",
+        descricao: "Maneio orientado para produ��o de carne.",
       },
       {
         id: "poedeiras",
         nome: "Poedeiras",
-        descricao: "Produção e gestão de ovos.",
+        descricao: "Produ��o e gest�o de ovos.",
       },
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Nutrição por fase.",
+        nome: "Alimenta��o",
+        descricao: "Nutri��o por fase.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção e vigilância.",
+        descricao: "Preven��o e vigil�ncia.",
       },
       {
         id: "instalacoes",
-        nome: "Instalações",
-        descricao: "Ambiente, ventilação e higiene.",
+        nome: "Instala��es",
+        descricao: "Ambiente, ventila��o e higiene.",
       },
       {
         id: "biosseguranca",
-        nome: "Biossegurança",
-        descricao: "Prevenção da entrada de doenças.",
+        nome: "Biosseguran�a",
+        descricao: "Preven��o da entrada de doen�as.",
       },
     ],
     secoes: [
       {
         titulo: "Finalidade produtiva",
         texto:
-          "Antes de iniciar a produção é necessário definir se o objectivo é carne, ovos, reprodução ou criação familiar.",
+          "Antes de iniciar a produ��o � necess�rio definir se o objectivo � carne, ovos, reprodu��o ou cria��o familiar.",
       },
       {
         titulo: "Pintos",
         texto:
-          "Os primeiros dias exigem atenção especial é temperatura, Água, alimentação, higiene e observação.",
+          "Os primeiros dias exigem aten��o especial � temperatura, �gua, alimenta��o, higiene e observa��o.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A ração deve corresponder é fase produtiva. Alterações bruscas e alimentação de qualidade inadequada podem afectar crescimento e produção.",
+          "A ra��o deve corresponder � fase produtiva. Altera��es bruscas e alimenta��o de qualidade inadequada podem afectar crescimento e produ��o.",
       },
       {
-        titulo: "Água",
+        titulo: "�gua",
         texto:
-          "A Água deve estar continuamente disponível, limpa e protegida de contaminação.",
+          "A �gua deve estar continuamente dispon�vel, limpa e protegida de contamina��o.",
       },
       {
-        titulo: "Ventilação",
+        titulo: "Ventila��o",
         texto:
-          "A ventilação reduz humidade e acumulação de gases, contribuindo para o conforto e a saúde das aves.",
+          "A ventila��o reduz humidade e acumula��o de gases, contribuindo para o conforto e a sa�de das aves.",
       },
       {
-        titulo: "Biossegurança",
+        titulo: "Biosseguran�a",
         texto:
-          "A entrada de pessoas, equipamentos, animais e materiais deve ser controlada para reduzir riscos sanitários.",
+          "A entrada de pessoas, equipamentos, animais e materiais deve ser controlada para reduzir riscos sanit�rios.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "Programas de prevenção devem ser definidos com orientação veterinária e de acordo com as doenças relevantes.",
+          "Programas de preven��o devem ser definidos com orienta��o veterin�ria e de acordo com as doen�as relevantes.",
       },
       {
         titulo: "Poedeiras",
         texto:
-          "A produção de ovos depende de genética, alimentação, Água, iluminação, idade e estado sanitário.",
+          "A produ��o de ovos depende de gen�tica, alimenta��o, �gua, ilumina��o, idade e estado sanit�rio.",
       },
       {
         titulo: "Frango de corte",
@@ -612,7 +612,7 @@ const especies: Especie[] = [
       {
         titulo: "Realidade angolana",
         texto:
-          "Os custos de alimentação, energia, pintos, medicamentos, transporte e comercialização devem ser considerados no planeamento da actividade.",
+          "Os custos de alimenta��o, energia, pintos, medicamentos, transporte e comercializa��o devem ser considerados no planeamento da actividade.",
       },
     ],
   },
@@ -626,78 +626,78 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Duck.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "A criação de patos requer atenção é alimentação, Água, higiene, instalações e controlo sanitário.",
+      "A cria��o de patos requer aten��o � alimenta��o, �gua, higiene, instala��es e controlo sanit�rio.",
     importancia:
-      "Os patos podem ser utilizados para carne, ovos e reprodução. O acesso é Água não significa necessariamente que todas as explorações precisem de grandes superfícies de Água.",
+      "Os patos podem ser utilizados para carne, ovos e reprodu��o. O acesso � �gua n�o significa necessariamente que todas as explora��es precisem de grandes superf�cies de �gua.",
     realidade:
-      "O sistema deve ser dimensionado de acordo com os recursos disponíveis, evitando excesso de humidade e contaminação.",
+      "O sistema deve ser dimensionado de acordo com os recursos dispon�veis, evitando excesso de humidade e contamina��o.",
     temas: [
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Nutrição e crescimento.",
+        nome: "Alimenta��o",
+        descricao: "Nutri��o e crescimento.",
       },
       {
         id: "agua",
-        nome: "Água",
+        nome: "�gua",
         descricao: "Acesso e qualidade.",
       },
       {
         id: "instalacoes",
-        nome: "Instalações",
+        nome: "Instala��es",
         descricao: "Abrigos e higiene.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção de doenças.",
+        descricao: "Preven��o de doen�as.",
       },
       {
         id: "reproducao",
-        nome: "Reprodução",
-        descricao: "Matrizes e incubação.",
+        nome: "Reprodu��o",
+        descricao: "Matrizes e incuba��o.",
       },
       {
         id: "maneio",
         nome: "Maneio",
-        descricao: "Gestão diária do efectivo.",
+        descricao: "Gest�o di�ria do efectivo.",
       },
     ],
     secoes: [
       {
         titulo: "Finalidade",
         texto:
-          "Definir carne, ovos ou reprodução antes da escolha dos animais e do sistema.",
+          "Definir carne, ovos ou reprodu��o antes da escolha dos animais e do sistema.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A dieta deve fornecer energia, proteína, minerais e vitaminas adequadas é fase produtiva.",
+          "A dieta deve fornecer energia, prote�na, minerais e vitaminas adequadas � fase produtiva.",
       },
       {
-        titulo: "Água",
+        titulo: "�gua",
         texto:
-          "A Água é essencial, mas instalações permanentemente molhadas favorecem problemas sanitários.",
+          "A �gua � essencial, mas instala��es permanentemente molhadas favorecem problemas sanit�rios.",
       },
       {
-        titulo: "Instalações",
+        titulo: "Instala��es",
         texto:
-          "O abrigo deve permitir drenagem, limpeza, protecção climática e acesso adequado aos equipamentos.",
+          "O abrigo deve permitir drenagem, limpeza, protec��o clim�tica e acesso adequado aos equipamentos.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "Higiene, controlo de visitantes, Água limpa e observação diária reduzem riscos.",
+          "Higiene, controlo de visitantes, �gua limpa e observa��o di�ria reduzem riscos.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A selecção das matrizes e o controlo dos ovos férteis são importantes para a produção de descendentes.",
+          "A selec��o das matrizes e o controlo dos ovos f�rteis s�o importantes para a produ��o de descendentes.",
       },
       {
         titulo: "Patinhos",
         texto:
-          "Os animais jovens precisam de protecção térmica, alimentação adequada e Água limpa.",
+          "Os animais jovens precisam de protec��o t�rmica, alimenta��o adequada e �gua limpa.",
       },
       {
         titulo: "Mortalidade",
@@ -705,14 +705,14 @@ const especies: Especie[] = [
           "A mortalidade deve ser registada e investigada, sobretudo quando ocorre aumento inesperado.",
       },
       {
-        titulo: "Comercialização",
+        titulo: "Comercializa��o",
         texto:
-          "A actividade deve ser ligada a um mercado real e a custos de produção conhecidos.",
+          "A actividade deve ser ligada a um mercado real e a custos de produ��o conhecidos.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "A produção deve ser ajustada aos recursos hídricos, alimentação e mercado local.",
+          "A produ��o deve ser ajustada aos recursos h�dricos, alimenta��o e mercado local.",
       },
     ],
   },
@@ -726,26 +726,26 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Turkey.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "A criação de perus apresenta exigências específicas de crescimento, alimentação, ambiente e sanidade.",
+      "A cria��o de perus apresenta exig�ncias espec�ficas de crescimento, alimenta��o, ambiente e sanidade.",
     importancia:
       "A actividade pode constituir alternativa comercial, mas exige planeamento porque os perus apresentam necessidades diferentes das galinhas.",
     realidade:
-      "Antes de investir é necessário avaliar mercado, disponibilidade de pintos, alimentação, instalações e assistência sanitária.",
+      "Antes de investir � necess�rio avaliar mercado, disponibilidade de pintos, alimenta��o, instala��es e assist�ncia sanit�ria.",
     temas: [
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Nutrição por fase.",
+        nome: "Alimenta��o",
+        descricao: "Nutri��o por fase.",
       },
       {
         id: "instalacoes",
-        nome: "Instalações",
-        descricao: "Espaço, ventilação e higiene.",
+        nome: "Instala��es",
+        descricao: "Espa�o, ventila��o e higiene.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção e controlo.",
+        descricao: "Preven��o e controlo.",
       },
       {
         id: "crescimento",
@@ -754,8 +754,8 @@ const especies: Especie[] = [
       },
       {
         id: "reproducao",
-        nome: "Reprodução",
-        descricao: "Matrizes e incubação.",
+        nome: "Reprodu��o",
+        descricao: "Matrizes e incuba��o.",
       },
       {
         id: "mercado",
@@ -767,22 +767,22 @@ const especies: Especie[] = [
       {
         titulo: "Planeamento",
         texto:
-          "A produção deve começar pela análise de mercado, disponibilidade de alimentação e capacidade de maneio.",
+          "A produ��o deve come�ar pela an�lise de mercado, disponibilidade de alimenta��o e capacidade de maneio.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "As exigências nutricionais variam ao longo do crescimento e devem ser acompanhadas por formulação adequada.",
+          "As exig�ncias nutricionais variam ao longo do crescimento e devem ser acompanhadas por formula��o adequada.",
       },
       {
-        titulo: "Instalações",
+        titulo: "Instala��es",
         texto:
-          "Espaço, ventilação, higiene e protecção climática são essenciais.",
+          "Espa�o, ventila��o, higiene e protec��o clim�tica s�o essenciais.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "A prevenção é mais eficiente do que responder apenas depois do aparecimento de doenças.",
+          "A preven��o � mais eficiente do que responder apenas depois do aparecimento de doen�as.",
       },
       {
         titulo: "Crescimento",
@@ -790,29 +790,29 @@ const especies: Especie[] = [
           "Peso, consumo, mortalidade e uniformidade do lote devem ser acompanhados.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A reprodução requer selecção de matrizes e controlo dos ovos e incubação.",
+          "A reprodu��o requer selec��o de matrizes e controlo dos ovos e incuba��o.",
       },
       {
         titulo: "Manejo dos jovens",
         texto:
-          "A fase inicial exige controlo rigoroso de temperatura, Água e alimentação.",
+          "A fase inicial exige controlo rigoroso de temperatura, �gua e alimenta��o.",
       },
       {
         titulo: "Mercado",
         texto:
-          "A produção deve ser sincronizada com a procura e capacidade de venda.",
+          "A produ��o deve ser sincronizada com a procura e capacidade de venda.",
       },
       {
-        titulo: "Biossegurança",
+        titulo: "Biosseguran�a",
         texto:
-          "A separação entre lotes e controlo de entrada de pessoas e equipamentos reduz riscos.",
+          "A separa��o entre lotes e controlo de entrada de pessoas e equipamentos reduz riscos.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "A viabilidade deve ser avaliada localmente antes de expansão da actividade.",
+          "A viabilidade deve ser avaliada localmente antes de expans�o da actividade.",
       },
     ],
   },
@@ -826,88 +826,88 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Common%20quail.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "A coturnicultura apresenta interesse para produção de ovos e carne em sistemas de pequena e média escala.",
+      "A coturnicultura apresenta interesse para produ��o de ovos e carne em sistemas de pequena e m�dia escala.",
     importancia:
-      "As codornizes apresentam ciclo produtivo relativamente curto e podem ser criadas em espaços menores, mas continuam dependentes de alimentação, higiene, Água, ventilação e mercado.",
+      "As codornizes apresentam ciclo produtivo relativamente curto e podem ser criadas em espa�os menores, mas continuam dependentes de alimenta��o, higiene, �gua, ventila��o e mercado.",
     realidade:
-      "É necessário confirmar a disponibilidade de material genético, alimentação e mercado antes do investimento.",
+      "� necess�rio confirmar a disponibilidade de material gen�tico, alimenta��o e mercado antes do investimento.",
     temas: [
       {
         id: "instalacoes",
-        nome: "Instalações",
+        nome: "Instala��es",
         descricao: "Gaiolas, ambiente e higiene.",
       },
       {
         id: "alimentacao",
-        nome: "Alimentação",
+        nome: "Alimenta��o",
         descricao: "Necessidades nutricionais.",
       },
       {
         id: "ovos",
-        nome: "Produção de ovos",
+        nome: "Produ��o de ovos",
         descricao: "Maneio das poedeiras.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção e higiene.",
+        descricao: "Preven��o e higiene.",
       },
       {
         id: "reproducao",
-        nome: "Reprodução",
-        descricao: "Matrizes e incubação.",
+        nome: "Reprodu��o",
+        descricao: "Matrizes e incuba��o.",
       },
       {
         id: "mercado",
         nome: "Mercado",
-        descricao: "Venda e viabilidade económica.",
+        descricao: "Venda e viabilidade econ�mica.",
       },
     ],
     secoes: [
       {
         titulo: "Dimensionamento",
         texto:
-          "A escala deve ser compatível com capacidade de alimentação, limpeza, mão de obra e venda.",
+          "A escala deve ser compat�vel com capacidade de alimenta��o, limpeza, m�o de obra e venda.",
       },
       {
-        titulo: "Instalações",
+        titulo: "Instala��es",
         texto:
-          "As estruturas devem proteger as aves e permitir limpeza, ventilação e recolha dos ovos.",
+          "As estruturas devem proteger as aves e permitir limpeza, ventila��o e recolha dos ovos.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A qualidade da dieta influencia crescimento, produção de ovos e reprodução.",
+          "A qualidade da dieta influencia crescimento, produ��o de ovos e reprodu��o.",
       },
       {
-        titulo: "Produção de ovos",
+        titulo: "Produ��o de ovos",
         texto:
-          "A produção depende da genética, idade, nutrição, ambiente e estado sanitário.",
+          "A produ��o depende da gen�tica, idade, nutri��o, ambiente e estado sanit�rio.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "A higiene diária e o controlo de densidade reduzem problemas.",
+          "A higiene di�ria e o controlo de densidade reduzem problemas.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A produção de pintos exige ovos férteis, incubação adequada e selecção das matrizes.",
+          "A produ��o de pintos exige ovos f�rteis, incuba��o adequada e selec��o das matrizes.",
       },
       {
         titulo: "Temperatura",
         texto:
-          "As aves jovens são particularmente sensíveis às condições térmicas.",
+          "As aves jovens s�o particularmente sens�veis �s condi��es t�rmicas.",
       },
       {
         titulo: "Higiene",
         texto:
-          "A remoção de resíduos e limpeza dos equipamentos devem fazer parte da rotina.",
+          "A remo��o de res�duos e limpeza dos equipamentos devem fazer parte da rotina.",
       },
       {
         titulo: "Mercado",
         texto:
-          "A procura local deve ser estudada antes de aumentar a produção.",
+          "A procura local deve ser estudada antes de aumentar a produ��o.",
       },
       {
         titulo: "Realidade angolana",
@@ -926,31 +926,31 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Horse.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "Os equinos podem desempenhar funções de trabalho, transporte, reprodução e actividades desportivas.",
+      "Os equinos podem desempenhar fun��es de trabalho, transporte, reprodu��o e actividades desportivas.",
     importancia:
-      "A saúde locomotora, alimentação, Água, cascos, descanso e equipamento determinam a capacidade de trabalho e bem-estar.",
+      "A sa�de locomotora, alimenta��o, �gua, cascos, descanso e equipamento determinam a capacidade de trabalho e bem-estar.",
     realidade:
-      "Em sistemas onde os equinos desempenham trabalho, o maneio deve equilibrar utilização e recuperação física.",
+      "Em sistemas onde os equinos desempenham trabalho, o maneio deve equilibrar utiliza��o e recupera��o f�sica.",
     temas: [
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Forragem, concentrados e condição corporal.",
+        nome: "Alimenta��o",
+        descricao: "Forragem, concentrados e condi��o corporal.",
       },
       {
         id: "agua",
-        nome: "Água",
-        descricao: "Hidratação e qualidade.",
+        nome: "�gua",
+        descricao: "Hidrata��o e qualidade.",
       },
       {
         id: "casco",
         nome: "Cascos",
-        descricao: "Manutenção e saúde locomotora.",
+        descricao: "Manuten��o e sa�de locomotora.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção e acompanhamento.",
+        descricao: "Preven��o e acompanhamento.",
       },
       {
         id: "trabalho",
@@ -959,60 +959,60 @@ const especies: Especie[] = [
       },
       {
         id: "reproducao",
-        nome: "Reprodução",
-        descricao: "Matrizes e garanhões.",
+        nome: "Reprodu��o",
+        descricao: "Matrizes e garanh�es.",
       },
     ],
     secoes: [
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A alimentação deve basear-se principalmente em forragens adequadas, complementadas quando necessário de acordo com o trabalho e condição corporal.",
+          "A alimenta��o deve basear-se principalmente em forragens adequadas, complementadas quando necess�rio de acordo com o trabalho e condi��o corporal.",
       },
       {
-        titulo: "Água",
+        titulo: "�gua",
         texto:
-          "O acesso é Água é fundamental, especialmente após exercício ou trabalho em condições de calor.",
+          "O acesso � �gua � fundamental, especialmente ap�s exerc�cio ou trabalho em condi��es de calor.",
       },
       {
         titulo: "Cascos",
         texto:
-          "A avaliação periódica dos cascos é fundamental para prevenir alterações locomotoras.",
+          "A avalia��o peri�dica dos cascos � fundamental para prevenir altera��es locomotoras.",
       },
       {
         titulo: "Trabalho",
         texto:
-          "A carga de trabalho deve considerar idade, condição corporal, treino, ambiente e estado de saúde.",
+          "A carga de trabalho deve considerar idade, condi��o corporal, treino, ambiente e estado de sa�de.",
       },
       {
         titulo: "Descanso",
         texto:
-          "O descanso é componente do maneio e reduz risco de fadiga e lesões.",
+          "O descanso � componente do maneio e reduz risco de fadiga e les�es.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "Vacinação, desparasitação quando indicada, higiene e acompanhamento veterinário devem integrar o plano sanitário.",
+          "Vacina��o, desparasita��o quando indicada, higiene e acompanhamento veterin�rio devem integrar o plano sanit�rio.",
       },
       {
-        titulo: "Instalações",
+        titulo: "Instala��es",
         texto:
-          "Os abrigos devem permitir descanso, protecção climática, ventilação e higiene.",
+          "Os abrigos devem permitir descanso, protec��o clim�tica, ventila��o e higiene.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A reprodução deve ser planeada considerando saúde, conformação, genética e objectivos.",
+          "A reprodu��o deve ser planeada considerando sa�de, conforma��o, gen�tica e objectivos.",
       },
       {
         titulo: "Transporte",
         texto:
-          "O transporte deve reduzir risco de trauma, stress e desidratação.",
+          "O transporte deve reduzir risco de trauma, stress e desidrata��o.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "Quando utilizados para trabalho, os equinos devem ser tratados como activos produtivos que exigem manutenção sanitária e nutricional.",
+          "Quando utilizados para trabalho, os equinos devem ser tratados como activos produtivos que exigem manuten��o sanit�ria e nutricional.",
       },
     ],
   },
@@ -1026,21 +1026,21 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Donkey.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "Os asininos desempenham funções de transporte e trabalho em diferentes comunidades e sistemas rurais.",
+      "Os asininos desempenham fun��es de transporte e trabalho em diferentes comunidades e sistemas rurais.",
     importancia:
-      "A capacidade de trabalho depende de alimentação, Água, condição corporal, saúde dos cascos, equipamento e descanso.",
+      "A capacidade de trabalho depende de alimenta��o, �gua, condi��o corporal, sa�de dos cascos, equipamento e descanso.",
     realidade:
-      "A utilização deve respeitar a capacidade física do animal e evitar sobrecarga ou jornadas excessivas.",
+      "A utiliza��o deve respeitar a capacidade f�sica do animal e evitar sobrecarga ou jornadas excessivas.",
     temas: [
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Forragem e condição corporal.",
+        nome: "Alimenta��o",
+        descricao: "Forragem e condi��o corporal.",
       },
       {
         id: "agua",
-        nome: "Água",
-        descricao: "Hidratação.",
+        nome: "�gua",
+        descricao: "Hidrata��o.",
       },
       {
         id: "trabalho",
@@ -1050,39 +1050,39 @@ const especies: Especie[] = [
       {
         id: "cascos",
         nome: "Cascos",
-        descricao: "Manutenção locomotora.",
+        descricao: "Manuten��o locomotora.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção e vigilância.",
+        descricao: "Preven��o e vigil�ncia.",
       },
       {
         id: "bem-estar",
         nome: "Bem-estar",
-        descricao: "Manejo responsável.",
+        descricao: "Manejo respons�vel.",
       },
     ],
     secoes: [
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A dieta deve garantir manutenção corporal e capacidade de trabalho sem excessos ou deficiências nutricionais.",
+          "A dieta deve garantir manuten��o corporal e capacidade de trabalho sem excessos ou defici�ncias nutricionais.",
       },
       {
-        titulo: "Água",
+        titulo: "�gua",
         texto:
-          "A Água deve estar disponível regularmente, sobretudo durante trabalho e períodos quentes.",
+          "A �gua deve estar dispon�vel regularmente, sobretudo durante trabalho e per�odos quentes.",
       },
       {
         titulo: "Carga de trabalho",
         texto:
-          "A carga deve ser ajustada é condição corporal, idade, treino e terreno.",
+          "A carga deve ser ajustada � condi��o corporal, idade, treino e terreno.",
       },
       {
         titulo: "Cascos",
         texto:
-          "Os cascos devem ser observados regularmente para identificar lesões, crescimento anormal ou problemas locomotores.",
+          "Os cascos devem ser observados regularmente para identificar les�es, crescimento anormal ou problemas locomotores.",
       },
       {
         titulo: "Equipamento",
@@ -1092,27 +1092,27 @@ const especies: Especie[] = [
       {
         titulo: "Descanso",
         texto:
-          "Períodos adequados de descanso são necessários para recuperação física.",
+          "Per�odos adequados de descanso s�o necess�rios para recupera��o f�sica.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "Doenças, parasitas e lesões devem ser identificados e tratados com assistência adequada.",
+          "Doen�as, parasitas e les�es devem ser identificados e tratados com assist�ncia adequada.",
       },
       {
         titulo: "Bem-estar",
         texto:
-          "O animal deve ter acesso a alimentação, Água, abrigo, descanso e cuidados veterinários.",
+          "O animal deve ter acesso a alimenta��o, �gua, abrigo, descanso e cuidados veterin�rios.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A reprodução deve considerar saúde, conformação e objectivo de criação.",
+          "A reprodu��o deve considerar sa�de, conforma��o e objectivo de cria��o.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "O valor económico do asinino deve ser acompanhado de práticas de utilização que protejam a saúde e o bem-estar do animal.",
+          "O valor econ�mico do asinino deve ser acompanhado de pr�ticas de utiliza��o que protejam a sa�de e o bem-estar do animal.",
       },
     ],
   },
@@ -1126,93 +1126,93 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Water%20buffalo.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "Os búfalos domésticos possuem interesse potencial para sistemas específicos de carne e leite, mas a sua utilização deve ser avaliada localmente.",
+      "Os b�falos dom�sticos possuem interesse potencial para sistemas espec�ficos de carne e leite, mas a sua utiliza��o deve ser avaliada localmente.",
     importancia:
-      "A bubalinocultura não deve ser apresentada automaticamente como actividade de expressão nacional. A decisão de investimento depende de ambiente, Água, alimentação, genética, mercado e capacidade técnica.",
+      "A bubalinocultura n�o deve ser apresentada automaticamente como actividade de express�o nacional. A decis�o de investimento depende de ambiente, �gua, alimenta��o, gen�tica, mercado e capacidade t�cnica.",
     realidade:
-      "Em Angola, a expansão da actividade requer evidência sobre adaptação, disponibilidade de animais, mercado e condições de produção.",
+      "Em Angola, a expans�o da actividade requer evid�ncia sobre adapta��o, disponibilidade de animais, mercado e condi��es de produ��o.",
     temas: [
       {
         id: "adaptacao",
-        nome: "Adaptação",
-        descricao: "Ambiente e recursos disponíveis.",
+        nome: "Adapta��o",
+        descricao: "Ambiente e recursos dispon�veis.",
       },
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Pastagem e suplementação.",
+        nome: "Alimenta��o",
+        descricao: "Pastagem e suplementa��o.",
       },
       {
         id: "agua",
-        nome: "Água",
+        nome: "�gua",
         descricao: "Disponibilidade e ambiente.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção sanitária.",
+        descricao: "Preven��o sanit�ria.",
       },
       {
         id: "reproducao",
-        nome: "Reprodução",
-        descricao: "Gestão reprodutiva.",
+        nome: "Reprodu��o",
+        descricao: "Gest�o reprodutiva.",
       },
       {
         id: "instalacoes",
-        nome: "Instalações",
+        nome: "Instala��es",
         descricao: "Abrigos e maneio.",
       },
     ],
     secoes: [
       {
-        titulo: "Avaliação antes do investimento",
+        titulo: "Avalia��o antes do investimento",
         texto:
-          "Antes de iniciar a actividade deve ser avaliada a disponibilidade de Água, alimento, animais, assistência técnica e mercado.",
+          "Antes de iniciar a actividade deve ser avaliada a disponibilidade de �gua, alimento, animais, assist�ncia t�cnica e mercado.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A alimentação deve ser ajustada é finalidade produtiva e às condições da exploração.",
+          "A alimenta��o deve ser ajustada � finalidade produtiva e �s condi��es da explora��o.",
       },
       {
-        titulo: "Água e ambiente",
+        titulo: "�gua e ambiente",
         texto:
-          "A gestão da Água e do conforto térmico é importante em sistemas de criação de búfalos.",
+          "A gest�o da �gua e do conforto t�rmico � importante em sistemas de cria��o de b�falos.",
       },
       {
-        titulo: "Instalações",
+        titulo: "Instala��es",
         texto:
-          "As instalações devem permitir manejo seguro, limpeza, drenagem e protecção climática.",
+          "As instala��es devem permitir manejo seguro, limpeza, drenagem e protec��o clim�tica.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "O plano sanitário deve ser adaptado às doenças existentes na região.",
+          "O plano sanit�rio deve ser adaptado �s doen�as existentes na regi�o.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A reprodução requer selecção de animais saudáveis e acompanhamento de desempenho.",
+          "A reprodu��o requer selec��o de animais saud�veis e acompanhamento de desempenho.",
       },
       {
         titulo: "Leite",
         texto:
-          "A produção leiteira deve ser avaliada com base na genética, alimentação, higiene da ordenha e mercado.",
+          "A produ��o leiteira deve ser avaliada com base na gen�tica, alimenta��o, higiene da ordenha e mercado.",
       },
       {
         titulo: "Carne",
         texto:
-          "A produção de carne depende do crescimento, genética, alimentação e sistema de acabamento.",
+          "A produ��o de carne depende do crescimento, gen�tica, alimenta��o e sistema de acabamento.",
       },
       {
         titulo: "Mercado",
         texto:
-          "Sem mercado definido, a introdução de uma nova actividade apresenta risco económico elevado.",
+          "Sem mercado definido, a introdu��o de uma nova actividade apresenta risco econ�mico elevado.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "A plataforma apresenta os bubalinos como actividade que necessita de avaliação técnica e económica específica.",
+          "A plataforma apresenta os bubalinos como actividade que necessita de avalia��o t�cnica e econ�mica espec�fica.",
       },
     ],
   },
@@ -1226,31 +1226,31 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Rabbit.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "A cunicultura pode ser desenvolvida em pequena escala, mas exige rigor no maneio, alimentação, reprodução e higiene.",
+      "A cunicultura pode ser desenvolvida em pequena escala, mas exige rigor no maneio, alimenta��o, reprodu��o e higiene.",
     importancia:
-      "O ciclo produtivo dos coelhos permite produção de carne em sistemas de pequena dimensão, desde que exista alimentação adequada, controlo sanitário e mercado.",
+      "O ciclo produtivo dos coelhos permite produ��o de carne em sistemas de pequena dimens�o, desde que exista alimenta��o adequada, controlo sanit�rio e mercado.",
     realidade:
-      "As altas temperaturas podem representar desafio importante, tornando ventilação, sombra e densidade factores críticos.",
+      "As altas temperaturas podem representar desafio importante, tornando ventila��o, sombra e densidade factores cr�ticos.",
     temas: [
       {
         id: "instalacoes",
-        nome: "Instalações",
-        descricao: "Gaiolas, ventilação e higiene.",
+        nome: "Instala��es",
+        descricao: "Gaiolas, ventila��o e higiene.",
       },
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Forragem e ração.",
+        nome: "Alimenta��o",
+        descricao: "Forragem e ra��o.",
       },
       {
         id: "reproducao",
-        nome: "Reprodução",
+        nome: "Reprodu��o",
         descricao: "Matrizes e ninhadas.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção e higiene.",
+        descricao: "Preven��o e higiene.",
       },
       {
         id: "crescimento",
@@ -1265,54 +1265,54 @@ const especies: Especie[] = [
     ],
     secoes: [
       {
-        titulo: "Instalações",
+        titulo: "Instala��es",
         texto:
-          "As instalações devem permitir ventilação, protecção climática, higiene e manejo seguro.",
+          "As instala��es devem permitir ventila��o, protec��o clim�tica, higiene e manejo seguro.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A alimentação deve fornecer fibra suficiente e nutrientes adequados ao crescimento e reprodução.",
+          "A alimenta��o deve fornecer fibra suficiente e nutrientes adequados ao crescimento e reprodu��o.",
       },
       {
-        titulo: "Água",
+        titulo: "�gua",
         texto:
-          "A Água limpa deve estar continuamente disponível.",
+          "A �gua limpa deve estar continuamente dispon�vel.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A reprodução exige registos de cobrição, parto, tamanho das ninhadas e sobrevivência.",
+          "A reprodu��o exige registos de cobri��o, parto, tamanho das ninhadas e sobreviv�ncia.",
       },
       {
         titulo: "Ninhadas",
         texto:
-          "As crias necessitam de protecção contra frio, calor, humidade e competição excessiva.",
+          "As crias necessitam de protec��o contra frio, calor, humidade e competi��o excessiva.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "Higiene e observação diária são importantes para detectar problemas rapidamente.",
+          "Higiene e observa��o di�ria s�o importantes para detectar problemas rapidamente.",
       },
       {
         titulo: "Calor",
         texto:
-          "O stress térmico pode afectar consumo, reprodução e sobrevivência.",
+          "O stress t�rmico pode afectar consumo, reprodu��o e sobreviv�ncia.",
       },
       {
         titulo: "Crescimento",
         texto:
-          "O acompanhamento do peso ajuda a avaliar alimentação e eficiência produtiva.",
+          "O acompanhamento do peso ajuda a avaliar alimenta��o e efici�ncia produtiva.",
       },
       {
-        titulo: "Abate e comercialização",
+        titulo: "Abate e comercializa��o",
         texto:
-          "A produção deve ser organizada de acordo com requisitos sanitários e mercado disponível.",
+          "A produ��o deve ser organizada de acordo com requisitos sanit�rios e mercado dispon�vel.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "A cunicultura deve ser desenvolvida de forma gradual, começando com uma escala compatível com os recursos disponíveis.",
+          "A cunicultura deve ser desenvolvida de forma gradual, come�ando com uma escala compat�vel com os recursos dispon�veis.",
       },
     ],
   },
@@ -1321,36 +1321,36 @@ const especies: Especie[] = [
     id: "apicultura",
     nome: "Apicultura",
     singular: "colmeia",
-    grupo: "Produção apícola",
+    grupo: "Produ��o ap�cola",
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Honey%20bee%20on%20honeycomb.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "A apicultura depende da relação entre colónias de abelhas, recursos florais, ambiente, maneio e qualidade do produto.",
+      "A apicultura depende da rela��o entre col�nias de abelhas, recursos florais, ambiente, maneio e qualidade do produto.",
     importancia:
-      "Além do mel, as abelhas contribuem para polinização e podem integrar sistemas rurais diversificados.",
+      "Al�m do mel, as abelhas contribuem para poliniza��o e podem integrar sistemas rurais diversificados.",
     realidade:
-      "A localização dos apiários deve considerar flora, Água, segurança, acesso e distância de fontes de contaminação.",
+      "A localiza��o dos api�rios deve considerar flora, �gua, seguran�a, acesso e dist�ncia de fontes de contamina��o.",
     temas: [
       {
         id: "apiario",
-        nome: "Apiário",
-        descricao: "Localização e organização.",
+        nome: "Api�rio",
+        descricao: "Localiza��o e organiza��o.",
       },
       {
         id: "recursos-florais",
         nome: "Recursos florais",
-        descricao: "Flora e calendário de floração.",
+        descricao: "Flora e calend�rio de flora��o.",
       },
       {
         id: "maneio",
         nome: "Maneio",
-        descricao: "Inspecção e gestão das colónias.",
+        descricao: "Inspec��o e gest�o das col�nias.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Vigilância das colónias.",
+        descricao: "Vigil�ncia das col�nias.",
       },
       {
         id: "mel",
@@ -1359,60 +1359,60 @@ const especies: Especie[] = [
       },
       {
         id: "seguranca",
-        nome: "Segurança",
-        descricao: "Protecção do apicultor e comunidade.",
+        nome: "Seguran�a",
+        descricao: "Protec��o do apicultor e comunidade.",
       },
     ],
     secoes: [
       {
         titulo: "Escolha do local",
         texto:
-          "O apiário deve ser instalado em local adequado é disponibilidade floral, segurança, acesso e protecção contra condições adversas.",
+          "O api�rio deve ser instalado em local adequado � disponibilidade floral, seguran�a, acesso e protec��o contra condi��es adversas.",
       },
       {
         titulo: "Flora",
         texto:
-          "A produtividade depende da disponibilidade de recursos florais. O conhecimento do calendário de floração ajuda no planeamento.",
+          "A produtividade depende da disponibilidade de recursos florais. O conhecimento do calend�rio de flora��o ajuda no planeamento.",
       },
       {
-        titulo: "Água",
+        titulo: "�gua",
         texto:
-          "A disponibilidade de Água nas proximidades pode ser relevante, devendo ser evitada a instalação em locais contaminados.",
+          "A disponibilidade de �gua nas proximidades pode ser relevante, devendo ser evitada a instala��o em locais contaminados.",
       },
       {
         titulo: "Maneio",
         texto:
-          "As colónias devem ser inspeccionadas de forma organizada, evitando intervenções desnecessárias.",
+          "As col�nias devem ser inspeccionadas de forma organizada, evitando interven��es desnecess�rias.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "Doenças e parasitas devem ser reconhecidos e tratados de acordo com orientação técnica.",
+          "Doen�as e parasitas devem ser reconhecidos e tratados de acordo com orienta��o t�cnica.",
       },
       {
         titulo: "Colheita",
         texto:
-          "A colheita deve respeitar a maturação do mel e procedimentos higiénicos.",
+          "A colheita deve respeitar a matura��o do mel e procedimentos higi�nicos.",
       },
       {
         titulo: "Higiene",
         texto:
-          "Equipamentos e recipientes utilizados na extracção e armazenamento devem estar limpos e adequados para contacto alimentar.",
+          "Equipamentos e recipientes utilizados na extrac��o e armazenamento devem estar limpos e adequados para contacto alimentar.",
       },
       {
-        titulo: "Segurança",
+        titulo: "Seguran�a",
         texto:
-          "O apiário deve ser organizado para reduzir riscos para trabalhadores, crianças e comunidades vizinhas.",
+          "O api�rio deve ser organizado para reduzir riscos para trabalhadores, crian�as e comunidades vizinhas.",
       },
       {
         titulo: "Mercado",
         texto:
-          "A qualidade, apresentação e rastreabilidade podem aumentar o valor comercial dos produtos.",
+          "A qualidade, apresenta��o e rastreabilidade podem aumentar o valor comercial dos produtos.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "A apicultura pode beneficiar de recursos florais existentes em diferentes regiões, mas o potencial deve ser analisado localmente.",
+          "A apicultura pode beneficiar de recursos florais existentes em diferentes regi�es, mas o potencial deve ser analisado localmente.",
       },
     ],
   },
@@ -1421,78 +1421,78 @@ const especies: Especie[] = [
     id: "aquacultura",
     nome: "Aquacultura",
     singular: "peixe",
-    grupo: "Produção aquícola",
+    grupo: "Produ��o aqu�cola",
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Tilapia.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "A aquacultura depende do controlo da Água, alimentação, densidade, sanidade, espécie e qualidade dos alevinos.",
+      "A aquacultura depende do controlo da �gua, alimenta��o, densidade, sanidade, esp�cie e qualidade dos alevinos.",
     importancia:
-      "A produção aquícola pode contribuir para disponibilidade de proteína animal e diversificação das actividades rurais, desde que tecnicamente e economicamente viável.",
+      "A produ��o aqu�cola pode contribuir para disponibilidade de prote�na animal e diversifica��o das actividades rurais, desde que tecnicamente e economicamente vi�vel.",
     realidade:
-      "A qualidade da Água e a disponibilidade de alimento são factores determinantes. Sistemas aquícolas devem ser planeados de acordo com recursos hídricos e mercado.",
+      "A qualidade da �gua e a disponibilidade de alimento s�o factores determinantes. Sistemas aqu�colas devem ser planeados de acordo com recursos h�dricos e mercado.",
     temas: [
       {
         id: "agua",
-        nome: "Qualidade da Água",
-        descricao: "Parâmetros e gestão.",
+        nome: "Qualidade da �gua",
+        descricao: "Par�metros e gest�o.",
       },
       {
         id: "especies",
-        nome: "Espécies",
-        descricao: "Selecção do material biológico.",
+        nome: "Esp�cies",
+        descricao: "Selec��o do material biol�gico.",
       },
       {
         id: "alimentacao",
-        nome: "Alimentação",
-        descricao: "Nutrição e conversão.",
+        nome: "Alimenta��o",
+        descricao: "Nutri��o e convers�o.",
       },
       {
         id: "tanques",
         nome: "Tanques",
-        descricao: "Construção e gestão.",
+        descricao: "Constru��o e gest�o.",
       },
       {
         id: "sanidade",
         nome: "Sanidade",
-        descricao: "Prevenção e vigilância.",
+        descricao: "Preven��o e vigil�ncia.",
       },
       {
         id: "colheita",
         nome: "Colheita",
-        descricao: "Despesca e comercialização.",
+        descricao: "Despesca e comercializa��o.",
       },
     ],
     secoes: [
       {
-        titulo: "Escolha da espécie",
+        titulo: "Escolha da esp�cie",
         texto:
-          "A espécie deve ser compatível com temperatura, qualidade da Água, sistema de produção, alimentação e mercado.",
+          "A esp�cie deve ser compat�vel com temperatura, qualidade da �gua, sistema de produ��o, alimenta��o e mercado.",
       },
       {
-        titulo: "Água",
+        titulo: "�gua",
         texto:
-          "Parâmetros físicos e químicos da Água devem ser acompanhados de acordo com a espécie e sistema.",
+          "Par�metros f�sicos e qu�micos da �gua devem ser acompanhados de acordo com a esp�cie e sistema.",
       },
       {
         titulo: "Tanques",
         texto:
-          "O desenho dos tanques deve permitir entrada e saída de Água, limpeza, alimentação e colheita.",
+          "O desenho dos tanques deve permitir entrada e sa�da de �gua, limpeza, alimenta��o e colheita.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A alimentação representa parte significativa dos custos e deve ser ajustada é biomassa e fase de crescimento.",
+          "A alimenta��o representa parte significativa dos custos e deve ser ajustada � biomassa e fase de crescimento.",
       },
       {
         titulo: "Densidade",
         texto:
-          "Densidades excessivas podem comprometer crescimento, qualidade da Água e saúde.",
+          "Densidades excessivas podem comprometer crescimento, qualidade da �gua e sa�de.",
       },
       {
         titulo: "Sanidade",
         texto:
-          "A prevenção deve começar pela qualidade da Água, origem dos alevinos e higiene dos equipamentos.",
+          "A preven��o deve come�ar pela qualidade da �gua, origem dos alevinos e higiene dos equipamentos.",
       },
       {
         titulo: "Alevinos",
@@ -1502,17 +1502,17 @@ const especies: Especie[] = [
       {
         titulo: "Energia e equipamentos",
         texto:
-          "Sistemas que dependem de bombagem, aeração ou circulação de Água necessitam de planeamento energético.",
+          "Sistemas que dependem de bombagem, aera��o ou circula��o de �gua necessitam de planeamento energ�tico.",
       },
       {
         titulo: "Colheita",
         texto:
-          "A despesca deve ser planeada considerando tamanho dos peixes, procura e capacidade de conservação.",
+          "A despesca deve ser planeada considerando tamanho dos peixes, procura e capacidade de conserva��o.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "A aquacultura deve ser planeada de acordo com recursos hídricos locais e viabilidade económica.",
+          "A aquacultura deve ser planeada de acordo com recursos h�dricos locais e viabilidade econ�mica.",
       },
     ],
   },
@@ -1526,11 +1526,11 @@ const especies: Especie[] = [
       "https://commons.wikimedia.org/wiki/Special:FilePath/Helix%20pomatia.jpg",
     imagemFonte: "Wikimedia Commons",
     resumo:
-      "A helicicultura é apresentada como actividade especializada que exige avaliação de ambiente, alimentação, instalações e mercado.",
+      "A helicicultura � apresentada como actividade especializada que exige avalia��o de ambiente, alimenta��o, instala��es e mercado.",
     importancia:
-      "Pode constituir actividade alternativa, mas não deve ser apresentada como cadeia pecuária nacional consolidada sem evidência suficiente.",
+      "Pode constituir actividade alternativa, mas n�o deve ser apresentada como cadeia pecu�ria nacional consolidada sem evid�ncia suficiente.",
     realidade:
-      "Antes de investir é indispensável avaliar procura, espécies permitidas, legislação aplicável, alimentação e capacidade técnica.",
+      "Antes de investir � indispens�vel avaliar procura, esp�cies permitidas, legisla��o aplic�vel, alimenta��o e capacidade t�cnica.",
     temas: [
       {
         id: "ambiente",
@@ -1539,22 +1539,22 @@ const especies: Especie[] = [
       },
       {
         id: "alimentacao",
-        nome: "Alimentação",
+        nome: "Alimenta��o",
         descricao: "Recursos alimentares.",
       },
       {
         id: "instalacoes",
-        nome: "Instalações",
-        descricao: "Estruturas de criação.",
+        nome: "Instala��es",
+        descricao: "Estruturas de cria��o.",
       },
       {
         id: "reproducao",
-        nome: "Reprodução",
+        nome: "Reprodu��o",
         descricao: "Ciclo produtivo.",
       },
       {
         id: "biosseguranca",
-        nome: "Biossegurança",
+        nome: "Biosseguran�a",
         descricao: "Higiene e controlo.",
       },
       {
@@ -1567,52 +1567,52 @@ const especies: Especie[] = [
       {
         titulo: "Antes de iniciar",
         texto:
-          "A primeira etapa deve ser verificar legislação, espécies permitidas, mercado e disponibilidade de assistência técnica.",
+          "A primeira etapa deve ser verificar legisla��o, esp�cies permitidas, mercado e disponibilidade de assist�ncia t�cnica.",
       },
       {
         titulo: "Ambiente",
         texto:
-          "Temperatura, humidade, ventilação e protecção contra extremos ambientais influenciam o desempenho.",
+          "Temperatura, humidade, ventila��o e protec��o contra extremos ambientais influenciam o desempenho.",
       },
       {
-        titulo: "Alimentação",
+        titulo: "Alimenta��o",
         texto:
-          "A alimentação deve ser compatível com a espécie e fase de desenvolvimento.",
+          "A alimenta��o deve ser compat�vel com a esp�cie e fase de desenvolvimento.",
       },
       {
-        titulo: "Instalações",
+        titulo: "Instala��es",
         texto:
-          "As estruturas devem permitir controlo ambiental, higiene e protecção contra predadores.",
+          "As estruturas devem permitir controlo ambiental, higiene e protec��o contra predadores.",
       },
       {
-        titulo: "Reprodução",
+        titulo: "Reprodu��o",
         texto:
-          "A reprodução deve ser acompanhada através de registos e controlo das condições ambientais.",
+          "A reprodu��o deve ser acompanhada atrav�s de registos e controlo das condi��es ambientais.",
       },
       {
         titulo: "Higiene",
         texto:
-          "A limpeza reduz acumulação de resíduos e condições favoráveis a problemas sanitários.",
+          "A limpeza reduz acumula��o de res�duos e condi��es favor�veis a problemas sanit�rios.",
       },
       {
-        titulo: "Biossegurança",
+        titulo: "Biosseguran�a",
         texto:
-          "A introdução de organismos e materiais deve ser controlada para evitar contaminações.",
+          "A introdu��o de organismos e materiais deve ser controlada para evitar contamina��es.",
       },
       {
         titulo: "Mercado",
         texto:
-          "Não se deve iniciar produção comercial sem confirmar compradores e requisitos de comercialização.",
+          "N�o se deve iniciar produ��o comercial sem confirmar compradores e requisitos de comercializa��o.",
       },
       {
         titulo: "Processamento",
         texto:
-          "Produtos destinados ao consumo devem obedecer aos requisitos sanitários e de segurança alimentar aplicáveis.",
+          "Produtos destinados ao consumo devem obedecer aos requisitos sanit�rios e de seguran�a alimentar aplic�veis.",
       },
       {
         titulo: "Realidade angolana",
         texto:
-          "A helicicultura deve ser considerada uma actividade especializada e experimental até existir evidência suficiente sobre escala, mercado e cadeia de valor em Angola.",
+          "A helicicultura deve ser considerada uma actividade especializada e experimental at� existir evid�ncia suficiente sobre escala, mercado e cadeia de valor em Angola.",
       },
     ],
   },
@@ -2042,44 +2042,44 @@ const rotasTemas: Record<
 
 const fundamentos = [
   {
-    titulo: "Genética e selecção",
+    titulo: "Gen�tica e selec��o",
     texto:
-      "A escolha genética deve ser orientada pela finalidade produtiva, adaptação ambiental, disponibilidade de alimentos, sanidade, reprodução e capacidade de maneio.",
+      "A escolha gen�tica deve ser orientada pela finalidade produtiva, adapta��o ambiental, disponibilidade de alimentos, sanidade, reprodu��o e capacidade de maneio.",
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Cattle%20in%20Angola.jpg",
   },
   {
-    titulo: "Nutrição animal",
+    titulo: "Nutri��o animal",
     texto:
-      "Alimentação adequada exige equilíbrio entre energia, proteína, minerais, vitaminas, fibra e Água, considerando espécie, idade, estado fisiológico e finalidade.",
+      "Alimenta��o adequada exige equil�brio entre energia, prote�na, minerais, vitaminas, fibra e �gua, considerando esp�cie, idade, estado fisiol�gico e finalidade.",
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Cattle%20in%20Angola.jpg",
   },
   {
-    titulo: "Sanidade e biossegurança",
+    titulo: "Sanidade e biosseguran�a",
     texto:
-      "A prevenção de doenças começa antes do aparecimento dos sinais clínicos e envolve higiene, vigilância, quarentena, vacinação quando indicada e assistência veterinária.",
+      "A preven��o de doen�as come�a antes do aparecimento dos sinais cl�nicos e envolve higiene, vigil�ncia, quarentena, vacina��o quando indicada e assist�ncia veterin�ria.",
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Chicken.jpg",
   },
   {
-    titulo: "Reprodução",
+    titulo: "Reprodu��o",
     texto:
-      "A eficiência reprodutiva depende da condição corporal, idade, genética, nutrição, sanidade e organização dos registos da exploração.",
+      "A efici�ncia reprodutiva depende da condi��o corporal, idade, gen�tica, nutri��o, sanidade e organiza��o dos registos da explora��o.",
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Cattle%20in%20Angola.jpg",
   },
   {
     titulo: "Bem-estar animal",
     texto:
-      "O maneio deve reduzir dor, medo, stress, fome, sede e lesões, garantindo condições adequadas de alimentação, alojamento e descanso.",
+      "O maneio deve reduzir dor, medo, stress, fome, sede e les�es, garantindo condi��es adequadas de alimenta��o, alojamento e descanso.",
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Horse.jpg",
   },
   {
-    titulo: "Gestão da exploração",
+    titulo: "Gest�o da explora��o",
     texto:
-      "Uma exploração tecnicamente organizada precisa de registos, controlo de custos, planeamento alimentar, calendário sanitário e avaliação de resultados.",
+      "Uma explora��o tecnicamente organizada precisa de registos, controlo de custos, planeamento alimentar, calend�rio sanit�rio e avalia��o de resultados.",
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Cattle%20in%20Angola.jpg",
   },
@@ -2138,7 +2138,7 @@ export default function PecuariaPage() {
     useState("Angola");
 
   const [finalidade, setFinalidade] =
-    useState("Produção de carne");
+    useState("Produ��o de carne");
 
   const [secaoAberta, setSecaoAberta] =
     useState(0);
@@ -2179,7 +2179,7 @@ export default function PecuariaPage() {
 
         <img
           src={especie.imagem}
-          alt="Pecuária em Angola"
+          alt="Pecu�ria em Angola"
           className="absolute inset-0 h-full w-full object-cover"
         />
 
@@ -2190,23 +2190,23 @@ export default function PecuariaPage() {
           <div className="max-w-4xl text-white">
 
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-green-300">
-              AGROINOVA ANGOLA é PECUÁRIA
+              AGROINOVA ANGOLA � PECU�RIA
             </p>
 
             <h1 className="mt-6 text-5xl font-black leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
-              Conhecimento técnico
+              Conhecimento t�cnico
               <br />
-              para a pecuária
+              para a pecu�ria
               <br />
               angolana
             </h1>
 
             <p className="mt-7 max-w-3xl text-lg leading-8 text-green-50 sm:text-xl">
-              Uma área dedicada ao estudo, produção,
-              gestão e desenvolvimento dos sistemas
-              pecuários de Angola, reunindo informação
-              técnica, conhecimento científico e dados
-              verificáveis.
+              Uma �rea dedicada ao estudo, produ��o,
+              gest�o e desenvolvimento dos sistemas
+              pecu�rios de Angola, reunindo informa��o
+              t�cnica, conhecimento cient�fico e dados
+              verific�veis.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-4">
@@ -2222,7 +2222,7 @@ export default function PecuariaPage() {
                 }
                 className="rounded-xl bg-green-600 px-6 py-3.5 font-bold text-white transition hover:bg-green-500"
               >
-                Explorar espécies
+                Explorar esp�cies
               </button>
 
               <Link
@@ -2241,7 +2241,7 @@ export default function PecuariaPage() {
       </section>
 
       {/* =====================================================
-          INTRODUÇÃO
+          INTRODU��O
       ===================================================== */}
 
       <section className="border-b border-slate-200 bg-white">
@@ -2271,9 +2271,9 @@ export default function PecuariaPage() {
                 </h2>
 
                 <p className="mt-3 text-sm leading-7 text-slate-600">
-                  Os sistemas pecuários diferem entre regiões
-                  em ambiente, Água, alimentação, genética,
-                  mão de obra, tecnologia e acesso ao mercado.
+                  Os sistemas pecu�rios diferem entre regi�es
+                  em ambiente, �gua, alimenta��o, gen�tica,
+                  m�o de obra, tecnologia e acesso ao mercado.
                 </p>
 
               </div>
@@ -2285,7 +2285,7 @@ export default function PecuariaPage() {
               <div className="h-44 overflow-hidden">
                 <img
                   src="https://commons.wikimedia.org/wiki/Special:FilePath/Horse.jpg"
-                  alt="Animal de produção"
+                  alt="Animal de produ��o"
                   className="h-full w-full object-cover transition duration-500 hover:scale-105"
                 />
               </div>
@@ -2293,17 +2293,17 @@ export default function PecuariaPage() {
               <div className="p-6">
 
                 <p className="text-xs font-bold uppercase tracking-widest text-green-700">
-                  Ciência
+                  Ci�ncia
                 </p>
 
                 <h2 className="mt-2 text-xl font-bold">
-                  Conhecimento técnico
+                  Conhecimento t�cnico
                 </h2>
 
                 <p className="mt-3 text-sm leading-7 text-slate-600">
-                  As orientações combinam princípios de produção
-                  animal, saúde, nutrição, genética, reprodução,
-                  instalações e gestão da exploração.
+                  As orienta��es combinam princ�pios de produ��o
+                  animal, sa�de, nutri��o, gen�tica, reprodu��o,
+                  instala��es e gest�o da explora��o.
                 </p>
 
               </div>
@@ -2327,14 +2327,14 @@ export default function PecuariaPage() {
                 </p>
 
                 <h2 className="mt-2 text-xl font-bold">
-                  Informação verificável
+                  Informa��o verific�vel
                 </h2>
 
                 <p className="mt-3 text-sm leading-7 text-slate-600">
-                  Dados estatísticos devem manter fonte,
-                  período, unidade e âmbito territorial.
-                  Informação técnica não é apresentada como
-                  estatística oficial.
+                  Dados estat�sticos devem manter fonte,
+                  per�odo, unidade e �mbito territorial.
+                  Informa��o t�cnica n�o � apresentada como
+                  estat�stica oficial.
                 </p>
 
               </div>
@@ -2348,7 +2348,7 @@ export default function PecuariaPage() {
       </section>
 
       {/* =====================================================
-          ESPÉCIES
+          ESP�CIES
       ===================================================== */}
 
       <section
@@ -2363,18 +2363,18 @@ export default function PecuariaPage() {
             <div className="max-w-3xl">
 
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-green-700">
-                01 — ESPÉCIES DA PECUÁRIA
+                01 � ESP�CIES DA PECU�RIA
               </p>
 
               <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
-                Escolha a espécie
+                Escolha a esp�cie
               </h2>
 
               <p className="mt-5 text-lg leading-8 text-slate-600">
-                Explore informação técnica organizada por
-                espécie, com foco nas principais necessidades
-                de produção, saúde, alimentação, reprodução,
-                instalações e gestão.
+                Explore informa��o t�cnica organizada por
+                esp�cie, com foco nas principais necessidades
+                de produ��o, sa�de, alimenta��o, reprodu��o,
+                instala��es e gest�o.
               </p>
 
             </div>
@@ -2386,7 +2386,7 @@ export default function PecuariaPage() {
                   htmlFor="provincia"
                   className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500"
                 >
-                  Província
+                  Prov�ncia
                 </label>
 
                 <select
@@ -2502,7 +2502,7 @@ export default function PecuariaPage() {
                           : "text-slate-700 group-hover:text-green-700",
                       ].join(" ")}
                     >
-                      Consultar espécie
+                      Consultar esp�cie
                     </span>
 
                   </div>
@@ -2518,7 +2518,7 @@ export default function PecuariaPage() {
       </section>
 
       {/* =====================================================
-          GUIA DA ESPÉCIE
+          GUIA DA ESP�CIE
       ===================================================== */}
 
       <section
@@ -2530,7 +2530,7 @@ export default function PecuariaPage() {
 
           <div className="grid gap-10 lg:grid-cols-[280px_1fr]">
 
-            {/* ÍNDICE */}
+            {/* �NDICE */}
 
             <aside className="lg:sticky lg:top-24 lg:h-fit">
 
@@ -2549,7 +2549,7 @@ export default function PecuariaPage() {
                 <div className="p-5">
 
                   <p className="text-xs font-bold uppercase tracking-widest text-green-700">
-                    Espécie seleccionada
+                    Esp�cie seleccionada
                   </p>
 
                   <h2 className="mt-2 text-2xl font-black">
@@ -2563,7 +2563,7 @@ export default function PecuariaPage() {
                   <div className="mt-6 border-t border-slate-200 pt-5">
 
                     <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">
-                      índice técnico
+                      �ndice t�cnico
                     </p>
 
                     <nav className="space-y-1">
@@ -2608,7 +2608,7 @@ export default function PecuariaPage() {
 
             </aside>
 
-            {/* CONTEÚDO */}
+            {/* CONTE�DO */}
 
             <div>
 
@@ -2625,7 +2625,7 @@ export default function PecuariaPage() {
                 <div className="relative p-8 sm:p-12">
 
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-green-300">
-                    GUIA TÉCNICO é {especie.grupo}
+                    GUIA T�CNICO � {especie.grupo}
                   </p>
 
                   <h2 className="mt-4 text-4xl font-black sm:text-5xl">
@@ -2641,7 +2641,7 @@ export default function PecuariaPage() {
                     <div className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
 
                       <p className="text-xs font-bold uppercase tracking-wider text-green-300">
-                        Província
+                        Prov�ncia
                       </p>
 
                       <p className="mt-2 text-lg font-bold">
@@ -2668,7 +2668,7 @@ export default function PecuariaPage() {
 
               </div>
 
-              {/* IMPORTÂNCIA */}
+              {/* IMPORT�NCIA */}
 
               <div className="mt-8 grid gap-6 md:grid-cols-2">
 
@@ -2679,7 +2679,7 @@ export default function PecuariaPage() {
                   </p>
 
                   <h3 className="mt-3 text-2xl font-black">
-                    Importância da espécie
+                    Import�ncia da esp�cie
                   </h3>
 
                   <p className="mt-4 leading-8 text-slate-600">
@@ -2695,7 +2695,7 @@ export default function PecuariaPage() {
                   </p>
 
                   <h3 className="mt-3 text-2xl font-black text-green-950">
-                    Aplicação na realidade nacional
+                    Aplica��o na realidade nacional
                   </h3>
 
                   <p className="mt-4 leading-8 text-green-900">
@@ -2713,18 +2713,18 @@ export default function PecuariaPage() {
                 <div className="max-w-3xl">
 
                   <p className="text-xs font-bold uppercase tracking-widest text-green-700">
-                    ÁREAS DE ORIENTAÇÃO
+                    �REAS DE ORIENTA��O
                   </p>
 
                   <h3 className="mt-3 text-3xl font-black">
-                    Principais temas técnicos
+                    Principais temas t�cnicos
                   </h3>
 
                   <p className="mt-3 leading-7 text-slate-600">
-                    As áreas disponíveis são desenvolvidas
-                    progressivamente. Os conteúdos marcados
-                    como disponíveis conduzem directamente
-                    para páginas técnicas específicas.
+                    As �reas dispon�veis s�o desenvolvidas
+                    progressivamente. Os conte�dos marcados
+                    como dispon�veis conduzem directamente
+                    para p�ginas t�cnicas espec�ficas.
                   </p>
 
                 </div>
@@ -2776,7 +2776,7 @@ export default function PecuariaPage() {
                           </div>
 
                           <span className="mt-5 block text-sm font-bold text-green-700">
-                            Consultar orientação
+                            Consultar orienta��o
                           </span>
 
                         </Link>
@@ -2799,7 +2799,7 @@ export default function PecuariaPage() {
                           </p>
 
                           <span className="mt-4 inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
-                            Conteúdo em preparação
+                            Conte�do em prepara��o
                           </span>
 
                         </article>
@@ -2813,7 +2813,7 @@ export default function PecuariaPage() {
 
               </div>
 
-              {/* SECÇÕES */}
+              {/* SEC��ES */}
 
               <div className="mt-12 space-y-4">
 
@@ -2909,7 +2909,7 @@ export default function PecuariaPage() {
       </section>
 
       {/* =====================================================
-          FUNDAMENTOS ACADÉMICOS
+          FUNDAMENTOS ACAD�MICOS
       ===================================================== */}
 
       <section className="bg-stone-100">
@@ -2919,17 +2919,17 @@ export default function PecuariaPage() {
           <div className="max-w-3xl">
 
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-green-700">
-              02 — FUNDAMENTOS ACADÉMICOS
+              02 � FUNDAMENTOS ACAD�MICOS
             </p>
 
             <h2 className="mt-3 text-4xl font-black tracking-tight">
-              Princípios que sustentam a produção animal
+              Princ�pios que sustentam a produ��o animal
             </h2>
 
             <p className="mt-5 text-lg leading-8 text-slate-600">
-              A produção pecuária moderna deve ser analisada
-              como um sistema. Genética, nutrição, sanidade,
-              reprodução, ambiente, bem-estar e economia estão
+              A produ��o pecu�ria moderna deve ser analisada
+              como um sistema. Gen�tica, nutri��o, sanidade,
+              reprodu��o, ambiente, bem-estar e economia est�o
               interligados.
             </p>
 
@@ -2990,19 +2990,19 @@ export default function PecuariaPage() {
             <div>
 
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-green-700">
-                03 — ABORDAGEM
+                03 � ABORDAGEM
               </p>
 
               <h2 className="mt-3 text-4xl font-black">
-                Como interpretar a informação
+                Como interpretar a informa��o
               </h2>
 
               <p className="mt-5 leading-8 text-slate-600">
-                A plataforma distingue conhecimento técnico,
-                evidência científica, experiência de campo e
-                estatística oficial. Essa separação é fundamental
-                para evitar que uma recomendação técnica seja
-                confundida com um dado estatístico.
+                A plataforma distingue conhecimento t�cnico,
+                evid�ncia cient�fica, experi�ncia de campo e
+                estat�stica oficial. Essa separa��o � fundamental
+                para evitar que uma recomenda��o t�cnica seja
+                confundida com um dado estat�stico.
               </p>
 
             </div>
@@ -3012,13 +3012,13 @@ export default function PecuariaPage() {
               <article className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
 
                 <h3 className="text-lg font-bold">
-                  Conhecimento técnico
+                  Conhecimento t�cnico
                 </h3>
 
                 <p className="mt-2 leading-7 text-slate-600">
-                  Explica princípios, práticas de maneio,
-                  critérios de decisão e factores que influenciam
-                  a produção.
+                  Explica princ�pios, pr�ticas de maneio,
+                  crit�rios de decis�o e factores que influenciam
+                  a produ��o.
                 </p>
 
               </article>
@@ -3026,13 +3026,13 @@ export default function PecuariaPage() {
               <article className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
 
                 <h3 className="text-lg font-bold">
-                  Evidência científica
+                  Evid�ncia cient�fica
                 </h3>
 
                 <p className="mt-2 leading-7 text-slate-600">
-                  Estudos científicos ajudam a compreender
-                  genética, doenças, alimentação, produtividade,
-                  adaptação e outros fenómenos.
+                  Estudos cient�ficos ajudam a compreender
+                  gen�tica, doen�as, alimenta��o, produtividade,
+                  adapta��o e outros fen�menos.
                 </p>
 
               </article>
@@ -3044,8 +3044,8 @@ export default function PecuariaPage() {
                 </h3>
 
                 <p className="mt-2 leading-7 text-slate-600">
-                  Estatísticas devem conservar fonte, período,
-                  unidade de medida e âmbito territorial.
+                  Estat�sticas devem conservar fonte, per�odo,
+                  unidade de medida e �mbito territorial.
                 </p>
 
               </article>
@@ -3080,7 +3080,7 @@ export default function PecuariaPage() {
               <div className="absolute bottom-0 left-0 p-8 sm:p-12">
 
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-green-300">
-                  ESPÉCIE EM DESTAQUE
+                  ESP�CIE EM DESTAQUE
                 </p>
 
                 <h2 className="mt-3 text-4xl font-black">
@@ -3088,9 +3088,9 @@ export default function PecuariaPage() {
                 </h2>
 
                 <p className="mt-3 max-w-xl leading-7 text-green-50">
-                  Aprofunde os conhecimentos sobre genética,
-                  alimentação, instalações, sanidade, reprodução
-                  e Água.
+                  Aprofunde os conhecimentos sobre gen�tica,
+                  alimenta��o, instala��es, sanidade, reprodu��o
+                  e �gua.
                 </p>
 
                 <Link
@@ -3115,7 +3115,7 @@ export default function PecuariaPage() {
               </p>
 
               <h3 className="mt-3 text-3xl font-black">
-                Orientação especializada
+                Orienta��o especializada
               </h3>
 
               <div className="mt-8 space-y-3">
@@ -3188,7 +3188,7 @@ export default function PecuariaPage() {
 
                 <img
                   src="https://commons.wikimedia.org/wiki/Special:FilePath/Cattle%20in%20Angola.jpg"
-                  alt="Dados e produção pecuária"
+                  alt="Dados e produ��o pecu�ria"
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
 
@@ -3205,9 +3205,9 @@ export default function PecuariaPage() {
                 </h3>
 
                 <p className="mt-3 leading-7 text-slate-600">
-                  Consulte os dados estatísticos disponíveis
-                  no AGROINOVA com indicação de fonte,
-                  período, unidade e âmbito territorial.
+                  Consulte os dados estat�sticos dispon�veis
+                  no AGROINOVA com indica��o de fonte,
+                  per�odo, unidade e �mbito territorial.
                 </p>
 
                 <span className="mt-5 inline-block font-bold text-green-700">
@@ -3227,7 +3227,7 @@ export default function PecuariaPage() {
 
                 <img
                   src="https://commons.wikimedia.org/wiki/Special:FilePath/Tilapia.jpg"
-                  alt="Tecnologia aplicada é produção"
+                  alt="Tecnologia aplicada � produ��o"
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
 
@@ -3244,9 +3244,9 @@ export default function PecuariaPage() {
                 </h3>
 
                 <p className="mt-3 leading-7 text-slate-600">
-                  Utilize a área tecnológica do AGROINOVA
-                  para estruturar problemas agrícolas e
-                  pecuários e procurar soluções.
+                  Utilize a �rea tecnol�gica do AGROINOVA
+                  para estruturar problemas agr�colas e
+                  pecu�rios e procurar solu��es.
                 </p>
 
                 <span className="mt-5 inline-block font-bold text-green-700">
@@ -3274,18 +3274,18 @@ export default function PecuariaPage() {
           <div className="max-w-3xl">
 
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-green-700">
-              04 — REFERÊNCIAS
+              04 � REFER�NCIAS
             </p>
 
             <h2 className="mt-3 text-4xl font-black">
-              Fontes e instituições de referência
+              Fontes e institui��es de refer�ncia
             </h2>
 
             <p className="mt-5 leading-8 text-slate-600">
-              A construção da área de pecuária deve privilegiar
-              instituições científicas, estatísticas e técnicas
-              reconhecidas, mantendo a distinção entre informação
-              nacional, estudos científicos e orientação técnica.
+              A constru��o da �rea de pecu�ria deve privilegiar
+              institui��es cient�ficas, estat�sticas e t�cnicas
+              reconhecidas, mantendo a distin��o entre informa��o
+              nacional, estudos cient�ficos e orienta��o t�cnica.
             </p>
 
           </div>
@@ -3295,12 +3295,12 @@ export default function PecuariaPage() {
             <article className="rounded-3xl border border-slate-200 bg-slate-50 p-7">
 
               <h3 className="text-xl font-bold">
-                Instituto Nacional de Estatística
+                Instituto Nacional de Estat�stica
               </h3>
 
               <p className="mt-3 text-sm leading-7 text-slate-600">
-                Fonte fundamental para estatísticas agropecuárias
-                oficiais e informação censitária de Angola.
+                Fonte fundamental para estat�sticas agropecu�rias
+                oficiais e informa��o censit�ria de Angola.
               </p>
 
             </article>
@@ -3312,9 +3312,9 @@ export default function PecuariaPage() {
               </h3>
 
               <p className="mt-3 text-sm leading-7 text-slate-600">
-                Organização internacional com documentação
-                científica e técnica relacionada com agricultura,
-                pecuária, recursos genéticos e segurança alimentar.
+                Organiza��o internacional com documenta��o
+                cient�fica e t�cnica relacionada com agricultura,
+                pecu�ria, recursos gen�ticos e seguran�a alimentar.
               </p>
 
             </article>
@@ -3326,8 +3326,8 @@ export default function PecuariaPage() {
               </h3>
 
               <p className="mt-3 text-sm leading-7 text-slate-600">
-                Referência institucional para políticas, programas
-                e desenvolvimento do sector agropecuário angolano.
+                Refer�ncia institucional para pol�ticas, programas
+                e desenvolvimento do sector agropecu�rio angolano.
               </p>
 
             </article>
@@ -3350,7 +3350,7 @@ export default function PecuariaPage() {
       </section>
 
       {/* =====================================================
-          NOTA TÉCNICA
+          NOTA T�CNICA
       ===================================================== */}
 
       <section className="bg-amber-50">
@@ -3360,19 +3360,19 @@ export default function PecuariaPage() {
           <div className="max-w-4xl">
 
             <p className="text-xs font-bold uppercase tracking-widest text-amber-700">
-              NOTA TÉCNICA
+              NOTA T�CNICA
             </p>
 
             <h2 className="mt-3 text-2xl font-black text-amber-950">
-              Orientação não substitui assistência profissional
+              Orienta��o n�o substitui assist�ncia profissional
             </h2>
 
             <p className="mt-4 leading-8 text-amber-900">
-              O conteúdo desta plataforma tem finalidade
-              educativa, técnica e informativa. Diagnóstico de
-              doenças, prescrição de medicamentos, procedimentos
-              clínicos e decisões de elevado risco devem ser
-              realizados por médicos veterinários ou outros
+              O conte�do desta plataforma tem finalidade
+              educativa, t�cnica e informativa. Diagn�stico de
+              doen�as, prescri��o de medicamentos, procedimentos
+              cl�nicos e decis�es de elevado risco devem ser
+              realizados por m�dicos veterin�rios ou outros
               profissionais legalmente habilitados.
             </p>
 
@@ -3399,13 +3399,13 @@ export default function PecuariaPage() {
               </p>
 
               <h2 className="mt-3 text-4xl font-black">
-                Conhecimento ? Dados ? Solução
+                Conhecimento ? Dados ? Solu��o
               </h2>
 
               <p className="mt-5 leading-8 text-green-50">
-                Estude a espécie, compreenda o sistema de produção,
-                consulte os dados disponíveis e avance para as
-                ferramentas tecnológicas quando existir um problema
+                Estude a esp�cie, compreenda o sistema de produ��o,
+                consulte os dados dispon�veis e avance para as
+                ferramentas tecnol�gicas quando existir um problema
                 concreto.
               </p>
 
@@ -3436,7 +3436,7 @@ export default function PecuariaPage() {
       </section>
 
       {/* =====================================================
-          RODAPÉ
+          RODAP�
       ===================================================== */}
 
       <footer className="border-t border-white/10 bg-green-950 text-white">
@@ -3452,8 +3452,8 @@ export default function PecuariaPage() {
               </h3>
 
               <p className="mt-2 max-w-xl text-sm leading-6 text-green-100/70">
-                Plataforma Nacional de Investigação,
-                Conhecimento e Inovação Agropecuária de Angola.
+                Plataforma Nacional de Investiga��o,
+                Conhecimento e Inova��o Agropecu�ria de Angola.
               </p>
 
             </div>
@@ -3464,7 +3464,7 @@ export default function PecuariaPage() {
                 href="/"
                 className="transition hover:text-white"
               >
-                Início
+                In�cio
               </Link>
 
               <Link
@@ -3478,7 +3478,7 @@ export default function PecuariaPage() {
                 href="/pecuaria"
                 className="text-white"
               >
-                Pecuária
+                Pecu�ria
               </Link>
 
               <Link
@@ -3502,7 +3502,7 @@ export default function PecuariaPage() {
           <div className="mt-8 border-t border-white/10 pt-6">
 
             <p className="text-sm text-green-100/60">
-              Conhecimento, Tecnologia e Inovação ao Serviço do Campo Angolano.
+              Conhecimento, Tecnologia e Inova��o ao Servi�o do Campo Angolano.
             </p>
 
           </div>
