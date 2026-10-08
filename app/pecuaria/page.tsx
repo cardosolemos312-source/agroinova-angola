@@ -23,7 +23,7 @@ type EspecieId =
 type Secao = {
   titulo: string;
   texto: string;
-  pontos?: string[];
+  pontos: string[];
 };
 
 type Tema = {
@@ -1795,27 +1795,27 @@ const rotasTemas: Record<
   perus: {
     alimentacao: {
       href: "/pecuaria/perus/orientacoes/alimentacao",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     instalacoes: {
       href: "/pecuaria/perus/orientacoes/instalacoes",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     sanidade: {
       href: "/pecuaria/perus/orientacoes/sanidade",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     crescimento: {
       href: "/pecuaria/perus/orientacoes/crescimento",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     reproducao: {
       href: "/pecuaria/perus/orientacoes/reproducao",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     mercado: {
       href: "/pecuaria/perus/orientacoes/mercado",
-      status: "em-preparacao",
+      status: "disponivel",
     },
   },
 
@@ -2770,7 +2770,7 @@ export default function PecuariaPage() {
                             </div>
 
                             <span className="text-lg font-bold text-green-700 transition group-hover:translate-x-1">
-                              ?
+                
                             </span>
 
                           </div>
@@ -3399,7 +3399,7 @@ export default function PecuariaPage() {
               </p>
 
               <h2 className="mt-3 text-4xl font-black">
-                Conhecimento ? Dados ? Solução
+                Conhecimento, Dados e Solução
               </h2>
 
               <p className="mt-5 leading-8 text-green-50">
