@@ -627,11 +627,7 @@ export default function Header() {
                   Agricultura
                 </Link>
                 <Link href="/florestas" onClick={fecharMenu}>
-  Florestas
-</Link>
-
-                <Link href="/silvicultura" onClick={fecharMenu}>
-                  Silvicultura
+                Florestas
                 </Link>
                 <Link href="/pecuaria" onClick={fecharMenu}>
                   Pecuária
