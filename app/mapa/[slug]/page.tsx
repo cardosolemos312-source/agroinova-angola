@@ -16,7 +16,6 @@ const provincias: Record<string, string> = {
   cubango: "Cubango",
   "cuanza-norte": "Cuanza Norte",
   "cuanza-sul": "Cuanza Sul",
-  "cuanza-sul": "Cuanza Sul",
   cunene: "Cunene",
   huambo: "Huambo",
   huila: "Huíla",

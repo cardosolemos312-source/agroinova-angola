@@ -1364,7 +1364,7 @@ Abrir página das províncias → </button>
         aberto={modalAberto}
         fechar={() => setModalAberto(false)}
         tipo={tipoModal}
-        provincia={selecionada?.nome}
+        provincia={selecionada ?? null}
         tema={temaAtivo}
       />
     </main>

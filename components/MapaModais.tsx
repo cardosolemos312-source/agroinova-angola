@@ -2,7 +2,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  GeoJSON,
+  useMap,
+} from "react-leaflet";
 import type { FeatureCollection } from "geojson";
 import "leaflet/dist/leaflet.css";
 
@@ -22,10 +27,17 @@ type Indicador = {
   descricao: string;
 };
 
+type TipoModal =
+  | "provincias"
+  | "municipios"
+  | "areas"
+  | "pesca"
+  | "sobre";
+
 type Props = {
   aberto: boolean;
   fechar: () => void;
-  tipo: "provincias" | "municipios" | "areas" | "sobre";
+  tipo: TipoModal;
   provincia?: Provincia | null;
   tema?: string;
 };
@@ -61,12 +73,12 @@ const indicadores: Indicador[] = [
     periodo: "Período da fonte original",
     fonte: "Estatística agrícola oficial necessária",
     descricao:
-      "Não deve ser calculada subtraindo áreas de fontes ou períodos diferentes. A área não cultivada só será calculada quando existir uma área total comparável e uma área cultivada correspondente.",
+      "Só deve ser calculada quando existir uma área total comparável e uma área cultivada correspondente, para a mesma região e período.",
   },
   {
     titulo: "Produção agrícola",
     valor: "A confirmar na fonte",
-    unidade: "toneladas ou unidade publicada",
+    unidade: "Toneladas ou unidade publicada",
     periodo: "Período da fonte original",
     fonte: "INE / MINAGRIF",
     descricao:
@@ -75,7 +87,7 @@ const indicadores: Indicador[] = [
   {
     titulo: "Efetivo pecuário",
     valor: "A confirmar na fonte",
-    unidade: "cabeças ou unidade publicada",
+    unidade: "Cabeças ou unidade publicada",
     periodo: "Período da fonte original",
     fonte: "Estatística pecuária oficial",
     descricao:
@@ -93,7 +105,7 @@ const indicadores: Indicador[] = [
   {
     titulo: "Pesca e aquicultura",
     valor: "A confirmar na fonte",
-    unidade: "toneladas ou unidade publicada",
+    unidade: "Toneladas ou unidade publicada",
     periodo: "Período da fonte original",
     fonte: "Estatística oficial das pescas",
     descricao:
@@ -101,13 +113,40 @@ const indicadores: Indicador[] = [
   },
 ];
 
-function AjustarMapa({ dados }: { dados: FeatureCollection | null }) {
+const provinciasAngola = [
+  "Bengo",
+  "Benguela",
+  "Bié",
+  "Cabinda",
+  "Cuando",
+  "Cubango",
+  "Cuanza Norte",
+  "Cuanza Sul",
+  "Cunene",
+  "Huambo",
+  "Huíla",
+  "Icolo e Bengo",
+  "Luanda",
+  "Lunda Norte",
+  "Lunda Sul",
+  "Malanje",
+  "Moxico",
+  "Moxico Leste",
+  "Namibe",
+  "Uíge",
+  "Zaire",
+];
+
+function AjustarMapa({
+  dados,
+}: {
+  dados: FeatureCollection | null;
+}) {
   const mapa = useMap();
 
   useEffect(() => {
     if (!dados?.features?.length) return;
 
-    // O mapa nacional só é enquadrado quando existe cartografia disponível.
     import("leaflet").then(({ default: L }) => {
       const camada = L.geoJSON(dados as never);
       const limites = camada.getBounds();
@@ -128,11 +167,13 @@ export default function MapaModais({
   provincia,
   tema = "Agricultura",
 }: Props) {
-  const [geojson, setGeojson] = useState<FeatureCollection | null>(null);
+  const [geojson, setGeojson] =
+    useState<FeatureCollection | null>(null);
   const [erroMapa, setErroMapa] = useState("");
   const [temaModal, setTemaModal] = useState(tema);
   const [pesquisa, setPesquisa] = useState("");
-  const [municipioSelecionado, setMunicipioSelecionado] = useState("");
+  const [municipioSelecionado, setMunicipioSelecionado] =
+    useState("");
 
   useEffect(() => {
     if (!aberto || tipo !== "provincias") return;
@@ -140,16 +181,26 @@ export default function MapaModais({
     let cancelado = false;
 
     fetch("/Angola_Provincias.geojson")
-      .then((r) => {
-        if (!r.ok) throw new Error("Falha ao carregar os limites provinciais.");
-        return r.json();
+      .then((resposta) => {
+        if (!resposta.ok) {
+          throw new Error(
+            "Falha ao carregar os limites provinciais."
+          );
+        }
+
+        return resposta.json();
       })
-      .then((d: FeatureCollection) => {
-        if (!cancelado) setGeojson(d);
+      .then((dados: FeatureCollection) => {
+        if (!cancelado) {
+          setGeojson(dados);
+          setErroMapa("");
+        }
       })
       .catch(() => {
         if (!cancelado) {
-          setErroMapa("Não foi possível carregar a cartografia provincial.");
+          setErroMapa(
+            "Não foi possível carregar a cartografia provincial."
+          );
         }
       });
 
@@ -166,8 +217,15 @@ export default function MapaModais({
     }
 
     window.addEventListener("keydown", tecla);
-    return () => window.removeEventListener("keydown", tecla);
+
+    return () => {
+      window.removeEventListener("keydown", tecla);
+    };
   }, [aberto, fechar]);
+
+  useEffect(() => {
+    setTemaModal(tema);
+  }, [tema]);
 
   if (!aberto) return null;
 
@@ -178,17 +236,25 @@ export default function MapaModais({
         ? `Municípios — ${provincia?.nome ?? "Província"}`
         : tipo === "areas"
           ? `Indicadores e áreas — ${provincia?.nome ?? "Angola"}`
-          : "AGROINOVA ANGOLA";
+          : tipo === "pesca"
+            ? "Pesca e aquicultura em Angola"
+            : "AGROINOVA ANGOLA";
 
   const indicadoresFiltrados = indicadores.filter((item) =>
-    `${item.titulo} ${item.descricao}`.toLowerCase().includes(pesquisa.toLowerCase())
+    `${item.titulo} ${item.descricao} ${item.fonte}`
+      .toLowerCase()
+      .includes(pesquisa.toLowerCase())
+  );
+
+  const provinciasFiltradas = provinciasAngola.filter((nome) =>
+    nome.toLowerCase().includes(pesquisa.toLowerCase())
   );
 
   return (
     <div
       role="presentation"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) fechar();
+      onMouseDown={(evento) => {
+        if (evento.target === evento.currentTarget) fechar();
       }}
       style={{
         position: "fixed",
@@ -230,10 +296,20 @@ export default function MapaModais({
           }}
         >
           <div>
-            <div style={{ fontSize: 10, letterSpacing: 2, color: "#bbf7d0" }}>
+            <div
+              style={{
+                fontSize: 10,
+                letterSpacing: 2,
+                color: "#bbf7d0",
+              }}
+            >
               AGROINOVA ANGOLA · OBSERVATÓRIO TERRITORIAL
             </div>
-            <h2 id="mapa-modal-titulo" style={{ margin: "5px 0 0", fontSize: 23 }}>
+
+            <h2
+              id="mapa-modal-titulo"
+              style={{ margin: "5px 0 0", fontSize: 23 }}
+            >
               {titulo}
             </h2>
           </div>
@@ -260,19 +336,14 @@ export default function MapaModais({
         <div style={{ padding: 22 }}>
           {tipo === "provincias" && (
             <>
-              <p style={{ color: "#64748b", lineHeight: 1.7, marginTop: 0 }}>
-                Explore as divisões provinciais de Angola. Selecione uma província
-                para consultar os indicadores territoriais associados. Os limites
-                municipais exigem uma camada cartográfica municipal própria.
+              <p style={textoIntro}>
+                Explore as divisões provinciais de Angola.
+                Consulte as províncias e os indicadores territoriais
+                disponíveis. Os limites municipais exigem cartografia
+                municipal própria.
               </p>
 
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(0, 1.6fr) minmax(250px, .8fr)",
-                  gap: 18,
-                }}
-              >
+              <div style={grelhaMapa}>
                 <div
                   style={{
                     minHeight: 460,
@@ -282,7 +353,9 @@ export default function MapaModais({
                   }}
                 >
                   {erroMapa ? (
-                    <p style={{ padding: 20, color: "#fff" }}>{erroMapa}</p>
+                    <p style={{ padding: 20, color: "#fff" }}>
+                      {erroMapa}
+                    </p>
                   ) : geojson ? (
                     <MapContainer
                       center={[-12.5, 17.5]}
@@ -294,7 +367,9 @@ export default function MapaModais({
                         attribution="Tiles © Esri"
                         url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
                       />
+
                       <AjustarMapa dados={geojson} />
+
                       <GeoJSON
                         data={geojson}
                         style={() => ({
@@ -313,63 +388,38 @@ export default function MapaModais({
                 </div>
 
                 <div>
-                  <h3 style={{ marginTop: 0 }}>Consultar uma província</h3>
+                  <h3 style={{ marginTop: 0 }}>
+                    Consultar uma província
+                  </h3>
+
                   <input
                     value={pesquisa}
-                    onChange={(e) => setPesquisa(e.target.value)}
+                    onChange={(evento) =>
+                      setPesquisa(evento.target.value)
+                    }
                     placeholder="Pesquisar província..."
-                    style={{
-                      width: "100%",
-                      padding: 12,
-                      border: "1px solid #cbd5e1",
-                      borderRadius: 8,
-                      marginBottom: 12,
-                    }}
+                    style={estiloInput}
                   />
 
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                      gap: 7,
-                      maxHeight: 360,
-                      overflowY: "auto",
-                    }}
-                  >
-                    {provincia && (
+                  <div style={listaProvincias}>
+                    {provinciasFiltradas.map((nome) => (
                       <button
+                        key={nome}
                         type="button"
-                        onClick={() => setPesquisa(provincia.nome)}
+                        onClick={() => setPesquisa(nome)}
                         style={botaoProvincia}
                       >
-                        {provincia.nome}
+                        {nome}
                       </button>
-                    )}
-                    {[
-                      "Bengo", "Benguela", "Bié", "Cabinda", "Cuando",
-                      "Cuanza Norte", "Cuanza Sul", "Cubango", "Cunene",
-                      "Huambo", "Huíla", "Icolo e Bengo", "Luanda",
-                      "Lunda Norte", "Lunda Sul", "Malanje", "Moxico",
-                      "Moxico Leste", "Namibe", "Uíge", "Zaire",
-                    ]
-                      .filter((nome) => nome.toLowerCase().includes(pesquisa.toLowerCase()))
-                      .map((nome) => (
-                        <button
-                          key={nome}
-                          type="button"
-                          onClick={() => setPesquisa(nome)}
-                          style={botaoProvincia}
-                        >
-                          {nome}
-                        </button>
-                      ))}
+                    ))}
                   </div>
 
                   <div style={caixaInformacao}>
                     <strong>Nota sobre os dados</strong>
-                    <p style={{ fontSize: 12, lineHeight: 1.7, marginBottom: 0 }}>
-                      Os indicadores históricos devem conservar a divisão
-                      administrativa, a unidade e o período da fonte original.
+                    <p style={textoPequeno}>
+                      Os indicadores históricos devem conservar a
+                      divisão administrativa, a unidade e o período
+                      da fonte original.
                     </p>
                   </div>
                 </div>
@@ -379,44 +429,33 @@ export default function MapaModais({
 
           {tipo === "municipios" && (
             <>
-              <p style={{ color: "#64748b", lineHeight: 1.7, marginTop: 0 }}>
-                O mapa municipal deverá permitir selecionar cada município,
-                comparar o seu potencial e consultar a produção por atividade.
-                Para desenhar os limites reais, é necessário carregar um ficheiro
-                GeoJSON dos municípios — o ficheiro provincial atual não contém
-                esses limites.
+              <p style={textoIntro}>
+                Consulte os temas relevantes para o desenvolvimento
+                municipal. Os limites reais e os indicadores por
+                município só devem ser apresentados quando existirem
+                cartografia e dados verificáveis.
               </p>
 
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-                gap: 12,
-              }}>
+              <div style={grelhaTemas}>
                 {temas.map((nome) => (
                   <button
                     key={nome}
                     type="button"
                     onClick={() => setTemaModal(nome)}
                     style={{
-                      padding: 17,
-                      borderRadius: 12,
-                      border: temaModal === nome
-                        ? "2px solid #16a34a"
-                        : "1px solid #dbe5dd",
-                      background: temaModal === nome ? "#f0fdf4" : "#fff",
-                      textAlign: "left",
-                      cursor: "pointer",
+                      ...botaoTema,
+                      border:
+                        temaModal === nome
+                          ? "2px solid #16a34a"
+                          : "1px solid #dbe5dd",
+                      background:
+                        temaModal === nome ? "#f0fdf4" : "#fff",
                     }}
                   >
                     <strong>{nome}</strong>
-                    <p style={{
-                      marginBottom: 0,
-                      color: "#64748b",
-                      fontSize: 12,
-                      lineHeight: 1.6,
-                    }}>
-                      Consultar potencial, produção e limitações quando existirem
-                      dados municipais verificáveis.
+                    <p style={textoPequeno}>
+                      Consultar potencial, produção e limitações
+                      quando existirem dados verificáveis.
                     </p>
                   </button>
                 ))}
@@ -424,204 +463,249 @@ export default function MapaModais({
 
               <div style={caixaInformacao}>
                 <strong>Camada selecionada: {temaModal}</strong>
-                <p style={{ fontSize: 12, lineHeight: 1.7, marginBottom: 0 }}>
-                  Os dados municipais serão apresentados por município, com
-                  unidade, período e fonte. Não será atribuído automaticamente
-                  a um município um total que a fonte só publique para a província.
+                <p style={textoPequeno}>
+                  Os dados municipais devem indicar unidade,
+                  período e fonte. Não será atribuído a um município
+                  um total que a fonte publique apenas para a província.
                 </p>
               </div>
 
-              <label style={{ display: "block", marginTop: 18, fontWeight: 700 }}>
-                Município selecionado
+              <label
+                htmlFor="municipio-selecionado"
+                style={rotulo}
+              >
+                Município a consultar
               </label>
+
               <input
+                id="municipio-selecionado"
                 value={municipioSelecionado}
-                onChange={(e) => setMunicipioSelecionado(e.target.value)}
-                placeholder="Nome do município, quando a lista oficial estiver ligada..."
-                style={{
-                  width: "100%",
-                  padding: 12,
-                  border: "1px solid #cbd5e1",
-                  borderRadius: 8,
-                  marginTop: 7,
-                }}
+                onChange={(evento) =>
+                  setMunicipioSelecionado(evento.target.value)
+                }
+                placeholder="Introduza o nome do município..."
+                style={estiloInput}
               />
-              <p style={{ fontSize: 12, color: "#64748b", lineHeight: 1.7 }}>
-                Este campo permite identificar o município a consultar; não
-                representa uma lista municipal oficial nem confirma a existência
-                de estatísticas para o município digitado.
+
+              <p style={textoPequeno}>
+                O nome introduzido não confirma, por si só, a
+                existência de estatísticas oficiais para o município.
               </p>
             </>
           )}
 
           {tipo === "areas" && (
             <>
-              <p style={{ color: "#64748b", lineHeight: 1.7, marginTop: 0 }}>
-                Painel técnico de áreas e produção para {provincia?.nome ?? "Angola"}.
-                Filtre os indicadores e consulte o significado de cada medida.
+              <p style={textoIntro}>
+                Painel técnico de áreas e produção para{" "}
+                {provincia?.nome ?? "Angola"}. Consulte os indicadores
+                sem confundir áreas totais, cultivadas ou potencialmente
+                aptas.
               </p>
 
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                gap: 12,
-                marginBottom: 18,
-              }}>
+              <div style={grelhaIndicadores}>
                 {[
                   ["Área cultivada", "ha"],
                   ["Área não cultivada", "ha"],
                   ["Produção agrícola", "t"],
                   ["Produtividade", "t/ha"],
                 ].map(([nome, unidade]) => (
-                  <div key={nome} style={{
-                    border: "1px solid #dbe5dd",
-                    borderRadius: 12,
-                    padding: 15,
-                    background: "#f8fafc",
-                  }}>
-                    <div style={{ color: "#64748b", fontSize: 12 }}>{nome}</div>
-                    <div style={{ fontSize: 19, fontWeight: 800, color: VERDE, marginTop: 7 }}>
+                  <div key={nome} style={cartaoIndicador}>
+                    <div style={textoSecundario}>{nome}</div>
+                    <div
+                      style={{
+                        fontSize: 19,
+                        fontWeight: 800,
+                        color: VERDE,
+                        marginTop: 7,
+                      }}
+                    >
                       A validar
                     </div>
-                    <small style={{ color: "#64748b" }}>Unidade: {unidade}</small>
+                    <small style={textoSecundario}>
+                      Unidade: {unidade}
+                    </small>
                   </div>
                 ))}
               </div>
 
               <input
                 value={pesquisa}
-                onChange={(e) => setPesquisa(e.target.value)}
+                onChange={(evento) =>
+                  setPesquisa(evento.target.value)
+                }
                 placeholder="Pesquisar indicador..."
-                style={{
-                  width: "100%",
-                  padding: 12,
-                  border: "1px solid #cbd5e1",
-                  borderRadius: 8,
-                  marginBottom: 12,
-                }}
+                style={estiloInput}
               />
 
               <div style={{ display: "grid", gap: 10 }}>
                 {indicadoresFiltrados.map((item) => (
-                  <article key={item.titulo} style={{
-                    padding: 16,
-                    border: "1px solid #e2e8f0",
-                    borderRadius: 11,
-                  }}>
-                    <h3 style={{ margin: "0 0 8px", color: VERDE_ESCURO }}>
+                  <article key={item.titulo} style={cartaoArtigo}>
+                    <h3
+                      style={{
+                        margin: "0 0 8px",
+                        color: VERDE_ESCURO,
+                      }}
+                    >
                       {item.titulo}
                     </h3>
-                    <div style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: 7,
-                      marginBottom: 9,
-                    }}>
+
+                    <div style={linhaEtiquetas}>
                       <span style={etiqueta}>{item.valor}</span>
-                      <span style={etiqueta}>Unidade: {item.unidade}</span>
+                      <span style={etiqueta}>
+                        Unidade: {item.unidade}
+                      </span>
                       <span style={etiqueta}>{item.periodo}</span>
                     </div>
-                    <p style={{
-                      color: "#475569",
-                      fontSize: 13,
-                      lineHeight: 1.7,
-                      margin: "0 0 8px",
-                    }}>
+
+                    <p style={textoDescricao}>
                       {item.descricao}
                     </p>
-                    <small style={{ color: "#64748b" }}>
-                      Fonte necessária: {item.fonte}
+
+                    <small style={textoSecundario}>
+                      Fonte: {item.fonte}
                     </small>
                   </article>
                 ))}
               </div>
 
               <div style={caixaInformacao}>
-                <strong>Como calcular a área restante?</strong>
-                <p style={{ fontSize: 12, lineHeight: 1.7, marginBottom: 0 }}>
-                  Quando a fonte disponibilizar a área agrícola total e a área
-                  cultivada para a mesma região e período, a área não cultivada
-                  poderá ser calculada por: área total comparável menos área
-                  cultivada. Área potencialmente apta não é sinónimo de área
-                  disponível nem de área ainda não cultivada.
+                <strong>Como calcular a área não cultivada?</strong>
+                <p style={textoPequeno}>
+                  Quando existirem dados comparáveis para a mesma
+                  região e período, pode calcular-se a diferença
+                  entre a área agrícola total e a área cultivada.
+                  A área potencialmente apta não é sinónimo de área
+                  disponível nem de área não cultivada.
+                </p>
+              </div>
+            </>
+          )}
+
+          {tipo === "pesca" && (
+            <>
+              <p style={textoIntro}>
+                A pesca e a aquicultura são importantes para a
+                alimentação, o emprego e a economia angolana. A
+                análise territorial deve distinguir a pesca marítima,
+                a pesca continental e a produção aquícola.
+              </p>
+
+              <div style={grelhaIndicadores}>
+                {[
+                  {
+                    titulo: "Pesca marítima",
+                    descricao:
+                      "Atividade desenvolvida ao longo da costa angolana.",
+                  },
+                  {
+                    titulo: "Pesca continental",
+                    descricao:
+                      "Captura de recursos pesqueiros em rios, lagos e outras águas interiores.",
+                  },
+                  {
+                    titulo: "Aquicultura",
+                    descricao:
+                      "Produção de organismos aquáticos em sistemas de criação.",
+                  },
+                ].map((item) => (
+                  <article key={item.titulo} style={cartaoArtigo}>
+                    <h3 style={tituloCartao}>{item.titulo}</h3>
+                    <p style={textoDescricao}>{item.descricao}</p>
+                    <span style={etiqueta}>
+                      Estatísticas a validar na fonte oficial
+                    </span>
+                  </article>
+                ))}
+              </div>
+
+              <div style={caixaInformacao}>
+                <strong>Rigor estatístico</strong>
+                <p style={textoPequeno}>
+                  Não são apresentados totais de captura ou produção
+                  sem fonte, período, unidade e cobertura geográfica
+                  identificados.
                 </p>
               </div>
             </>
           )}
 
           {tipo === "sobre" && (
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-              gap: 18,
-            }}>
-              <div style={{
-                padding: 26,
-                borderRadius: 15,
-                background: `linear-gradient(145deg, ${VERDE_ESCURO}, ${VERDE})`,
-                color: "#fff",
-              }}>
-                <div style={{ color: "#bbf7d0", letterSpacing: 2, fontSize: 11 }}>
+            <div style={grelhaSobre}>
+              <div style={cartaoSobrePrincipal}>
+                <div
+                  style={{
+                    color: "#bbf7d0",
+                    letterSpacing: 2,
+                    fontSize: 11,
+                  }}
+                >
                   CONHECIMENTO · TECNOLOGIA · INOVAÇÃO
                 </div>
-                <h3 style={{ fontSize: 28, lineHeight: 1.2 }}>
+
+                <h3
+                  style={{
+                    fontSize: 28,
+                    lineHeight: 1.2,
+                  }}
+                >
                   Uma nova forma de conhecer o campo angolano.
                 </h3>
-                <p style={{ lineHeight: 1.8, color: "#e2fbe9" }}>
-                  A AGROINOVA ANGOLA liga conhecimento científico, informação
-                  territorial e inovação para apoiar quem produz, investiga,
-                  planeia e decide sobre o futuro da agricultura.
+
+                <p style={textoSobrePrincipal}>
+                  A AGROINOVA ANGOLA liga conhecimento científico,
+                  informação territorial e inovação para apoiar
+                  quem produz, investiga, planeia e decide sobre
+                  o futuro da agricultura.
                 </p>
               </div>
 
               <div style={{ display: "grid", gap: 12 }}>
                 <article style={cartaoSobre}>
-                  <h3 style={tituloSobre}>A nossa missão</h3>
-                  <p style={textoSobre}>
-                    Organizar e tornar acessível o conhecimento agropecuário
-                    angolano, aproximando dados, investigação, produtores,
-                    técnicos, instituições e decisores públicos.
+                  <h3 style={tituloCartao}>A nossa missão</h3>
+                  <p style={textoDescricao}>
+                    Organizar e tornar acessível o conhecimento
+                    agropecuário angolano, aproximando dados,
+                    investigação, produtores, técnicos, instituições
+                    e decisores públicos.
                   </p>
                 </article>
 
                 <article style={cartaoSobre}>
-                  <h3 style={tituloSobre}>A nossa visão</h3>
-                  <p style={textoSobre}>
-                    Contribuir para um setor agropecuário mais produtivo,
-                    resiliente, sustentável e apoiado em evidências, valorizando
-                    a diversidade das províncias e dos sistemas de produção.
+                  <h3 style={tituloCartao}>A nossa visão</h3>
+                  <p style={textoDescricao}>
+                    Contribuir para um setor agropecuário mais
+                    produtivo, resiliente, sustentável e apoiado
+                    em evidências.
                   </p>
                 </article>
 
                 <article style={cartaoSobre}>
-                  <h3 style={tituloSobre}>O que nos orienta</h3>
-                  <p style={textoSobre}>
-                    Rigor nos dados, transparência das fontes, valorização do
-                    conhecimento local, inovação útil e respeito pelas
-                    diferenças ambientais e económicas de Angola.
+                  <h3 style={tituloCartao}>O que nos orienta</h3>
+                  <p style={textoDescricao}>
+                    Rigor nos dados, transparência das fontes,
+                    valorização do conhecimento local e inovação
+                    útil para Angola.
                   </p>
                 </article>
               </div>
 
-              <div style={{
-                gridColumn: "1 / -1",
-                padding: 20,
-                border: "1px solid #dbe5dd",
-                borderRadius: 12,
-                background: "#f8fafc",
-              }}>
-                <h3 style={{ color: VERDE_ESCURO, marginTop: 0 }}>
+              <div style={caixaInformacao}>
+                <h3 style={{ marginTop: 0 }}>
                   Conhecimento ao serviço do campo angolano
                 </h3>
-                <p style={{ color: "#475569", lineHeight: 1.8 }}>
-                  O mapa é uma porta de entrada para explorar agricultura,
-                  pecuária, florestas, solos, pesca, recursos hídricos,
-                  infraestruturas e investigação. A plataforma deve distinguir
-                  estatísticas oficiais, informação técnica, estimativas e
-                  recomendações, indicando sempre as fontes e os períodos.
+
+                <p style={textoDescricao}>
+                  O mapa é uma porta de entrada para explorar
+                  agricultura, pecuária, florestas, solos, pesca,
+                  recursos hídricos, infraestruturas e investigação.
+                  A plataforma deve distinguir estatísticas oficiais,
+                  informação técnica, estimativas e recomendações.
                 </p>
-                <strong style={{ color: VERDE }}>
-                  Conhecimento, Tecnologia e Inovação ao Serviço do Campo Angolano.
+
+                <strong>
+                  Conhecimento, Tecnologia e Inovação ao Serviço
+                  do Campo Angolano.
                 </strong>
               </div>
             </div>
@@ -631,6 +715,26 @@ export default function MapaModais({
     </div>
   );
 }
+
+const textoIntro: React.CSSProperties = {
+  color: "#64748b",
+  lineHeight: 1.7,
+  marginTop: 0,
+};
+
+const grelhaMapa: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "minmax(0, 1.6fr) minmax(250px, .8fr)",
+  gap: 18,
+};
+
+const listaProvincias: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+  gap: 7,
+  maxHeight: 360,
+  overflowY: "auto",
+};
 
 const botaoProvincia: React.CSSProperties = {
   border: "1px solid #dbe5dd",
@@ -643,6 +747,57 @@ const botaoProvincia: React.CSSProperties = {
   cursor: "pointer",
 };
 
+const grelhaTemas: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+  gap: 12,
+};
+
+const botaoTema: React.CSSProperties = {
+  padding: 17,
+  borderRadius: 12,
+  textAlign: "left",
+  cursor: "pointer",
+  color: "#17221b",
+};
+
+const grelhaIndicadores: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+  gap: 12,
+  marginBottom: 18,
+};
+
+const cartaoIndicador: React.CSSProperties = {
+  border: "1px solid #dbe5dd",
+  borderRadius: 12,
+  padding: 15,
+  background: "#f8fafc",
+};
+
+const cartaoArtigo: React.CSSProperties = {
+  padding: 16,
+  border: "1px solid #e2e8f0",
+  borderRadius: 11,
+  background: "#fff",
+};
+
+const linhaEtiquetas: React.CSSProperties = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: 7,
+  marginBottom: 9,
+};
+
+const etiqueta: React.CSSProperties = {
+  display: "inline-block",
+  padding: "5px 8px",
+  borderRadius: 6,
+  background: "#f1f5f9",
+  color: "#475569",
+  fontSize: 11,
+};
+
 const caixaInformacao: React.CSSProperties = {
   marginTop: 16,
   padding: 14,
@@ -652,12 +807,55 @@ const caixaInformacao: React.CSSProperties = {
   color: "#14532d",
 };
 
-const etiqueta: React.CSSProperties = {
-  padding: "5px 8px",
-  borderRadius: 6,
-  background: "#f1f5f9",
+const textoPequeno: React.CSSProperties = {
+  fontSize: 12,
+  lineHeight: 1.7,
+  marginBottom: 0,
+};
+
+const textoSecundario: React.CSSProperties = {
+  color: "#64748b",
+  fontSize: 12,
+};
+
+const textoDescricao: React.CSSProperties = {
   color: "#475569",
-  fontSize: 11,
+  fontSize: 13,
+  lineHeight: 1.7,
+};
+
+const estiloInput: React.CSSProperties = {
+  width: "100%",
+  boxSizing: "border-box",
+  padding: 12,
+  border: "1px solid #cbd5e1",
+  borderRadius: 8,
+  marginBottom: 12,
+};
+
+const rotulo: React.CSSProperties = {
+  display: "block",
+  marginTop: 18,
+  marginBottom: 7,
+  fontWeight: 700,
+};
+
+const grelhaSobre: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+  gap: 18,
+};
+
+const cartaoSobrePrincipal: React.CSSProperties = {
+  padding: 26,
+  borderRadius: 15,
+  background: `linear-gradient(145deg, ${VERDE_ESCURO}, ${VERDE})`,
+  color: "#fff",
+};
+
+const textoSobrePrincipal: React.CSSProperties = {
+  lineHeight: 1.8,
+  color: "#e2fbe9",
 };
 
 const cartaoSobre: React.CSSProperties = {
@@ -667,14 +865,7 @@ const cartaoSobre: React.CSSProperties = {
   background: "#fff",
 };
 
-const tituloSobre: React.CSSProperties = {
+const tituloCartao: React.CSSProperties = {
   margin: "0 0 8px",
   color: "#14532d",
-};
-
-const textoSobre: React.CSSProperties = {
-  margin: 0,
-  color: "#475569",
-  lineHeight: 1.75,
-  fontSize: 13,
 };
