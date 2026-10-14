@@ -1820,108 +1820,108 @@ const rotasTemas: Record<
   codornizes: {
     instalacoes: {
       href: "/pecuaria/codornizes/orientacoes/instalacoes",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     alimentacao: {
       href: "/pecuaria/codornizes/orientacoes/alimentacao",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     ovos: {
       href: "/pecuaria/codornizes/orientacoes/ovos",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     sanidade: {
       href: "/pecuaria/codornizes/orientacoes/sanidade",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     reproducao: {
       href: "/pecuaria/codornizes/orientacoes/reproducao",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     mercado: {
       href: "/pecuaria/codornizes/orientacoes/mercado",
-      status: "em-preparacao",
+      status: "disponivel",
     },
   },
 
   equinos: {
     alimentacao: {
       href: "/pecuaria/equinos/orientacoes/alimentacao",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     agua: {
       href: "/pecuaria/equinos/orientacoes/agua",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     casco: {
       href: "/pecuaria/equinos/orientacoes/casco",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     sanidade: {
       href: "/pecuaria/equinos/orientacoes/sanidade",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     trabalho: {
       href: "/pecuaria/equinos/orientacoes/trabalho",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     reproducao: {
       href: "/pecuaria/equinos/orientacoes/reproducao",
-      status: "em-preparacao",
+      status: "disponivel",
     },
   },
 
   asininos: {
     alimentacao: {
       href: "/pecuaria/asininos/orientacoes/alimentacao",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     agua: {
       href: "/pecuaria/asininos/orientacoes/agua",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     trabalho: {
       href: "/pecuaria/asininos/orientacoes/trabalho",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     cascos: {
       href: "/pecuaria/asininos/orientacoes/cascos",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     sanidade: {
       href: "/pecuaria/asininos/orientacoes/sanidade",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     "bem-estar": {
       href: "/pecuaria/asininos/orientacoes/bem-estar",
-      status: "em-preparacao",
+      status: "disponivel",
     },
   },
 
   bubalinos: {
     adaptacao: {
       href: "/pecuaria/bubalinos/orientacoes/adaptacao",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     alimentacao: {
       href: "/pecuaria/bubalinos/orientacoes/alimentacao",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     agua: {
       href: "/pecuaria/bubalinos/orientacoes/agua",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     sanidade: {
       href: "/pecuaria/bubalinos/orientacoes/sanidade",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     reproducao: {
       href: "/pecuaria/bubalinos/orientacoes/reproducao",
-      status: "em-preparacao",
+      status: "disponivel",
     },
     instalacoes: {
       href: "/pecuaria/bubalinos/orientacoes/instalacoes",
-      status: "em-preparacao",
+      status: "disponivel",
     },
   },
 

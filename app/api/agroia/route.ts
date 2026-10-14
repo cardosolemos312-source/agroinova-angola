@@ -1,208 +1,195 @@
-import OpenAI from "openai";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
+export const maxDuration = 30;
+
+const OLLAMA_URL = "http://127.0.0.1:11434/api/generate";
+const OLLAMA_MODEL = "qwen2.5:0.5b";
+const TIMEOUT_MS = 25_000;
+const MAX_DESCRICAO = 1000;
+
+function textoSeguro(valor: unknown, padrao = ""): string {
+  if (typeof valor !== "string") return padrao;
+  return valor.trim();
+}
+
+function removerRepeticoes(texto: string): string {
+  const linhas = texto.replace(/\r\n/g, "\n").split("\n");
+  const resultado: string[] = [];
+
+  for (const linha of linhas) {
+    const atual = linha.trim();
+
+    if (
+      atual &&
+      resultado.length > 0 &&
+      resultado[resultado.length - 1].trim() === atual
+    ) {
+      continue;
+    }
+
+    resultado.push(linha);
+  }
+
+  return resultado.join("\n").trim();
+}
 
 export async function POST(request: NextRequest) {
+  const controller = new AbortController();
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
   try {
-    const apiKey = process.env.OPENAI_API_KEY;
+    let body: unknown;
 
-    if (!apiKey) {
-      console.error("AGROINOVA IA: OPENAI_API_KEY não configurada.");
-
+    try {
+      body = await request.json();
+    } catch {
       return NextResponse.json(
-        {
-          sucesso: false,
-          erro: "A chave da OpenAI não está configurada no servidor.",
-        },
-        { status: 500 }
+        { sucesso: false, erro: "Pedido inválido. Actualiza a página e tenta novamente." },
+        { status: 400 }
       );
     }
 
-    const openai = new OpenAI({
-      apiKey,
-    });
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json(
+        { sucesso: false, erro: "Os dados enviados são inválidos." },
+        { status: 400 }
+      );
+    }
 
-    const body = await request.json();
+    const dados = body as Record<string, unknown>;
 
-    const {
-      descricao,
-      provincia,
-      municipio,
-      cultura,
-      atividade,
-      imagem,
-    } = body;
+    const descricao = textoSeguro(dados.descricao);
+    const provincia = textoSeguro(dados.provincia, "Não informada");
+    const municipio = textoSeguro(dados.municipio, "Não informado");
+    const cultura = textoSeguro(dados.cultura, "Não informada");
+    const atividade = textoSeguro(dados.atividade, "Não informada");
+    const imagem = dados.imagem;
 
     if (!descricao && !imagem) {
       return NextResponse.json(
-        {
-          sucesso: false,
-          erro:
-            "Envie uma descrição do problema ou uma fotografia para análise.",
-        },
+        { sucesso: false, erro: "Descreve o problema para iniciar a análise." },
         { status: 400 }
       );
     }
-
-    if (
-      imagem &&
-      typeof imagem === "string" &&
-      imagem.length > 12_000_000
-    ) {
-      return NextResponse.json(
-        {
-          sucesso: false,
-          erro: "A imagem é demasiado grande. Envie uma imagem até 12 MB.",
-        },
-        { status: 400 }
-      );
-    }
-
-    const contexto = `
-Você é a AGROINOVA IA, assistente técnico de agricultura especializado
-nas condições agrícolas de Angola.
-
-Ajude agricultores, técnicos, estudantes e gestores a compreender
-problemas agrícolas reais e indique caminhos de solução.
-
-LOCALIZAÇÃO:
-Província: ${provincia || "Não informada"}
-Município: ${municipio || "Não informado"}
-
-ACTIVIDADE:
-Cultura: ${cultura || "Não informada"}
-Actividade: ${atividade || "Não informada"}
-
-DESCRIÇÃO DO PROBLEMA:
-${descricao || "O utilizador enviou apenas uma fotografia."}
-
-REGRAS:
-
-1. Não invente dados, empresas, lojas, fazendas, técnicos,
-equipamentos, medicamentos ou produtos.
-
-2. Não apresente um diagnóstico como certeza quando apenas existe
-uma fotografia ou descrição.
-
-3. Diferencie claramente observações, hipóteses e recomendações.
-
-4. Considere as condições agrícolas de Angola.
-
-5. Quando for necessária análise laboratorial ou avaliação presencial,
-diga claramente.
-
-6. Não recomende produtos comerciais específicos sem informação
-suficiente.
-
-7. Se existir risco para pessoas, animais, alimentos ou ambiente,
-destaque esse risco.
-
-8. Seja prático e compreensível para o agricultor.
-
-9. Nunca invente técnicos ou fornecedores.
-
-10. A indicação de fornecedores, equipamentos e serviços será feita
-posteriormente pela base de dados da AGROINOVA.
-
-RESPONDA EM PORTUGUÊS DE ANGOLA.
-
-ESTRUTURA:
-
-## 1. O que foi observado
-
-## 2. Possíveis causas
-
-## 3. O que fazer agora
-
-## 4. O que deve ser verificado
-
-## 5. Quando procurar um técnico
-
-## 6. Especialidade recomendada
-`;
-
-    const content: Array<
-      | {
-          type: "input_text";
-          text: string;
-        }
-      | {
-          type: "input_image";
-          image_url: string;
-          detail: "auto";
-        }
-    > = [
-      {
-        type: "input_text",
-        text: contexto,
-      },
-    ];
 
     if (imagem) {
-      content.push({
-        type: "input_image",
-        image_url: imagem,
-        detail: "auto",
-      });
+      return NextResponse.json(
+        {
+          sucesso: false,
+          erro: "A análise de fotografias ainda não está disponível. Descreve os sintomas observados.",
+        },
+        { status: 400 }
+      );
     }
 
-    console.log("AGROINOVA IA: enviando pedido para OpenAI...");
-    console.log("AGROINOVA IA: modelo = gpt-5.6");
-    console.log("AGROINOVA IA: imagem =", Boolean(imagem));
+    if (descricao.length > MAX_DESCRICAO) {
+      return NextResponse.json(
+        { sucesso: false, erro: "Resume a descrição em até 1000 caracteres." },
+        { status: 400 }
+      );
+    }
 
-    const response = await openai.responses.create({
-      model: "gpt-5.6",
-      input: [
-        {
-          role: "user",
-          content,
+    const prompt = `
+És a AGROINOVA IA, assistente agrícola de Angola.
+
+Responde em português de Angola. Sê breve, directo e prudente.
+
+Cultura: ${cultura}
+Província: ${provincia}
+Município: ${municipio}
+Actividade: ${atividade}
+Problema: ${descricao}
+
+REGRAS:
+- Responde apenas sobre o problema apresentado.
+- Usa no máximo 70 palavras.
+- Indica até 2 causas plausíveis, sem confirmar diagnósticos.
+- Recomenda até 2 medidas seguras e relevantes.
+- Nunca inventes doenças, dados ou tratamentos.
+- Não recomendes detergentes, produtos de limpeza ou materiais inadequados para plantas.
+- Se não conseguires determinar a causa, diz o que deve ser observado.
+- Não incluas introduções nem repitas a pergunta.
+
+FORMATO:
+**Possível causa:** hipótese ou incerteza.
+
+**O que fazer:** medidas seguras.
+
+**Para confirmar:** uma pergunta essencial, se necessária.
+`;
+
+    console.log("AGROIA: a iniciar consulta.");
+    console.log("AGROIA: modelo =", OLLAMA_MODEL);
+
+    timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+    const response = await fetch(OLLAMA_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: OLLAMA_MODEL,
+        prompt,
+        stream: false,
+        keep_alive: "10m",
+        options: {
+          temperature: 0.1,
+          num_predict: 120,
+          num_ctx: 1024,
+          repeat_penalty: 1.15,
+          repeat_last_n: 32,
         },
-      ],
+      }),
+      signal: controller.signal,
+      cache: "no-store",
     });
 
-    console.log("AGROINOVA IA: resposta recebida.");
-
-    const resposta = response.output_text?.trim();
-
-    if (!resposta) {
-      console.error(
-        "AGROINOVA IA: OpenAI respondeu sem texto.",
-        response
-      );
+    if (!response.ok) {
+      const detalhe = await response.text();
+      console.error("AGROIA Ollama:", response.status, detalhe.slice(0, 500));
 
       return NextResponse.json(
         {
           sucesso: false,
-          erro: "A IA respondeu sem conteúdo.",
+          erro: "O Ollama não conseguiu responder. Confirma se está activo e se o modelo está instalado.",
         },
         { status: 502 }
       );
     }
 
-    return NextResponse.json({
-      sucesso: true,
-      resposta,
-    });
-  } catch (error: unknown) {
-    console.error("=================================");
-    console.error("ERRO AGROINOVA IA");
-    console.error("=================================");
-    console.error(error);
+    const resultado = await response.json();
+    const resposta = removerRepeticoes(textoSeguro(resultado.response));
 
-    let mensagem =
-      "Não foi possível realizar a análise.";
-
-    if (error instanceof Error) {
-      mensagem = error.message;
+    if (!resposta) {
+      return NextResponse.json(
+        { sucesso: false, erro: "A IA não devolveu uma resposta. Tenta novamente." },
+        { status: 502 }
+      );
     }
+
+    console.log("AGROIA: resposta recebida.");
+
+    return NextResponse.json(
+      { sucesso: true, resposta },
+      { headers: { "Cache-Control": "no-store" } }
+    );
+  } catch (error: unknown) {
+    console.error("ERRO AGROIA:", error);
+
+    const expirou =
+      error instanceof Error &&
+      (error.name === "AbortError" || error.name === "TimeoutError");
 
     return NextResponse.json(
       {
         sucesso: false,
-        erro: mensagem,
+        erro: expirou
+          ? "A análise demorou demasiado. Tenta uma pergunta mais curta."
+          : "Não foi possível contactar o Ollama. Confirma se está activo em http://127.0.0.1:11434.",
       },
-      { status: 500 }
+      { status: expirou ? 504 : 503 }
     );
+  } finally {
+    if (timeout) clearTimeout(timeout);
   }
 }

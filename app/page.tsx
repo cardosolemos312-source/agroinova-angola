@@ -687,22 +687,23 @@ export default function Home() {
     setAResponder(true);
 
     try {
-      const resposta = await fetch("/api/grok", {
+
+      const resposta = await fetch("/api/agroia", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          messages: historico.slice(-12),
+          descricao: texto,
         }),
       });
 
       const dados = await resposta.json();
 
-      if (!resposta.ok) {
+      if (!resposta.ok || !dados.sucesso) {
         throw new Error(
-          dados?.error ||
-            "Não foi possível obter resposta do AGROIA.",
+          dados?.erro ||
+            "Não foi possível obter resposta da AGROIA."
         );
       }
 
@@ -710,9 +711,11 @@ export default function Home() {
         ...estadoAtual,
         {
           role: "assistant",
-          content: dados.answer,
+          content: dados.resposta,
         },
       ]);
+
+
     } catch (error) {
       setMensagens((estadoAtual) => [
         ...estadoAtual,
@@ -1445,7 +1448,7 @@ export default function Home() {
                   </h2>
 
                   <p className="mt-1 text-sm text-white/70">
-                    Alimentado por Grok
+                    Alimentado por inteligência artificial local
                   </p>
                 </div>
 
