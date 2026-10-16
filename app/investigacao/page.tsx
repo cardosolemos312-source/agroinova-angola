@@ -1,5 +1,6 @@
 
 "use client";
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { areasInvestigacao } from "@/data/investigacao/areas";
@@ -88,31 +89,36 @@ const fotografias = {
 const acessos = [
   {
     titulo: "Instituições científicas",
-    texto: "Universidades, organismos de investigação e unidades de formação técnica.",
+    texto:
+      "Universidades, organismos de investigação e unidades de formação técnica.",
     imagem: fotografias.universidade,
     modal: "instituicao" as const,
   },
   {
     titulo: "Projectos e ensaios",
-    texto: "Estudos, experiências de campo, metodologias e resultados documentados.",
+    texto:
+      "Estudos, experiências de campo, metodologias e resultados documentados.",
     imagem: fotografias.campo,
     modal: "projectos" as const,
   },
   {
     titulo: "Biblioteca científica",
-    texto: "Artigos, teses, dissertações, relatórios e manuais técnicos.",
+    texto:
+      "Artigos, teses, dissertações, relatórios e manuais técnicos.",
     imagem: fotografias.laboratorio,
     modal: "biblioteca" as const,
   },
   {
     titulo: "Tecnologias agropecuárias",
-    texto: "Métodos de produção, variedades, equipamentos e soluções técnicas.",
+    texto:
+      "Métodos de produção, variedades, equipamentos e soluções técnicas.",
     imagem: fotografias.milho,
     modal: "tecnologias" as const,
   },
   {
     titulo: "Agenda de investigação",
-    texto: "Desafios científicos e propostas de investigação para Angola.",
+    texto:
+      "Desafios científicos e propostas de investigação para Angola.",
     imagem: fotografias.irrigacao,
     modal: "agenda" as const,
   },
@@ -121,37 +127,43 @@ const acessos = [
 const destaques = [
   {
     titulo: "Produção vegetal",
-    descricao: "Sementes, culturas alimentares, fertilidade e produtividade agrícola.",
+    descricao:
+      "Sementes, culturas alimentares, fertilidade e produtividade agrícola.",
     imagem: fotografias.milho,
     pesquisa: "Produção vegetal",
   },
   {
     titulo: "Água e irrigação",
-    descricao: "Gestão da água, sistemas de rega e resiliência dos sistemas agrícolas.",
+    descricao:
+      "Gestão da água, sistemas de rega e resiliência dos sistemas agrícolas.",
     imagem: fotografias.irrigacao,
     pesquisa: "Água e irrigação",
   },
   {
     titulo: "Produção animal",
-    descricao: "Nutrição, reprodução, saúde animal e melhoria dos sistemas pecuários.",
+    descricao:
+      "Nutrição, reprodução, saúde animal e melhoria dos sistemas pecuários.",
     imagem: fotografias.pecuaria,
     pesquisa: "Produção animal",
   },
   {
     titulo: "Solos e recursos naturais",
-    descricao: "Conservação, fertilidade dos solos, biodiversidade e gestão sustentável.",
+    descricao:
+      "Conservação, fertilidade dos solos, biodiversidade e gestão sustentável.",
     imagem: fotografias.floresta,
     pesquisa: "Solos",
   },
   {
     titulo: "Ciência e laboratório",
-    descricao: "Métodos científicos, análises laboratoriais e validação de resultados.",
+    descricao:
+      "Métodos científicos, análises laboratoriais e validação de resultados.",
     imagem: fotografias.laboratorio,
     pesquisa: "Sanidade",
   },
   {
     titulo: "Cadeias de valor",
-    descricao: "Produção, transformação, qualidade e valorização dos produtos agrícolas.",
+    descricao:
+      "Produção, transformação, qualidade e valorização dos produtos agrícolas.",
     imagem: fotografias.cafe,
     pesquisa: "Café",
   },
@@ -195,27 +207,33 @@ const escolas = [
 const prioridades = [
   {
     titulo: "Segurança alimentar",
-    texto: "Investigação sobre produtividade, sementes adaptadas, conservação de alimentos e redução das perdas pós-colheita.",
+    texto:
+      "Investigação sobre produtividade, sementes adaptadas, conservação de alimentos e redução das perdas pós-colheita.",
   },
   {
     titulo: "Resiliência climática",
-    texto: "Estudos sobre seca, precipitação, disponibilidade de água e práticas agrícolas adaptadas às condições locais.",
+    texto:
+      "Estudos sobre seca, precipitação, disponibilidade de água e práticas agrícolas adaptadas às condições locais.",
   },
   {
     titulo: "Solos e fertilidade",
-    texto: "Caracterização dos solos, gestão de nutrientes, matéria orgânica, erosão e conservação dos recursos.",
+    texto:
+      "Caracterização dos solos, gestão de nutrientes, matéria orgânica, erosão e conservação dos recursos.",
   },
   {
     titulo: "Saúde e produção animal",
-    texto: "Melhoria dos sistemas pecuários, alimentação, sanidade, reprodução e prevenção de doenças.",
+    texto:
+      "Melhoria dos sistemas pecuários, alimentação, sanidade, reprodução e prevenção de doenças.",
   },
   {
     titulo: "Florestas e biodiversidade",
-    texto: "Gestão sustentável das florestas, sistemas agroflorestais e conservação dos ecossistemas.",
+    texto:
+      "Gestão sustentável das florestas, sistemas agroflorestais e conservação dos ecossistemas.",
   },
   {
     titulo: "Digitalização agrícola",
-    texto: "Sistemas de informação geográfica, monitorização agrícola e ferramentas de apoio à decisão.",
+    texto:
+      "Sistemas de informação geográfica, monitorização agrícola e ferramentas de apoio à decisão.",
   },
 ];
 
@@ -226,11 +244,13 @@ function lista(valor?: string[]) {
 export default function InvestigacaoPage() {
   const [pesquisa, setPesquisa] = useState("");
   const [especialistas, setEspecialistas] = useState<Especialista[]>([]);
-  const [aCarregarEspecialistas, setACarregarEspecialistas] = useState(true);
+  const [aCarregarEspecialistas, setACarregarEspecialistas] =
+    useState(true);
   const [indiceEspecialista, setIndiceEspecialista] = useState(0);
   const [indiceDestaque, setIndiceDestaque] = useState(0);
   const [modal, setModal] = useState<Modal>(null);
 
+  // CARREGAR INVESTIGADORES PUBLICADOS
   useEffect(() => {
     let activo = true;
 
@@ -238,14 +258,15 @@ export default function InvestigacaoPage() {
       setACarregarEspecialistas(true);
 
       try {
-        // Utiliza a API existente de técnicos.
-        // Se a tua rota tiver outro endereço, altera apenas este URL.
-        const resposta = await fetch("/api/admin/tecnicos", {
+        const resposta = await fetch("/api/tecnicos", {
+          method: "GET",
           cache: "no-store",
         });
 
         if (!resposta.ok) {
-          throw new Error(`Erro ao consultar técnicos: ${resposta.status}`);
+          throw new Error(
+            `Erro ao consultar investigadores: ${resposta.status}`,
+          );
         }
 
         const resultado: unknown = await resposta.json();
@@ -254,7 +275,10 @@ export default function InvestigacaoPage() {
 
         if (Array.isArray(resultado)) {
           registos = resultado as TecnicoAPI[];
-        } else if (resultado && typeof resultado === "object") {
+        } else if (
+          resultado &&
+          typeof resultado === "object"
+        ) {
           const dados = resultado as {
             tecnicos?: TecnicoAPI[];
             data?: TecnicoAPI[];
@@ -271,14 +295,19 @@ export default function InvestigacaoPage() {
 
         const convertidos = registos
           .filter((tecnico) => {
-            // A API deve preferencialmente devolver apenas registos publicados.
-            // Se os campos vierem na resposta, filtramos também os destaques.
-            if (tecnico.estado && tecnico.estado !== "publicado") return false;
-            if (tecnico.destaque === false) return false;
+            if (
+              tecnico.estado &&
+              tecnico.estado !== "publicado"
+            ) {
+              return false;
+            }
+
             return Boolean(tecnico.nome);
           })
           .map((tecnico, index): Especialista => ({
-            id: String(tecnico.id ?? `${tecnico.nome}-${index}`),
+            id: String(
+              tecnico.id ?? `${tecnico.nome}-${index}`,
+            ),
             nome: tecnico.nome || "Especialista",
             cargo:
               tecnico.titulo_profissional ||
@@ -303,10 +332,18 @@ export default function InvestigacaoPage() {
         setEspecialistas(convertidos);
         setIndiceEspecialista(0);
       } catch (erro) {
-        console.error("Erro ao carregar especialistas:", erro);
-        if (activo) setEspecialistas([]);
+        console.error(
+          "Erro ao carregar especialistas:",
+          erro,
+        );
+
+        if (activo) {
+          setEspecialistas([]);
+        }
       } finally {
-        if (activo) setACarregarEspecialistas(false);
+        if (activo) {
+          setACarregarEspecialistas(false);
+        }
       }
     }
 
@@ -351,7 +388,8 @@ export default function InvestigacaoPage() {
 
   function mudarDestaque(direcao: number) {
     setIndiceDestaque(
-      (indiceDestaque + direcao + destaques.length) % destaques.length,
+      (indiceDestaque + direcao + destaques.length) %
+        destaques.length,
     );
   }
 
@@ -363,6 +401,7 @@ export default function InvestigacaoPage() {
         texto:
           "A AGROINOVA pretende reunir instituições de investigação, universidades e escolas agrárias de Angola. O catálogo deverá distinguir instituições identificadas, competências confirmadas, cursos, projectos e contactos oficiais. A inclusão neste catálogo não significa, por si só, que exista um projecto conjunto com a AGROINOVA.",
       });
+
       return;
     }
 
@@ -386,6 +425,7 @@ export default function InvestigacaoPage() {
             backgroundImage: `url("${destaques[indiceDestaque].imagem}")`,
           }}
         />
+
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-green-950 via-green-950/90 to-green-950/20" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-green-950/50 to-transparent" />
 
@@ -400,10 +440,11 @@ export default function InvestigacaoPage() {
             </h1>
 
             <p className="mt-6 max-w-2xl text-base leading-8 text-green-50/90 md:text-lg">
-              Aproximamos investigadores, instituições, escolas agrárias,
-              estudantes e profissionais para organizar conhecimento,
-              promover a investigação e apoiar a transformação sustentável
-              da agricultura e da pecuária angolanas.
+              Aproximamos investigadores, instituições, escolas
+              agrárias, estudantes e profissionais para organizar
+              conhecimento, promover a investigação e apoiar a
+              transformação sustentável da agricultura e da
+              pecuária angolanas.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -411,7 +452,8 @@ export default function InvestigacaoPage() {
                 href="#areas"
                 className="rounded-xl bg-emerald-500 px-6 py-4 font-black text-green-950 shadow-lg transition hover:bg-emerald-400"
               >
-                Explorar investigação <span aria-hidden="true">→</span>
+                Explorar investigação{" "}
+                <span aria-hidden="true">→</span>
               </a>
 
               <button
@@ -432,13 +474,17 @@ export default function InvestigacaoPage() {
 
             <div className="mt-10 flex flex-wrap gap-6 border-t border-white/20 pt-6 text-sm text-green-50">
               <span>
-                <strong className="text-xl text-white">{areas.length}</strong>{" "}
+                <strong className="text-xl text-white">
+                  {areas.length}
+                </strong>{" "}
                 áreas científicas
               </span>
+
               <span>
-                <strong className="text-xl text-white">21</strong> províncias
-                no enquadramento territorial
+                <strong className="text-xl text-white">21</strong>{" "}
+                províncias no enquadramento territorial
               </span>
+
               <span>
                 <strong className="text-xl text-white">
                   {especialistas.length}
@@ -458,9 +504,11 @@ export default function InvestigacaoPage() {
           >
             ‹
           </button>
+
           <span className="text-sm font-bold text-white">
             {indiceDestaque + 1} / {destaques.length}
           </span>
+
           <button
             type="button"
             aria-label="Imagem seguinte"
@@ -484,15 +532,20 @@ export default function InvestigacaoPage() {
             >
               <div
                 className="h-32 bg-cover bg-center transition duration-500 group-hover:scale-105"
-                style={{ backgroundImage: `url("${item.imagem}")` }}
+                style={{
+                  backgroundImage: `url("${item.imagem}")`,
+                }}
               />
+
               <div className="p-5">
                 <h2 className="text-base font-black text-green-950">
                   {item.titulo}
                 </h2>
+
                 <p className="mt-2 text-sm leading-6 text-slate-600">
                   {item.texto}
                 </p>
+
                 <span className="mt-4 inline-flex items-center gap-2 text-sm font-black text-green-800">
                   Aceder <span aria-hidden="true">→</span>
                 </span>
@@ -502,13 +555,16 @@ export default function InvestigacaoPage() {
         </div>
       </section>
 
-      {/* ESPECIALISTAS: DADOS DA ADMINISTRAÇÃO */}
+      {/* ESPECIALISTAS */}
       <section className="mx-auto max-w-[1440px] px-5 py-20 lg:px-8">
         <div className="relative overflow-hidden rounded-3xl bg-green-950 p-6 text-white md:p-10">
           <div
             className="absolute inset-0 bg-cover bg-center opacity-20"
-            style={{ backgroundImage: `url("${fotografias.floresta}")` }}
+            style={{
+              backgroundImage: `url("${fotografias.floresta}")`,
+            }}
           />
+
           <div className="absolute inset-0 bg-gradient-to-r from-green-950 via-green-950/95 to-green-900/70" />
 
           <div className="relative grid gap-8 lg:grid-cols-[0.8fr_1.6fr] lg:items-center">
@@ -516,13 +572,15 @@ export default function InvestigacaoPage() {
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-green-300">
                 Pessoas e conhecimento
               </p>
+
               <h2 className="mt-3 text-3xl font-black md:text-4xl">
                 Especialistas em destaque
               </h2>
+
               <p className="mt-4 leading-7 text-green-50/85">
-                Conheça os técnicos e investigadores publicados pela
-                administração da AGROINOVA ANGOLA, as suas competências e
-                áreas de especialização.
+                Conheça os técnicos e investigadores publicados
+                pela administração da AGROINOVA ANGOLA, as suas
+                competências e áreas de especialização.
               </p>
 
               <button
@@ -544,7 +602,9 @@ export default function InvestigacaoPage() {
             <div>
               {aCarregarEspecialistas ? (
                 <div className="rounded-2xl border border-white/15 bg-white/10 p-8 text-center">
-                  <p className="font-bold">A carregar especialistas...</p>
+                  <p className="font-bold">
+                    A carregar especialistas...
+                  </p>
                 </div>
               ) : especialistas.length > 0 ? (
                 <>
@@ -553,12 +613,13 @@ export default function InvestigacaoPage() {
                       <button
                         type="button"
                         key={pessoa.id}
-                        onClick={() =>
+                        onClick={() => {
+                          setIndiceEspecialista(index);
                           setModal({
                             tipo: "especialista",
                             especialista: pessoa,
-                          })
-                        }
+                          });
+                        }}
                         className={`overflow-hidden rounded-2xl border text-left transition hover:-translate-y-1 hover:shadow-2xl ${
                           index === indiceEspecialista
                             ? "border-emerald-300 bg-white text-green-950 ring-2 ring-emerald-300/40"
@@ -572,8 +633,10 @@ export default function InvestigacaoPage() {
                               backgroundImage: `url("${pessoa.imagem || fotografias.cientista}")`,
                             }}
                           />
+
                           <div className="absolute inset-0 bg-gradient-to-t from-green-950/50 to-transparent" />
-                          <span className="absolute bottom-3 left-3 rounded-full bg-green-800 px-3 py-1 text-xs font-bold text-white">
+
+                          <span className="absolute bottom-3 left-3 max-w-[90%] truncate rounded-full bg-green-800 px-3 py-1 text-xs font-bold text-white">
                             {pessoa.cargo}
                           </span>
                         </div>
@@ -582,9 +645,11 @@ export default function InvestigacaoPage() {
                           <h3 className="text-sm font-black leading-5">
                             {pessoa.nome}
                           </h3>
+
                           <p className="mt-2 text-xs leading-5 text-slate-600">
                             {pessoa.area}
                           </p>
+
                           <p className="mt-4 text-xs font-black text-green-800">
                             Consultar perfil →
                           </p>
@@ -609,7 +674,9 @@ export default function InvestigacaoPage() {
                             key={pessoa.id}
                             type="button"
                             aria-label={`Ver ${pessoa.nome}`}
-                            onClick={() => setIndiceEspecialista(index)}
+                            onClick={() =>
+                              setIndiceEspecialista(index)
+                            }
                             className={`h-2.5 rounded-full transition ${
                               indiceEspecialista === index
                                 ? "w-8 bg-emerald-400"
@@ -634,10 +701,11 @@ export default function InvestigacaoPage() {
                   <h3 className="text-lg font-black">
                     Especialistas em breve
                   </h3>
+
                   <p className="mt-2 text-sm leading-6 text-green-50/80">
-                    Ainda não existem especialistas publicados para esta
-                    secção. Os perfis aparecerão aqui depois de serem
-                    publicados na administração.
+                    Ainda não existem especialistas publicados
+                    para esta secção. Os perfis aparecerão aqui
+                    depois de serem publicados na administração.
                   </p>
                 </div>
               )}
@@ -646,7 +714,7 @@ export default function InvestigacaoPage() {
         </div>
       </section>
 
-      {/* ÁREAS EM DESTAQUE */}
+      {/* ÁREAS DE INVESTIGAÇÃO */}
       <section id="areas" className="scroll-mt-24 bg-white py-20">
         <div className="mx-auto max-w-[1440px] px-5 lg:px-8">
           <div className="flex flex-wrap items-end justify-between gap-5">
@@ -654,12 +722,15 @@ export default function InvestigacaoPage() {
               <p className="text-xs font-black uppercase tracking-[0.18em] text-green-700">
                 Conhecimento científico
               </p>
+
               <h2 className="mt-3 text-3xl font-black md:text-4xl">
                 Áreas de investigação em destaque
               </h2>
+
               <p className="mt-4 leading-7 text-slate-600">
-                Explore as áreas científicas, os seus temas de estudo e
-                as aplicações potenciais para os sistemas de produção em Angola.
+                Explore as áreas científicas, os seus temas de
+                estudo e as aplicações potenciais para os sistemas
+                de produção em Angola.
               </p>
             </div>
 
@@ -678,6 +749,7 @@ export default function InvestigacaoPage() {
             >
               Pesquisar áreas científicas
             </label>
+
             <input
               id="pesquisa"
               value={pesquisa}
@@ -721,15 +793,20 @@ export default function InvestigacaoPage() {
                 >
                   <div
                     className="h-44 bg-cover bg-center transition duration-500 group-hover:scale-[1.03]"
-                    style={{ backgroundImage: `url("${imagem}")` }}
+                    style={{
+                      backgroundImage: `url("${imagem}")`,
+                    }}
                   />
+
                   <div className="p-5">
                     <p className="text-xs font-bold uppercase tracking-wider text-green-700">
                       Área científica
                     </p>
+
                     <h3 className="mt-2 text-lg font-black text-green-950">
                       {area.titulo}
                     </h3>
+
                     <p className="mt-3 min-h-16 text-sm leading-6 text-slate-600">
                       {area.resumo ||
                         area.descricao ||
@@ -740,11 +817,14 @@ export default function InvestigacaoPage() {
                     <div className="mt-5 flex flex-wrap gap-2">
                       <button
                         type="button"
-                        onClick={() => setModal({ tipo: "area", area })}
+                        onClick={() =>
+                          setModal({ tipo: "area", area })
+                        }
                         className="rounded-lg bg-green-800 px-4 py-2.5 text-sm font-bold text-white hover:bg-green-950"
                       >
                         Ver detalhes
                       </button>
+
                       <Link
                         href={`/investigacao/areas/${area.slug}`}
                         className="rounded-lg border border-green-800 px-4 py-2.5 text-sm font-bold text-green-900 hover:bg-green-50"
@@ -760,26 +840,30 @@ export default function InvestigacaoPage() {
 
           {areasFiltradas.length === 0 && (
             <p className="mt-6 rounded-xl bg-slate-50 p-6 text-slate-600">
-              Não foram encontradas áreas para essa pesquisa. Tenta outro termo.
+              Não foram encontradas áreas para essa pesquisa.
+              Tenta outro termo.
             </p>
           )}
         </div>
       </section>
 
-      {/* INSTITUIÇÕES: MANTIDAS COMO ESTÃO NESTA ETAPA */}
+      {/* INSTITUIÇÕES */}
       <section className="py-20">
         <div className="mx-auto max-w-[1440px] px-5 lg:px-8">
           <div className="max-w-3xl">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-green-700">
               Formação e investigação
             </p>
+
             <h2 className="mt-3 text-3xl font-black md:text-4xl">
               Universidades e escolas agrárias de Angola
             </h2>
+
             <p className="mt-4 leading-7 text-slate-600">
-              A ligação entre ensino superior, formação técnica e investigação
-              aplicada é essencial para desenvolver competências, testar
-              soluções e aproximar a ciência das necessidades dos produtores.
+              A ligação entre ensino superior, formação técnica e
+              investigação aplicada é essencial para desenvolver
+              competências, testar soluções e aproximar a ciência
+              das necessidades dos produtores.
             </p>
           </div>
 
@@ -791,16 +875,24 @@ export default function InvestigacaoPage() {
               >
                 <div
                   className="h-40 bg-cover bg-center"
-                  style={{ backgroundImage: `url("${escola.imagem}")` }}
+                  style={{
+                    backgroundImage: `url("${escola.imagem}")`,
+                  }}
                 />
+
                 <div className="p-5">
                   <p className="text-xs font-bold uppercase tracking-wider text-green-700">
                     {escola.local} · {escola.sigla}
                   </p>
-                  <h3 className="mt-2 text-lg font-black">{escola.nome}</h3>
+
+                  <h3 className="mt-2 text-lg font-black">
+                    {escola.nome}
+                  </h3>
+
                   <p className="mt-3 text-sm leading-6 text-slate-600">
                     {escola.texto}
                   </p>
+
                   <button
                     type="button"
                     onClick={() =>
@@ -820,9 +912,10 @@ export default function InvestigacaoPage() {
           </div>
 
           <p className="mt-5 text-xs leading-5 text-slate-500">
-            As fotografias são ilustrativas e não constituem identificação
-            visual confirmada dos edifícios destas instituições. Os dados
-            institucionais serão ligados à administração numa próxima etapa.
+            As fotografias são ilustrativas e não constituem
+            identificação visual confirmada dos edifícios destas
+            instituições. Os dados institucionais serão ligados à
+            administração numa próxima etapa.
           </p>
         </div>
       </section>
@@ -835,15 +928,19 @@ export default function InvestigacaoPage() {
               <p className="text-xs font-black uppercase tracking-[0.18em] text-green-300">
                 Investigação orientada para resultados
               </p>
+
               <h2 className="mt-3 text-3xl font-black md:text-4xl">
                 Que problemas científicos devemos resolver?
               </h2>
+
               <p className="mt-5 leading-8 text-green-50/85">
-                A agenda da investigação deve responder a necessidades reais
-                dos agricultores, criadores, técnicos e comunidades, tendo
-                em conta os diferentes solos, climas, culturas e sistemas
-                de produção do país.
+                A agenda da investigação deve responder a
+                necessidades reais dos agricultores, criadores,
+                técnicos e comunidades, tendo em conta os
+                diferentes solos, climas, culturas e sistemas de
+                produção do país.
               </p>
+
               <button
                 type="button"
                 onClick={() => setModal({ tipo: "agenda" })}
@@ -864,10 +961,15 @@ export default function InvestigacaoPage() {
                   <span className="text-sm font-black text-emerald-300">
                     PRIORIDADE 0{index + 1}
                   </span>
-                  <h3 className="mt-3 text-lg font-black">{item.titulo}</h3>
+
+                  <h3 className="mt-3 text-lg font-black">
+                    {item.titulo}
+                  </h3>
+
                   <p className="mt-2 text-sm leading-6 text-green-50/80">
                     {item.texto}
                   </p>
+
                   <span className="mt-4 inline-block text-sm font-bold text-emerald-300">
                     Explorar tema →
                   </span>
@@ -883,7 +985,9 @@ export default function InvestigacaoPage() {
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/70 p-3 sm:p-6"
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setModal(null);
+            if (event.target === event.currentTarget) {
+              setModal(null);
+            }
           }}
         >
           <section
@@ -896,6 +1000,7 @@ export default function InvestigacaoPage() {
                 <p className="text-xs font-bold uppercase tracking-[0.17em] text-green-300">
                   AGROINOVA ANGOLA
                 </p>
+
                 <h2 className="mt-2 text-2xl font-black">
                   {modal.tipo === "especialista"
                     ? modal.especialista.nome
@@ -911,6 +1016,7 @@ export default function InvestigacaoPage() {
                               ? "Tecnologias agropecuárias"
                               : "Agenda de investigação"}
                 </h2>
+
                 {modal.tipo === "especialista" && (
                   <p className="mt-1 text-sm text-green-100">
                     {modal.especialista.cargo}
@@ -939,23 +1045,29 @@ export default function InvestigacaoPage() {
                       }}
                     />
                   )}
+
                   <div className="rounded-xl border border-green-100 bg-green-50 p-5">
                     <p className="text-sm font-bold uppercase tracking-wide text-green-800">
                       Área profissional
                     </p>
+
                     <p className="mt-2 text-lg font-black text-green-950">
                       {modal.especialista.area}
                     </p>
+
                     <p className="mt-4 text-sm leading-7 text-slate-700">
                       {modal.especialista.descricao}
                     </p>
                   </div>
+
                   <h3 className="mt-6 font-black text-green-950">
                     Perfil profissional
                   </h3>
+
                   <p className="mt-2 text-sm leading-7 text-slate-600">
-                    Os dados deste perfil são apresentados a partir do registo
-                    disponibilizado pela administração da AGROINOVA ANGOLA.
+                    Os dados deste perfil são apresentados a partir
+                    do registo disponibilizado pela administração
+                    da AGROINOVA ANGOLA.
                   </p>
                 </div>
               )}
@@ -966,6 +1078,7 @@ export default function InvestigacaoPage() {
                     <h3 className="font-black text-green-950">
                       Enquadramento científico
                     </h3>
+
                     <p className="mt-3 whitespace-pre-line text-sm leading-7 text-slate-700">
                       {modal.area.introducao ||
                         modal.area.resumo ||
@@ -976,22 +1089,40 @@ export default function InvestigacaoPage() {
 
                   {(
                     [
-                      ["Importância científica", modal.area.importancia],
+                      [
+                        "Importância científica",
+                        modal.area.importancia,
+                      ],
                       ["Contexto angolano", modal.area.angola],
-                      ["Linhas de investigação", modal.area.linhasPesquisa],
-                      ["Aplicações práticas", modal.area.aplicacoes],
-                      ["Questões científicas", modal.area.perguntas],
+                      [
+                        "Linhas de investigação",
+                        modal.area.linhasPesquisa,
+                      ],
+                      [
+                        "Aplicações práticas",
+                        modal.area.aplicacoes,
+                      ],
+                      [
+                        "Questões científicas",
+                        modal.area.perguntas,
+                      ],
                     ] as [string, string[] | undefined][]
                   ).map(([titulo, itens]) => {
                     const valores = lista(itens);
+
                     if (!valores.length) return null;
 
                     return (
                       <div key={titulo}>
-                        <h3 className="font-black text-green-950">{titulo}</h3>
+                        <h3 className="font-black text-green-950">
+                          {titulo}
+                        </h3>
+
                         <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-7 text-slate-700">
                           {valores.map((item, index) => (
-                            <li key={`${index}-${item}`}>{item}</li>
+                            <li key={`${index}-${item}`}>
+                              {item}
+                            </li>
                           ))}
                         </ul>
                       </div>
@@ -1003,17 +1134,22 @@ export default function InvestigacaoPage() {
                       <h3 className="font-black text-green-950">
                         Referências e fontes
                       </h3>
+
                       <div className="mt-3 space-y-3">
                         {modal.area.referencias.map((ref, index) => (
                           <article
                             key={`${index}-${ref.titulo}`}
                             className="rounded-xl border border-slate-200 p-4"
                           >
-                            <p className="font-bold">{ref.titulo}</p>
+                            <p className="font-bold">
+                              {ref.titulo}
+                            </p>
+
                             <p className="mt-1 text-sm text-slate-600">
                               {ref.instituicao}
                               {ref.ano ? ` · ${ref.ano}` : ""}
                             </p>
+
                             {ref.url && (
                               <a
                                 href={ref.url}
@@ -1044,16 +1180,26 @@ export default function InvestigacaoPage() {
                   <p className="text-sm leading-7 text-slate-700">
                     {modal.texto}
                   </p>
+
                   <div className="rounded-xl border border-green-200 bg-green-50 p-5">
                     <h3 className="font-black text-green-950">
                       Informação a catalogar
                     </h3>
+
                     <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-7 text-slate-700">
                       <li>Nome oficial e natureza institucional.</li>
                       <li>Localização e contactos institucionais.</li>
-                      <li>Cursos, áreas de competência e unidades de investigação.</li>
-                      <li>Projectos, publicações e investigadores associados.</li>
-                      <li>Fontes oficiais para validar a informação.</li>
+                      <li>
+                        Cursos, áreas de competência e unidades de
+                        investigação.
+                      </li>
+                      <li>
+                        Projectos, publicações e investigadores
+                        associados.
+                      </li>
+                      <li>
+                        Fontes oficiais para validar a informação.
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -1062,31 +1208,48 @@ export default function InvestigacaoPage() {
               {modal.tipo === "projectos" && (
                 <div className="space-y-5">
                   <p className="text-sm leading-7 text-slate-700">
-                    O catálogo de projectos deve documentar investigação
-                    realizada, ensaios em curso e propostas futuras em
-                    categorias separadas.
+                    O catálogo de projectos deve documentar
+                    investigação realizada, ensaios em curso e
+                    propostas futuras em categorias separadas.
                   </p>
+
                   <div className="grid gap-3 sm:grid-cols-2">
                     {[
-                      ["Identificação", "Título, instituição, equipa e financiamento, quando confirmado."],
-                      ["Território", "Província, município, local de estudo e condições ambientais."],
-                      ["Metodologia", "Objectivos, desenho experimental, amostragem e período."],
-                      ["Resultados", "Dados, conclusões, limitações e publicação de referência."],
+                      [
+                        "Identificação",
+                        "Título, instituição, equipa e financiamento, quando confirmado.",
+                      ],
+                      [
+                        "Território",
+                        "Província, município, local de estudo e condições ambientais.",
+                      ],
+                      [
+                        "Metodologia",
+                        "Objectivos, desenho experimental, amostragem e período.",
+                      ],
+                      [
+                        "Resultados",
+                        "Dados, conclusões, limitações e publicação de referência.",
+                      ],
                     ].map(([titulo, texto]) => (
                       <article
                         key={titulo}
                         className="rounded-xl border border-slate-200 p-4"
                       >
-                        <h3 className="font-black text-green-900">{titulo}</h3>
+                        <h3 className="font-black text-green-900">
+                          {titulo}
+                        </h3>
+
                         <p className="mt-2 text-sm leading-6 text-slate-600">
                           {texto}
                         </p>
                       </article>
                     ))}
                   </div>
+
                   <p className="rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-                    Não são apresentados projectos concretos sem documentação
-                    verificável.
+                    Não são apresentados projectos concretos sem
+                    documentação verificável.
                   </p>
                 </div>
               )}
@@ -1094,21 +1257,24 @@ export default function InvestigacaoPage() {
               {modal.tipo === "biblioteca" && (
                 <div className="space-y-5">
                   <p className="text-sm leading-7 text-slate-700">
-                    A biblioteca científica deve reunir artigos, teses,
-                    dissertações, relatórios técnicos, manuais e documentos
-                    estatísticos de interesse para o desenvolvimento
-                    agropecuário angolano.
+                    A biblioteca científica deve reunir artigos,
+                    teses, dissertações, relatórios técnicos, manuais
+                    e documentos estatísticos de interesse para o
+                    desenvolvimento agropecuário angolano.
                   </p>
+
                   <div className="rounded-xl border border-slate-200 p-5">
                     <h3 className="font-black text-green-950">
                       Pesquisa documental
                     </h3>
+
                     <p className="mt-2 text-sm leading-7 text-slate-600">
-                      Os registos devem incluir título, autoria, ano,
-                      instituição, tipo de documento, resumo, tema e ligação
-                      à fonte original.
+                      Os registos devem incluir título, autoria,
+                      ano, instituição, tipo de documento, resumo,
+                      tema e ligação à fonte original.
                     </p>
                   </div>
+
                   <Link
                     href="/biblioteca"
                     className="inline-block rounded-xl bg-green-800 px-5 py-3 font-bold text-white hover:bg-green-950"
@@ -1121,17 +1287,28 @@ export default function InvestigacaoPage() {
               {modal.tipo === "tecnologias" && (
                 <div className="space-y-5">
                   <p className="text-sm leading-7 text-slate-700">
-                    O catálogo tecnológico pode abranger variedades, técnicas
-                    de produção, conservação do solo, irrigação, mecanização,
-                    sanidade animal e ferramentas digitais.
+                    O catálogo tecnológico pode abranger variedades,
+                    técnicas de produção, conservação do solo,
+                    irrigação, mecanização, sanidade animal e
+                    ferramentas digitais.
                   </p>
+
                   <div className="rounded-xl bg-green-50 p-5">
-                    <h3 className="font-black text-green-950">Ficha técnica</h3>
+                    <h3 className="font-black text-green-950">
+                      Ficha técnica
+                    </h3>
+
                     <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-7 text-slate-700">
-                      <li>Descrição, finalidade e sector de aplicação.</li>
+                      <li>
+                        Descrição, finalidade e sector de aplicação.
+                      </li>
                       <li>Condições de utilização e limitações.</li>
-                      <li>Resultados experimentais e evidência disponível.</li>
-                      <li>Fonte técnica, instituição e data de publicação.</li>
+                      <li>
+                        Resultados experimentais e evidência disponível.
+                      </li>
+                      <li>
+                        Fonte técnica, instituição e data de publicação.
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -1140,10 +1317,12 @@ export default function InvestigacaoPage() {
               {modal.tipo === "agenda" && (
                 <div className="space-y-4">
                   <p className="text-sm leading-7 text-slate-700">
-                    Estas são propostas de temas para investigação futura. A
-                    sua prioridade deve ser validada com instituições
-                    científicas, produtores e dados territoriais.
+                    Estas são propostas de temas para investigação
+                    futura. A sua prioridade deve ser validada com
+                    instituições científicas, produtores e dados
+                    territoriais.
                   </p>
+
                   {prioridades.map((item, index) => (
                     <article
                       key={item.titulo}
@@ -1152,9 +1331,11 @@ export default function InvestigacaoPage() {
                       <p className="text-xs font-black uppercase tracking-wider text-green-700">
                         Tema {String(index + 1).padStart(2, "0")}
                       </p>
+
                       <h3 className="mt-2 font-black text-green-950">
                         {item.titulo}
                       </h3>
+
                       <p className="mt-2 text-sm leading-7 text-slate-600">
                         {item.texto}
                       </p>
