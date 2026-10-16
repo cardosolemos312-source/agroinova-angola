@@ -276,7 +276,7 @@ export default function MassangoPage() {
             <p className="mt-6 max-w-3xl text-lg leading-8 text-green-50 md:text-xl">
               Guia técnico sobre o cultivo de massango em Angola, com foco em
               adaptação à seca, solos, sementes, estabelecimento da cultura,
-              fertilidade, manejo, sanidade, colheita, conservação,
+              fertilidade, maneio, sanidade, colheita, conservação,
               alimentação e sistemas agrícolas das regiões secas.
             </p>
 
@@ -360,7 +360,7 @@ export default function MassangoPage() {
 
             <p className="mt-3">
               Isso não significa que o massango produza bem sem água,
-              nutrientes ou manejo: significa que possui características
+              nutrientes ou maneio: significa que possui características
               fisiológicas que lhe permitem suportar condições adversas melhor
               que várias culturas.
             </p>
@@ -375,7 +375,7 @@ export default function MassangoPage() {
             ["#agronomia", "Agronomia"],
             ["#solo", "Solo e água"],
             ["#semente", "Sementes"],
-            ["#manejo", "Manejo"],
+            ["#maneio", "Maneio"],
             ["#sanidade", "Sanidade"],
             ["#colheita", "Colheita"],
             ["#angola", "Angola"],
@@ -683,7 +683,7 @@ export default function MassangoPage() {
 
           <Card title="Emergência">
             <p>
-              A uniformidade da emergência facilita o manejo de infestantes,
+              A uniformidade da emergência facilita o maneio de infestantes,
               reduz competição e melhora a sincronização da maturação.
             </p>
           </Card>
@@ -707,13 +707,13 @@ export default function MassangoPage() {
         </div>
       </section>
 
-      {/* MANEJO */}
-      <section id="manejo" className="bg-white">
+      {/* MANEIO */}
+      <section id="maneio" className="bg-white">
         <div className="mx-auto max-w-7xl px-6 py-16 md:px-10">
           <SectionTitle
-            eyebrow="Manejo"
+            eyebrow="Maneio"
             title="Fertilidade, infestantes e água"
-            text="A capacidade de resistir à seca não significa que a cultura dispense nutrientes. O manejo deve procurar eficiência no uso dos recursos disponíveis."
+            text="A capacidade de resistir à seca não significa que a cultura dispense nutrientes. O maneio deve procurar eficiência no uso dos recursos disponíveis."
           />
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -961,7 +961,7 @@ export default function MassangoPage() {
           <Card title="Forragem">
             <p>
               Determinados sistemas podem utilizar a biomassa para alimentação
-              animal, desde que o manejo e o estádio de corte sejam adequados.
+              animal, desde que o maneio e o estádio de corte sejam adequados.
             </p>
           </Card>
 

@@ -311,7 +311,7 @@ export default function BatataRenaPage() {
 
             <p className="mt-6 max-w-3xl text-lg leading-8 text-green-50 md:text-xl">
               Guia técnico sobre a produção de batata-rena em Angola,
-              integrando agronomia, material de plantação, manejo do solo,
+              integrando agronomia, material de plantação, maneio do solo,
               água, nutrição, sanidade, colheita, pós-colheita, mercado e
               investigação realizada em condições angolanas.
             </p>
@@ -398,7 +398,7 @@ export default function BatataRenaPage() {
           {[
             ["#agronomia", "Agronomia"],
             ["#semente", "Tubérculo-semente"],
-            ["#manejo", "Manejo"],
+            ["#maneio", "Maneio"],
             ["#sanidade", "Sanidade"],
             ["#colheita", "Colheita"],
             ["#angola", "Angola"],
@@ -556,7 +556,7 @@ export default function BatataRenaPage() {
         <SectionTitle
           eyebrow="Ambiente"
           title="Clima e solo"
-          text="Não existe uma única combinação de clima e solo válida para todas as zonas produtoras de Angola. O diagnóstico local deve preceder a definição do calendário e do manejo."
+          text="Não existe uma única combinação de clima e solo válida para todas as zonas produtoras de Angola. O diagnóstico local deve preceder a definição do calendário e do maneio."
         />
 
         <div className="grid gap-6 lg:grid-cols-2">
@@ -757,13 +757,13 @@ export default function BatataRenaPage() {
         </div>
       </section>
 
-      {/* MANEJO */}
-      <section id="manejo" className="bg-white">
+      {/* MANEiO */}
+      <section id="maneio" className="bg-white">
         <div className="mx-auto max-w-7xl px-6 py-16 md:px-10">
           <SectionTitle
-            eyebrow="Manejo"
+            eyebrow="Maneio"
             title="Água, nutrição, amontoa e infestantes"
-            text="O manejo deve ser acompanhado ao longo do ciclo. Uma lavoura que começa bem pode perder produtividade se sofrer défice hídrico, excesso de água, competição de infestantes ou desequilíbrio nutricional."
+            text="O maneio deve ser acompanhado ao longo do ciclo. Uma lavoura que começa bem pode perder produtividade se sofrer défice hídrico, excesso de água, competição de infestantes ou desequilíbrio nutricional."
           />
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -903,7 +903,7 @@ export default function BatataRenaPage() {
             </p>
           </InfoCard>
 
-          <InfoCard title="Manejo integrado">
+          <InfoCard title="Maneio integrado">
             <p>
               A estratégia recomendada é integrar prevenção, material saudável,
               rotação, monitorização, higiene, controlo cultural e, quando

@@ -220,11 +220,11 @@ const fontes = [
   {
     titulo: "FAO — Post-harvest Compendium: Mango",
     descricao:
-      "Referência técnica para instalação, preparação, formação, poda e manejo pós-colheita.",
+      "Referência técnica para instalação, preparação, formação, poda e maneio pós-colheita.",
     url: "https://www.fao.org/fileadmin/user_upload/inpho/docs/Post_Harvest_Compendium_-_Mango.pdf",
   },
   {
-    titulo: "FAO AGRIS — Manejo de água e poda",
+    titulo: "FAO AGRIS — Maneio de água e poda",
     descricao:
       "Estudo sobre poda, irrigação e eficiência de uso da água em pomares de manga.",
     url: "https://agris.fao.org/search/en/providers/122413/records/687a8246c90365bbc104636e",
@@ -566,7 +566,7 @@ export default function MangaPage() {
 
               <p>
                 O comportamento da floração varia com clima, cultivar, idade da
-                planta e manejo.
+                planta e maneio.
               </p>
             </Card>
 
@@ -909,7 +909,7 @@ export default function MangaPage() {
 
               <p>
                 Monitorização, higiene do pomar, recolha de frutos afectados e
-                estratégias de controlo integrado devem fazer parte do manejo.
+                estratégias de controlo integrado devem fazer parte do maneio.
               </p>
             </Card>
 
@@ -921,7 +921,7 @@ export default function MangaPage() {
 
               <p>
                 A gestão da copa e redução de fontes de inóculo são componentes
-                importantes do manejo integrado.
+                importantes do maneio integrado.
               </p>
             </Card>
 
@@ -960,7 +960,7 @@ export default function MangaPage() {
               </p>
             </Card>
 
-            <Card titulo="Manejo integrado">
+            <Card titulo="Maneio integrado">
               <p>
                 O programa sanitário deve combinar monitorização, higiene,
                 material vegetal saudável, conservação de inimigos naturais e

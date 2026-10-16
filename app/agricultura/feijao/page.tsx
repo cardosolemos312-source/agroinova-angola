@@ -40,7 +40,7 @@ const provincias: Provincia[] = [
     nome: "Cabinda",
     regiao: "Norte",
     observacao:
-      "O excesso de humidade deve ser considerado na escolha da área e no manejo fitossanitário.",
+      "O excesso de humidade deve ser considerado na escolha da área e no maneio fitossanitário.",
   },
   {
     nome: "Cuando",
@@ -94,7 +94,7 @@ const provincias: Provincia[] = [
     nome: "Luanda",
     regiao: "Norte",
     observacao:
-      "A produção comercial depende sobretudo de disponibilidade de água, solo adequado e manejo intensivo.",
+      "A produção comercial depende sobretudo de disponibilidade de água, solo adequado e maneio intensivo.",
   },
   {
     nome: "Lunda Norte",
@@ -172,7 +172,7 @@ const materiais: Material[] = [
     evidencia:
       "O catálogo do INE/IDREA regista ocorrências de feijão Catarino.",
     observacao:
-      "A ocorrência no inquérito não significa, por si só, que seja uma variedade oficialmente recomendada.",
+      "A ocorrência no inquérito não significa, por si só, que seja uma variedade oficialmente srecomendada.",
   },
   {
     nome: "Ervilha",
@@ -280,7 +280,7 @@ const fases = [
   },
   {
     fase: "06",
-    titulo: "Manejo de infestantes",
+    titulo: "Maneio de infestantes",
     texto:
       "O feijoeiro apresenta elevada sensibilidade à competição durante as fases iniciais. O controlo precoce reduz a competição por água, luz e nutrientes.",
   },
@@ -304,15 +304,15 @@ const pragas = [
     nomeCientifico: "Acanthoscelides obtectus",
     dano:
       "Ataca principalmente os grãos armazenados, formando galerias e reduzindo a qualidade comercial e a capacidade germinativa.",
-    manejo:
-      "Secagem adequada, limpeza dos armazéns, armazenamento protegido e monitorização dos lotes são componentes importantes do manejo.",
+    maneio:
+      "Secagem adequada, limpeza dos armazéns, armazenamento protegido e monitorização dos lotes são componentes importantes do maneio.",
   },
   {
     nome: "Mosca-minadora",
     nomeCientifico: "Liriomyza spp.",
     dano:
       "As larvas formam galerias no tecido foliar, reduzindo a área fotossintética quando a infestação é elevada.",
-    manejo:
+    maneio:
       "Monitorização das folhas, conservação de inimigos naturais e utilização criteriosa de medidas de controlo quando economicamente justificadas.",
   },
   {
@@ -320,7 +320,7 @@ const pragas = [
     nomeCientifico: "Aphididae",
     dano:
       "Sugam a seiva e podem provocar deformações, redução do vigor e transmissão de alguns vírus.",
-    manejo:
+    maneio:
       "Monitorizar colónias, observar inimigos naturais e evitar aplicações indiscriminadas de insecticidas.",
   },
   {
@@ -328,7 +328,7 @@ const pragas = [
     nomeCientifico: "Tetranychidae",
     dano:
       "Podem provocar pontuações, bronzeamento e perda de vigor das folhas, sobretudo em condições quentes e secas.",
-    manejo:
+    maneio:
       "Monitorizar a face inferior das folhas e evitar condições de stress hídrico sempre que possível.",
   },
 ];
@@ -348,7 +348,7 @@ const doencas = [
     sintomas:
       "Pequenas pústulas, geralmente de coloração castanha, nas folhas e outros órgãos verdes.",
     prevencao:
-      "Monitorização do campo, manejo integrado e utilização de materiais resistentes quando essa característica estiver documentada.",
+      "Monitorização do campo, maneio integrado e utilização de materiais resistentes quando essa característica estiver documentada.",
   },
   {
     nome: "Podridões radiculares",
@@ -400,7 +400,7 @@ const fontes = [
     titulo:
       "FAO AGRIS — Práticas agronómicas para aumento do rendimento do feijão",
     descricao:
-      "Revisão sistemática sobre fertilização, irrigação, densidade, rizóbios, doenças, pragas e manejo da cultura.",
+      "Revisão sistemática sobre fertilização, irrigação, densidade, rizóbios, doenças, pragas e maneio da cultura.",
     href: "https://agris.fao.org/search/en/providers/122535/records/65df7d010f3e94b9e5d9164a",
   },
 ];
@@ -440,7 +440,7 @@ export default function FeijaoPage() {
             <p className="mt-6 max-w-3xl text-lg leading-8 text-emerald-50 sm:text-xl">
               Conhecimento técnico sobre Phaseolus vulgaris L., com atenção
               para materiais documentados em Angola, qualidade da semente,
-              fertilidade do solo, fixação biológica de nitrogénio, manejo,
+              fertilidade do solo, fixação biológica de nitrogénio, maneio,
               fitossanidade, colheita e conservação.
             </p>
 
@@ -859,7 +859,7 @@ export default function FeijaoPage() {
 
       <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
         <p className="text-sm font-semibold uppercase tracking-wider text-emerald-700">
-          07 · Manejo
+          07 · Maneio
         </p>
 
         <h2 className="mt-2 text-3xl font-bold">
@@ -923,11 +923,11 @@ export default function FeijaoPage() {
 
                 <div className="mt-5">
                   <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
-                    Manejo
+                    Maneio
                   </p>
 
                   <p className="mt-2 leading-7 text-stone-700">
-                    {praga.manejo}
+                    {praga.maneio}
                   </p>
                 </div>
               </article>
@@ -954,7 +954,7 @@ export default function FeijaoPage() {
                     <th className="px-5 py-4">Doença</th>
                     <th className="px-5 py-4">Agente</th>
                     <th className="px-5 py-4">Sintomas</th>
-                    <th className="px-5 py-4">Prevenção e manejo</th>
+                    <th className="px-5 py-4">Prevenção e maneio</th>
                   </tr>
                 </thead>
 

@@ -73,7 +73,7 @@ const provincias: Provincia[] = [
     nome: "Huambo",
     regiao: "Centro",
     observacao:
-      "Pode integrar sistemas hortícolas diversificados, sendo importante ajustar época, material vegetal e manejo às condições locais.",
+      "Pode integrar sistemas hortícolas diversificados, sendo importante ajustar época, material vegetal e maneio às condições locais.",
   },
   {
     nome: "Huíla",
@@ -338,8 +338,8 @@ export default function PimentaPage() {
             Plantio
           </a>
 
-          <a href="#manejo" className="whitespace-nowrap hover:text-green-700">
-            Manejo
+          <a href="#maneio" className="whitespace-nowrap hover:text-green-700">
+            Maneio
           </a>
 
           <a href="#sanidade" className="whitespace-nowrap hover:text-green-700">
@@ -738,7 +738,7 @@ export default function PimentaPage() {
 
           <Card title="Uniformidade">
             <p>
-              Mudas desuniformes dificultam o manejo e podem criar diferentes
+              Mudas desuniformes dificultam o maneio e podem criar diferentes
               momentos de colheita.
             </p>
           </Card>
@@ -809,10 +809,10 @@ export default function PimentaPage() {
         </div>
       </section>
 
-      {/* MANEJO */}
-      <section id="manejo" className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+      {/* MANEIO */}
+      <section id="manio" className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
         <SectionTitle
-          eyebrow="09 • Manejo"
+          eyebrow="09 • Maneio"
           title="Água, nutrição e condução"
           description="A produtividade deve ser construída através de decisões integradas, não de uma única prática."
         />
@@ -888,7 +888,7 @@ export default function PimentaPage() {
           <SectionTitle
             eyebrow="10 • Sanidade"
             title="Pragas, doenças e viroses"
-            description="O princípio central deve ser a prevenção e o Manejo Integrado de Pragas, com identificação correcta antes de qualquer tratamento."
+            description="O princípio central deve ser a prevenção e o Maneio Integrado de Pragas, com identificação correcta antes de qualquer tratamento."
           />
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -1533,7 +1533,7 @@ export default function PimentaPage() {
             </strong>
 
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Material técnico para diagnóstico e manejo de pragas e doenças
+              Material técnico para diagnóstico e maneio de pragas e doenças
               de culturas.
             </p>
           </a>
@@ -1549,7 +1549,7 @@ export default function PimentaPage() {
             </strong>
 
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Conteúdo técnico sobre cultivo, variedades, manejo e utilização
+              Conteúdo técnico sobre cultivo, variedades, maneio e utilização
               de pimentas.
             </p>
           </a>

@@ -17,19 +17,16 @@ export default function LoginPage() {
     setErro("");
 
     try {
-      const resposta = await fetch(
-        "/api/admin/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            senha,
-          }),
-        }
-      );
+      const resposta = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          senha,
+        }),
+      });
 
       const resultado = await resposta.json();
 
@@ -40,9 +37,8 @@ export default function LoginPage() {
         );
       }
 
-      window.location.href =
-        "/admin/submissoes";
-
+      // Abrir o painel administrativo principal
+      window.location.href = "/admin";
     } catch (error) {
       setErro(
         error instanceof Error
@@ -56,28 +52,25 @@ export default function LoginPage() {
 
   return (
     <main className="admin-login-page">
-
       <section className="admin-login-box">
-
         <div className="admin-login-header">
-
           <span className="admin-login-kicker">
             AGROINOVA ANGOLA
           </span>
 
-          <h1>
-            Área administrativa
-          </h1>
+          <h1>Área administrativa</h1>
 
           <p>
-            Acesso reservado à administração
-            do Repositório AGROINOVA.
+            Acesso reservado à administração da
+            plataforma AGROINOVA ANGOLA.
           </p>
-
         </div>
 
         {erro && (
-          <div className="admin-login-erro">
+          <div
+            className="admin-login-erro"
+            role="alert"
+          >
             {erro}
           </div>
         )}
@@ -86,35 +79,34 @@ export default function LoginPage() {
           className="admin-login-form"
           onSubmit={handleSubmit}
         >
-
           <div className="admin-login-field">
-
             <label htmlFor="email">
               E-mail
             </label>
 
             <input
               id="email"
+              name="email"
               type="email"
               value={email}
               onChange={(event) =>
                 setEmail(event.target.value)
               }
-              placeholder="Administrador"
+              placeholder="Introduza o e-mail do administrador"
               required
               autoComplete="username"
+              disabled={entrando}
             />
-
           </div>
 
           <div className="admin-login-field">
-
             <label htmlFor="senha">
               Palavra-passe
             </label>
 
             <input
               id="senha"
+              name="senha"
               type="password"
               value={senha}
               onChange={(event) =>
@@ -123,28 +115,23 @@ export default function LoginPage() {
               placeholder="Introduza a palavra-passe"
               required
               autoComplete="current-password"
+              disabled={entrando}
             />
-
           </div>
 
           <button
             type="submit"
             disabled={entrando}
           >
-            {entrando
-              ? "A entrar..."
-              : "Entrar"}
+            {entrando ? "A entrar..." : "Entrar"}
           </button>
-
         </form>
 
         <div className="admin-login-aviso">
           Acesso restrito. Esta área destina-se
           exclusivamente à administração da plataforma.
         </div>
-
       </section>
-
     </main>
   );
 }

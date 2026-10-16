@@ -58,7 +58,7 @@ const fases = [
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Young_cattle.jpg?width=1200",
     texto:
-      "Na fase de crescimento, o objetivo é proporcionar desenvolvimento adequado sem provocar crescimento desequilibrado ou excesso de gordura. A qualidade das pastagens e das forragens tem grande importância nos sistemas extensivos.",
+      "Na fase de crescimento, o objectivo é proporcionar desenvolvimento adequado sem provocar crescimento desequilibrado ou excesso de gordura. A qualidade das pastagens e das forragens tem grande importância nos sistemas extensivos.",
     pontos: [
       "Acompanhar a disponibilidade de pastagem.",
       "Fornecer suplementação quando a qualidade ou quantidade do pasto for insuficiente.",
@@ -100,7 +100,7 @@ const fases = [
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Cow_pregnant.jpg?width=1200",
     texto:
-      "Durante a gestação, a alimentação deve manter a condição corporal da vaca e apoiar o desenvolvimento do feto. O manejo alimentar deve evitar tanto a subnutrição como o excesso de gordura.",
+      "Durante a gestação, a alimentação deve manter a condição corporal da vaca e apoiar o desenvolvimento do feto. O maneio alimentar deve evitar tanto a subnutrição como o excesso de gordura.",
     pontos: [
       "Avaliar regularmente a condição corporal.",
       "Garantir pastagem ou forragem suficiente.",
@@ -131,7 +131,7 @@ const principios = [
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Cattle_grazing.jpg?width=1200",
     texto:
-      "A pastagem constitui uma das principais fontes de alimentação nos sistemas bovinos. A qualidade depende da espécie forrageira, estágio de crescimento, fertilidade do solo, chuva, manejo e pressão de pastejo.",
+      "A pastagem constitui uma das principais fontes de alimentação nos sistemas bovinos. A qualidade depende da espécie forrageira, estágio de crescimento, fertilidade do solo, chuva, maneio e pressão de pastejo.",
   },
   {
     titulo: "Forragens",
@@ -145,7 +145,7 @@ const principios = [
     imagem:
       "https://commons.wikimedia.org/wiki/Special:FilePath/Cattle_feeding.jpg?width=1200",
     texto:
-      "A suplementação pode ser utilizada quando a pastagem ou forragem não cobre as necessidades dos animais. Deve ser definida de acordo com a categoria animal e o objetivo produtivo.",
+      "A suplementação pode ser utilizada quando a pastagem ou forragem não cobre as necessidades dos animais. Deve ser definida de acordo com a categoria animal e o objectivo produtivo.",
   },
   {
     titulo: "Minerais",

@@ -541,21 +541,21 @@ const pragas = [
     nome: "Ácaros",
     sinal:
       "Alterações na aparência das folhas, redução do vigor e sintomas associados à alimentação do artrópode.",
-    manejo:
+    maneio:
       "Monitorizar regularmente e confirmar o organismo antes de escolher qualquer medida de controlo.",
   },
   {
     nome: "Cochonilhas e insectos sugadores",
     sinal:
       "Presença de insectos nas folhas ou ramos, enfraquecimento e deformação do crescimento.",
-    manejo:
-      "Identificar correctamente o organismo e priorizar manejo integrado.",
+    maneio:
+      "Identificar correctamente o organismo e priorizar maneio integrado.",
   },
   {
     nome: "Pragas do material de plantio",
     sinal:
       "Danos nos caules, manivas debilitadas ou baixa emergência.",
-    manejo:
+    maneio:
       "Utilizar material vigoroso e evitar transportar manivas de parcelas com sintomas suspeitos.",
   },
 ];
@@ -804,7 +804,7 @@ export default function MandiocaPage() {
                 sistemas agrícolas e alimentares de Angola. A sua
                 capacidade de adaptação permite o cultivo em diferentes
                 ambientes, mas a produtividade depende da combinação
-                entre material genético, solo, água, sanidade e manejo.
+                entre material genético, solo, água, sanidade e maneio.
               </p>
 
               <p>
@@ -1649,11 +1649,11 @@ export default function MandiocaPage() {
                 </p>
 
                 <p className="mt-4 text-sm font-bold text-green-700">
-                  Manejo
+                  Maneio
                 </p>
 
                 <p className="mt-2 leading-7 text-stone-600">
-                  {praga.manejo}
+                  {praga.maneio}
                 </p>
 
               </article>

@@ -393,10 +393,10 @@ export default function MassambalaPage() {
           </a>
 
           <a
-            href="#manejo"
+            href="#maneio"
             className="whitespace-nowrap rounded-lg px-3 py-2 hover:bg-green-50 hover:text-green-800"
           >
-            Manejo
+            Maneio
           </a>
 
           <a
@@ -824,10 +824,10 @@ export default function MassambalaPage() {
           </div>
         </section>
 
-        {/* MANEJO */}
-        <section id="manejo" className="mt-16 scroll-mt-24">
+        {/* MANEIO */}
+        <section id="maneio" className="mt-16 scroll-mt-24">
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-green-700">
-            Manejo da cultura
+            Maneio da cultura
           </p>
 
           <h2 className="mt-2 text-3xl font-black sm:text-4xl">
@@ -903,7 +903,7 @@ export default function MassambalaPage() {
 
             <p className="mt-4 leading-8 text-slate-700">
               A protecção da massambala deve privilegiar a prevenção, a
-              monitorização e o manejo integrado. O tratamento químico não deve
+              monitorização e o maneio integrado. O tratamento químico não deve
               ser a primeira resposta automática: é necessário identificar
               correctamente o problema e verificar se existe limiar de
               intervenção e produto legalmente autorizado.
@@ -965,7 +965,7 @@ export default function MassambalaPage() {
 
           <div className="mt-6 rounded-3xl bg-green-900 p-7 text-green-50">
             <h3 className="text-xl font-bold text-white">
-              Manejo integrado
+              Maneio integrado
             </h3>
 
             <p className="mt-3 max-w-4xl leading-8">

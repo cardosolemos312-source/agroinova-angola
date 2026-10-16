@@ -121,7 +121,7 @@ const provincias: Provincia[] = [
     clima:
       "A variabilidade das chuvas torna interessante trabalhar com materiais de ciclo e adaptação adequados ao local.",
     foco:
-      "Produção de semente, materiais tolerantes à seca e manejo da fertilidade.",
+      "Produção de semente, materiais tolerantes à seca e maneio da fertilidade.",
     observacao:
       "Há documentação do CIMMYT/IIA sobre ensaios, produção de sementes e materiais como ZM309, ZM521 e ZM523 no Cuanza Sul.",
   },
@@ -198,7 +198,7 @@ const provincias: Provincia[] = [
     sistema: "Agricultura familiar",
     solo: "Avaliar drenagem, matéria orgânica e disponibilidade de nutrientes.",
     clima:
-      "A maior humidade exige atenção ao manejo e à sanidade da cultura.",
+      "A maior humidade exige atenção ao maneio e à sanidade da cultura.",
     foco:
       "Semente de qualidade, sanidade e conservação do solo.",
     observacao:
@@ -291,7 +291,7 @@ const provincias: Provincia[] = [
     clima:
       "O calendário deve acompanhar as chuvas locais.",
     foco:
-      "Manejo do solo, sementes, sanidade e pós-colheita.",
+      "Maneio do solo, sementes, sanidade e pós-colheita.",
     observacao:
       "Não são apresentados números provinciais sem confirmação em fonte estatística oficial.",
   },

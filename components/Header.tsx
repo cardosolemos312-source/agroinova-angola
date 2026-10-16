@@ -3,10 +3,12 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import PesquisaGlobal from "@/components/PesquisaGlobal";
 
 export default function Header() {
   const [menuAberto, setMenuAberto] = useState(false);
   const [dropdownAberto, setDropdownAberto] = useState<string | null>(null);
+  const [pesquisaAberta, setPesquisaAberta] = useState(false);
 
   const headerRef = useRef<HTMLElement | null>(null);
 
@@ -24,6 +26,11 @@ export default function Header() {
     setDropdownAberto(null);
   }
 
+  function abrirPesquisa() {
+    fecharMenu();
+    setPesquisaAberta(true);
+  }
+
   useEffect(() => {
     function tratarCliqueFora(event: MouseEvent) {
       if (
@@ -37,6 +44,7 @@ export default function Header() {
     function tratarTecla(event: KeyboardEvent) {
       if (event.key === "Escape") {
         fecharMenu();
+        setPesquisaAberta(false);
       }
     }
 
@@ -51,25 +59,26 @@ export default function Header() {
 
   return (
     <>
-      <style jsx global>{`
-        .site-header,
-        .site-header * {
+      <style>{`
+        .agro-header,
+        .agro-header *,
+        .agro-header *::before,
+        .agro-header *::after {
           box-sizing: border-box;
         }
 
-        .site-header {
+        .agro-header {
           position: sticky;
           top: 0;
           z-index: 1000;
           width: 100%;
-          background: rgba(174, 180, 185, 0.98);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
+          background: #103f2b;
+          border-bottom: 1px solid rgba(255,255,255,.15);
+          box-shadow: 0 5px 22px rgba(8,39,24,.18);
           font-family: Arial, Helvetica, sans-serif;
         }
 
-        .header-content {
+        .agro-header-inner {
           width: min(96%, 1600px);
           min-height: 82px;
           margin: 0 auto;
@@ -81,429 +90,495 @@ export default function Header() {
 
         /* LOGÓTIPO */
 
-        .logo {
+        .agro-logo {
           display: flex;
           align-items: center;
           flex-shrink: 0;
           gap: 10px;
-          color: inherit;
+          color: #ffffff !important;
           text-decoration: none;
         }
 
-        .logo-symbol {
-          width: 57px;
-          height: 57px;
-          flex-shrink: 0;
+        .agro-logo-symbol {
           display: block;
+          width: 52px;
+          height: 52px;
+          flex-shrink: 0;
+          transition: transform .25s ease;
         }
 
-        .logo-text {
+        .agro-logo:hover .agro-logo-symbol {
+          transform: scale(1.04) rotate(-4deg);
+        }
+
+        .agro-logo-text {
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          gap: 2px;
+          gap: 3px;
         }
 
-        .logo-title {
-          color: #ffffff;
-          font-size: 23px;
+        .agro-logo-title {
+          color: #ffffff !important;
+          font-size: 20px;
           font-weight: 900;
-          letter-spacing: -0.8px;
-          line-height: 1.05;
+          letter-spacing: -.6px;
+          line-height: 1.1;
           white-space: nowrap;
         }
 
-        .logo-subtitle {
-          color: #00bd86;
-          font-size: 11px;
+        .agro-logo-subtitle {
+          color: #86efac !important;
+          font-size: 9px;
           font-weight: 800;
           letter-spacing: 4px;
-          line-height: 1.5;
         }
 
-        .logo-slogan {
-          color: rgba(255, 255, 255, 0.95);
-          font-size: 10px;
-          letter-spacing: 0.7px;
+        .agro-logo-slogan {
+          color: #e2eee5 !important;
+          font-size: 9px;
           white-space: nowrap;
         }
 
-        /* MENU PRINCIPAL */
+        /* NAVEGAÇÃO */
 
-        .main-nav {
+        .agro-main-nav {
           display: flex;
           flex: 1;
           min-width: 0;
           align-items: center;
           justify-content: center;
-          gap: clamp(10px, 1.2vw, 22px);
+          gap: clamp(10px, 1.4vw, 23px);
         }
 
-        .main-nav > a,
-        .nav-dropdown-button {
+        .agro-main-nav > a,
+        .agro-dropdown-button {
+          position: relative;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 6px;
-          padding: 28px 0;
-          border: none;
+          gap: 7px;
+          padding: 30px 0;
+          border: 0;
           background: transparent;
-          color: #ffffff;
-          font-family: inherit;
-          font-size: 14px;
-          font-weight: 600;
+          color: #ffffff !important;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 13px;
+          font-weight: 700;
           line-height: 1.3;
           text-decoration: none;
           white-space: nowrap;
           cursor: pointer;
-          transition: color 0.2s ease;
+          transition: color .2s ease;
         }
 
-        .main-nav > a:hover,
-        .nav-dropdown-button:hover {
-          color: #00bd86;
+        .agro-main-nav > a::after,
+        .agro-dropdown-button::after {
+          position: absolute;
+          right: 0;
+          bottom: 21px;
+          left: 0;
+          height: 2px;
+          border-radius: 5px;
+          background: #4ade80;
+          content: "";
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform .2s ease;
         }
 
-        .nav-dropdown {
+        .agro-main-nav > a:hover,
+        .agro-dropdown-button:hover,
+        .agro-dropdown-button[aria-expanded="true"] {
+          color: #86efac !important;
+        }
+
+        .agro-main-nav > a:hover::after,
+        .agro-dropdown-button:hover::after {
+          transform: scaleX(1);
+        }
+
+        .agro-dropdown {
           position: relative;
           display: flex;
           align-items: center;
         }
 
-        .dropdown-arrow {
-          font-size: 10px;
-          transition: transform 0.2s ease;
+        .agro-dropdown-arrow {
+          font-size: 9px;
+          color: inherit;
+          transition: transform .2s ease;
         }
 
-        .nav-dropdown-button[aria-expanded="true"] .dropdown-arrow {
+        .agro-dropdown-button[aria-expanded="true"] .agro-dropdown-arrow {
           transform: rotate(180deg);
         }
 
-        /* DROPDOWNS */
+        /* MENUS SUSPENSOS: FUNDO BRANCO E TEXTO PRETO */
 
-        .nav-dropdown-menu {
+        .agro-dropdown-menu {
           position: absolute;
-          top: 100%;
-          left: -14px;
+          top: calc(100% - 8px);
+          left: -18px;
           z-index: 1001;
           display: none;
           flex-direction: column;
-          min-width: 220px;
-          padding: 8px;
-          border: 1px solid #e5ebe7;
-          border-radius: 10px;
+          min-width: 230px;
+          padding: 9px;
+          border: 1px solid #dbe7dd;
+          border-radius: 13px;
           background: #ffffff;
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+          box-shadow: 0 18px 40px rgba(0,0,0,.2);
         }
 
-        .nav-dropdown-menu.dropdown-aberto {
+        .agro-dropdown-menu.is-open {
           display: flex;
         }
 
-        .nav-dropdown-menu a {
+        .agro-dropdown-menu a {
           display: block;
-          padding: 12px 14px;
-          border-radius: 6px;
-          color: #283b32;
-          font-size: 14px;
-          font-weight: 500;
+          padding: 12px 13px;
+          border-radius: 8px;
+          background: #ffffff;
+          color: #111827 !important;
+          font-size: 13px;
+          font-weight: 700;
+          line-height: 1.4;
           text-decoration: none;
-          transition: background 0.2s ease, color 0.2s ease;
+          transition: background .2s ease, color .2s ease,
+            padding-left .2s ease;
         }
 
-        .nav-dropdown-menu a:hover {
-          background: #e9f8f1;
-          color: #009b6c;
+        .agro-dropdown-menu a:hover {
+          padding-left: 17px;
+          background: #e8f5ec;
+          color: #14532d !important;
         }
 
-        /* PESQUISA E AGROIA */
+        /* BOTÕES DE ACÇÃO */
 
-        .header-actions {
+        .agro-header-actions {
           display: flex;
           align-items: center;
           justify-content: flex-end;
           flex-shrink: 0;
-          gap: 10px;
-          margin-left: auto;
+          gap: 9px;
         }
 
-        .search-button,
-        .agroia-button {
-          min-height: 43px;
+        .agro-search-button,
+        .agro-ai-button {
+          min-height: 42px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
+          gap: 8px;
           border-radius: 30px;
-          font-family: inherit;
-          font-size: 14px;
-          font-weight: 600;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 13px;
+          font-weight: 700;
           text-decoration: none;
           white-space: nowrap;
-          transition: background 0.2s ease, transform 0.2s ease;
+          cursor: pointer;
+          transition: background .2s ease, border-color .2s ease,
+            transform .2s ease;
         }
 
-        .search-button {
-          padding: 0 18px;
-          border: 1px solid rgba(255, 255, 255, 0.85);
-          background: transparent;
-          color: #ffffff;
+        .agro-search-button {
+          padding: 0 15px;
+          border: 1px solid rgba(255,255,255,.5);
+          background: #174b34;
+          color: #ffffff !important;
         }
 
-        .search-button:hover {
-          background: rgba(255, 255, 255, 0.18);
-          color: #ffffff;
+        .agro-search-button:hover {
+          border-color: #86efac;
+          background: #205b3f;
+          color: #ffffff !important;
         }
 
-        .agroia-button {
-          min-width: 95px;
-          padding: 0 20px;
-          background: #00bd86;
-          color: #ffffff;
+        .agro-search-icon {
+          width: 16px;
+          height: 16px;
+          flex-shrink: 0;
         }
 
-        .agroia-button:hover {
-          background: #009e70;
-          color: #ffffff;
+        .agro-ai-button {
+          min-width: 90px;
+          padding: 0 17px;
+          border: 1px solid #4ade80;
+          background: #4ade80;
+          color: #123522 !important;
+        }
+
+        .agro-ai-button:hover {
           transform: translateY(-1px);
+          background: #86efac;
+          color: #123522 !important;
         }
 
-        .mobile-menu-button,
-        .mobile-actions {
+        .agro-mobile-toggle,
+        .agro-mobile-actions {
           display: none;
         }
 
-        /* ECRÃS MÉDIOS */
+        /* TABLETS E ECRÃS MÉDIOS */
 
         @media (max-width: 1250px) {
-          .header-content {
+          .agro-header-inner {
             width: 97%;
             gap: 12px;
           }
 
-          .logo-symbol {
-            width: 46px;
-            height: 46px;
-          }
-
-          .logo {
+          .agro-logo {
             gap: 7px;
           }
 
-          .logo-title {
-            font-size: 18px;
+          .agro-logo-symbol {
+            width: 44px;
+            height: 44px;
           }
 
-          .logo-subtitle {
-            font-size: 9px;
-            letter-spacing: 2px;
+          .agro-logo-title {
+            font-size: 16px;
           }
 
-          .logo-slogan {
-            font-size: 9px;
+          .agro-logo-subtitle {
+            font-size: 8px;
+            letter-spacing: 3px;
           }
 
-          .main-nav {
+          .agro-logo-slogan {
+            font-size: 8px;
+          }
+
+          .agro-main-nav {
             gap: 10px;
           }
 
-          .main-nav > a,
-          .nav-dropdown-button {
-            font-size: 12px;
+          .agro-main-nav > a,
+          .agro-dropdown-button {
+            font-size: 11px;
           }
 
-          .header-actions {
-            gap: 7px;
+          .agro-header-actions {
+            gap: 6px;
           }
 
-          .search-button {
-            padding: 0 12px;
-            font-size: 12px;
+          .agro-search-button {
+            padding: 0 10px;
+            font-size: 11px;
           }
 
-          .agroia-button {
-            min-width: 75px;
-            padding: 0 12px;
-            font-size: 12px;
+          .agro-ai-button {
+            min-width: 70px;
+            padding: 0 11px;
+            font-size: 11px;
           }
         }
 
-        /* TABLETS E TELEMÓVEIS */
+        /* MENU RESPONSIVO */
 
         @media (max-width: 950px) {
-          .header-content {
+          .agro-header-inner {
+            position: relative;
             min-height: 76px;
           }
 
-          .mobile-menu-button {
+          .agro-mobile-toggle {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-height: 42px;
-            padding: 0 15px;
-            border: 1px solid #ffffff;
-            border-radius: 24px;
-            background: transparent;
-            color: #ffffff;
-            font-family: inherit;
-            font-size: 14px;
+            gap: 8px;
+            min-height: 41px;
+            padding: 0 13px;
+            border: 1px solid rgba(255,255,255,.45);
+            border-radius: 25px;
+            background: #174b34;
+            color: #ffffff !important;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight: 700;
             cursor: pointer;
           }
 
-          .mobile-menu-button:hover {
-            background: rgba(255, 255, 255, 0.15);
+          .agro-mobile-toggle:hover {
+            background: #205b3f;
           }
 
-          .main-nav {
+          .agro-mobile-icon {
+            width: 17px;
+            height: 17px;
+          }
+
+          .agro-main-nav {
             position: absolute;
             top: 100%;
-            left: 0;
-            right: 0;
+            right: -1.55%;
+            left: -1.55%;
             display: none;
             align-items: stretch;
             flex-direction: column;
             gap: 0;
-            max-height: calc(100vh - 76px);
+            max-height: calc(100dvh - 76px);
             overflow-y: auto;
-            padding: 12px 24px 20px;
-            background: #aeb4b9;
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 14px 25px rgba(0, 0, 0, 0.13);
+            padding: 12px 24px 22px;
+            border-top: 1px solid rgba(255,255,255,.15);
+            background: #103f2b;
+            box-shadow: 0 16px 30px rgba(0,0,0,.22);
           }
 
-          .main-nav.mobile-menu-open {
+          .agro-main-nav.is-mobile-open {
             display: flex;
           }
 
-          .main-nav > a,
-          .nav-dropdown-button {
+          .agro-main-nav > a,
+          .agro-dropdown-button {
             width: 100%;
             justify-content: space-between;
             padding: 15px 5px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.28);
-            color: #ffffff;
-            font-size: 15px;
+            border-bottom: 1px solid rgba(255,255,255,.14);
+            color: #ffffff !important;
+            font-size: 14px;
             text-align: left;
           }
 
-          .main-nav > a:hover,
-          .nav-dropdown-button:hover {
-            color: #00bd86;
+          .agro-main-nav > a::after,
+          .agro-dropdown-button::after {
+            display: none;
           }
 
-          .nav-dropdown {
+          .agro-dropdown {
             display: flex;
             flex-direction: column;
             align-items: stretch;
           }
 
-          .nav-dropdown-menu {
+          .agro-dropdown-menu {
             position: static;
             width: 100%;
             min-width: 0;
-            margin-bottom: 8px;
-            border-radius: 8px;
+            margin: 5px 0 9px;
+            border: 1px solid #dbe7dd;
+            border-radius: 10px;
+            background: #ffffff;
             box-shadow: none;
           }
 
-          .nav-dropdown-menu a {
+          .agro-dropdown-menu a {
             padding: 13px 15px;
-            font-size: 14px;
+            color: #111827 !important;
+            font-size: 13px;
           }
 
-          .header-actions {
+          .agro-header-actions {
             margin-left: auto;
           }
 
-          .mobile-actions {
+          .agro-mobile-actions {
             display: flex;
             gap: 10px;
             padding-top: 16px;
           }
 
-          .mobile-actions a {
+          .agro-mobile-actions button,
+          .agro-mobile-actions a {
             flex: 1;
-            padding: 13px;
+            min-width: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 10px;
+            border: 1px solid rgba(255,255,255,.3);
             border-radius: 25px;
-            background: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            font-size: 14px;
+            background: #174b34;
+            color: #ffffff !important;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight: 700;
             text-align: center;
             text-decoration: none;
+            cursor: pointer;
           }
 
-          .mobile-actions a:last-child {
-            background: #00bd86;
+          .agro-mobile-actions a:last-child {
+            border-color: #4ade80;
+            background: #4ade80;
+            color: #123522 !important;
           }
         }
 
-        /* TELEMÓVEIS PEQUENOS */
+        /* TELEMÓVEIS */
 
         @media (max-width: 560px) {
-          .header-content {
-            width: calc(100% - 24px);
-            min-height: 72px;
+          .agro-header-inner {
+            width: calc(100% - 22px);
+            min-height: 70px;
             gap: 8px;
           }
 
-          .logo {
+          .agro-logo {
             gap: 6px;
           }
 
-          .logo-symbol {
-            width: 39px;
-            height: 39px;
+          .agro-logo-symbol {
+            width: 37px;
+            height: 37px;
           }
 
-          .logo-title {
-            font-size: 15px;
-            letter-spacing: -0.5px;
+          .agro-logo-title {
+            font-size: 13px;
+            letter-spacing: -.35px;
           }
 
-          .logo-subtitle {
+          .agro-logo-subtitle {
             font-size: 8px;
             letter-spacing: 2px;
           }
 
-          .logo-slogan {
+          .agro-logo-slogan {
             display: none;
           }
 
-          .header-actions {
+          .agro-header-actions {
             display: none;
           }
 
-          .mobile-menu-button {
-            padding: 0 11px;
-            font-size: 13px;
+          .agro-mobile-toggle {
+            min-height: 38px;
+            padding: 0 9px;
+            font-size: 12px;
           }
 
-          .main-nav {
-            padding-right: 18px;
-            padding-left: 18px;
+          .agro-main-nav {
+            right: -11px;
+            left: -11px;
+            padding-right: 17px;
+            padding-left: 17px;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .site-header *,
-          .site-header *::before,
-          .site-header *::after {
+          .agro-header *,
+          .agro-header *::before,
+          .agro-header *::after {
+            animation: none !important;
             transition: none !important;
           }
         }
       `}</style>
 
-      <header ref={headerRef} className="site-header">
-        <div className="container header-content">
-          {/* LOGÓTIPO AGROINOVA-ANGOLA */}
+      <header ref={headerRef} className="agro-header">
+        <div className="agro-header-inner">
+          {/* LOGÓTIPO */}
 
           <Link
             href="/"
-            className="logo"
+            className="agro-logo"
             onClick={fecharMenu}
             aria-label="AGROINOVA-ANGOLA — Página inicial"
           >
             <svg
-              className="logo-symbol"
+              className="agro-logo-symbol"
               viewBox="0 0 100 100"
               xmlns="http://www.w3.org/2000/svg"
               role="img"
@@ -511,13 +586,13 @@ export default function Header() {
             >
               <defs>
                 <linearGradient
-                  id="agroGreen"
+                  id="agro-logo-gradient"
                   x1="0"
                   y1="0"
                   x2="1"
                   y2="1"
                 >
-                  <stop offset="0%" stopColor="#00d99b" />
+                  <stop offset="0%" stopColor="#4ade80" />
                   <stop offset="100%" stopColor="#087b4b" />
                 </linearGradient>
               </defs>
@@ -527,7 +602,7 @@ export default function Header() {
                 cy="50"
                 r="45"
                 fill="none"
-                stroke="#f7b928"
+                stroke="#f7c948"
                 strokeWidth="5"
                 strokeDasharray="210 75"
                 transform="rotate(-45 50 50)"
@@ -536,24 +611,24 @@ export default function Header() {
               <path
                 d="M49 81 C48 62 49 43 59 23"
                 fill="none"
-                stroke="url(#agroGreen)"
+                stroke="url(#agro-logo-gradient)"
                 strokeWidth="6"
                 strokeLinecap="round"
               />
 
               <path
                 d="M49 58 C28 58 18 44 18 29 C37 29 49 39 49 58Z"
-                fill="url(#agroGreen)"
+                fill="url(#agro-logo-gradient)"
               />
 
               <path
                 d="M51 45 C51 26 65 15 82 15 C82 34 69 45 51 45Z"
-                fill="url(#agroGreen)"
+                fill="url(#agro-logo-gradient)"
               />
 
               <path
                 d="M50 73 C30 73 19 64 13 51 C31 48 45 57 50 73Z"
-                fill="#0c985d"
+                fill="#22a866"
               />
 
               <path
@@ -564,39 +639,56 @@ export default function Header() {
               <path
                 d="M26 88 Q50 77 76 88"
                 fill="none"
-                stroke="#f7b928"
+                stroke="#f7c948"
                 strokeWidth="4"
                 strokeLinecap="round"
               />
             </svg>
 
-            <div className="logo-text">
-              <span className="logo-title">AGROINOVA-ANGOLA</span>
-              <span className="logo-subtitle">ANGOLA</span>
-              <span className="logo-slogan">
-                Conhecimento • Tecnologia • Inovação
+            <span className="agro-logo-text">
+              <span className="agro-logo-title">AGROINOVA-ANGOLA</span>
+              <span className="agro-logo-subtitle">ANGOLA</span>
+              <span className="agro-logo-slogan">
+                Conhecimento · Tecnologia · Inovação
               </span>
-            </div>
+            </span>
           </Link>
 
-          {/* BOTÃO DO MENU MOBILE */}
+          {/* BOTÃO DO MENU MÓVEL */}
 
           <button
             type="button"
-            className="mobile-menu-button"
+            className="agro-mobile-toggle"
             onClick={abrirMenu}
             aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
             aria-expanded={menuAberto}
-            aria-controls="menu-principal"
+            aria-controls="agro-menu-principal"
           >
+            <svg
+              className="agro-mobile-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              {menuAberto ? (
+                <path d="M18 6 6 18M6 6l12 12" />
+              ) : (
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
             {menuAberto ? "Fechar" : "Menu"}
           </button>
 
-          {/* NAVEGAÇÃO PRINCIPAL */}
+          {/* MENU PRINCIPAL */}
 
           <nav
-            id="menu-principal"
-            className={`main-nav ${menuAberto ? "mobile-menu-open" : ""}`}
+            id="agro-menu-principal"
+            className={`agro-main-nav ${
+              menuAberto ? "is-mobile-open" : ""
+            }`}
             aria-label="Menu principal"
           >
             <Link href="/" onClick={fecharMenu}>
@@ -605,29 +697,32 @@ export default function Header() {
 
             {/* PRODUÇÃO */}
 
-            <div className="nav-dropdown">
+            <div className="agro-dropdown">
               <button
                 type="button"
-                className="nav-dropdown-button"
+                className="agro-dropdown-button"
                 onClick={() => alternarDropdown("producao")}
                 aria-expanded={dropdownAberto === "producao"}
               >
                 <span>Produção</span>
-                <span className="dropdown-arrow">
+                <span className="agro-dropdown-arrow" aria-hidden="true">
                   {dropdownAberto === "producao" ? "▲" : "▼"}
                 </span>
               </button>
 
               <div
-                className={`nav-dropdown-menu ${
-                  dropdownAberto === "producao" ? "dropdown-aberto" : ""
+                className={`agro-dropdown-menu ${
+                  dropdownAberto === "producao" ? "is-open" : ""
                 }`}
               >
                 <Link href="/agricultura" onClick={fecharMenu}>
                   Agricultura
                 </Link>
+                <Link href="/floricultura" onClick={fecharMenu}>
+                  Floricultura
+                </Link>
                 <Link href="/florestas" onClick={fecharMenu}>
-                Florestas
+                  Florestas
                 </Link>
                 <Link href="/pecuaria" onClick={fecharMenu}>
                   Pecuária
@@ -646,22 +741,22 @@ export default function Header() {
 
             {/* CONHECIMENTO */}
 
-            <div className="nav-dropdown">
+            <div className="agro-dropdown">
               <button
                 type="button"
-                className="nav-dropdown-button"
+                className="agro-dropdown-button"
                 onClick={() => alternarDropdown("conhecimento")}
                 aria-expanded={dropdownAberto === "conhecimento"}
               >
                 <span>Conhecimento</span>
-                <span className="dropdown-arrow">
+                <span className="agro-dropdown-arrow" aria-hidden="true">
                   {dropdownAberto === "conhecimento" ? "▲" : "▼"}
                 </span>
               </button>
 
               <div
-                className={`nav-dropdown-menu ${
-                  dropdownAberto === "conhecimento" ? "dropdown-aberto" : ""
+                className={`agro-dropdown-menu ${
+                  dropdownAberto === "conhecimento" ? "is-open" : ""
                 }`}
               >
                 <Link href="/investigacao" onClick={fecharMenu}>
@@ -681,22 +776,22 @@ export default function Header() {
 
             {/* DADOS E MAPAS */}
 
-            <div className="nav-dropdown">
+            <div className="agro-dropdown">
               <button
                 type="button"
-                className="nav-dropdown-button"
+                className="agro-dropdown-button"
                 onClick={() => alternarDropdown("dados")}
                 aria-expanded={dropdownAberto === "dados"}
               >
                 <span>Dados &amp; Mapas</span>
-                <span className="dropdown-arrow">
+                <span className="agro-dropdown-arrow" aria-hidden="true">
                   {dropdownAberto === "dados" ? "▲" : "▼"}
                 </span>
               </button>
 
               <div
-                className={`nav-dropdown-menu ${
-                  dropdownAberto === "dados" ? "dropdown-aberto" : ""
+                className={`agro-dropdown-menu ${
+                  dropdownAberto === "dados" ? "is-open" : ""
                 }`}
               >
                 <Link href="/dados" onClick={fecharMenu}>
@@ -718,31 +813,68 @@ export default function Header() {
               Notícias
             </Link>
 
-            {/* ACÇÕES NO MENU MOBILE */}
+            {/* ACÇÕES PARA TELEMÓVEIS */}
 
-            <div className="mobile-actions">
-              <Link href="/pesquisar" onClick={fecharMenu}>
+            <div className="agro-mobile-actions">
+              <button type="button" onClick={abrirPesquisa}>
+                <svg
+                  className="agro-search-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="m16 16 4 4" />
+                </svg>
                 Pesquisar
-              </Link>
+              </button>
+
               <Link href="/agroia" onClick={fecharMenu}>
                 AGROIA
               </Link>
             </div>
           </nav>
 
-          {/* ACÇÕES NO COMPUTADOR */}
+          {/* ACÇÕES PARA COMPUTADOR */}
 
-          <div className="header-actions">
-            <Link href="/pesquisar" className="search-button">
+          <div className="agro-header-actions">
+            <button
+              type="button"
+              className="agro-search-button"
+              onClick={abrirPesquisa}
+              aria-label="Abrir pesquisa global"
+            >
+              <svg
+                className="agro-search-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m16 16 4 4" />
+              </svg>
               Pesquisar
-            </Link>
+            </button>
 
-            <Link href="/agroia" className="agroia-button">
-              AGROIA
+            <Link href="/agroia" className="agro-ai-button">
+              AGROIA <span aria-hidden="true">↗</span>
             </Link>
           </div>
         </div>
       </header>
+
+      {/* PESQUISA GLOBAL */}
+
+      <PesquisaGlobal
+        aberto={pesquisaAberta}
+        aoFechar={() => setPesquisaAberta(false)}
+      />
     </>
   );
 }

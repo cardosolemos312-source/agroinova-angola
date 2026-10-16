@@ -2603,8 +2603,16 @@ export default function BibliotecaPage() {
                 académicos, relatórios técnicos, estudos de campo e experiências
                 de produtores e investigadores.
               </p>
-              <a className="b-primary" href="/investigacao">
+                            <a className="b-primary" href="/investigacao">
                 Explorar investigação <span>↗</span>
+              </a>
+
+              <a
+                className="b-primary"
+                href="/publicar"
+                style={{ marginTop: "12px", display: "inline-flex" }}
+              >
+                Publicar trabalho académico <span>↗</span>
               </a>
             </div>
 

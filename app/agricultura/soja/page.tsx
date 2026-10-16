@@ -406,42 +406,42 @@ const pragas = [
     nome: "Lagartas desfolhadoras",
     dano:
       "Consomem folhas e podem reduzir a área fotossintética, especialmente quando o ataque ocorre em elevada intensidade.",
-    manejo:
+    maneio:
       "Monitorizar a lavoura e avaliar a intensidade do ataque antes de intervir.",
   },
   {
     nome: "Percevejos",
     dano:
       "Podem perfurar vagens e grãos em formação, afectando rendimento e qualidade.",
-    manejo:
+    maneio:
       "Aumentar a monitorização durante a formação e enchimento das vagens.",
   },
   {
     nome: "Afídeos",
     dano:
       "Sugam seiva e algumas espécies podem participar na transmissão de vírus.",
-    manejo:
+    maneio:
       "Favorecer monitorização e controlo integrado, preservando inimigos naturais.",
   },
   {
     nome: "Ácaros",
     dano:
       "Podem provocar pontuações, bronzeamento ou perda de vigor em condições favoráveis ao seu desenvolvimento.",
-    manejo:
+    maneio:
       "Verificar o verso das folhas e diferenciar sintomas de deficiência nutricional ou doença.",
   },
   {
     nome: "Gafanhotos",
     dano:
       "Podem causar desfolha, principalmente em zonas com elevada pressão de insectos.",
-    manejo:
+    maneio:
       "Monitorizar bordaduras e focos antes que a população se espalhe.",
   },
   {
     nome: "Pragas de armazenamento",
     dano:
       "Podem atacar os grãos após a colheita e comprometer qualidade comercial e germinação.",
-    manejo:
+    maneio:
       "Secar adequadamente, limpar o lote e utilizar armazenamento apropriado.",
   },
 ];
@@ -451,42 +451,42 @@ const doencas = [
     nome: "Ferrugem da soja",
     sinais:
       "Pequenas lesões nas folhas que podem evoluir para pústulas e queda prematura de folhas.",
-    manejo:
+    maneio:
       "Monitorização frequente, cultivar adequada e intervenção baseada no risco e recomendação técnica.",
   },
   {
     nome: "Mancha olho-de-rã",
     sinais:
       "Lesões foliares circulares que podem apresentar centro mais claro e bordo definido.",
-    manejo:
+    maneio:
       "Semente de qualidade, rotação, monitorização e utilização de materiais com resistência quando disponíveis.",
   },
   {
     nome: "Mancha parda",
     sinais:
       "Lesões nas folhas que podem aumentar sob condições favoráveis de humidade.",
-    manejo:
+    maneio:
       "Reduzir condições favoráveis através de práticas culturais e utilizar material de qualidade.",
   },
   {
     nome: "Antracnose",
     sinais:
       "Pode afectar caules, folhas, vagens e sementes, sobretudo em ambientes favoráveis à doença.",
-    manejo:
+    maneio:
       "Semente sadia, rotação, higiene e acompanhamento fitossanitário.",
   },
   {
     nome: "Podridão radicular",
     sinais:
       "Falhas no estabelecimento, redução do vigor e deterioração do sistema radicular.",
-    manejo:
+    maneio:
       "Boa drenagem, qualidade da semente e prevenção de compactação/encharcamento.",
   },
   {
     nome: "Doenças bacterianas",
     sinais:
       "Podem provocar manchas e lesões em folhas e outros órgãos da planta.",
-    manejo:
+    maneio:
       "Utilizar semente de qualidade e evitar disseminação através de operações em culturas molhadas.",
   },
 ];
@@ -648,10 +648,10 @@ export default function SojaPage() {
               </a>
 
               <a
-                href="#manejo"
+                href="#maneio"
                 className="rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20"
               >
-                Manejo
+                Maneio
               </a>
             </div>
 
@@ -1241,7 +1241,7 @@ export default function SojaPage() {
             <p className="mt-3 max-w-5xl leading-8 text-emerald-50">
               Inocular não significa automaticamente produzir mais. O
               resultado depende da qualidade do inoculante, compatibilidade,
-              viabilidade das bactérias, solo, cultivar, ambiente e manejo.
+              viabilidade das bactérias, solo, cultivar, ambiente e maneio.
               Uma recomendação comercial deve ser baseada na ficha do produto
               e na assistência técnica.
             </p>
@@ -1249,12 +1249,12 @@ export default function SojaPage() {
         </div>
       </section>
 
-      {/* MANEJO */}
-      <section id="manejo" className="bg-stone-100 py-16">
+      {/* MANEIO */}
+      <section id="maneio" className="bg-stone-100 py-16">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <div className="max-w-4xl">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-700">
-              Manejo da cultura
+              Maneio da cultura
             </p>
 
             <h2 className="mt-3 text-3xl font-black sm:text-4xl">
@@ -1437,11 +1437,11 @@ export default function SojaPage() {
               </p>
 
               <p className="mt-4 text-xs font-bold uppercase tracking-wider text-emerald-700">
-                Manejo
+                Maneio
               </p>
 
               <p className="mt-2 text-sm leading-7 text-stone-600">
-                {praga.manejo}
+                {praga.maneio}
               </p>
             </article>
           ))}
@@ -1486,11 +1486,11 @@ export default function SojaPage() {
                 </p>
 
                 <p className="mt-4 text-xs font-bold uppercase tracking-wider text-emerald-700">
-                  Prevenção e manejo
+                  Prevenção e maneio
                 </p>
 
                 <p className="mt-2 text-sm leading-7 text-stone-600">
-                  {doenca.manejo}
+                  {doenca.maneio}
                 </p>
               </article>
             ))}

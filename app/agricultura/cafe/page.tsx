@@ -325,8 +325,8 @@ export default function CafePage() {
           <a href="#viveiro" className="whitespace-nowrap font-semibold text-emerald-800">
             Viveiro
           </a>
-          <a href="#manejo" className="whitespace-nowrap font-semibold text-emerald-800">
-            Manejo
+          <a href="#maneio" className="whitespace-nowrap font-semibold text-emerald-800">
+            Maneio
           </a>
           <a href="#sanidade" className="whitespace-nowrap font-semibold text-emerald-800">
             Sanidade
@@ -552,7 +552,7 @@ export default function CafePage() {
       >
         <SectionTitle
           eyebrow="Botânica"
-          title="Conhecer a planta antes de manejar o cafezal"
+          title="Conhecer a planta antes de maneiar o cafezal"
           description="O café é uma cultura perene. A qualidade da implantação inicial condiciona a produtividade e a longevidade do cafezal."
         />
 
@@ -569,7 +569,7 @@ export default function CafePage() {
             <p>
               As folhas são fundamentais para a fotossíntese e para a
               formação de reservas necessárias à produção. Desfolha intensa
-              provocada por pragas, doenças ou manejo inadequado reduz o
+              provocada por pragas, doenças ou maneio inadequado reduz o
               potencial produtivo.
             </p>
           </Card>
@@ -745,11 +745,11 @@ export default function CafePage() {
       </section>
 
       <section
-        id="manejo"
+        id="maneio"
         className="mx-auto max-w-7xl px-6 py-14 md:px-10"
       >
         <SectionTitle
-          eyebrow="Manejo"
+          eyebrow="Maneio"
           title="Implantação e condução do cafezal"
           description="A produtividade não depende de uma única prática. O cafezal deve ser conduzido como um sistema permanente."
         />
@@ -834,7 +834,7 @@ export default function CafePage() {
             <p>
               A ferrugem pode provocar queda prematura das folhas e redução da
               capacidade fotossintética. O risco varia de acordo com material
-              genético, clima, manejo e condições da plantação.
+              genético, clima, maneio e condições da plantação.
             </p>
           </Card>
 
@@ -846,7 +846,7 @@ export default function CafePage() {
             </p>
           </Card>
 
-          <Card titulo="Manejo integrado">
+          <Card titulo="Maneio integrado">
             <p>
               O AGROINOVA deve privilegiar monitorização, higiene da lavoura,
               material saudável, equilíbrio nutricional, conservação do

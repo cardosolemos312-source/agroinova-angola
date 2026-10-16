@@ -221,7 +221,7 @@ const secoes = [
   "Material de plantio",
   "Preparação",
   "Plantio",
-  "Manejo",
+  "Maneo",
   "Pragas",
   "Doenças",
   "Colheita",
@@ -275,7 +275,7 @@ export default function BatataDocePage() {
             <p className="mt-6 max-w-3xl text-lg leading-8 text-emerald-50 sm:text-xl">
               Guia técnico e académico sobre{" "}
               <em>Ipomoea batatas</em>, com foco na produção,
-              material vegetativo, manejo, sanidade, colheita,
+              material vegetativo, maneio, sanidade, colheita,
               pós-colheita, nutrição, processamento e realidade
               agrícola de Angola.
             </p>
@@ -284,7 +284,7 @@ export default function BatataDocePage() {
               {[
                 "Produção em Angola",
                 "Material vegetativo",
-                "Manejo",
+                "Maneio",
                 "Sanidade",
                 "Nutrição",
                 "Investigação",
@@ -871,18 +871,18 @@ export default function BatataDocePage() {
         </div>
       </section>
 
-      {/* MANEJO */}
+      {/* MANEiO */}
       <section
-        id="manejo"
+        id="maneio"
         className="scroll-mt-24 bg-emerald-50 py-16"
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <p className="text-sm font-black uppercase tracking-[0.2em] text-emerald-700">
-            07 • Manejo
+            07 • Maneio
           </p>
 
           <h2 className="mt-2 text-3xl font-black text-slate-900">
-            Manejo durante o ciclo
+            Maneio durante o ciclo
           </h2>
 
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">

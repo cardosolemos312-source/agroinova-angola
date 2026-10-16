@@ -262,7 +262,7 @@ export default function CebolaPage() {
             <p className="mt-5 max-w-3xl text-lg leading-8 text-green-50 md:text-xl">
               Guia técnico sobre{" "}
               <em>Allium cepa</em>, com enfoque na produção,
-              irrigação, solo, sementes, manejo, sanidade, colheita,
+              irrigação, solo, sementes, maneio, sanidade, colheita,
               conservação, comercialização e experiências agrícolas
               documentadas em Angola.
             </p>
@@ -318,8 +318,8 @@ export default function CebolaPage() {
           <a href="#plantio" className="whitespace-nowrap hover:text-green-700">
             Plantio
           </a>
-          <a href="#manejo" className="whitespace-nowrap hover:text-green-700">
-            Manejo
+          <a href="#maneio" className="whitespace-nowrap hover:text-green-700">
+            Maneio
           </a>
           <a href="#sanidade" className="whitespace-nowrap hover:text-green-700">
             Sanidade
@@ -399,7 +399,7 @@ export default function CebolaPage() {
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
           <SectionTitle
             eyebrow="02 • Botânica"
-            title="Conhecer a planta para manejar correctamente o cultivo"
+            title="Conhecer a planta para maneiar correctamente o cultivo"
             description="A cebola é uma espécie do género Allium, cultivada principalmente para produção de bolbos."
           />
 
@@ -678,7 +678,7 @@ export default function CebolaPage() {
           <SectionTitle
             eyebrow="06 • Implantação"
             title="Da preparação do terreno ao estabelecimento da cultura"
-            description="A implantação uniforme facilita o manejo e aumenta a probabilidade de obter bolbos comerciais homogéneos."
+            description="A implantação uniforme facilita o maneio e aumenta a probabilidade de obter bolbos comerciais homogéneos."
           />
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -728,10 +728,10 @@ export default function CebolaPage() {
         </div>
       </section>
 
-      {/* MANEJO */}
-      <section id="manejo" className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+      {/* MANEiO */}
+      <section id="maneio" className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
         <SectionTitle
-          eyebrow="07 • Manejo"
+          eyebrow="07 • Maneio"
           title="Água, nutrientes, infestantes e uniformidade"
           description="A produção comercial exige acompanhamento frequente do campo."
         />
@@ -838,7 +838,7 @@ export default function CebolaPage() {
               </p>
 
               <p className="mt-3">
-                Boa circulação de ar, drenagem, sementes sadias e manejo
+                Boa circulação de ar, drenagem, sementes sadias e maneio
                 adequado da irrigação ajudam a reduzir o risco.
               </p>
             </Card>
@@ -868,7 +868,7 @@ export default function CebolaPage() {
               </p>
             </Card>
 
-            <Card title="Manejo integrado">
+            <Card title="Maneio integrado">
               <p>
                 Combinar sementes sadias, rotação, limpeza da área, controlo
                 de infestantes, monitorização e irrigação adequada é mais
@@ -1369,7 +1369,7 @@ export default function CebolaPage() {
               FAO — Food Factsheet: Onion
             </strong>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Botânica, propagação, espaçamento, manejo e problemas gerais da
+              Botânica, propagação, espaçamento, maneio e problemas gerais da
               cultura.
             </p>
           </a>
@@ -1399,7 +1399,7 @@ export default function CebolaPage() {
               UC IPM — Tripes da cebola
             </strong>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Identificação, danos e princípios de manejo integrado de tripes.
+              Identificação, danos e princípios de maneio integrado de tripes.
             </p>
           </a>
 

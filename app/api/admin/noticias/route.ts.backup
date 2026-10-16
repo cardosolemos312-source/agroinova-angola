@@ -1,0 +1,162 @@
+
+import { NextResponse } from "next/server";
+import { administradorAutenticado } from "@/lib/admin-auth";
+import { obterSupabaseAdmin } from "@/lib/supabase/admin";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+const CAMPOS = [
+  "titulo",
+  "resumo",
+  "conteudo",
+  "categoria",
+  "imagem_url",
+  "autor",
+  "estado",
+  "destaque",
+] as const;
+
+const CATEGORIAS = [
+  "Agricultura",
+  "Pecuária",
+  "Florestas",
+  "Pescas",
+  "Solos",
+  "Clima",
+  "Investigação",
+  "Tecnologia e inovação",
+  "Institucional",
+];
+
+type DadosNoticia = {
+  titulo?: string;
+  resumo?: string;
+  conteudo?: string;
+  categoria?: string;
+  imagem_url?: string;
+  autor?: string;
+  estado?: string;
+  destaque?: boolean;
+};
+
+export async function GET() {
+  try {
+    if (!(await administradorAutenticado())) {
+      return NextResponse.json(
+        { erro: "Sessão administrativa inválida." },
+        { status: 401 }
+      );
+    }
+
+    const supabase = obterSupabaseAdmin();
+
+    const { data, error } = await supabase
+      .from("agroinova_noticias")
+      .select("*")
+      .order("criado_em", { ascending: false });
+
+    if (error) throw error;
+
+    return NextResponse.json({ sucesso: true, noticias: data ?? [] });
+  } catch (error) {
+    console.error("Erro ao listar notícias:", error);
+
+    return NextResponse.json(
+      { erro: "Não foi possível carregar as notícias." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    if (!(await administradorAutenticado())) {
+      return NextResponse.json(
+        { erro: "Sessão administrativa inválida." },
+        { status: 401 }
+      );
+    }
+
+    const body = (await request.json()) as DadosNoticia;
+
+    const titulo = body.titulo?.trim();
+    const resumo = body.resumo?.trim() ?? "";
+    const conteudo = body.conteudo?.trim() ?? "";
+    const categoria = body.categoria?.trim() ?? "Agricultura";
+    const imagemUrl = body.imagem_url?.trim() ?? "";
+    const autor = body.autor?.trim() || "Redacção AGROINOVA";
+    const estado = body.estado ?? "rascunho";
+
+    if (!titulo || titulo.length > 200) {
+      return NextResponse.json(
+        { erro: "O título é obrigatório e deve ter até 200 caracteres." },
+        { status: 400 }
+      );
+    }
+
+    if (resumo.length > 1000 || conteudo.length > 100000) {
+      return NextResponse.json(
+        { erro: "O resumo ou o conteúdo excede o limite permitido." },
+        { status: 400 }
+      );
+    }
+
+    if (!CATEGORIAS.includes(categoria)) {
+      return NextResponse.json(
+        { erro: "Categoria inválida." },
+        { status: 400 }
+      );
+    }
+
+    if (estado !== "rascunho" && estado !== "publicada") {
+      return NextResponse.json(
+        { erro: "Estado de publicação inválido." },
+        { status: 400 }
+      );
+    }
+
+    if (
+      imagemUrl &&
+      (!/^https?:\/\//i.test(imagemUrl) || imagemUrl.length > 2000)
+    ) {
+      return NextResponse.json(
+        { erro: "O endereço da imagem é inválido." },
+        { status: 400 }
+      );
+    }
+
+    const supabase = obterSupabaseAdmin();
+
+    const { data, error } = await supabase
+      .from("agroinova_noticias")
+      .insert({
+        titulo,
+        resumo,
+        conteudo,
+        categoria,
+        imagem_url: imagemUrl,
+        autor,
+        estado,
+        destaque: body.destaque === true,
+        data_publicacao:
+          estado === "publicada" ? new Date().toISOString() : null,
+      })
+      .select("*")
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json(
+      { sucesso: true, noticia: data },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Erro ao criar notícia:", error);
+
+    return NextResponse.json(
+      { erro: "Não foi possível guardar a notícia. Confirma a base de dados." },
+      { status: 500 }
+    );
+  }
+}

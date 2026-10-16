@@ -305,8 +305,8 @@ export default function GirassolPage() {
             Plantio
           </a>
 
-          <a href="#manejo" className="whitespace-nowrap hover:text-green-700">
-            Manejo
+          <a href="#maneio" className="whitespace-nowrap hover:text-green-700">
+            Maneio
           </a>
 
           <a href="#sanidade" className="whitespace-nowrap hover:text-green-700">
@@ -785,13 +785,13 @@ export default function GirassolPage() {
         </div>
       </section>
 
-      {/* MANEJO */}
-      <section id="manejo" className="border-y border-slate-200 bg-white">
+      {/* MANEiO */}
+      <section id="maneio" className="border-y border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
           <SectionTitle
-            eyebrow="08 • Manejo"
+            eyebrow="08 • Maneio"
             title="Nutrição, água, infestantes e rotação"
-            description="A produtividade resulta da combinação entre genética, ambiente e manejo."
+            description="A produtividade resulta da combinação entre genética, ambiente e maneio."
           />
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -869,7 +869,7 @@ export default function GirassolPage() {
         <SectionTitle
           eyebrow="09 • Sanidade vegetal"
           title="Prevenção antes de tratamento"
-          description="O girassol pode ser afectado por pragas, doenças e plantas parasitas. O manejo integrado deve combinar prevenção, monitorização e intervenção justificada."
+          description="O girassol pode ser afectado por pragas, doenças e plantas parasitas. O maneio integrado deve combinar prevenção, monitorização e intervenção justificada."
         />
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -924,11 +924,11 @@ export default function GirassolPage() {
 
         <div className="mt-8 rounded-2xl border border-red-200 bg-red-50 p-6">
           <h3 className="font-bold text-red-950">
-            Manejo integrado de pragas e doenças
+            Maneio integrado de pragas e doenças
           </h3>
 
           <p className="mt-2 text-sm leading-7 text-red-900">
-            Em 2024, o PDAC realizou formação sobre manejo integrado de pragas
+            Em 2024, o PDAC realizou formação sobre maneio integrado de pragas
             e doenças em Malanje e Cuanza Norte, incluindo o girassol entre as
             culturas abordadas. Isso reforça a importância de capacitação e
             diagnóstico local em vez de tratamentos automáticos.
@@ -1090,7 +1090,7 @@ export default function GirassolPage() {
           <Card title="Malanje">
             <p>
               O MOSAP3 identifica o girassol entre as culturas de Malanje.
-              Além disso, o PDAC realizou em 2024 uma formação de manejo
+              Além disso, o PDAC realizou em 2024 uma formação de maneio
               integrado de pragas e doenças que incluiu produtores e técnicos
               ligados à cultura.
             </p>
@@ -1418,7 +1418,7 @@ export default function GirassolPage() {
             className="block rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-green-300 hover:bg-green-50"
           >
             <strong className="text-slate-950">
-              PDAC — Manejo integrado em Malanje e Cuanza Norte
+              PDAC — Maneio integrado em Malanje e Cuanza Norte
             </strong>
 
             <p className="mt-2 text-sm leading-6 text-slate-600">

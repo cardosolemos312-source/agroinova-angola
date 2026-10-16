@@ -242,7 +242,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Milho",
     descricao:
-      "Informação sobre a cultura do milho, produção, manejo, solos e práticas agrícolas.",
+      "Informação sobre a cultura do milho, produção, maneio, solos e práticas agrícolas.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -256,7 +256,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Mandioca",
     descricao:
-      "Informação sobre produção de mandioca, implantação, manejo e utilização.",
+      "Informação sobre produção de mandioca, implantação, maneo e utilização.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -269,7 +269,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Feijão",
     descricao:
-      "Informação sobre produção de feijão, manejo da cultura e principais cuidados.",
+      "Informação sobre produção de feijão, maneio da cultura e principais cuidados.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -282,7 +282,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Soja",
     descricao:
-      "Informação sobre produção de soja, manejo, fertilidade e práticas agrícolas.",
+      "Informação sobre produção de soja, maneio, fertilidade e práticas agrícolas.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -294,7 +294,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Arroz",
     descricao:
-      "Informação sobre produção de arroz, água, solo, manejo e colheita.",
+      "Informação sobre produção de arroz, água, solo, maneio e colheita.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -306,7 +306,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Trigo",
     descricao:
-      "Informação sobre a cultura do trigo e os principais aspectos do seu manejo.",
+      "Informação sobre a cultura do trigo e os principais aspectos do seu maneio.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -317,7 +317,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Batata",
     descricao:
-      "Informação sobre produção de batata, implantação, manejo e colheita.",
+      "Informação sobre produção de batata, implantação, maneio e colheita.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -329,7 +329,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Batata-doce",
     descricao:
-      "Informação sobre produção de batata-doce e práticas de manejo.",
+      "Informação sobre produção de batata-doce e práticas de maneio.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -353,7 +353,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Cebola",
     descricao:
-      "Informação sobre produção de cebola, manejo, irrigação e conservação.",
+      "Informação sobre produção de cebola, maneio, irrigação e conservação.",
     href: "/agricultura",
     categoria: "Hortícola",
     palavras: [
@@ -364,7 +364,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Alface",
     descricao:
-      "Informação sobre produção de alface e práticas de manejo hortícola.",
+      "Informação sobre produção de alface e práticas de maneio hortícola.",
     href: "/agricultura",
     categoria: "Hortícola",
     palavras: [
@@ -375,7 +375,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Café",
     descricao:
-      "Informação sobre produção de café, implantação, manejo e conservação.",
+      "Informação sobre produção de café, implantação, maneio e conservação.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -387,7 +387,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Algodão",
     descricao:
-      "Informação sobre produção de algodão e principais práticas de manejo.",
+      "Informação sobre produção de algodão e principais práticas de maneio.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -399,7 +399,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Amendoim",
     descricao:
-      "Informação sobre produção de amendoim e manejo da cultura.",
+      "Informação sobre produção de amendoim e maneio da cultura.",
     href: "/agricultura",
     categoria: "Cultura",
     palavras: [
@@ -410,7 +410,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Banana",
     descricao:
-      "Informação sobre produção de banana, implantação, nutrição e manejo.",
+      "Informação sobre produção de banana, implantação, nutrição e maneio.",
     href: "/agricultura",
     categoria: "Fruticultura",
     palavras: [
@@ -423,7 +423,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Manga",
     descricao:
-      "Informação sobre produção de manga e práticas de manejo de pomares.",
+      "Informação sobre produção de manga e práticas de maneio de pomares.",
     href: "/agricultura",
     categoria: "Fruticultura",
     palavras: [
@@ -436,7 +436,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Abacaxi",
     descricao:
-      "Informação sobre produção de abacaxi e manejo da cultura.",
+      "Informação sobre produção de abacaxi e maneio da cultura.",
     href: "/agricultura",
     categoria: "Fruticultura",
     palavras: [
@@ -448,7 +448,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Mamão",
     descricao:
-      "Informação sobre produção de mamão e manejo de pomares.",
+      "Informação sobre produção de mamão e maneio de pomares.",
     href: "/agricultura",
     categoria: "Fruticultura",
     palavras: [
@@ -461,7 +461,7 @@ const resultados: ResultadoPesquisa[] = [
   {
     titulo: "Abacate",
     descricao:
-      "Informação sobre produção de abacate e práticas de manejo.",
+      "Informação sobre produção de abacate e práticas de maneio.",
     href: "/agricultura",
     categoria: "Fruticultura",
     palavras: [
@@ -897,7 +897,7 @@ export default function Home() {
               </h1>
 
               <p className="mt-7 max-w-2xl text-lg leading-8 text-white/85 md:text-xl">
-                A AGROINOVA ANGOLA reúne conhecimento científico,
+                A  AGROINOVA-ANGOLA reúne conhecimento científico,
                 investigação, tecnologias, dados e informação para aproximar
                 produtores, técnicos, investigadores, estudantes, empresas e
                 instituições.
@@ -1224,7 +1224,7 @@ export default function Home() {
                 {
                   titulo: "Investigação",
                   texto:
-                    "Projetos, pesquisas e resultados científicos.",
+                    "Projectos, pesquisas e resultados científicos.",
                   href: "/investigacao",
                 },
                 {
