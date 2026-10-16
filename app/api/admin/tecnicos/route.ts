@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { administradorAutenticado } from "@/lib/admin-auth";
@@ -48,20 +47,28 @@ type PedidoTecnico = {
 
 function erroJson(mensagem: string, status: number) {
   return NextResponse.json(
-    { sucesso: false, erro: mensagem },
+    {
+      sucesso: false,
+      erro: mensagem,
+    },
     { status },
   );
 }
 
 function texto(valor: unknown): string | null {
-  if (typeof valor !== "string") return null;
+  if (typeof valor !== "string") {
+    return null;
+  }
 
   const resultado = valor.trim();
+
   return resultado.length > 0 ? resultado : null;
 }
 
 function booleano(valor: unknown): boolean {
-  if (typeof valor === "boolean") return valor;
+  if (typeof valor === "boolean") {
+    return valor;
+  }
 
   if (typeof valor === "string") {
     return ["true", "1", "sim", "on"].includes(
@@ -77,7 +84,9 @@ function validarUrl(
   campo: string,
   protocolos: string[] = ["http:", "https:"],
 ): string | null {
-  if (!valor) return null;
+  if (!valor) {
+    return null;
+  }
 
   try {
     const url = new URL(valor);
@@ -115,9 +124,7 @@ function validarDados(
 
   const estadoRecebido = texto(entrada.estado) ?? "rascunho";
 
-  if (
-    !ESTADOS.includes(estadoRecebido as EstadoTecnico)
-  ) {
+  if (!ESTADOS.includes(estadoRecebido as EstadoTecnico)) {
     return {
       valido: false,
       erro: "O estado selecionado não é válido.",
@@ -188,16 +195,28 @@ function validarDados(
 
   for (const [campo, valor] of urls) {
     const erro = validarUrl(valor, campo);
-    if (erro) return { valido: false, erro };
+
+    if (erro) {
+      return {
+        valido: false,
+        erro,
+      };
+    }
   }
 
   const erroWebsite = validarUrl(dados.website, "Website");
 
   if (erroWebsite) {
-    return { valido: false, erro: erroWebsite };
+    return {
+      valido: false,
+      erro: erroWebsite,
+    };
   }
 
-  return { valido: true, dados };
+  return {
+    valido: true,
+    dados,
+  };
 }
 
 function obterFicheiro(
@@ -235,9 +254,7 @@ const CAMPOS_TECNICO = [
   "destaque",
 ] as const;
 
-async function lerPedido(
-  request: Request,
-): Promise<PedidoTecnico> {
+async function lerPedido(request: Request): Promise<PedidoTecnico> {
   const contentType = request.headers.get("content-type") ?? "";
 
   const ficheiros: FicheirosTecnico = {
@@ -250,6 +267,7 @@ async function lerPedido(
 
   if (contentType.includes("multipart/form-data")) {
     const formData = await request.formData();
+
     entrada = {};
 
     for (const campo of CAMPOS_TECNICO) {
@@ -259,9 +277,11 @@ async function lerPedido(
     ficheiros.fotografia = obterFicheiro(
       formData.get("fotografia"),
     );
+
     ficheiros.livro_capa = obterFicheiro(
       formData.get("livro_capa"),
     );
+
     ficheiros.livro_pdf = obterFicheiro(
       formData.get("livro_pdf"),
     );
@@ -309,13 +329,34 @@ function mensagemErro(erro: unknown): string {
   return String(erro);
 }
 
+async function verificarAdministrador() {
+  try {
+    const autenticado = await administradorAutenticado();
+
+    if (!autenticado) {
+      return erroJson("Sessão administrativa inválida.", 401);
+    }
+
+    return null;
+  } catch (erro) {
+    console.error("Erro ao verificar administrador:", mensagemErro(erro));
+
+    return erroJson(
+      "Não foi possível verificar a sessão administrativa.",
+      401,
+    );
+  }
+}
+
 async function carregarFicheiro(
   supabase: ReturnType<typeof obterSupabaseAdmin>,
   ficheiro: File | null,
   tipo: "fotografia" | "livro_capa" | "livro_pdf",
   id: string,
 ): Promise<string | null> {
-  if (!ficheiro) return null;
+  if (!ficheiro) {
+    return null;
+  }
 
   const ePdf = tipo === "livro_pdf";
   const limite = ePdf
@@ -375,7 +416,7 @@ async function carregarFicheiro(
       });
 
     if (error) {
-      console.error("Supabase Storage devolveu um erro:", {
+      console.error("Erro do Supabase Storage:", {
         tipo,
         mensagem: error.message,
         nome: error.name,
@@ -388,7 +429,7 @@ async function carregarFicheiro(
   } catch (erro) {
     const detalhe = mensagemErro(erro);
 
-    console.error("Falha no upload para Supabase Storage:", {
+    console.error("Falha no carregamento do ficheiro:", {
       tipo,
       tamanho: ficheiro.size,
       contentType: ficheiro.type,
@@ -442,36 +483,28 @@ async function prepararDados(
     id,
   );
 
-  if (fotografiaUrl) dados.fotografia_url = fotografiaUrl;
-  if (capaUrl) dados.livro_capa_url = capaUrl;
-  if (pdfUrl) dados.livro_pdf_url = pdfUrl;
+  if (fotografiaUrl) {
+    dados.fotografia_url = fotografiaUrl;
+  }
+
+  if (capaUrl) {
+    dados.livro_capa_url = capaUrl;
+  }
+
+  if (pdfUrl) {
+    dados.livro_pdf_url = pdfUrl;
+  }
 
   return dados;
 }
 
-async function verificarAdministrador() {
-  try {
-    const autenticado = await administradorAutenticado();
-
-    if (!autenticado) {
-      return erroJson("Sessão administrativa inválida.", 401);
-    }
-
-    return null;
-  } catch (erro) {
-    console.error("Erro ao verificar administrador:", erro);
-
-    return erroJson(
-      "Não foi possível verificar a sessão administrativa.",
-      401,
-    );
-  }
-}
-
-// GET — listar técnicos
+// GET — listar técnicos no painel administrativo
 export async function GET() {
   const respostaAuth = await verificarAdministrador();
-  if (respostaAuth) return respostaAuth;
+
+  if (respostaAuth) {
+    return respostaAuth;
+  }
 
   try {
     const supabase = obterSupabaseAdmin();
@@ -482,10 +515,22 @@ export async function GET() {
       .order("criado_em", { ascending: false });
 
     if (error) {
-      console.error("Erro ao listar técnicos:", error);
-      return erroJson(
-        "Não foi possível carregar os técnicos.",
-        500,
+      console.error("Erro ao listar técnicos no Supabase:", {
+        tabela: TABELA,
+        codigo: error.code,
+        mensagem: error.message,
+        detalhes: error.details,
+        sugestao: error.hint,
+      });
+
+      return NextResponse.json(
+        {
+          sucesso: false,
+          erro: "Não foi possível carregar os técnicos.",
+          detalhe: error.message,
+          codigo: error.code,
+        },
+        { status: 500 },
       );
     }
 
@@ -494,11 +539,17 @@ export async function GET() {
       tecnicos: data ?? [],
     });
   } catch (erro) {
-    console.error("Erro inesperado ao listar técnicos:", erro);
+    const detalhe = mensagemErro(erro);
 
-    return erroJson(
-      "Ocorreu um erro ao carregar os técnicos.",
-      500,
+    console.error("Erro inesperado ao consultar técnicos:", detalhe);
+
+    return NextResponse.json(
+      {
+        sucesso: false,
+        erro: "Ocorreu um erro ao carregar os técnicos.",
+        detalhe,
+      },
+      { status: 500 },
     );
   }
 }
@@ -506,7 +557,10 @@ export async function GET() {
 // POST — registar técnico
 export async function POST(request: Request) {
   const respostaAuth = await verificarAdministrador();
-  if (respostaAuth) return respostaAuth;
+
+  if (respostaAuth) {
+    return respostaAuth;
+  }
 
   try {
     const pedido = await lerPedido(request);
@@ -532,11 +586,22 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
-      console.error("Erro ao registar técnico:", error);
+      console.error("Erro ao registar técnico no Supabase:", {
+        tabela: TABELA,
+        codigo: error.code,
+        mensagem: error.message,
+        detalhes: error.details,
+        sugestao: error.hint,
+      });
 
-      return erroJson(
-        `Não foi possível registar o técnico: ${error.message}`,
-        500,
+      return NextResponse.json(
+        {
+          sucesso: false,
+          erro: "Não foi possível registar o técnico.",
+          detalhe: error.message,
+          codigo: error.code,
+        },
+        { status: 500 },
       );
     }
 
@@ -550,12 +615,14 @@ export async function POST(request: Request) {
     );
   } catch (erro) {
     const mensagem = mensagemErro(erro);
+
     console.error("Erro no registo de técnico:", mensagem);
 
-    const status =
-      mensagem.includes("Não foi possível carregar o ficheiro")
-        ? 502
-        : 400;
+    const status = mensagem.includes(
+      "Não foi possível carregar o ficheiro",
+    )
+      ? 502
+      : 400;
 
     return erroJson(mensagem, status);
   }
@@ -564,7 +631,10 @@ export async function POST(request: Request) {
 // PATCH — atualizar técnico
 export async function PATCH(request: Request) {
   const respostaAuth = await verificarAdministrador();
-  if (respostaAuth) return respostaAuth;
+
+  if (respostaAuth) {
+    return respostaAuth;
+  }
 
   try {
     const contentType = request.headers.get("content-type") ?? "";
@@ -572,6 +642,7 @@ export async function PATCH(request: Request) {
 
     let id: string | null = null;
     let dadosRecebidos: DadosTecnico;
+
     let ficheiros: FicheirosTecnico = {
       fotografia: null,
       livro_capa: null,
@@ -580,6 +651,7 @@ export async function PATCH(request: Request) {
 
     if (multipart) {
       const formData = await request.formData();
+
       id = texto(formData.get("id"));
 
       const entrada: Record<string, unknown> = {};
@@ -613,6 +685,7 @@ export async function PATCH(request: Request) {
       }
 
       const objeto = corpo as Record<string, unknown>;
+
       id = texto(objeto.id);
 
       const validacao = validarDados(objeto);
@@ -633,21 +706,31 @@ export async function PATCH(request: Request) {
 
     const supabase = obterSupabaseAdmin();
 
-    const { data: existente, error: erroExistente } =
-      await supabase
-        .from(TABELA)
-        .select(
-          "id, publicado_em, fotografia_url, livro_capa_url, livro_pdf_url",
-        )
-        .eq("id", id)
-        .maybeSingle();
+    const { data: existente, error: erroExistente } = await supabase
+      .from(TABELA)
+      .select(
+        "id, publicado_em, fotografia_url, livro_capa_url, livro_pdf_url",
+      )
+      .eq("id", id)
+      .maybeSingle();
 
     if (erroExistente) {
-      console.error("Erro ao procurar técnico:", erroExistente);
+      console.error("Erro ao procurar técnico no Supabase:", {
+        tabela: TABELA,
+        codigo: erroExistente.code,
+        mensagem: erroExistente.message,
+        detalhes: erroExistente.details,
+        sugestao: erroExistente.hint,
+      });
 
-      return erroJson(
-        "Não foi possível consultar o técnico.",
-        500,
+      return NextResponse.json(
+        {
+          sucesso: false,
+          erro: "Não foi possível consultar o técnico.",
+          detalhe: erroExistente.message,
+          codigo: erroExistente.code,
+        },
+        { status: 500 },
       );
     }
 
@@ -699,11 +782,22 @@ export async function PATCH(request: Request) {
       .single();
 
     if (error) {
-      console.error("Erro ao atualizar técnico:", error);
+      console.error("Erro ao atualizar técnico no Supabase:", {
+        tabela: TABELA,
+        codigo: error.code,
+        mensagem: error.message,
+        detalhes: error.details,
+        sugestao: error.hint,
+      });
 
-      return erroJson(
-        `Não foi possível atualizar o técnico: ${error.message}`,
-        500,
+      return NextResponse.json(
+        {
+          sucesso: false,
+          erro: "Não foi possível atualizar o técnico.",
+          detalhe: error.message,
+          codigo: error.code,
+        },
+        { status: 500 },
       );
     }
 
@@ -714,12 +808,14 @@ export async function PATCH(request: Request) {
     });
   } catch (erro) {
     const mensagem = mensagemErro(erro);
+
     console.error("Erro ao atualizar técnico:", mensagem);
 
-    const status =
-      mensagem.includes("Não foi possível carregar o ficheiro")
-        ? 502
-        : 400;
+    const status = mensagem.includes(
+      "Não foi possível carregar o ficheiro",
+    )
+      ? 502
+      : 400;
 
     return erroJson(mensagem, status);
   }
@@ -728,7 +824,10 @@ export async function PATCH(request: Request) {
 // DELETE — eliminar técnico
 export async function DELETE(request: Request) {
   const respostaAuth = await verificarAdministrador();
-  if (respostaAuth) return respostaAuth;
+
+  if (respostaAuth) {
+    return respostaAuth;
+  }
 
   try {
     const url = new URL(request.url);
@@ -751,11 +850,22 @@ export async function DELETE(request: Request) {
       .maybeSingle();
 
     if (error) {
-      console.error("Erro ao eliminar técnico:", error);
+      console.error("Erro ao eliminar técnico no Supabase:", {
+        tabela: TABELA,
+        codigo: error.code,
+        mensagem: error.message,
+        detalhes: error.details,
+        sugestao: error.hint,
+      });
 
-      return erroJson(
-        "Não foi possível eliminar o técnico.",
-        500,
+      return NextResponse.json(
+        {
+          sucesso: false,
+          erro: "Não foi possível eliminar o técnico.",
+          detalhe: error.message,
+          codigo: error.code,
+        },
+        { status: 500 },
       );
     }
 
@@ -768,11 +878,17 @@ export async function DELETE(request: Request) {
       mensagem: "Técnico eliminado com sucesso.",
     });
   } catch (erro) {
-    console.error("Erro inesperado ao eliminar técnico:", erro);
+    const detalhe = mensagemErro(erro);
 
-    return erroJson(
-      "Ocorreu um erro ao eliminar o técnico.",
-      500,
+    console.error("Erro inesperado ao eliminar técnico:", detalhe);
+
+    return NextResponse.json(
+      {
+        sucesso: false,
+        erro: "Ocorreu um erro ao eliminar o técnico.",
+        detalhe,
+      },
+      { status: 500 },
     );
   }
 }

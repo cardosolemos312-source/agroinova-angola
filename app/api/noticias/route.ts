@@ -25,14 +25,6 @@ type Fonte = {
   dominio: string;
 };
 
-type Candidato = {
-  title: string;
-  url: string;
-  image: string;
-  summary: string;
-  timestamp: number;
-};
-
 type Diagnostico = {
   fonte: string;
   linksEncontrados: number;
@@ -65,76 +57,23 @@ const FONTES: Fonte[] = [
 ];
 
 const USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36";
 
 const PALAVRAS_AGRICOLAS = [
-  "agricultura",
-  "agrícola",
-  "agricola",
-  "agrário",
-  "agrario",
-  "agronegócio",
-  "agronegocio",
-  "agroindústria",
-  "agroindustria",
-  "agropecuária",
-  "agropecuaria",
-  "produtor",
-  "produtores",
-  "produção agrícola",
-  "producao agricola",
-  "pecuária",
-  "pecuaria",
-  "gado",
-  "bovino",
-  "avicultura",
-  "apicultura",
-  "aquicultura",
-  "aquacultura",
-  "pescas",
-  "pesca",
-  "pescador",
-  "mandioca",
-  "milho",
-  "arroz",
-  "café",
-  "cafe",
-  "cacau",
-  "feijão",
-  "feijao",
-  "horticultura",
-  "sementes",
-  "fertilizantes",
-  "irrigação",
-  "irrigacao",
-  "solos",
-  "floresta",
-  "florestal",
-  "madeira",
-  "camponeses",
-  "cooperativas",
-  "fazenda",
-  "rural",
-  "alimentos",
-  "segurança alimentar",
-  "seguranca alimentar",
-  "financiamento agrícola",
-  "financiamento agricola",
-  "mecanização",
-  "mecanizacao",
-  "cultivo",
-  "colheita",
-  "pastagem",
-  "rebanho",
-  "pecuaristas",
-  "investigação agrária",
-  "investigacao agraria",
-  "desenvolvimento rural",
-  "produção animal",
-  "producao animal",
-  "produção vegetal",
-  "producao vegetal",
-  "agricultores",
+  "agricultura", "agrícola", "agricola", "agronegócio",
+  "agronegocio", "agropecuária", "agropecuaria", "produtor",
+  "produção", "producao", "pecuária", "pecuaria", "gado",
+  "bovino", "avicultura", "apicultura", "aquicultura",
+  "aquacultura", "pesca", "pescador", "mandioca", "milho",
+  "arroz", "café", "cafe", "cacau", "feijão", "feijao",
+  "horticultura", "sementes", "fertilizantes", "irrigação",
+  "irrigacao", "solos", "floresta", "madeira", "camponeses",
+  "cooperativas", "fazenda", "rural", "alimentos",
+  "segurança alimentar", "seguranca alimentar",
+  "financiamento agrícola", "financiamento agricola",
+  "mecanização", "mecanizacao", "cultivo", "colheita",
+  "pastagem", "rebanho", "desenvolvimento rural",
+  "agricultores", "fada",
 ];
 
 function limparHTML(valor: string): string {
@@ -151,15 +90,13 @@ function limparHTML(valor: string): string {
     .replace(/&gt;/gi, ">")
     .replace(/&ndash;|&#8211;/gi, "–")
     .replace(/&mdash;|&#8212;/gi, "—")
-    .replace(/&ldquo;|&rdquo;/gi, '"')
-    .replace(/&lsquo;|&rsquo;/gi, "'")
-    .replace(/&#(\d+);/g, (_, numero: string) => {
-      const codigo = Number(numero);
-      return codigo <= 0x10ffff ? String.fromCodePoint(codigo) : "";
+    .replace(/&#(\d+);/g, (_, n: string) => {
+      const code = Number(n);
+      return code <= 0x10ffff ? String.fromCodePoint(code) : "";
     })
-    .replace(/&#x([0-9a-f]+);/gi, (_, numero: string) => {
-      const codigo = parseInt(numero, 16);
-      return codigo <= 0x10ffff ? String.fromCodePoint(codigo) : "";
+    .replace(/&#x([0-9a-f]+);/gi, (_, n: string) => {
+      const code = parseInt(n, 16);
+      return code <= 0x10ffff ? String.fromCodePoint(code) : "";
     })
     .replace(/&[a-z][a-z0-9]+;/gi, " ")
     .replace(/\s+/g, " ")
@@ -172,9 +109,7 @@ function atributo(html: string, nome: string): string {
     `\\b${nomeSeguro}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`,
     "i",
   );
-
   const resultado = html.match(regex);
-
   return (
     resultado?.[1] ??
     resultado?.[2] ??
@@ -186,11 +121,7 @@ function atributo(html: string, nome: string): string {
 function absoluto(url: string, base: string): string {
   try {
     const resultado = new URL(url, base);
-
-    if (!["http:", "https:"].includes(resultado.protocol)) {
-      return "";
-    }
-
+    if (!["http:", "https:"].includes(resultado.protocol)) return "";
     resultado.hash = "";
     return resultado.href;
   } catch {
@@ -198,29 +129,17 @@ function absoluto(url: string, base: string): string {
   }
 }
 
-function dominioNormalizado(hostname: string): string {
-  return hostname.toLowerCase().replace(/^www\./, "");
-}
-
 function urlValidaImagem(url: string): boolean {
   if (!url) return false;
 
   try {
     const parsed = new URL(url);
-
-    if (!["https:", "http:"].includes(parsed.protocol)) {
-      return false;
-    }
-
-    if (
-      /logo|avatar|favicon|placeholder|sprite|icon-\d|\/icons?\//i.test(
+    return (
+      ["https:", "http:"].includes(parsed.protocol) &&
+      !/logo|avatar|favicon|placeholder|sprite|icon-\d|\/icons?\//i.test(
         parsed.pathname,
       )
-    ) {
-      return false;
-    }
-
-    return true;
+    );
   } catch {
     return false;
   }
@@ -228,7 +147,6 @@ function urlValidaImagem(url: string): boolean {
 
 function relevante(texto: string): boolean {
   const normalizado = texto.toLocaleLowerCase("pt-PT");
-
   return PALAVRAS_AGRICOLAS.some((palavra) =>
     normalizado.includes(palavra.toLocaleLowerCase("pt-PT")),
   );
@@ -237,73 +155,42 @@ function relevante(texto: string): boolean {
 function categoriaDaNoticia(texto: string): string {
   const t = texto.toLocaleLowerCase("pt-PT");
 
-  if (
-    /pecuária|pecuaria|gado|bovino|caprino|ovino|veterinária|veterinaria|avicultura|apicultura/.test(
-      t,
-    )
-  ) {
+  if (/pecuária|pecuaria|gado|bovino|caprino|ovino|veterinária|veterinaria|avicultura|apicultura/.test(t)) {
     return "Pecuária";
   }
-
   if (/pesca|pescas|aquicultura|aquacultura|peixe|pescador/.test(t)) {
     return "Pescas";
   }
-
-  if (
-    /floresta|madeira|desmatamento|silvicultura|reflorestação|reflorestacao/.test(
-      t,
-    )
-  ) {
+  if (/floresta|madeira|desmatamento|silvicultura|reflorestação|reflorestacao/.test(t)) {
     return "Florestas";
   }
-
-  if (
-    /irrigação|irrigacao|água|agua|seca|chuva|clima|temperatura|meteorologia/.test(
-      t,
-    )
-  ) {
+  if (/irrigação|irrigacao|água|agua|seca|chuva|clima|temperatura|meteorologia/.test(t)) {
     return "Água e clima";
   }
-
-  if (
-    /financiamento|crédito|credito|banco|investimento|fada/.test(t)
-  ) {
+  if (/financiamento|crédito|credito|banco|investimento|fada/.test(t)) {
     return "Financiamento";
   }
-
-  if (
-    /formação|formacao|curso|capacitação|capacitacao|workshop/.test(t)
-  ) {
+  if (/formação|formacao|curso|capacitação|capacitacao|workshop/.test(t)) {
     return "Formação";
   }
-
-  if (
-    /tecnologia|inovação|inovacao|investigação|investigacao|mecanização|mecanizacao|drones/.test(
-      t,
-    )
-  ) {
+  if (/tecnologia|inovação|inovacao|investigação|investigacao|mecanização|mecanizacao|drones/.test(t)) {
     return "Tecnologia e inovação";
   }
-
   return "Agricultura";
 }
 
 function tituloValido(titulo: string): boolean {
   const t = titulo.trim();
-
   if (t.length < 18 || t.length > 240) return false;
 
-  return !/^(ler mais|saiba mais|ver mais|continuar|home|início|inicio|notícias|noticias|pesquisar|menu|publicidade)$/i.test(
-    t,
-  );
+  return !/^(ler mais|saiba mais|ver mais|continuar|home|início|inicio|notícias|noticias|pesquisar|menu|publicidade)$/i.test(t);
 }
 
 async function buscarHTML(url: string): Promise<string> {
   const resposta = await fetch(url, {
     headers: {
       "User-Agent": USER_AGENT,
-      Accept:
-        "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       "Accept-Language": "pt-PT,pt;q=0.9,pt-AO;q=0.8,en;q=0.5",
     },
     signal: AbortSignal.timeout(9000),
@@ -321,11 +208,9 @@ async function buscarHTML(url: string): Promise<string> {
 function linkPareceNoticia(url: string, fonte: Fonte): boolean {
   try {
     const parsed = new URL(url);
+    const dominio = parsed.hostname.toLowerCase().replace(/^www\./, "");
 
-    if (
-      dominioNormalizado(parsed.hostname) !==
-      dominioNormalizado(fonte.dominio)
-    ) {
+    if (dominio !== fonte.dominio.toLowerCase().replace(/^www\./, "")) {
       return false;
     }
 
@@ -338,16 +223,7 @@ function linkPareceNoticia(url: string, fonte: Fonte): boolean {
       caminho === "/pt/noticias/lista" ||
       caminho === "/tag/agricultura.html" ||
       caminho === "/web/noticias" ||
-      caminho.includes("/categoria/") ||
-      caminho.includes("/category/") ||
-      caminho.includes("/author/") ||
-      caminho.includes("/page/") ||
-      caminho.includes("/tag/")
-    ) {
-      return false;
-    }
-
-    if (
+      /\/(categoria|category|author|page|tag)\//.test(caminho) ||
       /\.(jpg|jpeg|png|webp|gif|pdf|svg|css|js|xml|ico)$/i.test(caminho)
     ) {
       return false;
@@ -360,19 +236,13 @@ function linkPareceNoticia(url: string, fonte: Fonte): boolean {
 }
 
 function extrairData(texto: string): number {
-  const iso = texto.match(
-    /\b(20\d{2}-\d{2}-\d{2}(?:T[\d:.+-]+Z?)?)\b/,
-  );
-
+  const iso = texto.match(/\b(20\d{2}-\d{2}-\d{2}(?:T[\d:.+-]+Z?)?)\b/);
   if (iso) {
     const timestamp = Date.parse(iso[1]);
     if (!Number.isNaN(timestamp)) return timestamp;
   }
 
-  const numerica = texto.match(
-    /\b(\d{1,2})[/. -](\d{1,2})[/. -](20\d{2})\b/,
-  );
-
+  const numerica = texto.match(/\b(\d{1,2})[/. -](\d{1,2})[/. -](20\d{2})\b/);
   if (numerica) {
     const [, dia, mes, ano] = numerica;
     const timestamp = new Date(
@@ -381,24 +251,14 @@ function extrairData(texto: string): number {
       Number(dia),
       12,
     ).getTime();
-
     if (!Number.isNaN(timestamp)) return timestamp;
   }
 
   const meses: Record<string, number> = {
-    janeiro: 0,
-    fevereiro: 1,
-    março: 2,
-    marco: 2,
-    abril: 3,
-    maio: 4,
-    junho: 5,
-    julho: 6,
-    agosto: 7,
-    setembro: 8,
-    outubro: 9,
-    novembro: 10,
-    dezembro: 11,
+    janeiro: 0, fevereiro: 1, março: 2, marco: 2,
+    abril: 3, maio: 4, junho: 5, julho: 6,
+    agosto: 7, setembro: 8, outubro: 9,
+    novembro: 10, dezembro: 11,
   };
 
   const extensa = texto.match(
@@ -408,14 +268,8 @@ function extrairData(texto: string): number {
   if (extensa) {
     const [, dia, nomeMes, ano] = extensa;
     const mes = meses[nomeMes.toLowerCase()];
-
     if (mes !== undefined) {
-      return new Date(
-        Number(ano),
-        mes,
-        Number(dia),
-        12,
-      ).getTime();
+      return new Date(Number(ano), mes, Number(dia), 12).getTime();
     }
   }
 
@@ -426,10 +280,7 @@ function imagemDoBloco(bloco: string, base: string): string {
   const imagens = bloco.match(/<img\b[^>]*>/gi) ?? [];
 
   for (const tag of imagens) {
-    const srcset =
-      atributo(tag, "data-srcset") ||
-      atributo(tag, "srcset");
-
+    const srcset = atributo(tag, "data-srcset") || atributo(tag, "srcset");
     const primeiraSrcset = srcset
       .split(",")
       .map((parte) => parte.trim().split(/\s+/)[0])
@@ -445,7 +296,6 @@ function imagemDoBloco(bloco: string, base: string): string {
       "";
 
     const url = absoluto(src, base);
-
     if (urlValidaImagem(url)) return url;
   }
 
@@ -454,76 +304,18 @@ function imagemDoBloco(bloco: string, base: string): string {
 
 function imagemDaPagina(html: string, base: string): string {
   const tags = html.match(/<meta\b[^>]*>/gi) ?? [];
-
-  const prioridades = [
-    "og:image",
-    "og:image:url",
-    "twitter:image",
-    "twitter:image:src",
-  ];
+  const prioridades = ["og:image", "og:image:url", "twitter:image", "twitter:image:src"];
 
   for (const prioridade of prioridades) {
     for (const tag of tags) {
       const chave = (
-        atributo(tag, "property") ||
-        atributo(tag, "name")
+        atributo(tag, "property") || atributo(tag, "name")
       ).toLowerCase();
 
       if (chave !== prioridade) continue;
 
       const url = absoluto(atributo(tag, "content"), base);
-
       if (urlValidaImagem(url)) return url;
-    }
-  }
-
-  const scripts =
-    html.match(
-      /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi,
-    ) ?? [];
-
-  for (const script of scripts) {
-    const conteudo = script
-      .replace(/^<script\b[^>]*>/i, "")
-      .replace(/<\/script>$/i, "");
-
-    try {
-      const dados: unknown = JSON.parse(conteudo);
-      const fila: unknown[] = Array.isArray(dados) ? [...dados] : [dados];
-
-      while (fila.length) {
-        const item = fila.shift();
-
-        if (!item || typeof item !== "object") continue;
-
-        const objeto = item as Record<string, unknown>;
-
-        if (Array.isArray(objeto["@graph"])) {
-          fila.push(...objeto["@graph"]);
-        }
-
-        const imagem = objeto.image ?? objeto.thumbnailUrl;
-        const candidatas = Array.isArray(imagem) ? imagem : [imagem];
-
-        for (const candidata of candidatas) {
-          const valor =
-            typeof candidata === "string"
-              ? candidata
-              : candidata && typeof candidata === "object"
-                ? String(
-                    (candidata as Record<string, unknown>).url ??
-                      (candidata as Record<string, unknown>).contentUrl ??
-                      "",
-                  )
-                : "";
-
-          const url = absoluto(valor, base);
-
-          if (urlValidaImagem(url)) return url;
-        }
-      }
-    } catch {
-      // Continua para os restantes metadados.
     }
   }
 
@@ -559,9 +351,7 @@ function dataDaPagina(html: string): number {
 
   if (dataMeta) {
     const timestamp = Date.parse(dataMeta);
-
     if (!Number.isNaN(timestamp)) return timestamp;
-
     const extraida = extrairData(dataMeta);
     if (extraida) return extraida;
   }
@@ -570,30 +360,37 @@ function dataDaPagina(html: string): number {
 
   for (const tag of timeTags) {
     const datetime = atributo(tag, "datetime");
-    const timestamp = datetime
-      ? Date.parse(datetime)
-      : extrairData(limparHTML(tag));
-
+    const timestamp = datetime ? Date.parse(datetime) : extrairData(limparHTML(tag));
     if (timestamp && !Number.isNaN(timestamp)) return timestamp;
   }
 
   return extrairData(html.slice(0, 30000));
 }
 
-function extrairCandidatos(html: string, fonte: Fonte): Candidato[] {
-  const resultado: Candidato[] = [];
+function extrairCandidatos(
+  html: string,
+  fonte: Fonte,
+): Array<{
+  title: string;
+  url: string;
+  image: string;
+  summary: string;
+  timestamp: number;
+}> {
+  const resultado: Array<{
+    title: string;
+    url: string;
+    image: string;
+    summary: string;
+    timestamp: number;
+  }> = [];
+
   const vistos = new Set<string>();
-
-  const artigos = html.match(
-    /<article\b[^>]*>[\s\S]*?<\/article>/gi,
-  ) ?? [];
-
+  const artigos = html.match(/<article\b[^>]*>[\s\S]*?<\/article>/gi) ?? [];
   const zonas = artigos.length ? artigos : [html];
 
   for (const zona of zonas) {
-    const anchors = zona.match(
-      /<a\b[^>]*>[\s\S]*?<\/a>/gi,
-    ) ?? [];
+    const anchors = zona.match(/<a\b[^>]*>[\s\S]*?<\/a>/gi) ?? [];
 
     for (const anchor of anchors) {
       const href = atributo(anchor, "href");
@@ -601,27 +398,18 @@ function extrairCandidatos(html: string, fonte: Fonte): Candidato[] {
 
       if (!href || !linkPareceNoticia(url, fonte)) continue;
 
-      const textoImagem = anchor.match(
-        /<img\b[^>]*>/i,
-      )?.[0] ?? "";
-
+      const textoImagem = anchor.match(/<img\b[^>]*>/i)?.[0] ?? "";
       const title =
         limparHTML(atributo(anchor, "aria-label")) ||
         limparHTML(atributo(anchor, "title")) ||
         limparHTML(atributo(textoImagem, "alt")) ||
-        limparHTML(
-          anchor.match(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/i)?.[1] ?? "",
-        ) ||
+        limparHTML(anchor.match(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/i)?.[1] ?? "") ||
         limparHTML(anchor);
 
       if (!tituloValido(title)) continue;
-
-      if (!relevante(title) && fonte.dominio !== "agroportal.ao") {
-        continue;
-      }
+      if (!relevante(title) && fonte.dominio !== "agroportal.ao") continue;
 
       const chave = url.replace(/\/+$/, "").toLowerCase();
-
       if (vistos.has(chave)) continue;
       vistos.add(chave);
 
@@ -647,7 +435,13 @@ function extrairCandidatos(html: string, fonte: Fonte): Candidato[] {
 }
 
 async function completarNoticia(
-  candidato: Candidato,
+  candidato: {
+    title: string;
+    url: string;
+    image: string;
+    summary: string;
+    timestamp: number;
+  },
   fonte: Fonte,
 ): Promise<Noticia> {
   let title = candidato.title;
@@ -660,26 +454,15 @@ async function completarNoticia(
 
     title =
       metadado(html, ["og:title", "twitter:title"]) ||
-      limparHTML(
-        html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "",
-      ) ||
+      limparHTML(html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "") ||
       title;
 
     summary =
-      metadado(html, [
-        "og:description",
-        "description",
-        "twitter:description",
-      ]) ||
+      metadado(html, ["og:description", "description", "twitter:description"]) ||
       summary;
 
-    if (!image) {
-      image = imagemDaPagina(html, candidato.url);
-    }
-
-    if (!timestamp) {
-      timestamp = dataDaPagina(html);
-    }
+    if (!image) image = imagemDaPagina(html, candidato.url);
+    if (!timestamp) timestamp = dataDaPagina(html);
   } catch (erro) {
     console.warn(
       `[Notícias] Falha ao consultar artigo: ${candidato.url}`,
@@ -693,8 +476,7 @@ async function completarNoticia(
     id: `${fonte.dominio}-${Buffer.from(candidato.url).toString("base64url").slice(0, 24)}`,
     category: categoriaDaNoticia(`${title} ${summary}`),
     title,
-    summary:
-      summary || "Consulta a publicação original para ler a notícia completa.",
+    summary: summary || "Consulta a publicação original para ler a notícia completa.",
     date: data
       ? data.toLocaleDateString("pt-PT", {
           day: "2-digit",
@@ -716,12 +498,8 @@ async function lerFonte(
   try {
     const html = await buscarHTML(fonte.url);
     const candidatos = extrairCandidatos(html, fonte);
-
-    // Limita os pedidos por fonte para reduzir o tempo de resposta.
     const noticias = await Promise.all(
-      candidatos.slice(0, 6).map((candidato) =>
-        completarNoticia(candidato, fonte),
-      ),
+      candidatos.slice(0, 6).map((candidato) => completarNoticia(candidato, fonte)),
     );
 
     return {
@@ -730,14 +508,11 @@ async function lerFonte(
         fonte: fonte.nome,
         linksEncontrados: candidatos.length,
         artigosLidos: noticias.length,
-        fotografiasEncontradas: noticias.filter((noticia) => noticia.image)
-          .length,
+        fotografiasEncontradas: noticias.filter((noticia) => noticia.image).length,
       },
     };
   } catch (erro) {
-    const mensagem =
-      erro instanceof Error ? erro.message : "Erro desconhecido";
-
+    const mensagem = erro instanceof Error ? erro.message : "Erro desconhecido";
     console.error(`[Notícias] Fonte indisponível: ${fonte.nome}`, mensagem);
 
     return {
@@ -754,109 +529,130 @@ async function lerFonte(
 }
 
 export async function GET() {
-  const [resultadosExternos, resultadoSupabase] = await Promise.all([
-    Promise.all(FONTES.map(lerFonte)),
-    obterSupabaseAdmin()
-      .from("agroinova_noticias")
-      .select("*")
-      .eq("estado", "publicada")
-      .order("publicada_em", { ascending: false })
-      .limit(40),
-  ]);
+  try {
+    const supabase = obterSupabaseAdmin();
 
-  if (resultadoSupabase.error) {
-    console.error(
-      "[Notícias] Erro ao consultar publicações AGROINOVA:",
-      resultadoSupabase.error.message,
+    const [resultadosExternos, resultadoSupabase] = await Promise.all([
+      Promise.all(FONTES.map(lerFonte)),
+      supabase
+        .from("agroinova_noticias")
+        .select(
+          "id,titulo,resumo,conteudo,categoria,imagem_url,fonte,fonte_url,autor,estado,destaque,publicada_em,criada_em,actualizada_em,pdf_url",
+        )
+        .eq("estado", "publicada")
+        .order("publicada_em", { ascending: false })
+        .limit(40),
+    ]);
+
+    if (resultadoSupabase.error) {
+      console.error(
+        "[Notícias] Erro ao consultar publicações AGROINOVA:",
+        JSON.stringify(
+          {
+            code: resultadoSupabase.error.code,
+            message: resultadoSupabase.error.message,
+            details: resultadoSupabase.error.details,
+            hint: resultadoSupabase.error.hint,
+          },
+          null,
+          2,
+        ),
+      );
+    }
+
+    const noticiasProprias: Noticia[] = (resultadoSupabase.data ?? []).map(
+      (item: Record<string, unknown>) => {
+        const dataOriginal = item.publicada_em ?? item.criada_em;
+        const timestamp = dataOriginal
+          ? new Date(String(dataOriginal)).getTime() || 0
+          : 0;
+        const data = timestamp > 0 ? new Date(timestamp) : null;
+
+        return {
+          id: `agroinova-${String(item.id)}`,
+          category: String(item.categoria ?? "Institucional"),
+          title: String(item.titulo ?? ""),
+          summary: String(item.resumo ?? item.conteudo ?? ""),
+          date: data
+            ? data.toLocaleDateString("pt-PT", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })
+            : "",
+          timestamp,
+          source: "AGROINOVA ANGOLA",
+          location: "Angola",
+          image: typeof item.imagem_url === "string" ? item.imagem_url : "",
+          url: "",
+        };
+      },
+    );
+
+    const externas = resultadosExternos.flatMap((resultado) => resultado.noticias);
+    const unicas = new Map<string, Noticia>();
+
+    for (const noticia of [...noticiasProprias, ...externas]) {
+      const chave = noticia.id.startsWith("agroinova-")
+        ? noticia.id
+        : noticia.url.replace(/\/+$/, "").toLowerCase();
+
+      if (!unicas.has(chave) && tituloValido(noticia.title)) {
+        unicas.set(chave, noticia);
+      }
+    }
+
+    const noticias = [...unicas.values()]
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, 60);
+
+    const diagnostico = resultadosExternos.map((resultado) => resultado.diagnostico);
+    const fontes = diagnostico.map((item) => ({
+      nome: item.fonte,
+      total: item.artigosLidos,
+      erro: item.erro ?? "",
+    }));
+
+    return NextResponse.json(
+      {
+        sucesso: noticias.length > 0,
+        atualizadoEm: new Date().toISOString(),
+        total: noticias.length,
+        fontes,
+        noticias,
+        diagnostico,
+        erroPublicacoesProprias: resultadoSupabase.error
+          ? "Não foi possível consultar as publicações próprias."
+          : undefined,
+        mensagem:
+          noticias.length === 0
+            ? "Não foram encontradas notícias. Consulta o diagnóstico das fontes."
+            : undefined,
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+        },
+      },
+    );
+  } catch (erro) {
+    console.error("[Notícias] Erro geral da API:", erro);
+
+    return NextResponse.json(
+      {
+        sucesso: false,
+        total: 0,
+        noticias: [],
+        fontes: [],
+        diagnostico: [],
+        mensagem: "Não foi possível carregar as notícias neste momento.",
+      },
+      {
+        status: 500,
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+        },
+      },
     );
   }
-
-  const noticiasProprias: Noticia[] = (resultadoSupabase.data ?? []).map(
-    (item: Record<string, unknown>) => {
-      const dataOriginal =
-        item.publicada_em ?? item.criada_em ?? item.criado_em;
-
-      const timestamp = dataOriginal
-        ? new Date(String(dataOriginal)).getTime() || 0
-        : 0;
-
-      const data = timestamp > 0 ? new Date(timestamp) : null;
-
-      return {
-        id: `agroinova-${String(item.id)}`,
-        category: String(item.categoria ?? "Institucional"),
-        title: String(item.titulo ?? ""),
-        summary: String(
-          item.resumo ?? item.conteudo ?? "",
-        ),
-        date: data
-          ? data.toLocaleDateString("pt-PT", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            })
-          : "",
-        timestamp,
-        source: "AGROINOVA ANGOLA",
-        location: "Angola",
-        image: typeof item.imagem_url === "string" ? item.imagem_url : "",
-        url: "",
-      };
-    },
-  );
-
-  const externas = resultadosExternos.flatMap(
-    (resultado) => resultado.noticias,
-  );
-
-  const unicas = new Map<string, Noticia>();
-
-  for (const noticia of [...noticiasProprias, ...externas]) {
-    const chave = noticia.id.startsWith("agroinova-")
-      ? noticia.id
-      : noticia.url.replace(/\/+$/, "").toLowerCase();
-
-    if (!unicas.has(chave) && tituloValido(noticia.title)) {
-      unicas.set(chave, noticia);
-    }
-  }
-
-  const noticias = [...unicas.values()]
-    .sort((a, b) => b.timestamp - a.timestamp)
-    .slice(0, 60);
-
-  const fontes = FONTES.map((fonte, indice) => {
-    const diagnostico = resultadosExternos[indice].diagnostico;
-
-    return {
-      nome: fonte.nome,
-      total: diagnostico.artigosLidos,
-      erro: diagnostico.erro ?? "",
-    };
-  });
-
-  return NextResponse.json(
-    {
-      sucesso: noticias.length > 0,
-      atualizadoEm: new Date().toISOString(),
-      total: noticias.length,
-      fontes,
-      noticias,
-      diagnostico: resultadosExternos.map(
-        (resultado) => resultado.diagnostico,
-      ),
-      erroPublicacoesProprias: resultadoSupabase.error
-        ? "Não foi possível consultar as publicações próprias."
-        : undefined,
-      mensagem:
-        noticias.length === 0
-          ? "Não foram encontradas notícias. Consulta o diagnóstico das fontes."
-          : undefined,
-    },
-    {
-      headers: {
-        "Cache-Control": "no-store, max-age=0",
-      },
-    },
-  );
 }
