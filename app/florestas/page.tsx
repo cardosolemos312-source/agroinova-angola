@@ -22,7 +22,7 @@ const FONTES = {
   transformacao: "https://minagrif.gov.ao/web/noticias/secretario-de-estado-para-as-florestas-reafirma-aposta-na-trasnformacao-da-madeira-local",
   mussivi: "https://minagrif.gov.ao/web/noticias/madeira-mussivi-apreendida-revertida-a-favor-do-estado-comecou-a-ser-entregue-a-industria-nacional",
   inbac: "https://inbac.gov.ao/Site/areasConservacao/parque",
-  maiombe: "https://inbac.gov.ao/Site/areasConservacao/parque/10",
+  maiombe: "https://welcometoangola.co.ao/directorio/floresta-do-maiombe/",
   quicama: "https://inbac.gov.ao/Site/areasConservacao/parque/18",
   iona: "https://inbac.gov.ao/Site/areasConservacao/parque/7",
   bicuar: "https://www.inbac.gov.ao/Site/areasConservacao/parque/14",
@@ -40,13 +40,13 @@ const FONTES = {
 };
 
 const IMG = {
-  maiombe: "https://medicareclub.ao/image/cache/catalog/guia/cabinda/floresta%20maiombe/mayombe-1240x827.jpg",
-  toros: "https://angola24horas.com/media/k2/items/cache/7bebd3c4ae52261f600461f949b4e4e5_L.jpg",
-  corte: "https://www.verangola.net/va/images/cms-image-000022453.jpg",
-  plantacao: "https://www.radiomais.ao/wp-content/uploads/2025/11/37.webp",
-  miombo: "https://www.undp.org/sites/g/files/zskgke326/files/2023-09/undp_ao_theforest-and-trees-1.2.jpg",
-  queimada: "https://www.wwf.fr/sites/default/files/styles/default_large/public/2018-03/BIOS-1097250-min.jpg?h=dbfb23f9&itok=fDlm737Z",
-  comunidade: "https://angola.un.org/sites/default/files/styles/featured_image/public/2022-03/Foto_2%20PNUD.jpg?itok=yUbviQV-",
+  maiombe: "https://welcometoangola.co.ao/wp-content/uploads/2022/04/f28bebc400c8b4c0bf97-95.png",
+  toros: "https://thumbs.dreamstime.com/b/toros-cortados-serra%C3%A7%C3%A3o-de-madeira-rolos-da-floresta-cannock-chase-164639529.jpg?w=992",
+  corte: "http://www.redeangola.info/wp-content/uploads/2015/08/desflorestao-bengo_edmundo-eucilio_jaimagens-580x361.jpg",
+  plantacao: "https://correiokianda.info/wp-content/uploads/2023/10/WhatsApp-Image-2023-10-09-at-11.05.46.jpeg",
+  miombo: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b7/Nyika_miombo.jpg/960px-Nyika_miombo.jpg?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail",
+  queimada: "https://www.makaangola.org/wp-content/uploads/2024/09/queimadas-1-860x280.jpg",
+  comunidade: "https://angola.un.org/sites/default/files/styles/hero_header_2xl_1x/public/2022-03/Foto1PNUD_0.jpg?itok=4gvm2_A0",
 };
 
 const temas: Tema[] = [
@@ -253,13 +253,22 @@ export default function FlorestasPage() {
     });
   }, [pesquisa, categoria]);
 
-  return (
-    <main className="min-h-screen bg-[#f4f7f2] text-slate-900">
-      <section className="relative isolate overflow-hidden bg-[#102f24] text-white">
-        <img src={IMG.maiombe} alt="Floresta do Maiombe, Cabinda" className="absolute inset-0 -z-20 h-full w-full object-cover opacity-35" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0a2118]/95 via-[#103b2b]/85 to-[#123d2c]/55" />
-        <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
+return (
+  <main className="min-h-screen bg-[#f4f7f2] text-slate-900">
+    <section className="relative isolate overflow-hidden bg-[#102f24] text-white">
+      <img
+        src={IMG.maiombe}
+        alt="Floresta do Maiombe, Angola"
+        className="absolute inset-0 -z-10 h-full w-full object-cover"
+      />
+
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0a2118]/85 via-[#103b2b]/70 to-[#123d2c]/45" />
+
+      <div className="relative mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
+
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-emerald-100">
+
+
             <span>AGROINOVA ANGOLA</span><span className="text-emerald-300">/</span><span>Conhecimento florestal</span>
           </div>
           <p className="mb-3 text-sm font-bold uppercase tracking-[0.24em] text-emerald-300">Recursos naturais · Ciência · Desenvolvimento</p>

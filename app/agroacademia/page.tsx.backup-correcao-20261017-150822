@@ -1,0 +1,363 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
+type ItemTipo = "Curso" | "Palestra" | "Workshop" | "Fórum" | "Congresso" | "Dia de campo" | "Webinar";
+type Evento = {
+  id: number;
+  titulo: string;
+  tipo: ItemTipo;
+  area: string;
+  modalidade: "Online" | "Presencial" | "Híbrido";
+  duracao: string;
+  nivel: string;
+  resumo: string;
+  conteudo: string[];
+  imagem: string;
+  estado: "Catálogo" | "Em destaque";
+};
+
+const imagens = {
+  // Fotografias publicadas pelo Governo Provincial do Huambo sobre iniciativas realizadas em Angola.
+  hero: "https://c2a.portais.gov.ao/uploads/large_780180309_1418795920103779_4134149205477091074_n_e57c90ce3d.jfif",
+  agricultura: "https://c2a.portais.gov.ao/uploads/large_780180309_1418795920103779_4134149205477091074_n_e57c90ce3d.jfif",
+  drone: "https://c2a.portais.gov.ao/uploads/large_676719035_1286317610343543_4582659571791002103_n_726d5e874d.jpg",
+  solo: "https://c2a.portais.gov.ao/uploads/large_780180309_1418795920103779_4134149205477091074_n_e57c90ce3d.jfif",
+  pecuaria: "https://c2a.portais.gov.ao/uploads/large_818749133_1417419507233352_3674267806858305715_n_8627f41dd0.jpg",
+  rega: "https://c2a.portais.gov.ao/uploads/large_780180309_1418795920103779_4134149205477091074_n_e57c90ce3d.jfif",
+  pesquisa: "https://c2a.portais.gov.ao/uploads/large_676719035_1286317610343543_4582659571791002103_n_726d5e874d.jpg",
+  estufa: "https://c2a.portais.gov.ao/uploads/large_676719035_1286317610343543_4582659571791002103_n_726d5e874d.jpg",
+  conferencia: "https://c2a.portais.gov.ao/uploads/large_818749133_1417419507233352_3674267806858305715_n_8627f41dd0.jpg",
+  livro: "https://c2a.portais.gov.ao/uploads/large_676719035_1286317610343543_4582659571791002103_n_726d5e874d.jpg",
+  universidade: "https://c2a.portais.gov.ao/uploads/large_676719035_1286317610343543_4582659571791002103_n_726d5e874d.jpg",
+  campo: "https://c2a.portais.gov.ao/uploads/large_780180309_1418795920103779_4134149205477091074_n_e57c90ce3d.jfif",
+};
+
+const eventosIniciais: Evento[] = [
+  { id: 13, titulo: "Workshop prático de mecanização agrícola e manutenção de tractores", tipo: "Workshop", area: "Mecanização", modalidade: "Presencial", duracao: "1 dia · programa proposto", nivel: "Operadores, agricultores e estudantes", resumo: "Workshop proposto para o contexto angolano, inspirado nas iniciativas de mecanização agrícola e formação técnica divulgadas pelo Governo Provincial do Huambo. A edição, data, local e entidade formadora devem ser confirmados antes da abertura das inscrições.", conteudo: ["Identificação do tractor e dos seus comandos", "Selecção e ligação segura de alfaias agrícolas", "Verificação diária, lubrificação e manutenção preventiva", "Segurança do operador e diagnóstico de falhas comuns", "Demonstração prática e plano de manutenção"], imagem: imagens.agricultura, estado: "Em destaque" },
+  { id: 14, titulo: "Workshop de bovinicultura, alimentação e maneio do gado", tipo: "Workshop", area: "Pecuária", modalidade: "Presencial", duracao: "1 dia · programa proposto", nivel: "Criadores, técnicos e estudantes", resumo: "Proposta de formação prática inspirada na Feira de Exposição e Leilão de Gado do Huambo, que incluiu actividades ligadas à bovinicultura. Não representa uma inscrição oficial num evento já anunciado.", conteudo: ["Avaliação visual da condição corporal", "Alimentação, água e instalações", "Biossegurança e registos sanitários", "Maneio responsável e bem-estar animal", "Planeamento dos custos e indicadores produtivos"], imagem: imagens.pecuaria, estado: "Em destaque" },
+  { id: 15, titulo: "Fórum angolano de inovação e extensão agropecuária", tipo: "Fórum", area: "Inovação", modalidade: "Híbrido", duracao: "Meio dia · programa proposto", nivel: "Universidades, produtores, técnicos e investigadores", resumo: "Proposta de fórum para aproximar instituições de ensino, serviços públicos, cooperativas e produtores em torno de mecanização, sementes, solos, sanidade animal e transferência de tecnologia.", conteudo: ["Experiências angolanas de extensão rural", "Mecanização adaptada à agricultura familiar", "Investigação aplicada e disponibilidade de sementes", "Acesso a financiamento e mercados", "Debate aberto e propostas de colaboração"], imagem: imagens.conferencia, estado: "Em destaque" },
+  { id: 1, titulo: "Agricultura de conservação e saúde do solo", tipo: "Curso", area: "Agricultura", modalidade: "Online", duracao: "12 horas · percurso autónomo", nivel: "Iniciação e intermédio", resumo: "Princípios práticos para proteger o solo, conservar a humidade e melhorar a sustentabilidade dos sistemas de produção." , conteudo: ["Diagnóstico básico da estrutura e cobertura do solo", "Rotação de culturas, cobertura vegetal e redução da mobilização", "Matéria orgânica, erosão e conservação da água", "Plano de aplicação adaptado à exploração agrícola"], imagem: imagens.solo, estado: "Em destaque" },
+  { id: 2, titulo: "Gestão eficiente da água e sistemas de irrigação", tipo: "Curso", area: "Irrigação", modalidade: "Online", duracao: "10 horas · percurso autónomo", nivel: "Iniciação", resumo: "Conheça os critérios para seleccionar, operar e manter sistemas de rega, com atenção à disponibilidade de água e aos custos." , conteudo: ["Necessidades hídricas e calendário de rega", "Comparação entre gota-a-gota, aspersão e pivô central", "Filtragem, pressão, caudal e manutenção", "Eficiência energética e registo do consumo de água"], imagem: imagens.rega, estado: "Em destaque" },
+  { id: 3, titulo: "Drones e agricultura de precisão", tipo: "Workshop", area: "Tecnologia", modalidade: "Híbrido", duracao: "1 dia · demonstração técnica", nivel: "Intermédio", resumo: "Introdução ao uso responsável de drones para observação de culturas, mapeamento, monitorização e apoio à decisão." , conteudo: ["Aplicações e limites dos drones agrícolas", "Planeamento de voos e recolha de imagens", "Mapas de vigor e identificação de zonas de atenção", "Segurança operacional, legislação e análise de custos"], imagem: imagens.drone, estado: "Em destaque" },
+  { id: 4, titulo: "Sanidade animal e biossegurança nas explorações", tipo: "Curso", area: "Pecuária", modalidade: "Online", duracao: "8 horas · percurso autónomo", nivel: "Iniciação e intermédio", resumo: "Medidas de prevenção, higiene, observação dos animais e organização de rotinas sanitárias na produção pecuária." , conteudo: ["Sinais de alerta e registos sanitários", "Limpeza, desinfecção e controlo de acessos", "Quarentena e movimentação de animais", "Quando contactar os serviços veterinários"], imagem: imagens.pecuaria, estado: "Catálogo" },
+  { id: 5, titulo: "Estufas, hidroponia e produção protegida", tipo: "Workshop", area: "Horticultura", modalidade: "Presencial", duracao: "1 a 2 dias · componente prática", nivel: "Iniciação", resumo: "Fundamentos de produção protegida, planeamento de estufas e gestão de água e nutrientes em horticultura." , conteudo: ["Escolha do local e ventilação", "Substratos, solução nutritiva e qualidade da água", "Monitorização de temperatura e humidade", "Higiene, pragas e planeamento de produção"], imagem: imagens.estufa, estado: "Catálogo" },
+  { id: 6, titulo: "Comercialização, cooperativas e cadeias de valor", tipo: "Fórum", area: "Economia rural", modalidade: "Híbrido", duracao: "Encontro temático", nivel: "Produtores, técnicos e estudantes", resumo: "Espaço de debate sobre organização de produtores, acesso ao mercado, armazenamento, transporte e negociação." , conteudo: ["Organização de grupos e cooperativas", "Qualidade, classificação e apresentação do produto", "Custos, preços e negociação", "Parcerias entre produtores, compradores e instituições"], imagem: imagens.conferencia, estado: "Catálogo" },
+  { id: 7, titulo: "Investigação aplicada e escrita científica", tipo: "Curso", area: "Investigação", modalidade: "Online", duracao: "15 horas · percurso autónomo", nivel: "Estudantes e investigadores", resumo: "Estruture uma pergunta de investigação, organize referências e prepare um relatório científico com transparência metodológica." , conteudo: ["Pergunta, objectivos e desenho metodológico", "Pesquisa bibliográfica e gestão de referências", "Organização e apresentação de dados", "Integridade académica, citações e comunicação de resultados"], imagem: imagens.pesquisa, estado: "Em destaque" },
+  { id: 8, titulo: "Mecanização agrícola: preparação do solo e sementeira", tipo: "Dia de campo", area: "Mecanização", modalidade: "Presencial", duracao: "Demonstração de campo", nivel: "Operadores, produtores e técnicos", resumo: "Demonstração técnica de operações mecanizadas, selecção de alfaias e cuidados básicos de segurança e manutenção." , conteudo: ["Tractor, charrua, grade e semeadora: funções e diferenças", "Ajuste de profundidade e velocidade de trabalho", "Consumo de combustível e planeamento de operações", "Segurança do operador e manutenção preventiva"], imagem: imagens.agricultura, estado: "Catálogo" },
+  { id: 9, titulo: "Clima, calendário agrícola e gestão de risco", tipo: "Palestra", area: "Clima", modalidade: "Online", duracao: "Sessão técnica", nivel: "Todos os públicos", resumo: "Como interpretar informação meteorológica e integrar riscos climáticos no planeamento das campanhas agrícolas." , conteudo: ["Diferença entre tempo, clima e previsão sazonal", "Leitura de avisos meteorológicos", "Calendário de sementeira e gestão de risco", "Limites das previsões e fontes oficiais a consultar"], imagem: imagens.campo, estado: "Catálogo" },
+  { id: 10, titulo: "Tecnologias digitais para a extensão rural", tipo: "Webinar", area: "Tecnologia", modalidade: "Online", duracao: "Sessão demonstrativa", nivel: "Técnicos e agentes de extensão", resumo: "Ferramentas digitais para registo de campo, assistência técnica, partilha de conhecimento e acompanhamento de explorações." , conteudo: ["Recolha de dados em campo", "Mapas, fotografias e registos georreferenciados", "Comunicação com produtores e acompanhamento", "Protecção de dados e validação da informação"], imagem: imagens.pesquisa, estado: "Catálogo" },
+  { id: 11, titulo: "Produção de sementes e viveiros", tipo: "Curso", area: "Produção vegetal", modalidade: "Online", duracao: "10 horas · percurso autónomo", nivel: "Iniciação e intermédio", resumo: "Boas práticas para planear viveiros, seleccionar material de propagação e manter a qualidade das plantas." , conteudo: ["Planeamento do viveiro e escolha do local", "Sementes, germinação e propagação vegetativa", "Rega, nutrição e controlo fitossanitário", "Aclimatação, qualidade e registos de produção"], imagem: imagens.estufa, estado: "Catálogo" },
+  { id: 12, titulo: "Fórum de inovação agropecuária em Angola", tipo: "Fórum", area: "Inovação", modalidade: "Presencial", duracao: "Encontro multidisciplinar", nivel: "Comunidade académica e sector produtivo", resumo: "Proposta de fórum para aproximar universidades, centros de investigação, produtores, empresas e decisores do sector." , conteudo: ["Apresentação de soluções tecnológicas", "Comunicação de experiências de campo", "Debate sobre investigação e transferência de tecnologia", "Criação de redes e propostas de colaboração"], imagem: imagens.conferencia, estado: "Catálogo" },
+];
+
+type Universidade = { nome: string; sigla: string; provincia: string; tipo: string; foco: string; url: string; imagem?: string };
+const universidadesIniciais: Universidade[] = [
+  { nome: "Universidade Agostinho Neto", sigla: "UAN", provincia: "Luanda", tipo: "Pública", foco: "Ensino superior, investigação e formação multidisciplinar", url: "https://uan.ao/" },
+  { nome: "Universidade de Luanda", sigla: "UniLuanda", provincia: "Luanda", tipo: "Pública", foco: "Formação superior e investigação", url: "https://www.universidades.ao/" },
+  { nome: "Universidade José Eduardo dos Santos", sigla: "UJES", provincia: "Huambo", tipo: "Pública", foco: "Ciências, formação superior e desenvolvimento regional", url: "https://www.universidades.ao/" },
+  { nome: "Universidade Katyavala Bwila", sigla: "UKB", provincia: "Benguela", tipo: "Pública", foco: "Ensino superior, ciência e extensão", url: "https://www.universidades.ao/" },
+  { nome: "Instituto Superior Politécnico de Benguela", sigla: "ISPB", provincia: "Benguela", tipo: "Privada", foco: "Formação politécnica e cursos superiores", url: "https://www.universidades.ao/" },
+  { nome: "Instituto Superior Politécnico da Tundavala", sigla: "ISPT", provincia: "Huíla", tipo: "Privada", foco: "Formação superior e desenvolvimento de competências", url: "https://www.universidades.ao/" },
+  { nome: "Instituto Superior de Ciências de Educação da Huíla", sigla: "ISCED-Huíla", provincia: "Huíla", tipo: "Pública", foco: "Formação de professores e investigação educacional", url: "https://www.universidades.ao/" },
+  { nome: "Universidade Óscar Ribas", sigla: "UÓR", provincia: "Luanda", tipo: "Privada", foco: "Ensino superior e investigação", url: "https://www.universidades.ao/" },
+];
+
+const tipos: ("Todos" | ItemTipo)[] = ["Todos", "Curso", "Palestra", "Workshop", "Fórum", "Congresso", "Dia de campo", "Webinar"];
+const areas = ["Todas as áreas", "Agricultura", "Pecuária", "Irrigação", "Tecnologia", "Horticultura", "Economia rural", "Investigação", "Mecanização", "Clima", "Produção vegetal", "Inovação"];
+
+export default function AgroacademiaPage() {
+  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [universidades, setUniversidades] = useState<Universidade[]>([]);
+  const [aCarregarDados, setACarregarDados] = useState(true);
+  const [erroCarregamento, setErroCarregamento] = useState("");
+  const [erroInscricao, setErroInscricao] = useState("");
+  const [aEnviarInscricao, setAEnviarInscricao] = useState(false);
+
+  useEffect(() => {
+    let activo = true;
+
+    async function carregarDados() {
+      try {
+        const resposta = await fetch("/api/agroacademia", {
+          cache: "no-store",
+        });
+
+        if (!resposta.ok) {
+          throw new Error("Não foi possível carregar os dados da AgroAcademia.");
+        }
+
+        const dados = await resposta.json();
+
+        if (!activo) return;
+
+        const eventosRecebidos: Evento[] = (dados.eventos ?? []).map(
+          (evento: Record<string, unknown>) => ({
+            ...evento,
+            id: Number(evento.id),
+            conteudo: Array.isArray(evento.conteudo) ? evento.conteudo : [],
+            estado: evento.destaque ? "Em destaque" : "Catálogo",
+          })
+        );
+
+        const instituicoesRecebidas: Universidade[] = (
+          dados.instituicoes ?? []
+        ).map((instituicao: Record<string, unknown>) => ({
+          nome: String(instituicao.nome ?? ""),
+          sigla: String(instituicao.sigla ?? ""),
+          provincia: String(instituicao.provincia ?? ""),
+          tipo: String(instituicao.tipo ?? ""),
+          foco: String(instituicao.foco ?? ""),
+          url: String(instituicao.url ?? ""),`r`n          imagem: String(instituicao.imagem ?? ""),
+        }));
+
+        setEventos(eventosRecebidos);
+        setUniversidades(instituicoesRecebidas);
+        setErroCarregamento("");
+      } catch (erro) {
+        if (activo) {
+          setErroCarregamento(
+            erro instanceof Error
+              ? erro.message
+              : "Erro ao carregar os conteúdos."
+          );
+        }
+      } finally {
+        if (activo) setACarregarDados(false);
+      }
+    }
+
+    void carregarDados();
+
+    return () => {
+      activo = false;
+    };
+  }, []);
+  const [pesquisa, setPesquisa] = useState("");
+  const [tipo, setTipo] = useState<(typeof tipos)[number]>("Todos");
+  const [area, setArea] = useState("Todas as áreas");
+  const [modalidade, setModalidade] = useState("Todas as modalidades");
+  const [separador, setSeparador] = useState<"formacoes" | "universidades">("formacoes");
+  const [seleccionado, setSeleccionado] = useState<Evento | null>(null);
+  const [mostrarInscricao, setMostrarInscricao] = useState(false);
+  const [inscricaoConfirmada, setInscricaoConfirmada] = useState(false);
+  const [plataformaEscolhida, setPlataformaEscolhida] = useState("Zoom");
+  const [horarioEscolhido, setHorarioEscolhido] = useState("Noite · 18h00–20h00");
+  const [dadosInscricao, setDadosInscricao] = useState({ nome: "", email: "", telefone: "", provincia: "", perfil: "Estudante", observacoes: "" });
+  const [universidadePesquisa, setUniversidadePesquisa] = useState("");
+  const [indiceDestaque, setIndiceDestaque] = useState(0);
+
+
+const filtrados = useMemo(() => {
+  const termo = pesquisa.trim().toLocaleLowerCase("pt-PT");
+
+  return eventos.filter((evento) => {
+    const texto = [
+      evento.titulo,
+      evento.resumo,
+      evento.area,
+      evento.tipo,
+    ]
+      .map((valor) => String(valor ?? ""))
+      .join(" ")
+      .toLocaleLowerCase("pt-PT");
+
+    const correspondeTexto = texto.includes(termo);
+    const correspondeTipo = tipo === "Todos" || evento.tipo === tipo;
+    const correspondeArea =
+      area === "Todas as áreas" || evento.area === area;
+    const correspondeModalidade =
+      modalidade === "Todas as modalidades" ||
+      evento.modalidade === modalidade;
+
+    return (
+      correspondeTexto &&
+      correspondeTipo &&
+      correspondeArea &&
+      correspondeModalidade
+    );
+  });
+}, [eventos, pesquisa, tipo, area, modalidade]);
+
+  const universidadesFiltradas = useMemo(() => universidades.filter((u) =>
+    `${u.nome} ${u.sigla} ${u.provincia} ${u.foco}`.toLocaleLowerCase("pt-PT").includes(universidadePesquisa.toLocaleLowerCase("pt-PT"))
+  ), [universidadePesquisa, universidades]);
+
+  const destaques = eventos.filter((e) => e.estado === "Em destaque");
+  const destaque = destaques.length > 0 ? destaques[indiceDestaque % destaques.length] : undefined;
+
+  return (
+    <main className="agroacademia min-h-screen bg-[#f6f8f5] text-[#17221b]">
+      <style jsx global>{`
+        .agroacademia * { box-sizing: border-box; }
+        .agroacademia .aa-container { width: min(1200px, calc(100% - 40px)); margin: 0 auto; }
+        .agroacademia .aa-kicker { letter-spacing: .16em; text-transform: uppercase; font-size: 11px; font-weight: 800; }
+        .agroacademia .aa-card { transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease; }
+        .agroacademia .aa-card:hover { transform: translateY(-5px); box-shadow: 0 18px 45px rgba(20,83,45,.12); border-color: #a7c8ad; }
+        .agroacademia .aa-btn { transition: transform .2s ease, background .2s ease; }
+        .agroacademia .aa-btn:hover { transform: translateY(-1px); }
+        .agroacademia .aa-in { animation: aaIn .45s ease both; }
+        @keyframes aaIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .agroacademia .aa-modal-backdrop { animation: aaFade .18s ease both; }
+        .agroacademia .aa-modal-panel { animation: aaModal .24s ease both; }
+        .agroacademia .aa-form-field { width: 100%; border: 1px solid #d7e3d5; border-radius: 10px; background: #fff; padding: 11px 12px; color: #183d25; outline: none; }
+        .agroacademia .aa-form-field:focus { border-color: #2f8548; box-shadow: 0 0 0 3px #2f85481a; }
+        @keyframes aaFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes aaModal { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @media (max-width: 640px) { .agroacademia .aa-container { width: min(100% - 28px, 1200px); } }
+      `}</style>
+
+      <section className="relative isolate min-h-[540px] overflow-hidden bg-[#123d25] text-white">
+        <div className="absolute inset-0 -z-20 bg-cover bg-center" style={{ backgroundImage: `url(${imagens.hero})` }} />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#092817]/95 via-[#123d25]/85 to-[#123d25]/35" />
+        <div className="aa-container flex min-h-[540px] items-center py-16">
+          <div className="max-w-3xl aa-in">
+            <p className="aa-kicker mb-5 text-[#b8e2bd]">AGROINOVA ANGOLA · CONHECIMENTO E FORMAÇÃO</p>
+            <h1 className="max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">AGROACADEMIA</h1>
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-white/90 sm:text-xl">Cursos, palestras, workshops, fóruns e conhecimento universitário para transformar a agricultura e a pecuária em Angola.</p>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/75">Um espaço de aprendizagem e ligação entre estudantes, docentes, investigadores, técnicos, produtores, instituições de ensino e empresas do sector agropecuário.</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href="#catalogo" className="aa-btn rounded-lg bg-white px-5 py-3 text-sm font-bold text-[#14532d] shadow-lg">Explorar formações</a>
+              <a href="#universidades" onClick={() => setSeparador("universidades")} className="aa-btn rounded-lg border border-white/45 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur">Universidades de Angola</a>
+            </div>
+            <div className="mt-10 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
+              {[ ["12", "percursos no catálogo"], ["8", "instituições listadas"], ["7", "formatos de aprendizagem"], ["21", "províncias de Angola" ] ].map(([n, label]) => <div key={label} className="rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm"><strong className="block text-2xl font-extrabold">{n}</strong><span className="mt-1 block text-xs leading-5 text-white/75">{label}</span></div>)}
+            </div>
+          </div>
+        </div>
+        <div className="absolute bottom-0 left-0 h-1.5 w-full bg-gradient-to-r from-[#86c98d] via-[#e4d28a] to-transparent" />
+      </section>
+
+      <section className="aa-container py-12 sm:py-16">
+        <div className="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div><p className="aa-kicker text-[#438253]">NAVEGAR NA AGROACADEMIA</p><h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">Conhecimento para aplicar no terreno</h2><p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">Explore conteúdos técnicos, formação contínua e espaços de debate. Os itens apresentados constituem um catálogo demonstrativo da plataforma; datas, inscrições e certificação só devem ser anunciadas quando confirmadas.</p></div>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { title: "Cursos", desc: "Percursos de aprendizagem técnica e científica, com objectivos e conteúdos por módulo.", img: imagens.livro, action: () => { setSeparador("formacoes"); setTipo("Curso"); document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" }); } },
+            { title: "Palestras e webinars", desc: "Sessões de actualização, partilha de experiências e discussão de temas emergentes.", img: imagens.conferencia, action: () => { setSeparador("formacoes"); setTipo("Palestra"); document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" }); } },
+            { title: "Workshops e dias de campo", desc: "Demonstrações, exercícios e contacto com práticas, ferramentas e equipamentos.", img: imagens.agricultura, action: () => { setSeparador("formacoes"); setTipo("Workshop"); document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" }); } },
+            { title: "Fóruns e congressos", desc: "Debate científico e aproximação entre academia, empresas e comunidades rurais.", img: imagens.conferencia, action: () => { setSeparador("formacoes"); setTipo("Fórum"); document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth" }); } },
+          ].map((item) => <button key={item.title} onClick={item.action} className="aa-card overflow-hidden rounded-2xl border border-[#e1e9df] bg-white text-left shadow-sm"><div className="h-36 overflow-hidden"><img src={item.img} alt={item.title} className="h-full w-full object-cover transition duration-500 hover:scale-105" /></div><div className="p-5"><h3 className="text-lg font-bold text-[#173b24]">{item.title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{item.desc}</p><span className="mt-4 inline-block text-sm font-bold text-[#24733a]">Explorar categoria →</span></div></button>)}
+        </div>
+      </section>
+
+      <section className="aa-container py-8">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => setSeparador("formacoes")}
+            aria-pressed={separador === "formacoes"}
+            className={`aa-card rounded-2xl border p-5 text-left shadow-sm ${
+              separador === "formacoes"
+                ? "border-[#176534] bg-[#edf7eb] ring-2 ring-[#176534]/15"
+                : "border-[#dfe8dc] bg-white"
+            }`}
+          >
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#438253]">Secção 01</span>
+            <span className="mt-2 block text-xl font-extrabold text-[#183d25]">Eventos e formações</span>
+            <span className="mt-2 block text-sm leading-6 text-slate-600">Cursos, workshops, palestras, fóruns e inscrições.</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSeparador("universidades")}
+            aria-pressed={separador === "universidades"}
+            className={`aa-card rounded-2xl border p-5 text-left shadow-sm ${
+              separador === "universidades"
+                ? "border-[#176534] bg-[#edf7eb] ring-2 ring-[#176534]/15"
+                : "border-[#dfe8dc] bg-white"
+            }`}
+          >
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#438253]">Secção 02</span>
+            <span className="mt-2 block text-xl font-extrabold text-[#183d25]">Instituições</span>
+            <span className="mt-2 block text-sm leading-6 text-slate-600">Universidades, faculdades e centros de investigação.</span>
+          </button>
+        </div>
+      </section>
+
+      {separador === "formacoes" && (<>
+      <section className="border-y border-[#e3ebe1] bg-white py-12 sm:py-14">
+        <div className="aa-container grid items-center gap-8 md:grid-cols-[1fr_1fr]">
+          <div><p className="aa-kicker text-[#438253]">EM DESTAQUE NO CATÁLOGO</p><h2 className="mt-2 text-3xl font-extrabold">Aprender, experimentar, melhorar</h2><p className="mt-3 max-w-xl text-sm leading-7 text-slate-600">Percursos concebidos para ligar fundamentos científicos a decisões reais na exploração agrícola, na unidade pecuária, no laboratório e no trabalho de extensão rural.</p><div className="mt-5 flex gap-2"><button aria-label="Destaque anterior" onClick={() => setIndiceDestaque((indiceDestaque + destaques.length - 1) % destaques.length)} className="aa-btn rounded-full border border-[#d8e4d8] px-4 py-2 text-sm font-bold text-[#205c31]">←</button><button aria-label="Próximo destaque" onClick={() => setIndiceDestaque((indiceDestaque + 1) % destaques.length)} className="aa-btn rounded-full border border-[#d8e4d8] px-4 py-2 text-sm font-bold text-[#205c31]">→</button></div></div>
+          {destaque && (<article className="aa-in overflow-hidden rounded-2xl border border-[#dfe8dc] bg-[#f7faf6] shadow-sm"><div className="relative h-56 sm:h-64"><img src={destaque.imagem} alt={destaque.titulo} className="h-full w-full object-cover" /><span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#205c31]">{destaque.tipo}</span></div><div className="p-6"><div className="flex flex-wrap gap-2 text-xs font-semibold text-[#4e7256]"><span>{destaque.area}</span><span>·</span><span>{destaque.modalidade}</span><span>·</span><span>{destaque.duracao}</span></div><h3 className="mt-3 text-2xl font-extrabold text-[#183d25]">{destaque.titulo}</h3><p className="mt-3 text-sm leading-7 text-slate-600">{destaque.resumo}</p><button onClick={() => { setMostrarInscricao(false); setSeleccionado(destaque); }} className="aa-btn mt-5 rounded-lg bg-[#176534] px-5 py-3 text-sm font-bold text-white hover:bg-[#104d28]">Ver programa detalhado</button></div></article>)}
+        </div>
+      </section>
+
+      <section id="catalogo" className="aa-container scroll-mt-6 py-14 sm:py-16">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p className="aa-kicker text-[#438253]">CATÁLOGO DE APRENDIZAGEM</p><h2 className="mt-2 text-3xl font-extrabold sm:text-4xl">Formações e eventos</h2><p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">Pesquise por tema, tipo ou modalidade. A informação de cada ficha explica o programa proposto e não representa, por si só, uma inscrição aberta ou evento com data confirmada.</p></div><div className="rounded-xl border border-[#dce8db] bg-white px-4 py-3 text-sm text-slate-600"><strong className="text-xl text-[#1c6032]">{filtrados.length}</strong> resultados</div></div>
+        <div className="mt-7 rounded-2xl border border-[#dfe8dc] bg-white p-4 shadow-sm sm:p-5">
+          <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-500" htmlFor="aa-pesquisa">Pesquisar cursos e eventos</label>
+          <input id="aa-pesquisa" value={pesquisa} onChange={(e) => setPesquisa(e.target.value)} placeholder="Ex.: irrigação, solos, drones, pecuária..." className="w-full rounded-xl border border-[#d9e3d7] bg-[#fbfdfb] px-4 py-3 text-sm outline-none transition focus:border-[#2f8548] focus:ring-4 focus:ring-[#2f8548]/10" />
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"><div><label htmlFor="aa-tipo" className="mb-1.5 block text-xs font-bold text-slate-500">Tipo de actividade</label><select id="aa-tipo" value={tipo} onChange={(e) => setTipo(e.target.value as (typeof tipos)[number])} className="w-full rounded-lg border border-[#d9e3d7] bg-white px-3 py-2.5 text-sm">{tipos.map((t) => <option key={t}>{t}</option>)}</select></div><div><label htmlFor="aa-area" className="mb-1.5 block text-xs font-bold text-slate-500">Área de conhecimento</label><select id="aa-area" value={area} onChange={(e) => setArea(e.target.value)} className="w-full rounded-lg border border-[#d9e3d7] bg-white px-3 py-2.5 text-sm">{areas.map((a) => <option key={a}>{a}</option>)}</select></div><div><label htmlFor="aa-modalidade" className="mb-1.5 block text-xs font-bold text-slate-500">Modalidade</label><select id="aa-modalidade" value={modalidade} onChange={(e) => setModalidade(e.target.value)} className="w-full rounded-lg border border-[#d9e3d7] bg-white px-3 py-2.5 text-sm"><option>Todas as modalidades</option><option>Online</option><option>Presencial</option><option>Híbrido</option></select></div></div>
+          <div className="mt-4 flex flex-wrap gap-2">{["Todos", "Curso", "Workshop", "Palestra", "Fórum", "Dia de campo"].map((t) => <button key={t} onClick={() => setTipo(t as (typeof tipos)[number])} className={`aa-btn rounded-full border px-3.5 py-2 text-xs font-bold ${tipo === t ? "border-[#176534] bg-[#176534] text-white" : "border-[#dce6da] bg-white text-[#355d3c] hover:bg-[#f1f8f0]"}`}>{t}</button>)}<button onClick={() => { setPesquisa(""); setTipo("Todos"); setArea("Todas as áreas"); setModalidade("Todas as modalidades"); }} className="aa-btn rounded-full px-3.5 py-2 text-xs font-bold text-slate-500 underline">Limpar filtros</button></div>
+        </div>
+        {filtrados.length ? <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{filtrados.map((evento) => <article key={evento.id} className="aa-card overflow-hidden rounded-2xl border border-[#e0e8de] bg-white shadow-sm"><div className="relative h-48 overflow-hidden"><img src={evento.imagem} alt={evento.titulo} loading="lazy" className="h-full w-full object-cover transition duration-500 hover:scale-105" /><span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-[#205c31] shadow-sm">{evento.tipo}</span><span className="absolute bottom-3 right-3 rounded-full bg-[#143e25]/90 px-3 py-1.5 text-xs font-semibold text-white">{evento.modalidade}</span></div><div className="p-5"><p className="text-xs font-bold uppercase tracking-wide text-[#54815c]">{evento.area}</p><h3 className="mt-2 min-h-[56px] text-lg font-extrabold leading-6 text-[#183d25]">{evento.titulo}</h3><p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">{evento.resumo}</p><div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-500"><span className="rounded-md bg-[#f0f6ef] px-2.5 py-1.5">{evento.duracao}</span><span className="rounded-md bg-[#f0f6ef] px-2.5 py-1.5">{evento.nivel}</span></div><button onClick={() => { setMostrarInscricao(false); setSeleccionado(evento); }} className="aa-btn mt-5 w-full rounded-lg border border-[#bcd5bf] px-4 py-3 text-sm font-bold text-[#1b6332] hover:bg-[#f1f8f0]">Consultar programa</button></div></article>)}</div> : <div className="mt-6 rounded-2xl border border-dashed border-[#cbdac9] bg-white p-10 text-center"><h3 className="text-lg font-bold">Não encontrámos resultados para estes filtros.</h3><p className="mt-2 text-sm text-slate-600">Altere os termos da pesquisa ou limpe os filtros para voltar ao catálogo.</p><button onClick={() => { setPesquisa(""); setTipo("Todos"); setArea("Todas as áreas"); setModalidade("Todas as modalidades"); }} className="aa-btn mt-4 rounded-lg bg-[#176534] px-4 py-2.5 text-sm font-bold text-white">Mostrar catálogo completo</button></div>}
+      </section>
+
+      </>)}
+
+      <section className="bg-[#153f27] py-14 text-white sm:py-16">
+        <div className="aa-container grid gap-8 md:grid-cols-[.9fr_1.1fr] md:items-center"><div><p className="aa-kicker text-[#b9e0bd]">COMUNIDADE CIENTÍFICA</p><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">Uma ponte entre a academia e o campo</h2><p className="mt-4 text-sm leading-7 text-white/75">A AGROACADEMIA pretende aproximar estudantes, docentes, investigadores, técnicos de extensão, produtores e empresas. O objectivo é facilitar a circulação de conhecimento e dar visibilidade à formação e à investigação agropecuária feita em Angola.</p><a href="#universidades" onClick={() => setSeparador("universidades")} className="aa-btn mt-6 inline-flex rounded-lg bg-white px-5 py-3 text-sm font-bold text-[#174b2a]">Consultar instituições</a></div><div className="grid grid-cols-2 gap-3">{[{ n: "Aprendizagem", d: "Conteúdos organizados por área e nível." }, { n: "Partilha", d: "Palestras, fóruns e experiências." }, { n: "Investigação", d: "Metodologia e comunicação científica." }, { n: "Aplicação", d: "Conhecimento ligado aos desafios do campo." }].map((x) => <div key={x.n} className="rounded-xl border border-white/15 bg-white/[0.07] p-5"><h3 className="font-bold">{x.n}</h3><p className="mt-2 text-sm leading-6 text-white/70">{x.d}</p></div>)}</div></div>
+      </section>
+
+      {separador === "universidades" && (
+      <section id="universidades" className="aa-container scroll-mt-6 py-14 sm:py-16">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p className="aa-kicker text-[#438253]">ENSINO SUPERIOR ANGOLANO</p><h2 className="mt-2 text-3xl font-extrabold sm:text-4xl">Universidades e instituições</h2><p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">Directório inicial para descobrir instituições, conhecer o seu foco geral e visitar os respectivos canais institucionais. A presença nesta lista não significa parceria formal com a AGROINOVA.</p></div><span className="rounded-xl border border-[#dce8db] bg-white px-4 py-3 text-sm text-slate-600"><strong className="text-xl text-[#1c6032]">{universidadesFiltradas.length}</strong> instituições</span></div>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row"><input value={universidadePesquisa} onChange={(e) => setUniversidadePesquisa(e.target.value)} placeholder="Pesquisar por instituição, sigla ou província..." className="w-full rounded-xl border border-[#d9e3d7] bg-white px-4 py-3 text-sm outline-none focus:border-[#2f8548] focus:ring-4 focus:ring-[#2f8548]/10" /><a href="https://www.universidades.ao/" target="_blank" rel="noreferrer" className="aa-btn inline-flex shrink-0 items-center justify-center rounded-xl bg-[#176534] px-5 py-3 text-sm font-bold text-white">Explorar directório académico</a></div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{universidadesFiltradas.map((u, i) => <article key={u.sigla} className="aa-card rounded-2xl border border-[#e0e8de] bg-white p-5 shadow-sm">{u.imagem ? <img src={u.imagem} alt={u.nome} className="h-16 w-full rounded-xl object-cover" /> : <div className="flex h-16 w-full items-center justify-center rounded-xl bg-[#eaf4e8] text-sm font-extrabold text-[#1b6332]">{u.sigla.slice(0, 5)}</div>}<p className="mt-4 text-xs font-bold uppercase tracking-wide text-[#54815c]">{u.tipo} · {u.provincia}</p><h3 className="mt-2 text-lg font-extrabold leading-6 text-[#183d25]">{u.nome}</h3><p className="mt-3 min-h-[66px] text-sm leading-6 text-slate-600">{u.foco}</p><a href={u.url} target="_blank" rel="noreferrer" className="mt-4 inline-flex text-sm font-bold text-[#24733a] hover:underline">Visitar canal institucional ↗</a></article>)}</div>
+        <p className="mt-5 text-xs leading-6 text-slate-500">Nota editorial: os endereços institucionais devem ser confirmados antes da publicação final. Para validar cursos, vagas e acreditação, consulte também os canais oficiais do MESCTI e de cada instituição.</p>
+      </section>
+
+      )}
+
+      <section className="border-t border-[#e0e8de] bg-white py-12"><div className="aa-container grid gap-6 md:grid-cols-[1fr_auto] md:items-center"><div><p className="aa-kicker text-[#438253]">PARTICIPA NA COMUNIDADE</p><h2 className="mt-2 text-2xl font-extrabold">Pretende divulgar um curso ou evento académico?</h2><p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600">A página pode evoluir para receber propostas de universidades, centros de investigação, associações profissionais e organizações do sector. Antes de publicar um anúncio, devem ser recolhidos o programa, entidade organizadora, contacto, local, datas, custo e condições de participação.</p></div><a href="mailto:agroacademia@agroinova.ao?subject=Proposta%20de%20curso%20ou%20evento" className="aa-btn inline-flex items-center justify-center rounded-lg bg-[#176534] px-5 py-3 text-sm font-bold text-white">Propor uma actividade</a></div></section>
+
+      {seleccionado && !mostrarInscricao && <div className="aa-modal-backdrop fixed inset-0 z-[100] flex items-center justify-center bg-[#061b0d]/70 p-3 backdrop-blur-sm sm:p-6" role="dialog" aria-modal="true" aria-labelledby="aa-modal-title" onMouseDown={(e) => { if (e.target === e.currentTarget) setSeleccionado(null); }}><div className="aa-modal-panel max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-2xl"><div className="relative h-48 sm:h-64"><img src={seleccionado.imagem} alt={seleccionado.titulo} className="h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#092817]/85 via-transparent to-transparent" /><button onClick={() => setSeleccionado(null)} aria-label="Fechar janela" className="absolute right-4 top-4 rounded-full bg-white px-3 py-2 text-sm font-bold text-[#173b24] shadow">Fechar ×</button><div className="absolute bottom-5 left-5 right-5"><span className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#205c31]">{seleccionado.tipo} · {seleccionado.area}</span><h2 id="aa-modal-title" className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">{seleccionado.titulo}</h2></div></div><div className="p-5 sm:p-8"><p className="text-base leading-8 text-slate-700">{seleccionado.resumo}</p><div className="mt-5 grid gap-3 sm:grid-cols-3">{[["Modalidade", seleccionado.modalidade], ["Duração indicativa", seleccionado.duracao], ["Público", seleccionado.nivel]].map(([k, v]) => <div key={k} className="rounded-xl bg-[#f3f8f2] p-4"><p className="text-xs font-bold uppercase tracking-wide text-[#54815c]">{k}</p><p className="mt-1 text-sm font-bold text-[#21452b]">{v}</p></div>)}</div><h3 className="mt-7 text-xl font-extrabold text-[#183d25]">Programa da actividade</h3><ol className="mt-4 space-y-3">{seleccionado.conteudo.map((c, i) => <li key={c} className="flex gap-3 rounded-xl border border-[#e4ece2] p-4"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e5f2e3] text-xs font-extrabold text-[#1b6332]">{String(i + 1).padStart(2, "0")}</span><span className="text-sm leading-6 text-slate-700">{c}</span></li>)}</ol><div className="mt-6 rounded-xl border border-[#d6e7d2] bg-[#f4faf2] p-4"><p className="text-sm font-bold text-[#1a542b]">Horários e participação</p><p className="mt-1 text-sm leading-6 text-[#42654a]">Escolha o horário e o canal de acompanhamento no formulário de inscrição. Como esta página ainda não está ligada a uma entidade formadora, as opções são preferências do participante e não uma confirmação de turma, data ou vaga.</p></div><div className="mt-6 flex flex-col gap-3 sm:flex-row"><button onClick={() => { setInscricaoConfirmada(false); setMostrarInscricao(true); }} className="aa-btn flex-1 rounded-lg bg-[#176534] px-5 py-3 text-sm font-bold text-white">Inscrever-se nesta actividade</button><button onClick={() => setSeleccionado(null)} className="aa-btn rounded-lg border border-[#cbdcc9] px-5 py-3 text-sm font-bold text-[#1b6332]">Voltar ao catálogo</button></div></div></div></div>}
+
+      {seleccionado && mostrarInscricao && <div className="aa-modal-backdrop fixed inset-0 z-[110] flex items-center justify-center bg-[#061b0d]/75 p-3 backdrop-blur-sm sm:p-6" role="dialog" aria-modal="true" aria-labelledby="aa-inscricao-title" onMouseDown={(e) => { if (e.target === e.currentTarget) setMostrarInscricao(false); }}><div className="aa-modal-panel max-h-[94vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl"><div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-[#e1eadf] bg-white p-5 sm:p-7"><div><p className="aa-kicker text-[#438253]">FORMULÁRIO DE PARTICIPAÇÃO</p><h2 id="aa-inscricao-title" className="mt-2 text-2xl font-extrabold text-[#183d25]">Inscrição: {seleccionado.titulo}</h2><p className="mt-2 text-sm text-slate-600">Preencha os seus dados e indique como prefere acompanhar a formação.</p></div><button onClick={() => setMostrarInscricao(false)} className="shrink-0 rounded-full border border-[#dce8db] px-3 py-2 text-sm font-bold text-[#173b24]">Fechar ×</button></div>
+        {inscricaoConfirmada ? <div className="p-6 sm:p-8"><div className="rounded-2xl border border-[#cfe4cc] bg-[#f1f9ef] p-6"><p className="text-xs font-extrabold uppercase tracking-widest text-[#438253]">Formulário validado</p><h3 className="mt-2 text-2xl font-extrabold text-[#183d25]">A sua inscrição está preparada.</h3><p className="mt-3 text-sm leading-7 text-slate-700">A inscrição foi registada na base de dados da AGROINOVA e ficou pendente de confirmação. A organização poderá analisar os dados e contactar o participante.</p><div className="mt-5 space-y-2 rounded-xl bg-white p-4 text-sm text-slate-700"><p><strong>Participante:</strong> {dadosInscricao.nome}</p><p><strong>Actividade:</strong> {seleccionado.titulo}</p><p><strong>Horário preferido:</strong> {horarioEscolhido}</p><p><strong>Canal escolhido:</strong> {plataformaEscolhida}</p><p><strong>Província:</strong> {dadosInscricao.provincia || "Não indicada"}</p></div><button onClick={() => { setMostrarInscricao(false); setSeleccionado(null); }} className="aa-btn mt-5 w-full rounded-lg bg-[#176534] px-5 py-3 text-sm font-bold text-white">Concluir</button></div></div> : <form className="space-y-5 p-5 sm:p-7" onSubmit={async (e) => {
+  e.preventDefault();
+  setErroInscricao("");
+  setAEnviarInscricao(true);
+
+  try {
+    const resposta = await fetch("/api/agroacademia/inscricoes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        evento_id: seleccionado?.id,
+        nome: dadosInscricao.nome,
+        email: dadosInscricao.email,
+        telefone: dadosInscricao.telefone,
+        provincia: dadosInscricao.provincia,
+        perfil: dadosInscricao.perfil,
+        horario_preferido: horarioEscolhido,
+        plataforma: plataformaEscolhida,
+        observacoes: dadosInscricao.observacoes,
+      }),
+    });
+
+    const resultado = await resposta.json();
+
+    if (!resposta.ok) {
+      throw new Error(resultado.erro || "Não foi possível guardar a inscrição.");
+    }
+
+    setInscricaoConfirmada(true);
+  } catch (erro) {
+    setErroInscricao(
+      erro instanceof Error
+        ? erro.message
+        : "Erro ao enviar a inscrição. Tenta novamente."
+    );
+  } finally {
+    setAEnviarInscricao(false);
+  }
+}}>
+          <div className="grid gap-4 sm:grid-cols-2"><label className="text-sm font-semibold text-[#294b31]">Nome completo *<input className="aa-form-field mt-2" required minLength={3} value={dadosInscricao.nome} onChange={(e) => setDadosInscricao({ ...dadosInscricao, nome: e.target.value })} placeholder="Nome e apelido" /></label><label className="text-sm font-semibold text-[#294b31]">E-mail *<input className="aa-form-field mt-2" type="email" required value={dadosInscricao.email} onChange={(e) => setDadosInscricao({ ...dadosInscricao, email: e.target.value })} placeholder="nome@exemplo.com" /></label><label className="text-sm font-semibold text-[#294b31]">Telefone / WhatsApp<input className="aa-form-field mt-2" type="tel" value={dadosInscricao.telefone} onChange={(e) => setDadosInscricao({ ...dadosInscricao, telefone: e.target.value })} placeholder="+244 ..." /></label><label className="text-sm font-semibold text-[#294b31]">Província<select className="aa-form-field mt-2" value={dadosInscricao.provincia} onChange={(e) => setDadosInscricao({ ...dadosInscricao, provincia: e.target.value })}><option value="">Seleccione a província</option>{["Bengo","Benguela","Bié","Cabinda","Cuando","Cubango","Cuanza Norte","Cuanza Sul","Cunene","Icolo e Bengo","Huambo","Huíla","Luanda","Lunda Norte","Lunda Sul","Malanje","Moxico","Moxico Leste","Namibe","Uíge","Zaire"].map((p) => <option key={p} value={p}>{p}</option>)}</select></label><label className="text-sm font-semibold text-[#294b31]">Perfil do participante<select className="aa-form-field mt-2" value={dadosInscricao.perfil} onChange={(e) => setDadosInscricao({ ...dadosInscricao, perfil: e.target.value })}>{["Estudante","Agricultor / produtor","Técnico agropecuário","Docente / investigador","Empresário","Outro"].map((p) => <option key={p}>{p}</option>)}</select></label><label className="text-sm font-semibold text-[#294b31]">Horário preferido<select className="aa-form-field mt-2" value={horarioEscolhido} onChange={(e) => setHorarioEscolhido(e.target.value)}><option>Manhã · 08h00–10h00</option><option>Meio da manhã · 10h00–12h00</option><option>Tarde · 14h00–16h00</option><option>Noite · 18h00–20h00</option><option>Fim-de-semana · a combinar</option><option>Flexível / assíncrono</option></select></label></div>
+          <fieldset><legend className="text-sm font-bold text-[#294b31]">Como prefere acompanhar a formação? *</legend><p className="mt-1 text-xs leading-5 text-slate-500">Seleccione o canal mais conveniente. A disponibilidade final depende da organização e será confirmada depois.</p><div className="mt-3 grid gap-3 sm:grid-cols-2">{[{nome:"Zoom",desc:"Aulas ao vivo e sessões interactivas"},{nome:"YouTube",desc:"Transmissão ou vídeos gravados"},{nome:"WhatsApp",desc:"Grupo de apoio e partilha de materiais"},{nome:"Presencial",desc:"Participação física no local"},{nome:"Flexível",desc:"Ainda não tenho preferência"}].map((p) => <label key={p.nome} className={`cursor-pointer rounded-xl border p-4 transition ${plataformaEscolhida === p.nome ? "border-[#39834a] bg-[#f0f8ee] ring-2 ring-[#39834a]/15" : "border-[#dce8db] bg-white hover:bg-[#f8fbf7]"}`}><span className="flex items-center gap-3"><input type="radio" name="plataforma" value={p.nome} checked={plataformaEscolhida === p.nome} onChange={() => setPlataformaEscolhida(p.nome)} required /><span><strong className="block text-sm text-[#1c4b2a]">{p.nome}</strong><span className="mt-1 block text-xs leading-5 text-slate-600">{p.desc}</span></span></span></label>)}</div></fieldset>
+          <label className="block text-sm font-semibold text-[#294b31]">Observações ou necessidades específicas<textarea className="aa-form-field mt-2 min-h-24" value={dadosInscricao.observacoes} onChange={(e) => setDadosInscricao({ ...dadosInscricao, observacoes: e.target.value })} placeholder="Dúvidas, acessibilidade ou informação adicional" /></label><label className="flex items-start gap-3 text-xs leading-5 text-slate-600"><input className="mt-1" type="checkbox" required /><span>Confirmo que os dados fornecidos estão correctos e autorizo o seu uso para contacto relativo a esta actividade. *</span></label>{erroInscricao && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{erroInscricao}</p>}
+          <button type="submit" disabled={aEnviarInscricao} className="aa-btn w-full rounded-lg bg-[#176534] px-5 py-3.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60">{aEnviarInscricao ? "A enviar inscrição..." : "Enviar inscrição"}</button><p className="text-xs leading-5 text-slate-500">A inscrição será enviada ao servidor e guardada se os dados forem aceites.</p></form>}</div></div>}
+    </main>
+  );
+}

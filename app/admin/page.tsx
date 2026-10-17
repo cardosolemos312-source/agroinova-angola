@@ -1132,17 +1132,16 @@ export default function AdminPage() {
               className="agro-admin-menu-list"
               style={estilos.grupoMenu}
             >
-              <button
-                type="button"
-                className="agro-admin-menu"
-                style={{
-                  ...estilos.menuBotao,
-                  ...(secao === "visao-geral" ? estilos.menuAtivo : {}),
-                }}
-                onClick={() => navegar("visao-geral")}
-              >
-                <span>▦</span> Visão geral
-              </button>
+              
+<button
+  type="button"
+  className="agro-admin-menu"
+  style={estilos.menuBotao}
+  onClick={() => window.location.href = "/admin/agroacademia"}
+>
+  <span>▣</span> AgroAcademia
+</button>
+
 
               <button
                 type="button"

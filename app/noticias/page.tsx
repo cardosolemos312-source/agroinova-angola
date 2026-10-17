@@ -294,37 +294,6 @@ export default function NoticiasPage() {
           to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
-
-      {/* Cabeçalho editorial */}
-      <div className="bg-[#123d27] px-5 py-3 text-center text-xs font-bold uppercase tracking-[.16em] text-green-100">
-        Conhecimento, tecnologia e inovação ao serviço do campo angolano
-      </div>
-
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-5 md:px-10">
-          <a href="/noticias" className="flex items-center gap-3 no-underline">
-            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-green-700 to-green-900 text-2xl font-black text-white shadow-lg">
-              A
-            </div>
-            <div>
-              <div className="text-lg font-black tracking-tight text-green-900 md:text-xl">
-                AGROINOVA ANGOLA
-              </div>
-              <div className="mt-1 text-[9px] font-bold tracking-[.16em] text-slate-500">
-                PORTAL DE NOTÍCIAS AGROPECUÁRIAS
-              </div>
-            </div>
-          </a>
-
-          <a
-            href="/"
-            className="rounded-xl border border-green-800 px-4 py-2.5 text-sm font-bold text-green-800 transition hover:bg-green-50"
-          >
-            Página inicial
-          </a>
-        </div>
-      </header>
-
       <section className="mx-auto max-w-7xl px-5 pb-8 pt-10 md:px-10 md:pt-14">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
           <div>
@@ -592,20 +561,6 @@ export default function NoticiasPage() {
           </div>
         )}
       </section>
-
-      <footer className="bg-[#123d27] px-5 py-9 text-white md:px-10">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <div className="font-black tracking-wide">AGROINOVA ANGOLA</div>
-            <p className="mt-2 text-xs leading-6 text-green-100">
-              Conhecimento, tecnologia e inovação ao serviço do campo angolano.
-            </p>
-          </div>
-          <a href="/" className="text-sm font-bold text-green-200 hover:text-white">
-            Voltar à página inicial →
-          </a>
-        </div>
-      </footer>
 
       {/* Leitura integral em janela modal */}
       {noticiaAberta && (

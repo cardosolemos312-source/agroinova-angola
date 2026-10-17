@@ -21,7 +21,6 @@ export default function Footer() {
               <Link href="/">Início</Link>
               <Link href="/agricultura">Agricultura</Link>
               <Link href="/floresta">Floresta</Link>
-              <Link href="/silvicultura">Silvicultura</Link>
               <Link href="/pecuaria">Pecuária</Link>
               <Link href="/pesca">Pesca</Link>
               <Link href="/solos">Solos</Link>
@@ -30,19 +29,19 @@ export default function Footer() {
           </div>
 
           <div className="footer-column">
-            <h3>Recursos</h3>
+            <h3>Equipe da AgroInova-Angola</h3>
             <div className="footer-links">
-              <Link href="/investigacao">Investigação</Link>
-              <Link href="/tecnologias">Tecnologias</Link>
-              <Link href="/biblioteca">Biblioteca</Link>
-              <Link href="/agroacademia">AgroAcademia</Link>
-              <Link href="/dados">Dados agrícolas</Link>
-              <Link href="/mapa">Mapa agrícola</Link>
-              <Link href="/directorio">Directório</Link>
-              <Link href="/agroia">AGROIA</Link>
-              <Link href="/noticias">Notícias</Link>
+              <Link href="/investigacao">Cardoso Lemos</Link>
+              <Link href="/tecnologias">Daniel Tchikwamanga</Link>
+              <Link href="/biblioteca">Heythan Lemos</Link>
+              <Link href="/agroacademia">Luciano Lemos</Link>
+              <Link href="/dados">Bonifácio Visseteca</Link>
+              <Link href="/mapa">Messias Mengawaco</Link>
+              <Link href="/directorio">Ivo Casimiro</Link>
+              <Link href="/agroia">Funzula Eduardo</Link>
             </div>
           </div>
+
 
           <div className="footer-column footer-contact">
             <h3>Contactos</h3>
@@ -65,6 +64,11 @@ export default function Footer() {
                 agroinovagola@ango.com
               </a>
             </p>
+             <p>
+              <a href="mailto:agroinovagola@ango.com">
+                heythansantos@gmail.com
+              </a>
+            </p>
           </div>
 
           <div className="footer-column footer-developer">
@@ -72,7 +76,7 @@ export default function Footer() {
             <h4>Cardoso Lemos</h4>
             <p>Programador e Desenvolvedor Web</p>
             <p className="footer-company">CJSL-SOLUÇÕES DIGITAIS</p>
-            <p>CENFOTEP · ASUS-FILMES</p>
+            <p>BE-SMART · ASUS-FILMES</p>
             <a
               className="footer-button"
               href="mailto:cardosolemos312@gmail.com"

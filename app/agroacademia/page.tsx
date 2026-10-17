@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type ItemTipo = "Curso" | "Palestra" | "Workshop" | "Fórum" | "Congresso" | "Dia de campo" | "Webinar";
 type Evento = {
@@ -33,7 +33,7 @@ const imagens = {
   campo: "https://c2a.portais.gov.ao/uploads/large_780180309_1418795920103779_4134149205477091074_n_e57c90ce3d.jfif",
 };
 
-const eventos: Evento[] = [
+const eventosIniciais: Evento[] = [
   { id: 13, titulo: "Workshop prático de mecanização agrícola e manutenção de tractores", tipo: "Workshop", area: "Mecanização", modalidade: "Presencial", duracao: "1 dia · programa proposto", nivel: "Operadores, agricultores e estudantes", resumo: "Workshop proposto para o contexto angolano, inspirado nas iniciativas de mecanização agrícola e formação técnica divulgadas pelo Governo Provincial do Huambo. A edição, data, local e entidade formadora devem ser confirmados antes da abertura das inscrições.", conteudo: ["Identificação do tractor e dos seus comandos", "Selecção e ligação segura de alfaias agrícolas", "Verificação diária, lubrificação e manutenção preventiva", "Segurança do operador e diagnóstico de falhas comuns", "Demonstração prática e plano de manutenção"], imagem: imagens.agricultura, estado: "Em destaque" },
   { id: 14, titulo: "Workshop de bovinicultura, alimentação e maneio do gado", tipo: "Workshop", area: "Pecuária", modalidade: "Presencial", duracao: "1 dia · programa proposto", nivel: "Criadores, técnicos e estudantes", resumo: "Proposta de formação prática inspirada na Feira de Exposição e Leilão de Gado do Huambo, que incluiu actividades ligadas à bovinicultura. Não representa uma inscrição oficial num evento já anunciado.", conteudo: ["Avaliação visual da condição corporal", "Alimentação, água e instalações", "Biossegurança e registos sanitários", "Maneio responsável e bem-estar animal", "Planeamento dos custos e indicadores produtivos"], imagem: imagens.pecuaria, estado: "Em destaque" },
   { id: 15, titulo: "Fórum angolano de inovação e extensão agropecuária", tipo: "Fórum", area: "Inovação", modalidade: "Híbrido", duracao: "Meio dia · programa proposto", nivel: "Universidades, produtores, técnicos e investigadores", resumo: "Proposta de fórum para aproximar instituições de ensino, serviços públicos, cooperativas e produtores em torno de mecanização, sementes, solos, sanidade animal e transferência de tecnologia.", conteudo: ["Experiências angolanas de extensão rural", "Mecanização adaptada à agricultura familiar", "Investigação aplicada e disponibilidade de sementes", "Acesso a financiamento e mercados", "Debate aberto e propostas de colaboração"], imagem: imagens.conferencia, estado: "Em destaque" },
@@ -51,8 +51,8 @@ const eventos: Evento[] = [
   { id: 12, titulo: "Fórum de inovação agropecuária em Angola", tipo: "Fórum", area: "Inovação", modalidade: "Presencial", duracao: "Encontro multidisciplinar", nivel: "Comunidade académica e sector produtivo", resumo: "Proposta de fórum para aproximar universidades, centros de investigação, produtores, empresas e decisores do sector." , conteudo: ["Apresentação de soluções tecnológicas", "Comunicação de experiências de campo", "Debate sobre investigação e transferência de tecnologia", "Criação de redes e propostas de colaboração"], imagem: imagens.conferencia, estado: "Catálogo" },
 ];
 
-type Universidade = { nome: string; sigla: string; provincia: string; tipo: string; foco: string; url: string };
-const universidades: Universidade[] = [
+type Universidade = { nome: string; sigla: string; provincia: string; tipo: string; foco: string; url: string; imagem?: string };
+const universidadesIniciais: Universidade[] = [
   { nome: "Universidade Agostinho Neto", sigla: "UAN", provincia: "Luanda", tipo: "Pública", foco: "Ensino superior, investigação e formação multidisciplinar", url: "https://uan.ao/" },
   { nome: "Universidade de Luanda", sigla: "UniLuanda", provincia: "Luanda", tipo: "Pública", foco: "Formação superior e investigação", url: "https://www.universidades.ao/" },
   { nome: "Universidade José Eduardo dos Santos", sigla: "UJES", provincia: "Huambo", tipo: "Pública", foco: "Ciências, formação superior e desenvolvimento regional", url: "https://www.universidades.ao/" },
@@ -67,6 +67,73 @@ const tipos: ("Todos" | ItemTipo)[] = ["Todos", "Curso", "Palestra", "Workshop",
 const areas = ["Todas as áreas", "Agricultura", "Pecuária", "Irrigação", "Tecnologia", "Horticultura", "Economia rural", "Investigação", "Mecanização", "Clima", "Produção vegetal", "Inovação"];
 
 export default function AgroacademiaPage() {
+  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [universidades, setUniversidades] = useState<Universidade[]>([]);
+  const [aCarregarDados, setACarregarDados] = useState(true);
+  const [erroCarregamento, setErroCarregamento] = useState("");
+  const [erroInscricao, setErroInscricao] = useState("");
+  const [aEnviarInscricao, setAEnviarInscricao] = useState(false);
+
+  useEffect(() => {
+    let activo = true;
+
+    async function carregarDados() {
+      try {
+        const resposta = await fetch("/api/agroacademia", {
+          cache: "no-store",
+        });
+
+        if (!resposta.ok) {
+          throw new Error("Não foi possível carregar os dados da AgroAcademia.");
+        }
+
+        const dados = await resposta.json();
+
+        if (!activo) return;
+
+        const eventosRecebidos: Evento[] = (dados.eventos ?? []).map(
+          (evento: Record<string, unknown>) => ({
+            ...evento,
+            id: Number(evento.id),
+            conteudo: Array.isArray(evento.conteudo) ? evento.conteudo : [],
+            estado: evento.destaque ? "Em destaque" : "Catálogo",
+          })
+        );
+
+        const instituicoesRecebidas: Universidade[] = (
+          dados.instituicoes ?? []
+        ).map((instituicao: Record<string, unknown>) => ({
+          nome: String(instituicao.nome ?? ""),
+          sigla: String(instituicao.sigla ?? ""),
+          provincia: String(instituicao.provincia ?? ""),
+          tipo: String(instituicao.tipo ?? ""),
+          foco: String(instituicao.foco ?? ""),
+          url: String(instituicao.url ?? ""),
+          imagem: String(instituicao.imagem ?? ""),
+        }));
+
+        setEventos(eventosRecebidos);
+        setUniversidades(instituicoesRecebidas);
+        setErroCarregamento("");
+      } catch (erro) {
+        if (activo) {
+          setErroCarregamento(
+            erro instanceof Error
+              ? erro.message
+              : "Erro ao carregar os conteúdos."
+          );
+        }
+      } finally {
+        if (activo) setACarregarDados(false);
+      }
+    }
+
+    void carregarDados();
+
+    return () => {
+      activo = false;
+    };
+  }, []);
   const [pesquisa, setPesquisa] = useState("");
   const [tipo, setTipo] = useState<(typeof tipos)[number]>("Todos");
   const [area, setArea] = useState("Todas as áreas");
@@ -81,20 +148,44 @@ export default function AgroacademiaPage() {
   const [universidadePesquisa, setUniversidadePesquisa] = useState("");
   const [indiceDestaque, setIndiceDestaque] = useState(0);
 
-  const filtrados = useMemo(() => eventos.filter((evento) => {
-    const texto = `${evento.titulo} ${evento.resumo} ${evento.area} ${evento.tipo}`.toLocaleLowerCase("pt-PT");
-    return texto.includes(pesquisa.toLocaleLowerCase("pt-PT")) &&
-      (tipo === "Todos" || evento.tipo === tipo) &&
-      (area === "Todas as áreas" || evento.area === area) &&
-      (modalidade === "Todas as modalidades" || evento.modalidade === modalidade);
-  }), [pesquisa, tipo, area, modalidade]);
+
+const filtrados = useMemo(() => {
+  const termo = pesquisa.trim().toLocaleLowerCase("pt-PT");
+
+  return eventos.filter((evento) => {
+    const texto = [
+      evento.titulo,
+      evento.resumo,
+      evento.area,
+      evento.tipo,
+    ]
+      .map((valor) => String(valor ?? ""))
+      .join(" ")
+      .toLocaleLowerCase("pt-PT");
+
+    const correspondeTexto = texto.includes(termo);
+    const correspondeTipo = tipo === "Todos" || evento.tipo === tipo;
+    const correspondeArea =
+      area === "Todas as áreas" || evento.area === area;
+    const correspondeModalidade =
+      modalidade === "Todas as modalidades" ||
+      evento.modalidade === modalidade;
+
+    return (
+      correspondeTexto &&
+      correspondeTipo &&
+      correspondeArea &&
+      correspondeModalidade
+    );
+  });
+}, [eventos, pesquisa, tipo, area, modalidade]);
 
   const universidadesFiltradas = useMemo(() => universidades.filter((u) =>
     `${u.nome} ${u.sigla} ${u.provincia} ${u.foco}`.toLocaleLowerCase("pt-PT").includes(universidadePesquisa.toLocaleLowerCase("pt-PT"))
-  ), [universidadePesquisa]);
+  ), [universidadePesquisa, universidades]);
 
   const destaques = eventos.filter((e) => e.estado === "Em destaque");
-  const destaque = destaques[indiceDestaque % destaques.length];
+  const destaque = destaques.length > 0 ? destaques[indiceDestaque % destaques.length] : undefined;
 
   return (
     <main className="agroacademia min-h-screen bg-[#f6f8f5] text-[#17221b]">
@@ -152,10 +243,44 @@ export default function AgroacademiaPage() {
         </div>
       </section>
 
+      <section className="aa-container py-8">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => setSeparador("formacoes")}
+            aria-pressed={separador === "formacoes"}
+            className={`aa-card rounded-2xl border p-5 text-left shadow-sm ${
+              separador === "formacoes"
+                ? "border-[#176534] bg-[#edf7eb] ring-2 ring-[#176534]/15"
+                : "border-[#dfe8dc] bg-white"
+            }`}
+          >
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#438253]">Secção 01</span>
+            <span className="mt-2 block text-xl font-extrabold text-[#183d25]">Eventos e formações</span>
+            <span className="mt-2 block text-sm leading-6 text-slate-600">Cursos, workshops, palestras, fóruns e inscrições.</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSeparador("universidades")}
+            aria-pressed={separador === "universidades"}
+            className={`aa-card rounded-2xl border p-5 text-left shadow-sm ${
+              separador === "universidades"
+                ? "border-[#176534] bg-[#edf7eb] ring-2 ring-[#176534]/15"
+                : "border-[#dfe8dc] bg-white"
+            }`}
+          >
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#438253]">Secção 02</span>
+            <span className="mt-2 block text-xl font-extrabold text-[#183d25]">Instituições</span>
+            <span className="mt-2 block text-sm leading-6 text-slate-600">Universidades, faculdades e centros de investigação.</span>
+          </button>
+        </div>
+      </section>
+
+      {separador === "formacoes" && (<>
       <section className="border-y border-[#e3ebe1] bg-white py-12 sm:py-14">
         <div className="aa-container grid items-center gap-8 md:grid-cols-[1fr_1fr]">
           <div><p className="aa-kicker text-[#438253]">EM DESTAQUE NO CATÁLOGO</p><h2 className="mt-2 text-3xl font-extrabold">Aprender, experimentar, melhorar</h2><p className="mt-3 max-w-xl text-sm leading-7 text-slate-600">Percursos concebidos para ligar fundamentos científicos a decisões reais na exploração agrícola, na unidade pecuária, no laboratório e no trabalho de extensão rural.</p><div className="mt-5 flex gap-2"><button aria-label="Destaque anterior" onClick={() => setIndiceDestaque((indiceDestaque + destaques.length - 1) % destaques.length)} className="aa-btn rounded-full border border-[#d8e4d8] px-4 py-2 text-sm font-bold text-[#205c31]">←</button><button aria-label="Próximo destaque" onClick={() => setIndiceDestaque((indiceDestaque + 1) % destaques.length)} className="aa-btn rounded-full border border-[#d8e4d8] px-4 py-2 text-sm font-bold text-[#205c31]">→</button></div></div>
-          <article className="aa-in overflow-hidden rounded-2xl border border-[#dfe8dc] bg-[#f7faf6] shadow-sm"><div className="relative h-56 sm:h-64"><img src={destaque.imagem} alt={destaque.titulo} className="h-full w-full object-cover" /><span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#205c31]">{destaque.tipo}</span></div><div className="p-6"><div className="flex flex-wrap gap-2 text-xs font-semibold text-[#4e7256]"><span>{destaque.area}</span><span>·</span><span>{destaque.modalidade}</span><span>·</span><span>{destaque.duracao}</span></div><h3 className="mt-3 text-2xl font-extrabold text-[#183d25]">{destaque.titulo}</h3><p className="mt-3 text-sm leading-7 text-slate-600">{destaque.resumo}</p><button onClick={() => { setMostrarInscricao(false); setSeleccionado(destaque); }} className="aa-btn mt-5 rounded-lg bg-[#176534] px-5 py-3 text-sm font-bold text-white hover:bg-[#104d28]">Ver programa detalhado</button></div></article>
+          {destaque && (<article className="aa-in overflow-hidden rounded-2xl border border-[#dfe8dc] bg-[#f7faf6] shadow-sm"><div className="relative h-56 sm:h-64"><img src={destaque.imagem} alt={destaque.titulo} className="h-full w-full object-cover" /><span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#205c31]">{destaque.tipo}</span></div><div className="p-6"><div className="flex flex-wrap gap-2 text-xs font-semibold text-[#4e7256]"><span>{destaque.area}</span><span>·</span><span>{destaque.modalidade}</span><span>·</span><span>{destaque.duracao}</span></div><h3 className="mt-3 text-2xl font-extrabold text-[#183d25]">{destaque.titulo}</h3><p className="mt-3 text-sm leading-7 text-slate-600">{destaque.resumo}</p><button onClick={() => { setMostrarInscricao(false); setSeleccionado(destaque); }} className="aa-btn mt-5 rounded-lg bg-[#176534] px-5 py-3 text-sm font-bold text-white hover:bg-[#104d28]">Ver programa detalhado</button></div></article>)}
         </div>
       </section>
 
@@ -170,26 +295,70 @@ export default function AgroacademiaPage() {
         {filtrados.length ? <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{filtrados.map((evento) => <article key={evento.id} className="aa-card overflow-hidden rounded-2xl border border-[#e0e8de] bg-white shadow-sm"><div className="relative h-48 overflow-hidden"><img src={evento.imagem} alt={evento.titulo} loading="lazy" className="h-full w-full object-cover transition duration-500 hover:scale-105" /><span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-[#205c31] shadow-sm">{evento.tipo}</span><span className="absolute bottom-3 right-3 rounded-full bg-[#143e25]/90 px-3 py-1.5 text-xs font-semibold text-white">{evento.modalidade}</span></div><div className="p-5"><p className="text-xs font-bold uppercase tracking-wide text-[#54815c]">{evento.area}</p><h3 className="mt-2 min-h-[56px] text-lg font-extrabold leading-6 text-[#183d25]">{evento.titulo}</h3><p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">{evento.resumo}</p><div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-500"><span className="rounded-md bg-[#f0f6ef] px-2.5 py-1.5">{evento.duracao}</span><span className="rounded-md bg-[#f0f6ef] px-2.5 py-1.5">{evento.nivel}</span></div><button onClick={() => { setMostrarInscricao(false); setSeleccionado(evento); }} className="aa-btn mt-5 w-full rounded-lg border border-[#bcd5bf] px-4 py-3 text-sm font-bold text-[#1b6332] hover:bg-[#f1f8f0]">Consultar programa</button></div></article>)}</div> : <div className="mt-6 rounded-2xl border border-dashed border-[#cbdac9] bg-white p-10 text-center"><h3 className="text-lg font-bold">Não encontrámos resultados para estes filtros.</h3><p className="mt-2 text-sm text-slate-600">Altere os termos da pesquisa ou limpe os filtros para voltar ao catálogo.</p><button onClick={() => { setPesquisa(""); setTipo("Todos"); setArea("Todas as áreas"); setModalidade("Todas as modalidades"); }} className="aa-btn mt-4 rounded-lg bg-[#176534] px-4 py-2.5 text-sm font-bold text-white">Mostrar catálogo completo</button></div>}
       </section>
 
+      </>)}
+
       <section className="bg-[#153f27] py-14 text-white sm:py-16">
         <div className="aa-container grid gap-8 md:grid-cols-[.9fr_1.1fr] md:items-center"><div><p className="aa-kicker text-[#b9e0bd]">COMUNIDADE CIENTÍFICA</p><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">Uma ponte entre a academia e o campo</h2><p className="mt-4 text-sm leading-7 text-white/75">A AGROACADEMIA pretende aproximar estudantes, docentes, investigadores, técnicos de extensão, produtores e empresas. O objectivo é facilitar a circulação de conhecimento e dar visibilidade à formação e à investigação agropecuária feita em Angola.</p><a href="#universidades" onClick={() => setSeparador("universidades")} className="aa-btn mt-6 inline-flex rounded-lg bg-white px-5 py-3 text-sm font-bold text-[#174b2a]">Consultar instituições</a></div><div className="grid grid-cols-2 gap-3">{[{ n: "Aprendizagem", d: "Conteúdos organizados por área e nível." }, { n: "Partilha", d: "Palestras, fóruns e experiências." }, { n: "Investigação", d: "Metodologia e comunicação científica." }, { n: "Aplicação", d: "Conhecimento ligado aos desafios do campo." }].map((x) => <div key={x.n} className="rounded-xl border border-white/15 bg-white/[0.07] p-5"><h3 className="font-bold">{x.n}</h3><p className="mt-2 text-sm leading-6 text-white/70">{x.d}</p></div>)}</div></div>
       </section>
 
+      {separador === "universidades" && (
       <section id="universidades" className="aa-container scroll-mt-6 py-14 sm:py-16">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p className="aa-kicker text-[#438253]">ENSINO SUPERIOR ANGOLANO</p><h2 className="mt-2 text-3xl font-extrabold sm:text-4xl">Universidades e instituições</h2><p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">Directório inicial para descobrir instituições, conhecer o seu foco geral e visitar os respectivos canais institucionais. A presença nesta lista não significa parceria formal com a AGROINOVA.</p></div><span className="rounded-xl border border-[#dce8db] bg-white px-4 py-3 text-sm text-slate-600"><strong className="text-xl text-[#1c6032]">{universidadesFiltradas.length}</strong> instituições</span></div>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row"><input value={universidadePesquisa} onChange={(e) => setUniversidadePesquisa(e.target.value)} placeholder="Pesquisar por instituição, sigla ou província..." className="w-full rounded-xl border border-[#d9e3d7] bg-white px-4 py-3 text-sm outline-none focus:border-[#2f8548] focus:ring-4 focus:ring-[#2f8548]/10" /><a href="https://www.universidades.ao/" target="_blank" rel="noreferrer" className="aa-btn inline-flex shrink-0 items-center justify-center rounded-xl bg-[#176534] px-5 py-3 text-sm font-bold text-white">Explorar directório académico</a></div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{universidadesFiltradas.map((u, i) => <article key={u.sigla} className="aa-card rounded-2xl border border-[#e0e8de] bg-white p-5 shadow-sm"><div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#eaf4e8] text-sm font-extrabold text-[#1b6332]">{u.sigla.slice(0, 5)}</div><p className="mt-4 text-xs font-bold uppercase tracking-wide text-[#54815c]">{u.tipo} · {u.provincia}</p><h3 className="mt-2 text-lg font-extrabold leading-6 text-[#183d25]">{u.nome}</h3><p className="mt-3 min-h-[66px] text-sm leading-6 text-slate-600">{u.foco}</p><a href={u.url} target="_blank" rel="noreferrer" className="mt-4 inline-flex text-sm font-bold text-[#24733a] hover:underline">Visitar canal institucional ↗</a></article>)}</div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{universidadesFiltradas.map((u, i) => <article key={u.sigla} className="aa-card rounded-2xl border border-[#e0e8de] bg-white p-5 shadow-sm">{u.imagem ? <img src={u.imagem} alt={u.nome} className="h-16 w-full rounded-xl object-cover" /> : <div className="flex h-16 w-full items-center justify-center rounded-xl bg-[#eaf4e8] text-sm font-extrabold text-[#1b6332]">{u.sigla.slice(0, 5)}</div>}<p className="mt-4 text-xs font-bold uppercase tracking-wide text-[#54815c]">{u.tipo} · {u.provincia}</p><h3 className="mt-2 text-lg font-extrabold leading-6 text-[#183d25]">{u.nome}</h3><p className="mt-3 min-h-[66px] text-sm leading-6 text-slate-600">{u.foco}</p><a href={u.url} target="_blank" rel="noreferrer" className="mt-4 inline-flex text-sm font-bold text-[#24733a] hover:underline">Visitar canal institucional ↗</a></article>)}</div>
         <p className="mt-5 text-xs leading-6 text-slate-500">Nota editorial: os endereços institucionais devem ser confirmados antes da publicação final. Para validar cursos, vagas e acreditação, consulte também os canais oficiais do MESCTI e de cada instituição.</p>
       </section>
+
+      )}
 
       <section className="border-t border-[#e0e8de] bg-white py-12"><div className="aa-container grid gap-6 md:grid-cols-[1fr_auto] md:items-center"><div><p className="aa-kicker text-[#438253]">PARTICIPA NA COMUNIDADE</p><h2 className="mt-2 text-2xl font-extrabold">Pretende divulgar um curso ou evento académico?</h2><p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600">A página pode evoluir para receber propostas de universidades, centros de investigação, associações profissionais e organizações do sector. Antes de publicar um anúncio, devem ser recolhidos o programa, entidade organizadora, contacto, local, datas, custo e condições de participação.</p></div><a href="mailto:agroacademia@agroinova.ao?subject=Proposta%20de%20curso%20ou%20evento" className="aa-btn inline-flex items-center justify-center rounded-lg bg-[#176534] px-5 py-3 text-sm font-bold text-white">Propor uma actividade</a></div></section>
 
       {seleccionado && !mostrarInscricao && <div className="aa-modal-backdrop fixed inset-0 z-[100] flex items-center justify-center bg-[#061b0d]/70 p-3 backdrop-blur-sm sm:p-6" role="dialog" aria-modal="true" aria-labelledby="aa-modal-title" onMouseDown={(e) => { if (e.target === e.currentTarget) setSeleccionado(null); }}><div className="aa-modal-panel max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-2xl"><div className="relative h-48 sm:h-64"><img src={seleccionado.imagem} alt={seleccionado.titulo} className="h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#092817]/85 via-transparent to-transparent" /><button onClick={() => setSeleccionado(null)} aria-label="Fechar janela" className="absolute right-4 top-4 rounded-full bg-white px-3 py-2 text-sm font-bold text-[#173b24] shadow">Fechar ×</button><div className="absolute bottom-5 left-5 right-5"><span className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#205c31]">{seleccionado.tipo} · {seleccionado.area}</span><h2 id="aa-modal-title" className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">{seleccionado.titulo}</h2></div></div><div className="p-5 sm:p-8"><p className="text-base leading-8 text-slate-700">{seleccionado.resumo}</p><div className="mt-5 grid gap-3 sm:grid-cols-3">{[["Modalidade", seleccionado.modalidade], ["Duração indicativa", seleccionado.duracao], ["Público", seleccionado.nivel]].map(([k, v]) => <div key={k} className="rounded-xl bg-[#f3f8f2] p-4"><p className="text-xs font-bold uppercase tracking-wide text-[#54815c]">{k}</p><p className="mt-1 text-sm font-bold text-[#21452b]">{v}</p></div>)}</div><h3 className="mt-7 text-xl font-extrabold text-[#183d25]">Programa da actividade</h3><ol className="mt-4 space-y-3">{seleccionado.conteudo.map((c, i) => <li key={c} className="flex gap-3 rounded-xl border border-[#e4ece2] p-4"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e5f2e3] text-xs font-extrabold text-[#1b6332]">{String(i + 1).padStart(2, "0")}</span><span className="text-sm leading-6 text-slate-700">{c}</span></li>)}</ol><div className="mt-6 rounded-xl border border-[#d6e7d2] bg-[#f4faf2] p-4"><p className="text-sm font-bold text-[#1a542b]">Horários e participação</p><p className="mt-1 text-sm leading-6 text-[#42654a]">Escolha o horário e o canal de acompanhamento no formulário de inscrição. Como esta página ainda não está ligada a uma entidade formadora, as opções são preferências do participante e não uma confirmação de turma, data ou vaga.</p></div><div className="mt-6 flex flex-col gap-3 sm:flex-row"><button onClick={() => { setInscricaoConfirmada(false); setMostrarInscricao(true); }} className="aa-btn flex-1 rounded-lg bg-[#176534] px-5 py-3 text-sm font-bold text-white">Inscrever-se nesta actividade</button><button onClick={() => setSeleccionado(null)} className="aa-btn rounded-lg border border-[#cbdcc9] px-5 py-3 text-sm font-bold text-[#1b6332]">Voltar ao catálogo</button></div></div></div></div>}
 
       {seleccionado && mostrarInscricao && <div className="aa-modal-backdrop fixed inset-0 z-[110] flex items-center justify-center bg-[#061b0d]/75 p-3 backdrop-blur-sm sm:p-6" role="dialog" aria-modal="true" aria-labelledby="aa-inscricao-title" onMouseDown={(e) => { if (e.target === e.currentTarget) setMostrarInscricao(false); }}><div className="aa-modal-panel max-h-[94vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl"><div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-[#e1eadf] bg-white p-5 sm:p-7"><div><p className="aa-kicker text-[#438253]">FORMULÁRIO DE PARTICIPAÇÃO</p><h2 id="aa-inscricao-title" className="mt-2 text-2xl font-extrabold text-[#183d25]">Inscrição: {seleccionado.titulo}</h2><p className="mt-2 text-sm text-slate-600">Preencha os seus dados e indique como prefere acompanhar a formação.</p></div><button onClick={() => setMostrarInscricao(false)} className="shrink-0 rounded-full border border-[#dce8db] px-3 py-2 text-sm font-bold text-[#173b24]">Fechar ×</button></div>
-        {inscricaoConfirmada ? <div className="p-6 sm:p-8"><div className="rounded-2xl border border-[#cfe4cc] bg-[#f1f9ef] p-6"><p className="text-xs font-extrabold uppercase tracking-widest text-[#438253]">Formulário validado</p><h3 className="mt-2 text-2xl font-extrabold text-[#183d25]">A sua inscrição está preparada.</h3><p className="mt-3 text-sm leading-7 text-slate-700">Os dados foram validados nesta página, mas ainda não foram enviados para uma entidade formadora nem guardados numa base de dados. Para receber inscrições reais, será necessário ligar este formulário a uma API, e-mail institucional ou sistema de gestão.</p><div className="mt-5 space-y-2 rounded-xl bg-white p-4 text-sm text-slate-700"><p><strong>Participante:</strong> {dadosInscricao.nome}</p><p><strong>Actividade:</strong> {seleccionado.titulo}</p><p><strong>Horário preferido:</strong> {horarioEscolhido}</p><p><strong>Canal escolhido:</strong> {plataformaEscolhida}</p><p><strong>Província:</strong> {dadosInscricao.provincia || "Não indicada"}</p></div><button onClick={() => { setMostrarInscricao(false); setSeleccionado(null); }} className="aa-btn mt-5 w-full rounded-lg bg-[#176534] px-5 py-3 text-sm font-bold text-white">Concluir</button></div></div> : <form className="space-y-5 p-5 sm:p-7" onSubmit={(e) => { e.preventDefault(); setInscricaoConfirmada(true); }}>
-          <div className="grid gap-4 sm:grid-cols-2"><label className="text-sm font-semibold text-[#294b31]">Nome completo *<input className="aa-form-field mt-2" required minLength={3} value={dadosInscricao.nome} onChange={(e) => setDadosInscricao({ ...dadosInscricao, nome: e.target.value })} placeholder="Nome e apelido" /></label><label className="text-sm font-semibold text-[#294b31]">E-mail *<input className="aa-form-field mt-2" type="email" required value={dadosInscricao.email} onChange={(e) => setDadosInscricao({ ...dadosInscricao, email: e.target.value })} placeholder="nome@exemplo.com" /></label><label className="text-sm font-semibold text-[#294b31]">Telefone / WhatsApp<input className="aa-form-field mt-2" type="tel" value={dadosInscricao.telefone} onChange={(e) => setDadosInscricao({ ...dadosInscricao, telefone: e.target.value })} placeholder="+244 ..." /></label><label className="text-sm font-semibold text-[#294b31]">Província<select className="aa-form-field mt-2" value={dadosInscricao.provincia} onChange={(e) => setDadosInscricao({ ...dadosInscricao, provincia: e.target.value })}><option value="">Seleccione a província</option>{["Bengo","Benguela","Bié","Cabinda","Cuando","Cubango","Cuanza Norte","Cuanza Sul","Cunene","Icolo e Bengo","Huambo","Huíla","Luanda","Lunda Norte","Lunda Sul","Malanje","Moxico","Moxico Leste","Namibe","Uíge","Zaire"].map((p) => <option key={p} value={p}>{p}</option>)}</select></label><label className="text-sm font-semibold text-[#294b31]">Perfil do participante<select className="aa-form-field mt-2" value={dadosInscricao.perfil} onChange={(e) => setDadosInscricao({ ...dadosInscricao, perfil: e.target.value })}>{["Estudante","Agricultor / produtor","Técnico agropecuário","Docente / investigador","Empresário","Outro"].map((p) => <option key={p}>{p}</option>)}</select></label><label className="text-sm font-semibold text-[#294b31]">Horário preferido<select className="aa-form-field mt-2" value={horarioEscolhido} onChange={(e) => setHorarioEscolhido(e.target.value)}><option>Manhã · 08h00–10h00</option><option>Meio da manhã · 10h00–12h00</option><option>Tarde · 14h00–16h00</option><option>Noite · 18h00–20h00</option><option>Fim-de-semana · a combinar</option><option>Flexível / assíncrono</option></select></label></div>
+        {inscricaoConfirmada ? <div className="p-6 sm:p-8"><div className="rounded-2xl border border-[#cfe4cc] bg-[#f1f9ef] p-6"><p className="text-xs font-extrabold uppercase tracking-widest text-[#438253]">Formulário validado</p><h3 className="mt-2 text-2xl font-extrabold text-[#183d25]">A sua inscrição está preparada.</h3><p className="mt-3 text-sm leading-7 text-slate-700">A inscrição foi registada na base de dados da AGROINOVA e ficou pendente de confirmação. A organização poderá analisar os dados e contactar o participante.</p><div className="mt-5 space-y-2 rounded-xl bg-white p-4 text-sm text-slate-700"><p><strong>Participante:</strong> {dadosInscricao.nome}</p><p><strong>Actividade:</strong> {seleccionado.titulo}</p><p><strong>Horário preferido:</strong> {horarioEscolhido}</p><p><strong>Canal escolhido:</strong> {plataformaEscolhida}</p><p><strong>Província:</strong> {dadosInscricao.provincia || "Não indicada"}</p></div><button onClick={() => { setMostrarInscricao(false); setSeleccionado(null); }} className="aa-btn mt-5 w-full rounded-lg bg-[#176534] px-5 py-3 text-sm font-bold text-white">Concluir</button></div></div> : <form className="space-y-5 p-5 sm:p-7" onSubmit={async (e) => {
+  e.preventDefault();
+  setErroInscricao("");
+  setAEnviarInscricao(true);
+
+  try {
+    const resposta = await fetch("/api/agroacademia/inscricoes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        evento_id: seleccionado?.id,
+        nome: dadosInscricao.nome,
+        email: dadosInscricao.email,
+        telefone: dadosInscricao.telefone,
+        provincia: dadosInscricao.provincia,
+        perfil: dadosInscricao.perfil,
+        horario_preferido: horarioEscolhido,
+        plataforma: plataformaEscolhida,
+        observacoes: dadosInscricao.observacoes,
+      }),
+    });
+
+    const resultado = await resposta.json();
+
+    if (!resposta.ok) {
+      throw new Error(resultado.erro || "Não foi possível guardar a inscrição.");
+    }
+
+    setInscricaoConfirmada(true);
+  } catch (erro) {
+    setErroInscricao(
+      erro instanceof Error
+        ? erro.message
+        : "Erro ao enviar a inscrição. Tenta novamente."
+    );
+  } finally {
+    setAEnviarInscricao(false);
+  }
+}}>
+          <div className="grid gap-4 sm:grid-cols-2"><label className="text-sm font-semibold text-[#294b31]">Nome completo *<input className="aa-form-field mt-2" required minLength={3} value={dadosInscricao.nome} onChange={(e) => setDadosInscricao({ ...dadosInscricao, nome: e.target.value })} placeholder="Nome e apelido" /></label><label className="text-sm font-semibold text-[#294b31]">E-mail *<input className="aa-form-field mt-2" type="email" required value={dadosInscricao.email} onChange={(e) => setDadosInscricao({ ...dadosInscricao, email: e.target.value })} placeholder="nome@exemplo.com" /></label><label className="text-sm font-semibold text-[#294b31]">Telefone / WhatsApp<input className="aa-form-field mt-2" type="tel" value={dadosInscricao.telefone} onChange={(e) => setDadosInscricao({ ...dadosInscricao, telefone: e.target.value })} placeholder="+244 ..." /></label><label className="text-sm font-semibold text-[#294b31]">Província<select className="aa-form-field mt-2" value={dadosInscricao.provincia} onChange={(e) => setDadosInscricao({ ...dadosInscricao, provincia: e.target.value })}><option value="">Seleccione a província</option>{["Bengo","Benguela","Bié","Cabinda","Cuando","Cubango","Cuanza Norte","Cuanza Sul","Cunene","Icolo e Bengo","Huambo","Huíla","Luanda","Lunda Norte","Lunda Sul","Malanje","Moxico","Moxico Leste","Namibe","Uíge","Zaire"].map((p) => <option key={p} value={p}>{p}</option>)}</select></label><label className="text-sm font-semibold text-[#294b31]">Perfil do participante<select className="aa-form-field mt-2" value={dadosInscricao.perfil} onChange={(e) => setDadosInscricao({ ...dadosInscricao, perfil: e.target.value })}>{["Estudante", "Agricultor / produtor", "T\u00e9cnico agropecu\u00e1rio", "Docente / investigador", "Empres\u00e1rio", "Outros"].map((p) => <option key={p}>{p}</option>)}</select></label><label className="text-sm font-semibold text-[#294b31]">Horário preferido<select className="aa-form-field mt-2" value={horarioEscolhido} onChange={(e) => setHorarioEscolhido(e.target.value)}><option>Manhã · 08h00–10h00</option><option>Meio da manhã · 10h00–12h00</option><option>Tarde · 14h00–16h00</option><option>Noite · 18h00–20h00</option><option>Fim-de-semana · a combinar</option><option>Flexível / assíncrono</option></select></label></div>
           <fieldset><legend className="text-sm font-bold text-[#294b31]">Como prefere acompanhar a formação? *</legend><p className="mt-1 text-xs leading-5 text-slate-500">Seleccione o canal mais conveniente. A disponibilidade final depende da organização e será confirmada depois.</p><div className="mt-3 grid gap-3 sm:grid-cols-2">{[{nome:"Zoom",desc:"Aulas ao vivo e sessões interactivas"},{nome:"YouTube",desc:"Transmissão ou vídeos gravados"},{nome:"WhatsApp",desc:"Grupo de apoio e partilha de materiais"},{nome:"Presencial",desc:"Participação física no local"},{nome:"Flexível",desc:"Ainda não tenho preferência"}].map((p) => <label key={p.nome} className={`cursor-pointer rounded-xl border p-4 transition ${plataformaEscolhida === p.nome ? "border-[#39834a] bg-[#f0f8ee] ring-2 ring-[#39834a]/15" : "border-[#dce8db] bg-white hover:bg-[#f8fbf7]"}`}><span className="flex items-center gap-3"><input type="radio" name="plataforma" value={p.nome} checked={plataformaEscolhida === p.nome} onChange={() => setPlataformaEscolhida(p.nome)} required /><span><strong className="block text-sm text-[#1c4b2a]">{p.nome}</strong><span className="mt-1 block text-xs leading-5 text-slate-600">{p.desc}</span></span></span></label>)}</div></fieldset>
-          <label className="block text-sm font-semibold text-[#294b31]">Observações ou necessidades específicas<textarea className="aa-form-field mt-2 min-h-24" value={dadosInscricao.observacoes} onChange={(e) => setDadosInscricao({ ...dadosInscricao, observacoes: e.target.value })} placeholder="Dúvidas, acessibilidade ou informação adicional" /></label><label className="flex items-start gap-3 text-xs leading-5 text-slate-600"><input className="mt-1" type="checkbox" required /><span>Confirmo que os dados fornecidos estão correctos e autorizo o seu uso para contacto relativo a esta actividade. *</span></label><button type="submit" className="aa-btn w-full rounded-lg bg-[#176534] px-5 py-3.5 text-sm font-bold text-white">Validar formulário de inscrição</button><p className="text-xs leading-5 text-slate-500">Demonstração funcional no navegador: a validação é real, mas o envio e armazenamento ainda dependem da integração com o servidor da AGROINOVA.</p></form>}</div></div>}
+          <label className="block text-sm font-semibold text-[#294b31]">Observações ou necessidades específicas<textarea className="aa-form-field mt-2 min-h-24" value={dadosInscricao.observacoes} onChange={(e) => setDadosInscricao({ ...dadosInscricao, observacoes: e.target.value })} placeholder="Dúvidas, acessibilidade ou informação adicional" /></label><label className="flex items-start gap-3 text-xs leading-5 text-slate-600"><input className="mt-1" type="checkbox" required /><span>Confirmo que os dados fornecidos estão correctos e autorizo o seu uso para contacto relativo a esta actividade. *</span></label>{erroInscricao && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{erroInscricao}</p>}
+          <button type="submit" disabled={aEnviarInscricao} className="aa-btn w-full rounded-lg bg-[#176534] px-5 py-3.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60">{aEnviarInscricao ? "A enviar inscrição..." : "Enviar inscrição"}</button><p className="text-xs leading-5 text-slate-500">A inscrição será enviada ao servidor e guardada se os dados forem aceites.</p></form>}</div></div>}
     </main>
   );
 }

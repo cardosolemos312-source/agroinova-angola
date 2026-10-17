@@ -1,0 +1,416 @@
+import { NextResponse } from "next/server";
+import { administradorAutenticado } from "@/lib/admin-auth";
+import { obterSupabaseAdmin } from "@/lib/supabase/admin";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+type Entidade = "evento" | "instituicao" | "inscricao";
+type Dados = Record<string, unknown>;
+
+const TABELAS: Record<Entidade, string> = {
+  evento: "agroinova_agroacademia_eventos",
+  instituicao: "agroinova_agroacademia_instituicoes",
+  inscricao: "agroinova_agroacademia_inscricoes",
+};
+
+const CAMPOS: Record<Entidade, string[]> = {
+  evento: [
+    "titulo",
+    "tipo",
+    "area",
+    "modalidade",
+    "duracao",
+    "nivel",
+    "resumo",
+    "conteudo",
+    "imagem",
+    "estado",
+    "destaque",
+    "data_evento",
+    "local_evento",
+    "entidade_organizadora",
+  ],
+  instituicao: [
+    "nome",
+    "sigla",
+    "provincia",
+    "tipo",
+    "foco",
+    "url",
+    "imagem",
+    "estado",
+  ],
+  inscricao: ["estado"],
+};
+
+function respostaErro(mensagem: string, status: number) {
+  return NextResponse.json(
+    { sucesso: false, erro: mensagem },
+    { status, headers: { "Cache-Control": "no-store" } }
+  );
+}
+
+function filtrarDados(entidade: Entidade, dados: Dados): Dados {
+  const resultado: Dados = {};
+
+  for (const campo of CAMPOS[entidade]) {
+    if (Object.prototype.hasOwnProperty.call(dados, campo)) {
+      resultado[campo] = dados[campo];
+    }
+  }
+
+  return resultado;
+}
+
+function validarEstado(valor: unknown): boolean {
+  return (
+    typeof valor === "string" &&
+    valor.trim().length > 0 &&
+    valor.trim().length <= 40
+  );
+}
+
+function validarDados(entidade: Entidade, dados: Dados): string | null {
+  if (entidade === "evento") {
+    if (
+      typeof dados.titulo !== "string" ||
+      !dados.titulo.trim() ||
+      dados.titulo.length > 250
+    ) {
+      return "Indica um titulo valido para o evento.";
+    }
+
+    if (
+      typeof dados.tipo !== "string" ||
+      !dados.tipo.trim() ||
+      dados.tipo.length > 100
+    ) {
+      return "Indica o tipo do evento.";
+    }
+
+    if (
+      dados.estado !== undefined &&
+      !validarEstado(dados.estado)
+    ) {
+      return "O estado do evento e invalido.";
+    }
+
+    if (
+      dados.destaque !== undefined &&
+      typeof dados.destaque !== "boolean"
+    ) {
+      return "O campo destaque deve ser verdadeiro ou falso.";
+    }
+
+    if (
+      dados.conteudo !== undefined &&
+      !Array.isArray(dados.conteudo)
+    ) {
+      return "O conteudo do evento deve ser uma lista.";
+    }
+
+    if (
+      dados.data_evento !== undefined &&
+      dados.data_evento !== null &&
+      (typeof dados.data_evento !== "string" ||
+        !Number.isFinite(Date.parse(dados.data_evento)))
+    ) {
+      return "A data do evento e invalida.";
+    }
+  }
+
+  if (entidade === "instituicao") {
+    if (
+      typeof dados.nome !== "string" ||
+      !dados.nome.trim() ||
+      dados.nome.length > 250
+    ) {
+      return "Indica um nome valido para a instituicao.";
+    }
+
+    if (
+      dados.estado !== undefined &&
+      !validarEstado(dados.estado)
+    ) {
+      return "O estado da instituicao e invalido.";
+    }
+  }
+
+  if (
+    entidade === "inscricao" &&
+    !validarEstado(dados.estado)
+  ) {
+    return "Indica um estado valido para a inscricao.";
+  }
+
+  return null;
+}
+
+function obterEntidade(valor: unknown): Entidade | null {
+  if (
+    valor === "evento" ||
+    valor === "instituicao" ||
+    valor === "inscricao"
+  ) {
+    return valor;
+  }
+
+  return null;
+}
+
+function obterId(valor: unknown): string | null {
+  if (
+    (typeof valor === "string" || typeof valor === "number") &&
+    /^\d+$/.test(String(valor)) &&
+    String(valor) !== "0"
+  ) {
+    return String(valor);
+  }
+
+  return null;
+}
+
+export async function GET() {
+  try {
+    if (!(await administradorAutenticado())) {
+      return respostaErro("Acesso nao autorizado.", 401);
+    }
+
+    const supabase = obterSupabaseAdmin();
+
+    const [eventos, instituicoes, inscricoes] = await Promise.all([
+      supabase
+        .from(TABELAS.evento)
+        .select("*")
+        .order("criado_em", { ascending: false }),
+
+      supabase
+        .from(TABELAS.instituicao)
+        .select("*")
+        .order("criado_em", { ascending: false }),
+
+      supabase
+        .from(TABELAS.inscricao)
+        .select("*")
+        .order("criado_em", { ascending: false }),
+    ]);
+
+    const erro = eventos.error || instituicoes.error || inscricoes.error;
+
+    if (erro) {
+      console.error("Erro ao consultar a AgroAcademia:", erro.message);
+      return respostaErro(
+        "Nao foi possivel consultar os registos. Verifica as tabelas do Supabase.",
+        500
+      );
+    }
+
+    return NextResponse.json(
+      {
+        sucesso: true,
+        eventos: eventos.data ?? [],
+        instituicoes: instituicoes.data ?? [],
+        inscricoes: inscricoes.data ?? [],
+      },
+      { headers: { "Cache-Control": "no-store" } }
+    );
+  } catch (erro) {
+    console.error("Erro na API administrativa da AgroAcademia:", erro);
+    return respostaErro("Ocorreu um erro interno.", 500);
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    if (!(await administradorAutenticado())) {
+      return respostaErro("Acesso nao autorizado.", 401);
+    }
+
+    let corpo: unknown;
+
+    try {
+      corpo = await request.json();
+    } catch {
+      return respostaErro("O corpo do pedido nao contem JSON valido.", 400);
+    }
+
+    if (!corpo || typeof corpo !== "object" || Array.isArray(corpo)) {
+      return respostaErro("Os dados enviados sao invalidos.", 400);
+    }
+
+    const pedido = corpo as Record<string, unknown>;
+    const entidade = obterEntidade(pedido.entidade);
+
+    if (entidade !== "evento" && entidade !== "instituicao") {
+      return respostaErro(
+        "So e permitido criar eventos ou instituicoes.",
+        400
+      );
+    }
+
+    if (
+      !pedido.dados ||
+      typeof pedido.dados !== "object" ||
+      Array.isArray(pedido.dados)
+    ) {
+      return respostaErro("Os dados do registo sao invalidos.", 400);
+    }
+
+    const dados = filtrarDados(entidade, pedido.dados as Dados);
+    const erroValidacao = validarDados(entidade, dados);
+
+    if (erroValidacao) {
+      return respostaErro(erroValidacao, 400);
+    }
+
+    const supabase = obterSupabaseAdmin();
+    const { data, error } = await supabase
+      .from(TABELAS[entidade])
+      .insert(dados)
+      .select("*")
+      .single();
+
+    if (error) {
+      console.error("Erro ao criar registo:", error.message);
+      return respostaErro("Nao foi possivel criar o registo.", 500);
+    }
+
+    return NextResponse.json(
+      { sucesso: true, registo: data },
+      { status: 201, headers: { "Cache-Control": "no-store" } }
+    );
+  } catch (erro) {
+    console.error("Erro ao criar registo da AgroAcademia:", erro);
+    return respostaErro("Ocorreu um erro interno.", 500);
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    if (!(await administradorAutenticado())) {
+      return respostaErro("Acesso nao autorizado.", 401);
+    }
+
+    let corpo: unknown;
+
+    try {
+      corpo = await request.json();
+    } catch {
+      return respostaErro("O corpo do pedido nao contem JSON valido.", 400);
+    }
+
+    if (!corpo || typeof corpo !== "object" || Array.isArray(corpo)) {
+      return respostaErro("Os dados enviados sao invalidos.", 400);
+    }
+
+    const pedido = corpo as Record<string, unknown>;
+    const entidade = obterEntidade(pedido.entidade);
+    const id = obterId(pedido.id);
+
+    if (!entidade || !id) {
+      return respostaErro("A entidade ou o identificador sao invalidos.", 400);
+    }
+
+    if (
+      !pedido.dados ||
+      typeof pedido.dados !== "object" ||
+      Array.isArray(pedido.dados)
+    ) {
+      return respostaErro("Os dados do registo sao invalidos.", 400);
+    }
+
+    const dados = filtrarDados(entidade, pedido.dados as Dados);
+
+    if (Object.keys(dados).length === 0) {
+      return respostaErro("Nao existem campos validos para actualizar.", 400);
+    }
+
+    const erroValidacao = validarDados(entidade, dados);
+
+    if (erroValidacao) {
+      return respostaErro(erroValidacao, 400);
+    }
+
+    const supabase = obterSupabaseAdmin();
+    const { data, error } = await supabase
+      .from(TABELAS[entidade])
+      .update(dados)
+      .eq("id", id)
+      .select("*")
+      .maybeSingle();
+
+    if (error) {
+      console.error("Erro ao actualizar registo:", error.message);
+      return respostaErro("Nao foi possivel actualizar o registo.", 500);
+    }
+
+    if (!data) {
+      return respostaErro("O registo nao foi encontrado.", 404);
+    }
+
+    return NextResponse.json(
+      { sucesso: true, registo: data },
+      { headers: { "Cache-Control": "no-store" } }
+    );
+  } catch (erro) {
+    console.error("Erro ao actualizar registo da AgroAcademia:", erro);
+    return respostaErro("Ocorreu um erro interno.", 500);
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    if (!(await administradorAutenticado())) {
+      return respostaErro("Acesso nao autorizado.", 401);
+    }
+
+    const corpo = await request.json().catch(() => null);
+    const entidade = obterEntidade(corpo?.entidade);
+    const id = obterId(corpo?.id);
+
+    if (
+      (entidade !== "evento" && entidade !== "instituicao") ||
+      !id
+    ) {
+      return respostaErro(
+        "So e permitido eliminar eventos ou instituicoes com um ID valido.",
+        400
+      );
+    }
+
+    const supabase = obterSupabaseAdmin();
+    const { data, error } = await supabase
+      .from(TABELAS[entidade])
+      .delete()
+      .eq("id", id)
+      .select("id")
+      .maybeSingle();
+
+      
+if (error) {
+  console.error(
+    "ERRO SUPABASE ELIMINAR:",
+    JSON.stringify({
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+    })
+  );
+  return respostaErro("Nao foi possivel eliminar o registo.", 500);
+}
+
+    if (!data) {
+      return respostaErro("O registo nao foi encontrado.", 404);
+    }
+
+    return NextResponse.json(
+      { sucesso: true, registo: data },
+      { headers: { "Cache-Control": "no-store" } }
+    );
+  } catch (erro) {
+    console.error("Erro ao eliminar registo da AgroAcademia:", erro);
+    return respostaErro("Ocorreu um erro interno.", 500);
+  }
+}

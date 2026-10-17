@@ -56,7 +56,7 @@ const areas: Area[] = [
     nome: "Floresta",
     descricao:
       "Recursos florestais, biodiversidade, conservação, silvicultura e uso sustentável.",
-    href: "/floresta",
+    href: "/florestas",
     imagem:
       "https://images.pexels.com/photos/167698/pexels-photo-167698.jpeg?auto=compress&cs=tinysrgb&w=1400",
   },
@@ -110,7 +110,7 @@ const resultados: ResultadoPesquisa[] = [
     titulo: "Floresta",
     descricao:
       "Florestas, biodiversidade, conservação, recursos naturais e produção florestal.",
-    href: "/floresta",
+    href: "/florestas",
     categoria: "Floresta",
     palavras: [
       "floresta",
@@ -583,7 +583,7 @@ const navegacao = [
   { nome: "Agricultura", href: "/agricultura" },
   { nome: "Pecuária", href: "/pecuaria" },
   { nome: "Pesca", href: "/pesca" },
-  { nome: "Floresta", href: "/floresta" },
+  { nome: "Floresta", href: "/florestas" },
   { nome: "Investigação", href: "/investigacao" },
   { nome: "Tecnologias", href: "/tecnologias" },
   { nome: "Dados", href: "/dados" },
