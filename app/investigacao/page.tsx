@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -31,6 +30,10 @@ type Especialista = {
   area: string;
   descricao: string;
   imagem?: string;
+  livroTitulo?: string;
+  livroDescricao?: string;
+  livroCapaUrl?: string;
+  livroPdfUrl?: string;
 };
 
 type TecnicoAPI = {
@@ -48,6 +51,10 @@ type TecnicoAPI = {
   foto_url?: string | null;
   estado?: string | null;
   destaque?: boolean | null;
+  livro_titulo?: string | null;
+  livro_descricao?: string | null;
+  livro_capa_url?: string | null;
+  livro_pdf_url?: string | null;
 };
 
 type Modal =
@@ -250,7 +257,6 @@ export default function InvestigacaoPage() {
   const [indiceDestaque, setIndiceDestaque] = useState(0);
   const [modal, setModal] = useState<Modal>(null);
 
-  // CARREGAR INVESTIGADORES PUBLICADOS
   useEffect(() => {
     let activo = true;
 
@@ -275,10 +281,7 @@ export default function InvestigacaoPage() {
 
         if (Array.isArray(resultado)) {
           registos = resultado as TecnicoAPI[];
-        } else if (
-          resultado &&
-          typeof resultado === "object"
-        ) {
+        } else if (resultado && typeof resultado === "object") {
           const dados = resultado as {
             tecnicos?: TecnicoAPI[];
             data?: TecnicoAPI[];
@@ -305,9 +308,7 @@ export default function InvestigacaoPage() {
             return Boolean(tecnico.nome);
           })
           .map((tecnico, index): Especialista => ({
-            id: String(
-              tecnico.id ?? `${tecnico.nome}-${index}`,
-            ),
+            id: String(tecnico.id ?? `${tecnico.nome}-${index}`),
             nome: tecnico.nome || "Especialista",
             cargo:
               tecnico.titulo_profissional ||
@@ -327,15 +328,18 @@ export default function InvestigacaoPage() {
               tecnico.imagem_url ||
               tecnico.foto_url ||
               fotografias.cientista,
+
+            // PUBLICAÇÃO DO TÉCNICO
+            livroTitulo: tecnico.livro_titulo || undefined,
+            livroDescricao: tecnico.livro_descricao || undefined,
+            livroCapaUrl: tecnico.livro_capa_url || undefined,
+            livroPdfUrl: tecnico.livro_pdf_url || undefined,
           }));
 
         setEspecialistas(convertidos);
         setIndiceEspecialista(0);
       } catch (erro) {
-        console.error(
-          "Erro ao carregar especialistas:",
-          erro,
-        );
+        console.error("Erro ao carregar especialistas:", erro);
 
         if (activo) {
           setEspecialistas([]);
@@ -532,9 +536,7 @@ export default function InvestigacaoPage() {
             >
               <div
                 className="h-32 bg-cover bg-center transition duration-500 group-hover:scale-105"
-                style={{
-                  backgroundImage: `url("${item.imagem}")`,
-                }}
+                style={{ backgroundImage: `url("${item.imagem}")` }}
               />
 
               <div className="p-5">
@@ -560,9 +562,7 @@ export default function InvestigacaoPage() {
         <div className="relative overflow-hidden rounded-3xl bg-green-950 p-6 text-white md:p-10">
           <div
             className="absolute inset-0 bg-cover bg-center opacity-20"
-            style={{
-              backgroundImage: `url("${fotografias.floresta}")`,
-            }}
+            style={{ backgroundImage: `url("${fotografias.floresta}")` }}
           />
 
           <div className="absolute inset-0 bg-gradient-to-r from-green-950 via-green-950/95 to-green-900/70" />
@@ -602,9 +602,7 @@ export default function InvestigacaoPage() {
             <div>
               {aCarregarEspecialistas ? (
                 <div className="rounded-2xl border border-white/15 bg-white/10 p-8 text-center">
-                  <p className="font-bold">
-                    A carregar especialistas...
-                  </p>
+                  <p className="font-bold">A carregar especialistas...</p>
                 </div>
               ) : especialistas.length > 0 ? (
                 <>
@@ -650,6 +648,12 @@ export default function InvestigacaoPage() {
                             {pessoa.area}
                           </p>
 
+                          {pessoa.livroCapaUrl || pessoa.livroPdfUrl ? (
+                            <p className="mt-3 rounded-lg bg-green-50 px-2 py-1.5 text-xs font-bold text-green-800">
+                              Publicação disponível
+                            </p>
+                          ) : null}
+
                           <p className="mt-4 text-xs font-black text-green-800">
                             Consultar perfil →
                           </p>
@@ -674,9 +678,7 @@ export default function InvestigacaoPage() {
                             key={pessoa.id}
                             type="button"
                             aria-label={`Ver ${pessoa.nome}`}
-                            onClick={() =>
-                              setIndiceEspecialista(index)
-                            }
+                            onClick={() => setIndiceEspecialista(index)}
                             className={`h-2.5 rounded-full transition ${
                               indiceEspecialista === index
                                 ? "w-8 bg-emerald-400"
@@ -793,9 +795,7 @@ export default function InvestigacaoPage() {
                 >
                   <div
                     className="h-44 bg-cover bg-center transition duration-500 group-hover:scale-[1.03]"
-                    style={{
-                      backgroundImage: `url("${imagem}")`,
-                    }}
+                    style={{ backgroundImage: `url("${imagem}")` }}
                   />
 
                   <div className="p-5">
@@ -817,9 +817,7 @@ export default function InvestigacaoPage() {
                     <div className="mt-5 flex flex-wrap gap-2">
                       <button
                         type="button"
-                        onClick={() =>
-                          setModal({ tipo: "area", area })
-                        }
+                        onClick={() => setModal({ tipo: "area", area })}
                         className="rounded-lg bg-green-800 px-4 py-2.5 text-sm font-bold text-white hover:bg-green-950"
                       >
                         Ver detalhes
@@ -875,9 +873,7 @@ export default function InvestigacaoPage() {
               >
                 <div
                   className="h-40 bg-cover bg-center"
-                  style={{
-                    backgroundImage: `url("${escola.imagem}")`,
-                  }}
+                  style={{ backgroundImage: `url("${escola.imagem}")` }}
                 />
 
                 <div className="p-5">
@@ -1069,6 +1065,98 @@ export default function InvestigacaoPage() {
                     do registo disponibilizado pela administração
                     da AGROINOVA ANGOLA.
                   </p>
+
+                  {/* LIVRO, CAPA E PDF */}
+                  {(modal.especialista.livroTitulo ||
+                    modal.especialista.livroDescricao ||
+                    modal.especialista.livroCapaUrl ||
+                    modal.especialista.livroPdfUrl) && (
+                    <section className="mt-7 overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-green-50 to-white p-5 sm:p-6">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-green-800 text-white">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                            className="h-6 w-6"
+                            aria-hidden="true"
+                          >
+                            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z" />
+                            <path d="M4 5.5V22" />
+                            <path d="M8 7h8M8 11h8" />
+                          </svg>
+                        </div>
+
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold uppercase tracking-wider text-green-700">
+                            Publicação científica
+                          </p>
+
+                          <h3 className="mt-1 break-words text-xl font-black text-green-950">
+                            {modal.especialista.livroTitulo ||
+                              "Livro ou documento técnico"}
+                          </h3>
+                        </div>
+                      </div>
+
+                      <div className="mt-5 grid gap-5 sm:grid-cols-[180px_1fr]">
+                        <div className="flex min-h-48 items-start justify-center">
+                          {modal.especialista.livroCapaUrl ? (
+                            <img
+                              src={modal.especialista.livroCapaUrl}
+                              alt={`Capa de ${modal.especialista.livroTitulo || "publicação científica"}`}
+                              className="max-h-72 w-full max-w-[180px] rounded-xl border border-slate-200 bg-white object-contain shadow-md"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="flex min-h-48 w-full max-w-[180px] items-center justify-center rounded-xl border border-dashed border-green-300 bg-green-100 p-5 text-center text-sm font-bold text-green-800">
+                              Capa não disponível
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex flex-col">
+                          <h4 className="font-bold text-green-950">
+                            Sobre a publicação
+                          </h4>
+
+                          <p className="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700">
+                            {modal.especialista.livroDescricao ||
+                              "Consulte o documento científico disponibilizado por este profissional."}
+                          </p>
+
+                          {modal.especialista.livroPdfUrl ? (
+                            <div className="mt-5 flex flex-wrap gap-3">
+                              <a
+                                href={modal.especialista.livroPdfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center rounded-xl bg-green-800 px-5 py-3 text-sm font-bold text-white transition hover:bg-green-950"
+                              >
+                                Abrir PDF
+                              </a>
+
+                              <a
+                                href={modal.especialista.livroPdfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                download
+                                className="inline-flex items-center justify-center rounded-xl border border-green-800 px-5 py-3 text-sm font-bold text-green-900 transition hover:bg-green-50"
+                              >
+                                Descarregar PDF
+                              </a>
+                            </div>
+                          ) : (
+                            <p className="mt-5 rounded-lg bg-amber-50 p-3 text-sm leading-6 text-amber-900">
+                              O PDF ainda não foi disponibilizado
+                              para consulta.
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </section>
+                  )}
                 </div>
               )}
 
@@ -1089,23 +1177,11 @@ export default function InvestigacaoPage() {
 
                   {(
                     [
-                      [
-                        "Importância científica",
-                        modal.area.importancia,
-                      ],
+                      ["Importância científica", modal.area.importancia],
                       ["Contexto angolano", modal.area.angola],
-                      [
-                        "Linhas de investigação",
-                        modal.area.linhasPesquisa,
-                      ],
-                      [
-                        "Aplicações práticas",
-                        modal.area.aplicacoes,
-                      ],
-                      [
-                        "Questões científicas",
-                        modal.area.perguntas,
-                      ],
+                      ["Linhas de investigação", modal.area.linhasPesquisa],
+                      ["Aplicações práticas", modal.area.aplicacoes],
+                      ["Questões científicas", modal.area.perguntas],
                     ] as [string, string[] | undefined][]
                   ).map(([titulo, itens]) => {
                     const valores = lista(itens);
@@ -1120,9 +1196,7 @@ export default function InvestigacaoPage() {
 
                         <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-7 text-slate-700">
                           {valores.map((item, index) => (
-                            <li key={`${index}-${item}`}>
-                              {item}
-                            </li>
+                            <li key={`${index}-${item}`}>{item}</li>
                           ))}
                         </ul>
                       </div>
@@ -1141,9 +1215,7 @@ export default function InvestigacaoPage() {
                             key={`${index}-${ref.titulo}`}
                             className="rounded-xl border border-slate-200 p-4"
                           >
-                            <p className="font-bold">
-                              {ref.titulo}
-                            </p>
+                            <p className="font-bold">{ref.titulo}</p>
 
                             <p className="mt-1 text-sm text-slate-600">
                               {ref.instituicao}
@@ -1197,9 +1269,7 @@ export default function InvestigacaoPage() {
                         Projectos, publicações e investigadores
                         associados.
                       </li>
-                      <li>
-                        Fontes oficiais para validar a informação.
-                      </li>
+                      <li>Fontes oficiais para validar a informação.</li>
                     </ul>
                   </div>
                 </div>
