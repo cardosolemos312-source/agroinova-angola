@@ -1,4 +1,4 @@
-
+﻿
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
@@ -64,7 +64,7 @@ export default function PainelTecnicos() {
         resultado = conteudo ? JSON.parse(conteudo) : {};
       } catch {
         throw new Error(
-          "O servidor devolveu uma resposta inválida. Verifique a API e a configuração da publicação."
+          "O servidor devolveu uma resposta invÃ¡lida. Verifique a API e a configuraÃ§Ã£o da publicaÃ§Ã£o."
         );
       }
 
@@ -75,7 +75,7 @@ export default function PainelTecnicos() {
           "error" in resultado &&
           typeof resultado.error === "string"
             ? resultado.error
-            : "Não foi possível carregar os técnicos.";
+            : "NÃ£o foi possÃ­vel carregar os tÃ©cnicos.";
 
         throw new Error(mensagem);
       }
@@ -102,7 +102,7 @@ export default function PainelTecnicos() {
       setErro(
         erroConsulta instanceof Error
           ? erroConsulta.message
-          : "Ocorreu um erro ao carregar os técnicos."
+          : "Ocorreu um erro ao carregar os tÃ©cnicos."
       );
     } finally {
       setCarregando(false);
@@ -122,12 +122,12 @@ export default function PainelTecnicos() {
           </p>
 
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Técnicos, investigadores e publicações
+            TÃ©cnicos, investigadores e publicaÃ§Ãµes
           </h1>
 
           <p className="mt-4 max-w-3xl text-sm leading-7 text-green-50 sm:text-base">
-            Conheça os especialistas e consulte os seus livros, documentos
-            técnicos e publicações científicas disponibilizados na plataforma.
+            ConheÃ§a os especialistas e consulte os seus livros, documentos
+            tÃ©cnicos e publicaÃ§Ãµes cientÃ­ficas disponibilizados na plataforma.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
@@ -145,7 +145,7 @@ export default function PainelTecnicos() {
                 {tecnicos.filter((t) => enderecoSeguro(t.livro_pdf_url)).length}
               </span>
               <span className="text-sm text-green-100">
-                PDFs disponíveis
+                PDFs disponÃ­veis
               </span>
             </div>
 
@@ -158,7 +158,7 @@ export default function PainelTecnicos() {
                 }
               </span>
               <span className="text-sm text-green-100">
-                Capas disponíveis
+                Capas disponÃ­veis
               </span>
             </div>
           </div>
@@ -167,10 +167,10 @@ export default function PainelTecnicos() {
         <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-extrabold text-gray-900">
-              Directório de especialistas
+              DirectÃ³rio de especialistas
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Consulte o perfil e as publicações de cada técnico.
+              Consulte o perfil e as publicaÃ§Ãµes de cada tÃ©cnico.
             </p>
           </div>
 
@@ -188,7 +188,7 @@ export default function PainelTecnicos() {
           <div className="rounded-2xl border border-green-100 bg-white p-10 text-center shadow-sm">
             <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-green-100 border-t-green-700" />
             <p className="mt-4 font-semibold text-gray-700">
-              A carregar os especialistas e as publicações...
+              A carregar os especialistas e as publicaÃ§Ãµes...
             </p>
           </div>
         )}
@@ -199,12 +199,12 @@ export default function PainelTecnicos() {
             className="rounded-2xl border border-red-200 bg-red-50 p-6"
           >
             <h3 className="font-bold text-red-900">
-              Não foi possível carregar os dados
+              NÃ£o foi possÃ­vel carregar os dados
             </h3>
             <p className="mt-2 text-sm leading-6 text-red-800">{erro}</p>
             <p className="mt-2 text-sm text-red-800">
               Se o problema acontecer apenas no site publicado, confirme a
-              configuração da API e as variáveis de ambiente na Vercel.
+              configuraÃ§Ã£o da API e as variÃ¡veis de ambiente na Vercel.
             </p>
             <button
               type="button"
@@ -219,10 +219,10 @@ export default function PainelTecnicos() {
         {!carregando && !erro && tecnicos.length === 0 && (
           <div className="rounded-2xl border border-dashed border-green-300 bg-white p-10 text-center">
             <h3 className="text-xl font-bold text-gray-900">
-              Ainda não existem técnicos para apresentar
+              Ainda nÃ£o existem tÃ©cnicos para apresentar
             </h3>
             <p className="mt-3 text-sm leading-6 text-gray-600">
-              Quando os registos estiverem disponíveis na base de dados, serão
+              Quando os registos estiverem disponÃ­veis na base de dados, serÃ£o
               apresentados aqui.
             </p>
           </div>
@@ -263,7 +263,7 @@ export default function PainelTecnicos() {
                         <img
                           src={foto}
                           alt={`Fotografia de ${nome}`}
-                          className="h-20 w-20 shrink-0 rounded-2xl border border-gray-200 bg-gray-50 object-cover"
+                          className="h-20 w-20 shrink-0 rounded-2xl border border-gray-200 bg-gray-50 object-contain"
                           loading="lazy"
                         />
                       ) : (
@@ -299,7 +299,7 @@ export default function PainelTecnicos() {
                         {tecnico.instituicao && (
                           <p>
                             <span className="font-bold text-gray-800">
-                              Instituição:
+                              InstituiÃ§Ã£o:
                             </span>{" "}
                             {tecnico.instituicao}
                           </p>
@@ -308,7 +308,7 @@ export default function PainelTecnicos() {
                         {tecnico.provincia && (
                           <p>
                             <span className="font-bold text-gray-800">
-                              Província:
+                              ProvÃ­ncia:
                             </span>{" "}
                             {tecnico.provincia}
                           </p>
@@ -345,11 +345,11 @@ export default function PainelTecnicos() {
                     <section className="border-t border-green-100 bg-gradient-to-b from-green-50/80 to-white px-5 py-5">
                       <div className="mb-4">
                         <span className="text-xs font-extrabold uppercase tracking-wider text-green-800">
-                          Publicações
+                          PublicaÃ§Ãµes
                         </span>
                         <h4 className="mt-1 text-lg font-extrabold text-green-950">
                           {texto(tecnico.livro_titulo) ||
-                            "Livro ou documento técnico"}
+                            "Livro ou documento tÃ©cnico"}
                         </h4>
                       </div>
 
@@ -365,18 +365,18 @@ export default function PainelTecnicos() {
                             >
                               <img
                                 src={capa}
-                                alt={`Capa de ${texto(tecnico.livro_titulo) || "publicação"}`}
-                                className="h-48 w-36 rounded-xl border border-gray-200 bg-white object-cover shadow-lg transition duration-300 group-hover:shadow-xl"
+                                alt={`Capa de ${texto(tecnico.livro_titulo) || "publicaÃ§Ã£o"}`}
+                                className="h-48 w-36 rounded-xl border border-gray-200 bg-white object-contain shadow-lg transition duration-300 group-hover:shadow-xl"
                                 loading="lazy"
                               />
                             </a>
                           ) : (
                             <div className="flex h-48 w-36 flex-col items-center justify-center rounded-xl border-2 border-dashed border-green-200 bg-white p-3 text-center">
                               <span className="text-sm font-bold text-green-900">
-                                Capa não disponível
+                                Capa nÃ£o disponÃ­vel
                               </span>
                               <span className="mt-2 text-xs leading-5 text-gray-500">
-                                A imagem da publicação não foi encontrada.
+                                A imagem da publicaÃ§Ã£o nÃ£o foi encontrada.
                               </span>
                             </div>
                           )}
@@ -410,8 +410,8 @@ export default function PainelTecnicos() {
                             </div>
                           ) : (
                             <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm leading-5 text-amber-900">
-                              O endereço do PDF não está disponível para esta
-                              publicação.
+                              O endereÃ§o do PDF nÃ£o estÃ¡ disponÃ­vel para esta
+                              publicaÃ§Ã£o.
                             </p>
                           )}
                         </div>
@@ -422,7 +422,7 @@ export default function PainelTecnicos() {
                   {!temPublicacao && (
                     <div className="border-t border-gray-100 px-5 py-4">
                       <p className="text-sm text-gray-500">
-                        Ainda não foi associada nenhuma publicação a este
+                        Ainda nÃ£o foi associada nenhuma publicaÃ§Ã£o a este
                         especialista.
                       </p>
                     </div>
@@ -434,10 +434,12 @@ export default function PainelTecnicos() {
         )}
 
         <footer className="mt-10 border-t border-gray-200 py-5 text-center text-xs leading-5 text-gray-500">
-          AGROINOVA ANGOLA — Conhecimento, Tecnologia e Inovação ao Serviço do
+          AGROINOVA ANGOLA â€” Conhecimento, Tecnologia e InovaÃ§Ã£o ao ServiÃ§o do
           Campo Angolano.
         </footer>
       </div>
     </main>
   );
 }
+
+
