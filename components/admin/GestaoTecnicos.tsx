@@ -644,14 +644,29 @@ export default function GestaoTecnicos() {
         body: dadosFormulario,
       });
 
-      const dados = await resposta.json();
+const textoResposta = await resposta.text();
 
-      if (!resposta.ok || dados.sucesso !== true) {
-        throw new Error(
-          dados.erro || "Não foi possível guardar o técnico."
-        );
-      }
+let dados: {
+  sucesso?: boolean;
+  erro?: string;
+  detalhe?: string;
+} = {};
 
+try {
+  dados = textoResposta ? JSON.parse(textoResposta) : {};
+} catch {
+  throw new Error(
+    `Resposta inválida do servidor (HTTP ${resposta.status}): ${
+      textoResposta.slice(0, 250) || "Resposta vazia."
+    }`
+  );
+}
+
+if (!resposta.ok || dados.sucesso !== true) {
+  throw new Error(
+    dados.erro || dados.detalhe || "Não foi possível guardar o técnico."
+  );
+}
       setModalAberto(false);
       setMensagem(
         idEdicao
