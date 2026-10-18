@@ -1,10 +1,17 @@
 
 "use client";
 
-import { useCallback, useEffect, useState, type FormEvent, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  type FormEvent,
+  type CSSProperties,
+  type ChangeEvent,
+} from "react";
 
 type Separador = "eventos" | "instituicoes" | "inscricoes";
-type Entidade = "evento" | "instituicao";
+type Entidade = "evento" | "instituicao" | "inscricao";
 
 type Evento = {
   id: number | string;
@@ -121,7 +128,9 @@ export default function GestaoAgroAcademia() {
   const [formAberto, setFormAberto] = useState(false);
   const [edicaoId, setEdicaoId] = useState<number | string | null>(null);
   const [eventoForm, setEventoForm] = useState({ ...NOVO_EVENTO });
-  const [instituicaoForm, setInstituicaoForm] = useState({ ...NOVA_INSTITUICAO });
+  const [instituicaoForm, setInstituicaoForm] = useState({
+    ...NOVA_INSTITUICAO,
+  });
 
   const carregar = useCallback(async () => {
     setCarregando(true);
@@ -137,14 +146,22 @@ export default function GestaoAgroAcademia() {
       const dados = await resposta.json();
 
       if (!resposta.ok || dados.sucesso === false) {
-        throw new Error(dados.erro || "Não foi possível carregar os registos.");
+        throw new Error(
+          dados.erro || "Não foi possível carregar os registos.",
+        );
       }
 
       setEventos(Array.isArray(dados.eventos) ? dados.eventos : []);
-      setInstituicoes(Array.isArray(dados.instituicoes) ? dados.instituicoes : []);
-      setInscricoes(Array.isArray(dados.inscricoes) ? dados.inscricoes : []);
+      setInstituicoes(
+        Array.isArray(dados.instituicoes) ? dados.instituicoes : [],
+      );
+      setInscricoes(
+        Array.isArray(dados.inscricoes) ? dados.inscricoes : [],
+      );
     } catch (e) {
-      setErro(e instanceof Error ? e.message : "Erro ao carregar os dados.");
+      setErro(
+        e instanceof Error ? e.message : "Erro ao carregar os dados.",
+      );
     } finally {
       setCarregando(false);
     }
@@ -220,7 +237,9 @@ export default function GestaoAgroAcademia() {
       const resultado = await resposta.json();
 
       if (!resposta.ok || resultado.sucesso === false) {
-        throw new Error(resultado.erro || "Não foi possível guardar o registo.");
+        throw new Error(
+          resultado.erro || "Não foi possível guardar o registo.",
+        );
       }
 
       setFormAberto(false);
@@ -236,18 +255,21 @@ export default function GestaoAgroAcademia() {
 
       await carregar();
     } catch (e) {
-      setErro(e instanceof Error ? e.message : "Erro ao guardar o registo.");
+      setErro(
+        e instanceof Error ? e.message : "Erro ao guardar o registo.",
+      );
     } finally {
       setAGuardar(false);
     }
   }
 
   async function eliminar(entidade: Entidade, id: number | string) {
-    const confirmado = window.confirm(
-      "Queres eliminar este registo? Se o evento tiver inscrições, será arquivado para preservar os dados dos participantes.",
-    );
+    const mensagem =
+      entidade === "inscricao"
+        ? "Tens a certeza de que queres eliminar definitivamente esta inscrição? Esta acção não pode ser anulada."
+        : "Queres eliminar este registo? Se o evento tiver inscrições, será arquivado para preservar os dados dos participantes.";
 
-    if (!confirmado) return;
+    if (!window.confirm(mensagem)) return;
 
     setErro("");
     setSucesso("");
@@ -260,18 +282,21 @@ export default function GestaoAgroAcademia() {
         body: JSON.stringify({ entidade, id }),
       });
 
-      const dados = await resposta.json();
+      const dados = await resposta.json().catch(() => ({}));
 
       if (!resposta.ok || dados.sucesso === false) {
         throw new Error(
-          dados.erro || "Não foi possível processar o registo.",
+          dados.erro ||
+            `Não foi possível eliminar o registo. Código HTTP: ${resposta.status}.`,
         );
       }
 
       setSucesso(
         dados.arquivado
           ? "Evento arquivado. As inscrições foram preservadas."
-          : dados.mensagem || "Registo eliminado definitivamente.",
+          : entidade === "inscricao"
+            ? "Inscrição eliminada com sucesso."
+            : dados.mensagem || "Registo eliminado com sucesso.",
       );
 
       await carregar();
@@ -279,7 +304,7 @@ export default function GestaoAgroAcademia() {
       setErro(
         e instanceof Error
           ? e.message
-          : "Ocorreu um erro ao processar o registo.",
+          : "Ocorreu um erro ao eliminar o registo.",
       );
     }
   }
@@ -305,7 +330,9 @@ export default function GestaoAgroAcademia() {
       const dados = await resposta.json();
 
       if (!resposta.ok || dados.sucesso === false) {
-        throw new Error(dados.erro || "Não foi possível arquivar o registo.");
+        throw new Error(
+          dados.erro || "Não foi possível arquivar o registo.",
+        );
       }
 
       setSucesso(dados.mensagem || "Registo arquivado com sucesso.");
@@ -334,20 +361,24 @@ export default function GestaoAgroAcademia() {
       const dados = await resposta.json();
 
       if (!resposta.ok || dados.sucesso === false) {
-        throw new Error(dados.erro || "Não foi possível actualizar a inscrição.");
+        throw new Error(
+          dados.erro || "Não foi possível actualizar a inscrição.",
+        );
       }
 
       setSucesso("Estado da inscrição actualizado.");
       await carregar();
     } catch (e) {
-      setErro(e instanceof Error ? e.message : "Erro ao actualizar inscrição.");
+      setErro(
+        e instanceof Error ? e.message : "Erro ao actualizar inscrição.",
+      );
     }
   }
 
   const filtro = (texto: string) =>
-    texto.toLocaleLowerCase("pt-PT").includes(
-      pesquisa.trim().toLocaleLowerCase("pt-PT"),
-    );
+    texto
+      .toLocaleLowerCase("pt-PT")
+      .includes(pesquisa.trim().toLocaleLowerCase("pt-PT"));
 
   const eventosFiltrados = eventos.filter(
     (item) =>
@@ -389,8 +420,8 @@ export default function GestaoAgroAcademia() {
   };
 
   async function carregarImagem(
-    e: React.ChangeEvent<HTMLInputElement>,
-    entidade: Entidade,
+    e: ChangeEvent<HTMLInputElement>,
+    entidade: "evento" | "instituicao",
   ) {
     const input = e.currentTarget;
     const ficheiro = input.files?.[0];
@@ -432,19 +463,29 @@ export default function GestaoAgroAcademia() {
       const resultado = await resposta.json();
 
       if (!resposta.ok || !resultado.url) {
-        throw new Error(resultado.erro || "Falha no carregamento da imagem.");
+        throw new Error(
+          resultado.erro || "Falha no carregamento da imagem.",
+        );
       }
 
       if (entidade === "evento") {
-        setEventoForm((prev) => ({ ...prev, imagem: resultado.url }));
+        setEventoForm((prev) => ({
+          ...prev,
+          imagem: resultado.url,
+        }));
       } else {
-        setInstituicaoForm((prev) => ({ ...prev, imagem: resultado.url }));
+        setInstituicaoForm((prev) => ({
+          ...prev,
+          imagem: resultado.url,
+        }));
       }
 
       setSucesso("Imagem carregada com sucesso.");
     } catch (e) {
       setErro(
-        e instanceof Error ? e.message : "Falha no carregamento da imagem.",
+        e instanceof Error
+          ? e.message
+          : "Falha no carregamento da imagem.",
       );
     } finally {
       input.value = "";
@@ -462,15 +503,24 @@ export default function GestaoAgroAcademia() {
           boxShadow: "0 12px 30px rgba(20,83,45,.16)",
         }}
       >
-        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2, opacity: 0.85 }}>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 800,
+            letterSpacing: 2,
+            opacity: 0.85,
+          }}
+        >
           AGROINOVA ANGOLA · FORMAÇÃO E CONHECIMENTO
         </div>
+
         <h2 style={{ fontSize: 25, fontWeight: 800, margin: "10px 0" }}>
           Gestão da AgroAcademia
         </h2>
+
         <p style={{ margin: 0, maxWidth: 680, lineHeight: 1.7, fontSize: 14 }}>
-          Organize cursos, palestras, workshops, instituições parceiras e inscrições
-          numa única área administrativa.
+          Organize cursos, palestras, workshops, instituições parceiras e
+          inscrições numa única área administrativa.
         </p>
       </div>
 
@@ -482,9 +532,21 @@ export default function GestaoAgroAcademia() {
         }}
       >
         {[
-          { titulo: "Eventos", total: eventos.length, detalhe: "Formações registadas" },
-          { titulo: "Instituições", total: instituicoes.length, detalhe: "Entidades registadas" },
-          { titulo: "Inscrições", total: inscricoes.length, detalhe: "Participantes registados" },
+          {
+            titulo: "Eventos",
+            total: eventos.length,
+            detalhe: "Formações registadas",
+          },
+          {
+            titulo: "Instituições",
+            total: instituicoes.length,
+            detalhe: "Entidades registadas",
+          },
+          {
+            titulo: "Inscrições",
+            total: inscricoes.length,
+            detalhe: "Participantes registados",
+          },
         ].map((item) => (
           <div
             key={item.titulo}
@@ -495,12 +557,27 @@ export default function GestaoAgroAcademia() {
               background: "#fff",
             }}
           >
-            <div style={{ fontSize: 12, color: ESTILO.secundario, fontWeight: 700 }}>
+            <div
+              style={{
+                fontSize: 12,
+                color: ESTILO.secundario,
+                fontWeight: 700,
+              }}
+            >
               {item.titulo}
             </div>
-            <div style={{ fontSize: 30, fontWeight: 800, color: ESTILO.verde, margin: "7px 0" }}>
+
+            <div
+              style={{
+                fontSize: 30,
+                fontWeight: 800,
+                color: ESTILO.verde,
+                margin: "7px 0",
+              }}
+            >
               {item.total}
             </div>
+
             <div style={{ fontSize: 12, color: ESTILO.secundario }}>
               {item.detalhe}
             </div>
@@ -509,11 +586,13 @@ export default function GestaoAgroAcademia() {
       </div>
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {([
-          ["eventos", "Eventos"],
-          ["instituicoes", "Instituições"],
-          ["inscricoes", "Inscrições"],
-        ] as [Separador, string][]).map(([valor, titulo]) => (
+        {(
+          [
+            ["eventos", "Eventos"],
+            ["instituicoes", "Instituições"],
+            ["inscricoes", "Inscrições"],
+          ] as [Separador, string][]
+        ).map(([valor, titulo]) => (
           <button
             key={valor}
             type="button"
@@ -528,7 +607,8 @@ export default function GestaoAgroAcademia() {
               ...botao,
               background: separador === valor ? ESTILO.verde : "#fff",
               color: separador === valor ? "#fff" : ESTILO.escuro,
-              borderColor: separador === valor ? ESTILO.verde : ESTILO.borda,
+              borderColor:
+                separador === valor ? ESTILO.verde : ESTILO.borda,
             }}
           >
             {titulo}
@@ -545,7 +625,11 @@ export default function GestaoAgroAcademia() {
         </button>
 
         {separador !== "inscricoes" && (
-          <button type="button" style={botaoPrincipal} onClick={novoRegisto}>
+          <button
+            type="button"
+            style={botaoPrincipal}
+            onClick={novoRegisto}
+          >
             + Novo registo
           </button>
         )}
@@ -610,7 +694,8 @@ export default function GestaoAgroAcademia() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                  gridTemplateColumns:
+                    "repeat(auto-fit, minmax(220px, 1fr))",
                   gap: 14,
                 }}
               >
@@ -622,7 +707,10 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={eventoForm.titulo}
                     onChange={(e) =>
-                      setEventoForm({ ...eventoForm, titulo: e.target.value })
+                      setEventoForm({
+                        ...eventoForm,
+                        titulo: e.target.value,
+                      })
                     }
                   />
                 </label>
@@ -633,10 +721,21 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={eventoForm.tipo}
                     onChange={(e) =>
-                      setEventoForm({ ...eventoForm, tipo: e.target.value })
+                      setEventoForm({
+                        ...eventoForm,
+                        tipo: e.target.value,
+                      })
                     }
                   >
-                    {["Curso", "Palestra", "Workshop", "Fórum", "Congresso", "Dia de campo", "Webinar"].map((v) => (
+                    {[
+                      "Curso",
+                      "Palestra",
+                      "Workshop",
+                      "Fórum",
+                      "Congresso",
+                      "Dia de campo",
+                      "Webinar",
+                    ].map((v) => (
                       <option key={v}>{v}</option>
                     ))}
                   </select>
@@ -648,7 +747,10 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={eventoForm.area || ""}
                     onChange={(e) =>
-                      setEventoForm({ ...eventoForm, area: e.target.value })
+                      setEventoForm({
+                        ...eventoForm,
+                        area: e.target.value,
+                      })
                     }
                   />
                 </label>
@@ -659,7 +761,10 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={eventoForm.modalidade || "Online"}
                     onChange={(e) =>
-                      setEventoForm({ ...eventoForm, modalidade: e.target.value })
+                      setEventoForm({
+                        ...eventoForm,
+                        modalidade: e.target.value,
+                      })
                     }
                   >
                     {["Online", "Presencial", "Híbrido"].map((v) => (
@@ -675,7 +780,10 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={eventoForm.data_evento || ""}
                     onChange={(e) =>
-                      setEventoForm({ ...eventoForm, data_evento: e.target.value })
+                      setEventoForm({
+                        ...eventoForm,
+                        data_evento: e.target.value,
+                      })
                     }
                   />
                 </label>
@@ -686,7 +794,10 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={eventoForm.duracao || ""}
                     onChange={(e) =>
-                      setEventoForm({ ...eventoForm, duracao: e.target.value })
+                      setEventoForm({
+                        ...eventoForm,
+                        duracao: e.target.value,
+                      })
                     }
                     placeholder="Ex.: 2 dias ou 4 horas"
                   />
@@ -698,7 +809,10 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={eventoForm.nivel || ""}
                     onChange={(e) =>
-                      setEventoForm({ ...eventoForm, nivel: e.target.value })
+                      setEventoForm({
+                        ...eventoForm,
+                        nivel: e.target.value,
+                      })
                     }
                   />
                 </label>
@@ -723,20 +837,26 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={eventoForm.local_evento || ""}
                     onChange={(e) =>
-                      setEventoForm({ ...eventoForm, local_evento: e.target.value })
+                      setEventoForm({
+                        ...eventoForm,
+                        local_evento: e.target.value,
+                      })
                     }
                     placeholder="Local ou informação de acesso"
                   />
                 </label>
 
                 <label>
-                  <span style={rotulo}>Imagem do evento (seleccionar do PC)</span>
+                  <span style={rotulo}>
+                    Imagem do evento (seleccionar do PC)
+                  </span>
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
                     style={campo}
                     onChange={(e) => void carregarImagem(e, "evento")}
                   />
+
                   {eventoForm.imagem && (
                     <img
                       src={eventoForm.imagem}
@@ -758,7 +878,10 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={eventoForm.estado}
                     onChange={(e) =>
-                      setEventoForm({ ...eventoForm, estado: e.target.value })
+                      setEventoForm({
+                        ...eventoForm,
+                        estado: e.target.value,
+                      })
                     }
                   >
                     <option value="rascunho">Rascunho</option>
@@ -774,7 +897,10 @@ export default function GestaoAgroAcademia() {
                   style={campo}
                   value={eventoForm.resumo || ""}
                   onChange={(e) =>
-                    setEventoForm({ ...eventoForm, resumo: e.target.value })
+                    setEventoForm({
+                      ...eventoForm,
+                      resumo: e.target.value,
+                    })
                   }
                 />
               </label>
@@ -792,7 +918,10 @@ export default function GestaoAgroAcademia() {
                   type="checkbox"
                   checked={Boolean(eventoForm.destaque)}
                   onChange={(e) =>
-                    setEventoForm({ ...eventoForm, destaque: e.target.checked })
+                    setEventoForm({
+                      ...eventoForm,
+                      destaque: e.target.checked,
+                    })
                   }
                 />
                 Destacar este evento na página pública
@@ -803,7 +932,8 @@ export default function GestaoAgroAcademia() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                  gridTemplateColumns:
+                    "repeat(auto-fit, minmax(220px, 1fr))",
                   gap: 14,
                 }}
               >
@@ -815,7 +945,10 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={instituicaoForm.nome}
                     onChange={(e) =>
-                      setInstituicaoForm({ ...instituicaoForm, nome: e.target.value })
+                      setInstituicaoForm({
+                        ...instituicaoForm,
+                        nome: e.target.value,
+                      })
                     }
                   />
                 </label>
@@ -826,7 +959,10 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={instituicaoForm.sigla || ""}
                     onChange={(e) =>
-                      setInstituicaoForm({ ...instituicaoForm, sigla: e.target.value })
+                      setInstituicaoForm({
+                        ...instituicaoForm,
+                        sigla: e.target.value,
+                      })
                     }
                   />
                 </label>
@@ -851,10 +987,19 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={instituicaoForm.tipo || "Pública"}
                     onChange={(e) =>
-                      setInstituicaoForm({ ...instituicaoForm, tipo: e.target.value })
+                      setInstituicaoForm({
+                        ...instituicaoForm,
+                        tipo: e.target.value,
+                      })
                     }
                   >
-                    {["Pública", "Privada", "Centro de investigação", "Organização", "Outra"].map((v) => (
+                    {[
+                      "Pública",
+                      "Privada",
+                      "Centro de investigação",
+                      "Organização",
+                      "Outra",
+                    ].map((v) => (
                       <option key={v}>{v}</option>
                     ))}
                   </select>
@@ -867,20 +1012,28 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={instituicaoForm.url || ""}
                     onChange={(e) =>
-                      setInstituicaoForm({ ...instituicaoForm, url: e.target.value })
+                      setInstituicaoForm({
+                        ...instituicaoForm,
+                        url: e.target.value,
+                      })
                     }
                     placeholder="https://..."
                   />
                 </label>
 
                 <label>
-                  <span style={rotulo}>Imagem da instituição (seleccionar do PC)</span>
+                  <span style={rotulo}>
+                    Imagem da instituição (seleccionar do PC)
+                  </span>
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
                     style={campo}
-                    onChange={(e) => void carregarImagem(e, "instituicao")}
+                    onChange={(e) =>
+                      void carregarImagem(e, "instituicao")
+                    }
                   />
+
                   {instituicaoForm.imagem && (
                     <img
                       src={instituicaoForm.imagem}
@@ -902,7 +1055,10 @@ export default function GestaoAgroAcademia() {
                     style={campo}
                     value={instituicaoForm.estado}
                     onChange={(e) =>
-                      setInstituicaoForm({ ...instituicaoForm, estado: e.target.value })
+                      setInstituicaoForm({
+                        ...instituicaoForm,
+                        estado: e.target.value,
+                      })
                     }
                   >
                     <option value="rascunho">Rascunho</option>
@@ -918,7 +1074,10 @@ export default function GestaoAgroAcademia() {
                   style={campo}
                   value={instituicaoForm.foco || ""}
                   onChange={(e) =>
-                    setInstituicaoForm({ ...instituicaoForm, foco: e.target.value })
+                    setInstituicaoForm({
+                      ...instituicaoForm,
+                      foco: e.target.value,
+                    })
                   }
                 />
               </label>
@@ -929,7 +1088,10 @@ export default function GestaoAgroAcademia() {
             <button
               type="submit"
               disabled={aGuardar}
-              style={{ ...botaoPrincipal, opacity: aGuardar ? 0.6 : 1 }}
+              style={{
+                ...botaoPrincipal,
+                opacity: aGuardar ? 0.6 : 1,
+              }}
             >
               {aGuardar
                 ? "A guardar..."
@@ -953,7 +1115,13 @@ export default function GestaoAgroAcademia() {
       )}
 
       {carregando ? (
-        <div style={{ padding: 30, textAlign: "center", color: ESTILO.secundario }}>
+        <div
+          style={{
+            padding: 30,
+            textAlign: "center",
+            color: ESTILO.secundario,
+          }}
+        >
           A carregar dados da base de dados...
         </div>
       ) : separador === "eventos" ? (
@@ -970,7 +1138,8 @@ export default function GestaoAgroAcademia() {
             >
               <strong>Não existem eventos para apresentar.</strong>
               <p style={{ color: ESTILO.secundario, fontSize: 13 }}>
-                Cria um curso, workshop ou palestra para começar a preencher a AgroAcademia.
+                Cria um curso, workshop ou palestra para começar a preencher
+                a AgroAcademia.
               </p>
             </div>
           ) : (
@@ -1010,36 +1179,79 @@ export default function GestaoAgroAcademia() {
                     >
                       {item.tipo}
                     </span>
-                    <span style={{ fontSize: 11, color: ESTILO.secundario }}>
+
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: ESTILO.secundario,
+                      }}
+                    >
                       {item.estado}
                     </span>
+
                     {item.destaque && (
-                      <span style={{ fontSize: 11, color: "#92400e", fontWeight: 800 }}>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          color: "#92400e",
+                          fontWeight: 800,
+                        }}
+                      >
                         Em destaque
                       </span>
                     )}
                   </div>
 
-                  <h3 style={{ fontWeight: 800, fontSize: 16, margin: "0 0 6px" }}>
+                  <h3
+                    style={{
+                      fontWeight: 800,
+                      fontSize: 16,
+                      margin: "0 0 6px",
+                    }}
+                  >
                     {item.titulo}
                   </h3>
 
-                  <p style={{ color: ESTILO.secundario, fontSize: 13, margin: 0 }}>
-                    {item.area || "Área geral"} · {item.modalidade || "Modalidade não indicada"}
+                  <p
+                    style={{
+                      color: ESTILO.secundario,
+                      fontSize: 13,
+                      margin: 0,
+                    }}
+                  >
+                    {item.area || "Área geral"} ·{" "}
+                    {item.modalidade || "Modalidade não indicada"}
                     {item.data_evento
                       ? ` · ${new Date(item.data_evento).toLocaleString("pt-PT")}`
                       : ""}
                   </p>
 
                   {item.resumo && (
-                    <p style={{ fontSize: 13, lineHeight: 1.6, margin: "8px 0 0" }}>
+                    <p
+                      style={{
+                        fontSize: 13,
+                        lineHeight: 1.6,
+                        margin: "8px 0 0",
+                      }}
+                    >
                       {item.resumo}
                     </p>
                   )}
                 </div>
 
-                <div style={{ display: "flex", gap: 7, flexWrap: "wrap", justifyContent: "flex-end" }}>
-                  <button type="button" style={botao} onClick={() => editarEvento(item)}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 7,
+                    flexWrap: "wrap",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <button
+                    type="button"
+                    style={botao}
+                    onClick={() => editarEvento(item)}
+                  >
                     Editar
                   </button>
 
@@ -1055,7 +1267,11 @@ export default function GestaoAgroAcademia() {
 
                   <button
                     type="button"
-                    style={{ ...botao, color: "#b91c1c", borderColor: "#fecaca" }}
+                    style={{
+                      ...botao,
+                      color: "#b91c1c",
+                      borderColor: "#fecaca",
+                    }}
                     onClick={() => void eliminar("evento", item.id)}
                   >
                     Eliminar
@@ -1079,7 +1295,8 @@ export default function GestaoAgroAcademia() {
             >
               <strong>Não existem instituições para apresentar.</strong>
               <p style={{ color: ESTILO.secundario, fontSize: 13 }}>
-                Adiciona universidades, centros de investigação e entidades formadoras.
+                Adiciona universidades, centros de investigação e entidades
+                formadoras.
               </p>
             </div>
           ) : (
@@ -1098,20 +1315,41 @@ export default function GestaoAgroAcademia() {
                 }}
               >
                 <div>
-                  <div style={{ fontSize: 11, color: ESTILO.verde, fontWeight: 800 }}>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: ESTILO.verde,
+                      fontWeight: 800,
+                    }}
+                  >
                     {item.sigla || item.tipo || "Instituição"}
                   </div>
 
-                  <h3 style={{ fontWeight: 800, fontSize: 16, margin: "6px 0" }}>
+                  <h3
+                    style={{
+                      fontWeight: 800,
+                      fontSize: 16,
+                      margin: "6px 0",
+                    }}
+                  >
                     {item.nome}
                   </h3>
 
-                  <p style={{ color: ESTILO.secundario, fontSize: 13, margin: 0 }}>
-                    {item.provincia || "Província não indicada"} · {item.estado}
+                  <p
+                    style={{
+                      color: ESTILO.secundario,
+                      fontSize: 13,
+                      margin: 0,
+                    }}
+                  >
+                    {item.provincia || "Província não indicada"} ·{" "}
+                    {item.estado}
                   </p>
 
                   {item.foco && (
-                    <p style={{ fontSize: 13, margin: "8px 0 0" }}>{item.foco}</p>
+                    <p style={{ fontSize: 13, margin: "8px 0 0" }}>
+                      {item.foco}
+                    </p>
                   )}
 
                   {item.url && (
@@ -1132,7 +1370,13 @@ export default function GestaoAgroAcademia() {
                   )}
                 </div>
 
-                <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 7,
+                    flexWrap: "wrap",
+                  }}
+                >
                   <button
                     type="button"
                     style={botao}
@@ -1145,7 +1389,9 @@ export default function GestaoAgroAcademia() {
                     <button
                       type="button"
                       style={{ ...botao, color: "#b91c1c" }}
-                      onClick={() => void arquivar("instituicao", item.id)}
+                      onClick={() =>
+                        void arquivar("instituicao", item.id)
+                      }
                     >
                       Arquivar
                     </button>
@@ -1153,8 +1399,14 @@ export default function GestaoAgroAcademia() {
 
                   <button
                     type="button"
-                    style={{ ...botao, color: "#b91c1c", borderColor: "#fecaca" }}
-                    onClick={() => void eliminar("instituicao", item.id)}
+                    style={{
+                      ...botao,
+                      color: "#b91c1c",
+                      borderColor: "#fecaca",
+                    }}
+                    onClick={() =>
+                      void eliminar("instituicao", item.id)
+                    }
                   >
                     Eliminar
                   </button>
@@ -1180,11 +1432,29 @@ export default function GestaoAgroAcademia() {
               </p>
             </div>
           ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 750 }}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: 13,
+                minWidth: 750,
+              }}
+            >
               <thead>
                 <tr style={{ background: ESTILO.fundo, textAlign: "left" }}>
-                  {["Participante", "Contacto", "Evento (ID)", "Perfil", "Plataforma", "Estado", "Acção"].map((titulo) => (
-                    <th key={titulo} style={{ padding: 13, color: ESTILO.escuro }}>
+                  {[
+                    "Participante",
+                    "Contacto",
+                    "Evento (ID)",
+                    "Perfil",
+                    "Plataforma",
+                    "Estado",
+                    "Acção",
+                  ].map((titulo) => (
+                    <th
+                      key={titulo}
+                      style={{ padding: 13, color: ESTILO.escuro }}
+                    >
                       {titulo}
                     </th>
                   ))}
@@ -1193,10 +1463,18 @@ export default function GestaoAgroAcademia() {
 
               <tbody>
                 {inscricoesFiltradas.map((item) => (
-                  <tr key={item.id} style={{ borderTop: `1px solid ${ESTILO.borda}` }}>
+                  <tr
+                    key={item.id}
+                    style={{ borderTop: `1px solid ${ESTILO.borda}` }}
+                  >
                     <td style={{ padding: 13 }}>
                       <strong>{item.nome}</strong>
-                      <div style={{ color: ESTILO.secundario, fontSize: 11 }}>
+                      <div
+                        style={{
+                          color: ESTILO.secundario,
+                          fontSize: 11,
+                        }}
+                      >
                         {item.provincia || "Província não indicada"}
                       </div>
                     </td>
@@ -1212,16 +1490,42 @@ export default function GestaoAgroAcademia() {
                     <td style={{ padding: 13 }}>{item.estado}</td>
 
                     <td style={{ padding: 13 }}>
-                      <select
-                        aria-label={`Estado da inscrição de ${item.nome}`}
-                        style={{ ...campo, minWidth: 130 }}
-                        value={item.estado}
-                        onChange={(e) => void alterarInscricao(item, e.target.value)}
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 8,
+                          minWidth: 145,
+                        }}
                       >
-                        <option value="pendente">Pendente</option>
-                        <option value="confirmada">Confirmada</option>
-                        <option value="rejeitada">Rejeitada</option>
-                      </select>
+                        <select
+                          aria-label={`Estado da inscrição de ${item.nome}`}
+                          style={{ ...campo, minWidth: 130 }}
+                          value={item.estado}
+                          onChange={(e) =>
+                            void alterarInscricao(item, e.target.value)
+                          }
+                        >
+                          <option value="pendente">Pendente</option>
+                          <option value="confirmada">Confirmada</option>
+                          <option value="rejeitada">Rejeitada</option>
+                        </select>
+
+                        <button
+                          type="button"
+                          style={{
+                            ...botao,
+                            color: "#b91c1c",
+                            borderColor: "#fecaca",
+                            background: "#fff",
+                          }}
+                          onClick={() =>
+                            void eliminar("inscricao", item.id)
+                          }
+                        >
+                          Eliminar inscrição
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

@@ -55,6 +55,10 @@ function respostaErro(mensagem: string, status: number) {
   );
 }
 
+function semCache() {
+  return { "Cache-Control": "no-store" };
+}
+
 function filtrarDados(entidade: Entidade, dados: Dados): Dados {
   const resultado: Dados = {};
 
@@ -178,14 +182,10 @@ function obterId(valor: unknown): string | null {
   return null;
 }
 
-function semCache() {
-  return { "Cache-Control": "no-store" };
-}
-
 /**
  * GET
- * Devolve os eventos ativos e os arquivados separadamente.
- * A propriedade "eventos" contém apenas os que não estão arquivados.
+ * Devolve eventos ativos, eventos arquivados,
+ * instituições e inscrições.
  */
 export async function GET() {
   try {
@@ -454,9 +454,9 @@ export async function PATCH(request: Request) {
 
 /**
  * DELETE
- * Elimina definitivamente quando não existem inscrições.
- * Se existirem inscrições, arquiva o evento para preservar o histórico.
- * Os eventos arquivados deixam de aparecer na lista ativa devolvida pelo GET.
+ * Elimina inscrições individualmente.
+ * Eventos com inscrições associadas são arquivados para preservar
+ * o histórico e evitar a eliminação acidental dos inscritos.
  */
 export async function DELETE(request: Request) {
   try {
@@ -464,7 +464,16 @@ export async function DELETE(request: Request) {
       return respostaErro("Acesso nao autorizado.", 401);
     }
 
-    const corpo: unknown = await request.json().catch(() => null);
+    let corpo: unknown;
+
+    try {
+      corpo = await request.json();
+    } catch {
+      return respostaErro(
+        "O corpo do pedido nao contem JSON valido.",
+        400
+      );
+    }
 
     if (
       !corpo ||
@@ -479,13 +488,21 @@ export async function DELETE(request: Request) {
     const id = obterId(pedido.id);
 
     if (
-      (entidade !== "evento" && entidade !== "instituicao") ||
+      !entidade ||
       !id
     ) {
       return respostaErro(
         "A entidade ou o identificador sao invalidos.",
         400
       );
+    }
+
+    if (
+      entidade !== "evento" &&
+      entidade !== "instituicao" &&
+      entidade !== "inscricao"
+    ) {
+      return respostaErro("Entidade nao permitida.", 400);
     }
 
     const supabase = obterSupabaseAdmin();
@@ -550,7 +567,7 @@ export async function DELETE(request: Request) {
           );
 
           return respostaErro(
-            "O evento tem inscricoes associadas e nao foi possivel arquiva-lo.",
+            "Existem inscricoes associadas e nao foi possivel arquivar o evento.",
             500
           );
         }
@@ -567,7 +584,7 @@ export async function DELETE(request: Request) {
             sucesso: true,
             arquivado: true,
             mensagem:
-              "O evento foi retirado da lista ativa. As inscricoes foram preservadas e o evento ficou arquivado.",
+              "Evento arquivado. As inscricoes foram preservadas.",
           },
           { headers: semCache() }
         );
@@ -583,25 +600,31 @@ export async function DELETE(request: Request) {
 
     if (error) {
       console.error(
-        "Erro ao eliminar registo:",
+        `Erro ao eliminar ${entidade}:`,
         error.message
       );
 
       return respostaErro(
-        "Nao foi possivel eliminar o registo. Verifica se existem dados associados.",
+        `Nao foi possivel eliminar o registo. ${error.message}`,
         500
       );
     }
 
     if (!data) {
-      return respostaErro("O registo nao foi encontrado.", 404);
+      return respostaErro(
+        "O registo nao foi encontrado ou nao foi eliminado.",
+        404
+      );
     }
 
     return NextResponse.json(
       {
         sucesso: true,
         eliminado: true,
-        mensagem: "Registo eliminado definitivamente.",
+        mensagem:
+          entidade === "inscricao"
+            ? "Inscrito eliminado com sucesso."
+            : "Registo eliminado definitivamente.",
       },
       { headers: semCache() }
     );

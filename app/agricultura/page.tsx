@@ -307,7 +307,7 @@ export default function AgriculturaPage() {
             </h1>
 
             <p className="mt-6 max-w-2xl text-base leading-8 text-emerald-50 sm:text-lg">
-              Explore culturas agrícolas, consulte informação técnica e
+              Explore culturas agrícolas, consulte informações técnicas e
               descubra conteúdos de apoio à produção vegetal, adaptados à
               diversidade dos sistemas agrícolas angolanos.
             </p>

@@ -45,14 +45,10 @@ function urlValida(valor: string): boolean {
   }
 }
 
-
 function dataLegivel(noticia: Noticia): string {
   const dataOriginal = noticia.date?.trim();
 
-  // Tenta primeiro utilizar a data original.
   if (dataOriginal) {
-    // Reconhece datas ISO, como 2026-10-15 ou
-    // 2026-10-15T10:30:00Z.
     const dataISO = dataOriginal.match(
       /^(\d{4})-(\d{2})-(\d{2})(?:$|T|\s)/
     );
@@ -61,7 +57,6 @@ function dataLegivel(noticia: Noticia): string {
       const ano = Number(dataISO[1]);
       const mes = Number(dataISO[2]);
       const dia = Number(dataISO[3]);
-
       const data = new Date(ano, mes - 1, dia);
 
       if (
@@ -79,7 +74,6 @@ function dataLegivel(noticia: Noticia): string {
       }
     }
 
-    // Reconhece datas em formato DD/MM/AAAA.
     const dataPT = dataOriginal.match(
       /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
     );
@@ -88,7 +82,6 @@ function dataLegivel(noticia: Noticia): string {
       const dia = Number(dataPT[1]);
       const mes = Number(dataPT[2]);
       const ano = Number(dataPT[3]);
-
       const data = new Date(ano, mes - 1, dia);
 
       if (
@@ -107,11 +100,9 @@ function dataLegivel(noticia: Noticia): string {
     }
   }
 
-  // Só utiliza o timestamp se estiver num intervalo plausível.
   const timestamp = Number(noticia.timestamp);
 
   if (Number.isFinite(timestamp) && timestamp > 0) {
-    // Aceita segundos ou milissegundos.
     const milissegundos =
       timestamp < 100000000000 ? timestamp * 1000 : timestamp;
 
@@ -153,37 +144,41 @@ export default function NoticiasPage() {
       });
 
       if (!resposta.ok) {
-        throw new Error(`Não foi possível carregar as notícias (${resposta.status}).`);
+        throw new Error(
+          `Não foi possível carregar as notícias (${resposta.status}).`
+        );
       }
 
       const dados = (await resposta.json()) as Resposta;
 
-      const lista = (dados.noticias ?? []).map((item: any) => ({
-        ...item,
-        id: String(item.id ?? item.slug ?? ""),
-        category: item.category ?? item.categoria ?? "Geral",
-        title: item.title ?? item.titulo ?? "Notícia sem título",
-        summary: item.summary ?? item.resumo ?? item.excerpt ?? "",
-        content:
-          item.content ??
-          item.conteudo ??
-          item.corpo ??
-          item.texto ??
-          item.body ??
-          "",
-        date: item.date ?? item.data ?? item.created_at ?? "",
-        timestamp: Number(item.timestamp ?? 0),
-        source: item.source ?? item.fonte ?? "AGROINOVA ANGOLA",
-        location: item.location ?? item.localizacao ?? "",
-        image:
-          item.image ??
-          item.imagem ??
-          item.image_url ??
-          item.imagem_url ??
-          item.fotografia ??
-          "",
-        url: item.url ?? item.link ?? "",
-      }));
+      const lista: Noticia[] = (dados.noticias ?? []).map(
+        (item: any) => ({
+          ...item,
+          id: String(item.id ?? item.slug ?? ""),
+          category: item.category ?? item.categoria ?? "Geral",
+          title: item.title ?? item.titulo ?? "Notícia sem título",
+          summary: item.summary ?? item.resumo ?? item.excerpt ?? "",
+          content:
+            item.content ??
+            item.conteudo ??
+            item.corpo ??
+            item.texto ??
+            item.body ??
+            "",
+          date: item.date ?? item.data ?? item.created_at ?? "",
+          timestamp: Number(item.timestamp ?? 0),
+          source: item.source ?? item.fonte ?? "AGROINOVA ANGOLA",
+          location: item.location ?? item.localizacao ?? "",
+          image:
+            item.image ??
+            item.imagem ??
+            item.image_url ??
+            item.imagem_url ??
+            item.fotografia ??
+            "",
+          url: item.url ?? item.link ?? "",
+        })
+      );
 
       setNoticias(lista);
       setErro(dados.erroPublicacoesProprias ?? "");
@@ -202,9 +197,7 @@ export default function NoticiasPage() {
     void carregarNoticias();
   }, [carregarNoticias]);
 
-  const destaques = useMemo(() => {
-    return noticias.slice(0, 5);
-  }, [noticias]);
+  const destaques = useMemo(() => noticias.slice(0, 5), [noticias]);
 
   useEffect(() => {
     if (destaques.length < 2) return;
@@ -228,6 +221,7 @@ export default function NoticiasPage() {
     };
 
     window.addEventListener("keydown", fecharComEscape);
+
     return () => window.removeEventListener("keydown", fecharComEscape);
   }, [noticiaAberta]);
 
@@ -261,48 +255,70 @@ export default function NoticiasPage() {
     <main className="min-h-screen bg-[#f5f7f6] text-[#17221b]">
       <style jsx global>{`
         .noticias-card {
-          transition: transform .25s ease, box-shadow .25s ease;
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
+
         .noticias-card:hover {
           transform: translateY(-5px);
-          box-shadow: 0 18px 38px rgba(20,83,45,.12);
+          box-shadow: 0 18px 38px rgba(20, 83, 45, 0.12);
         }
+
         .noticias-card img {
-          transition: transform .5s ease;
+          transition: none;
         }
+
         .noticias-card:hover img {
-          transform: scale(1.045);
+          transform: none;
         }
+
         .noticias-imagem {
-          background: linear-gradient(135deg,#d9f5df,#eff8e9,#b8e5c4);
+          background: linear-gradient(135deg, #d9f5df, #eff8e9, #b8e5c4);
         }
+
         .noticias-hero {
           background: #103c26;
         }
+
         .noticias-hero-img {
-          animation: noticias-entrada .6s ease;
+          animation: noticias-entrada 0.6s ease;
         }
+
         @keyframes noticias-entrada {
-          from { opacity: .45; transform: scale(1.025); }
-          to { opacity: 1; transform: scale(1); }
+          from {
+            opacity: 0.45;
+          }
+          to {
+            opacity: 1;
+          }
         }
+
         .noticias-modal {
-          animation: noticias-modal-entrada .2s ease-out;
+          animation: noticias-modal-entrada 0.2s ease-out;
         }
+
         @keyframes noticias-modal-entrada {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
+
       <section className="mx-auto max-w-7xl px-5 pb-8 pt-10 md:px-10 md:pt-14">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
           <div>
             <div className="text-xs font-extrabold uppercase tracking-[.2em] text-green-700">
               Informação e actualidade
             </div>
+
             <h1 className="mt-3 text-4xl font-black tracking-tight text-[#17221b] md:text-5xl">
               Notícias do campo<span className="text-green-600">.</span>
             </h1>
+
             <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 md:text-base">
               Acompanhe as iniciativas, descobertas, políticas e tecnologias
               que contribuem para o desenvolvimento agropecuário de Angola.
@@ -319,7 +335,7 @@ export default function NoticiasPage() {
           </button>
         </div>
 
-        {/* Carrossel de notícias reais */}
+        {/* Destaque principal: fotografia sem cortes */}
         {destaque && (
           <section className="noticias-hero relative isolate min-h-[390px] overflow-hidden rounded-[26px] shadow-xl md:min-h-[440px]">
             {destaque.image && (
@@ -327,7 +343,7 @@ export default function NoticiasPage() {
                 key={`${destaque.id}-${destaque.image}`}
                 src={destaque.image}
                 alt={destaque.title}
-                className="noticias-hero-img absolute inset-0 h-full w-full object-cover"
+                className="noticias-hero-img absolute inset-0 h-full w-full object-contain"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
                 }}
@@ -368,14 +384,16 @@ export default function NoticiasPage() {
             {destaques.length > 1 && (
               <div className="absolute bottom-5 right-6 flex gap-2 md:bottom-7 md:right-8">
                 {destaques.map((n, i) => (
-  <button
-    key={`${n.id}-${i}`}
+                  <button
+                    key={`${n.id}-${i}`}
                     type="button"
                     aria-label={`Ver notícia em destaque ${i + 1}`}
                     aria-pressed={slide === i}
                     onClick={() => setSlide(i)}
                     className={`h-2.5 rounded-full transition-all ${
-                      slide === i ? "w-8 bg-green-400" : "w-2.5 bg-white/60"
+                      slide === i
+                        ? "w-8 bg-green-400"
+                        : "w-2.5 bg-white/60"
                     }`}
                   />
                 ))}
@@ -404,9 +422,11 @@ export default function NoticiasPage() {
             <div className="text-xs font-extrabold uppercase tracking-[.18em] text-green-700">
               Fique informado
             </div>
+
             <h2 className="mt-2 text-2xl font-black tracking-tight md:text-3xl">
               Últimas publicações
             </h2>
+
             <p className="mt-2 text-sm text-slate-500">
               {filtradas.length} publicação(ões) encontrada(s)
             </p>
@@ -469,11 +489,13 @@ export default function NoticiasPage() {
                 ? "Ainda não há notícias disponíveis"
                 : "Nenhuma notícia encontrada"}
             </h3>
+
             <p className="mx-auto mt-3 max-w-lg text-sm leading-7 text-slate-500">
               {noticias.length === 0
                 ? "As notícias publicadas e disponibilizadas pela API aparecerão aqui."
                 : "Experimenta outra pesquisa ou selecciona uma categoria diferente."}
             </p>
+
             {noticias.length > 0 && (
               <button
                 type="button"
@@ -489,11 +511,11 @@ export default function NoticiasPage() {
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-  {filtradas.map((noticia, index) => (
-    <article
-      key={`${noticia.id}-${index}`}
-      className="noticias-card flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm"
-    >
+            {filtradas.map((noticia, index) => (
+              <article
+                key={`${noticia.id}-${index}`}
+                className="noticias-card flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm"
+              >
                 <button
                   type="button"
                   onClick={() => setNoticiaAberta(noticia)}
@@ -505,7 +527,7 @@ export default function NoticiasPage() {
                       src={noticia.image}
                       alt={noticia.title}
                       loading="lazy"
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-contain"
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
                       }}
@@ -517,6 +539,7 @@ export default function NoticiasPage() {
                       </span>
                     </div>
                   )}
+
                   <span className="absolute bottom-3 left-3 rounded-lg bg-white/95 px-3 py-1.5 text-[10px] font-extrabold uppercase text-green-800 shadow-sm">
                     {noticia.category}
                   </span>
@@ -525,6 +548,7 @@ export default function NoticiasPage() {
                 <div className="flex flex-1 flex-col p-5">
                   <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
                     <time>{dataLegivel(noticia)}</time>
+
                     {noticia.source === "AGROINOVA ANGOLA" && (
                       <span className="rounded-full bg-blue-50 px-2.5 py-1 font-bold text-blue-800">
                         Publicação própria
@@ -542,7 +566,7 @@ export default function NoticiasPage() {
                     </p>
                   )}
 
-                  <div className="mt-auto flex items-center justify-between gap-3 border-t border-slate-100 pt-4 mt-5">
+                  <div className="mt-auto mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
                     <span className="min-w-0 truncate text-xs font-semibold text-slate-500">
                       {noticia.source}
                     </span>
@@ -562,7 +586,7 @@ export default function NoticiasPage() {
         )}
       </section>
 
-      {/* Leitura integral em janela modal */}
+      {/* Leitura integral: fotografia sem cortes */}
       {noticiaAberta && (
         <div
           className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-950/70 p-0 backdrop-blur-sm sm:items-center sm:p-5"
@@ -580,6 +604,7 @@ export default function NoticiasPage() {
               <span className="text-xs font-extrabold uppercase tracking-widest text-green-800">
                 {noticiaAberta.category} · AGROINOVA ANGOLA
               </span>
+
               <button
                 type="button"
                 onClick={() => setNoticiaAberta(null)}
@@ -591,11 +616,11 @@ export default function NoticiasPage() {
             </div>
 
             {noticiaAberta.image && (
-              <div className="max-h-[380px] overflow-hidden bg-green-50">
+              <div className="flex max-h-[500px] justify-center overflow-hidden bg-slate-50 p-2">
                 <img
                   src={noticiaAberta.image}
                   alt={noticiaAberta.title}
-                  className="max-h-[380px] w-full object-cover"
+                  className="block max-h-[480px] max-w-full object-contain"
                 />
               </div>
             )}
