@@ -992,6 +992,22 @@ export default function AdminPage() {
     setSucesso("");
   }
 
+  async function terminarSessao() {
+    try {
+      const resposta = await fetch("/api/admin/logout", {
+        method: "POST",
+        cache: "no-store",
+      });
+
+      if (!resposta.ok) {
+        throw new Error("Não foi possível terminar a sessão.");
+      }
+
+      window.location.replace("/login");
+    } catch {
+      window.alert("Não foi possível terminar a sessão. Tente novamente.");
+    }
+  }
   return (
     <main style={estilos.pagina}>
       <style jsx global>{`
@@ -1295,7 +1311,22 @@ export default function AdminPage() {
                 </button>
               </div>
             )}
-          </header>
+            <button
+              type="button"
+              onClick={terminarSessao}
+              style={{
+                background: "#b91c1c",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: 10,
+                padding: "10px 14px",
+                fontWeight: 700,
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Terminar sessão
+            </button>          </header>
 
           {erro && !modalAberto && secao !== "tecnicos" && (
             <div
