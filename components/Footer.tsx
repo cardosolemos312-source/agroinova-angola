@@ -1,287 +1,233 @@
 
 import Link from "next/link";
 
+const equipa = [
+  {
+    nome: "Cardoso Lemos",
+    cargo: "CEO e Desenvolvedor",
+    iniciais: "CL",
+  },
+  {
+    nome: "Viviane Catumbela",
+    cargo: "CEO e Analista Comercial",
+    iniciais: "VC",
+  },
+  {
+    nome: "Daniel Chicuamanga",
+    cargo: "Desenvolvedor / Cyber Segurança",
+    iniciais: "DC",
+  },
+  {
+    nome: "Heythan Lemos",
+    cargo: "Futuro da AgroInova Angola",
+    iniciais: "HL",
+  },
+  {
+    nome: "Luciano Lemos",
+    cargo: "Mestre / Eng.º Agrónomo",
+    iniciais: "LL",
+  },
+  {
+    nome: "Bonifácio Vissetaca",
+    cargo: "PhD, Professor Doutor",
+    iniciais: "BV",
+  },
+
+  {
+    nome: "Messias Mengawaco",
+    cargo: "Eng.º Agrónomo",
+    iniciais: "MM",
+  },
+];
+
+const empresas = [
+  {
+    nome: "CJSL-SOLUÇÕES DIGITAIS",
+    cargo: "Desenvolvedora",
+    iniciais: "CJSL",
+  },
+  {
+    nome: "BE-SMART",
+    cargo: "Parceria, Divulgação e Segurança",
+    iniciais: "BE",
+  },
+  {
+    nome: "ASUS-FILMES",
+    cargo: "Marketing e Publicidade",
+    iniciais: "AF",
+  },
+];
+
+const links = [
+  { nome: "Página inicial", href: "/" },
+  { nome: "Investigação", href: "/investigacao" },
+  { nome: "Biblioteca", href: "/biblioteca" },
+  { nome: "AgroAcademia", href: "/agroacademia" },
+  { nome: "Notícias", href: "/noticias" },
+  { nome: "Dados agropecuários", href: "/dados" },
+];
+
 export default function Footer() {
   const ano = new Date().getFullYear();
 
   return (
-    <>
-      <footer className="agro-footer">
-        <div className="footer-horizontal">
-          <div className="footer-brand">
-            <Link href="/" className="footer-logo">
-              AGROINOVA<span>-ANGOLA</span>
-            </Link>
-            <p>Conhecimento, tecnologia e inovação para o sector agropecuário angolano.</p>
+    <footer className="mt-12 border-t-4 border-green-500 bg-[#102b1c] text-gray-300">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-5 py-9 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+
+        {/* MARCA E APRESENTAÇÃO */}
+        <section>
+          <Link
+            href="/"
+            className="text-xl font-extrabold tracking-tight text-white"
+          >
+            AGROINOVA<span className="text-green-400">-ANGOLA</span>
+          </Link>
+
+          <p className="mt-3 text-sm font-semibold leading-6 text-green-300">
+            Conhecimento, Tecnologia e Inovação ao Serviço do Campo Angolano.
+          </p>
+
+          <p className="mt-3 text-sm leading-6 text-gray-400">
+            Plataforma nacional de investigação, conhecimento e inovação
+            agropecuária para o desenvolvimento sustentável de Angola.
+          </p>
+        </section>
+
+        {/* EQUIPA */}
+        <section>
+          <h2 className="mb-4 border-b border-green-500/40 pb-2 font-bold text-white">
+            Nossa equipa
+          </h2>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            {equipa.map((pessoa) => (
+              <div
+                key={pessoa.nome}
+                className="flex items-center gap-2.5"
+              >
+                {/* Avatar provisório: sem dependência de fotografias */}
+                <div
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-green-500/60 bg-green-900 text-xs font-bold text-green-300"
+                  aria-hidden="true"
+                >
+                  {pessoa.iniciais}
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-white">
+                    {pessoa.nome}
+                  </p>
+                  <p className="mt-0.5 text-[11px] leading-4 text-gray-400">
+                    {pessoa.cargo}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
+        </section>
 
-          <div className="footer-column">
-            <h3>Plataforma</h3>
-            <div className="footer-links">
-              <Link href="/">Início</Link>
-              <Link href="/agricultura">Agricultura</Link>
-              <Link href="/floresta">Floresta</Link>
-              <Link href="/pecuaria">Pecuária</Link>
-              <Link href="/pesca">Pesca</Link>
-              <Link href="/solos">Solos</Link>
-              <Link href="/clima">Clima</Link>
-            </div>
+        {/* EMPRESAS PARCEIRAS */}
+        <section>
+          <h2 className="mb-4 border-b border-green-500/40 pb-2 font-bold text-white">
+            Empresas parceiras
+          </h2>
+
+          <div className="space-y-3">
+            {empresas.map((empresa) => (
+              <div
+                key={empresa.nome}
+                className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] p-3 transition-colors hover:border-green-500/50"
+              >
+                {/* Espaço provisório para o futuro logótipo */}
+                <div
+                  className="flex h-11 w-14 shrink-0 items-center justify-center rounded bg-white px-1 text-center text-[10px] font-extrabold text-green-800"
+                  aria-hidden="true"
+                >
+                  {empresa.iniciais}
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-xs font-bold leading-5 text-white">
+                    {empresa.nome}
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-gray-400">
+                    {empresa.cargo}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
+        </section>
 
-          <div className="footer-column">
-            <h3>Equipe da AgroInova-Angola</h3>
-            <div className="footer-links">
-              <Link href="/investigacao">Cardoso Lemos</Link>
-              <Link href="/tecnologias">Daniel Tchikwamanga</Link>
-              <Link href="/biblioteca">Heythan Lemos</Link>
-              <Link href="/agroacademia">Luciano Lemos</Link>
-              <Link href="/dados">Bonifácio Visseteca</Link>
-              <Link href="/mapa">Messias Mengawaco</Link>
-              <Link href="/directorio">Ivo Casimiro</Link>
-              <Link href="/agroia">Funzula Eduardo</Link>
-            </div>
-          </div>
+        {/* CONTACTOS */}
+        <section>
+          <h2 className="mb-4 border-b border-green-500/40 pb-2 font-bold text-white">
+            Contactos
+          </h2>
 
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-green-300">
+            Email
+          </p>
 
-          <div className="footer-column footer-contact">
-            <h3>Contactos</h3>
-            <p>
-              <a href="tel:+24493932919">+244 939 329 199</a>
-            </p>
-            <p>
-              <a href="tel:+244953694214">+244 953 694 214</a>
-            </p>
-            <p>
-              <a href="tel:+244933395847">+244 933 395 847</a>
-            </p>
-            <p>
-              <a href="mailto:cardosolemos312@gmail.com">
-                cardosolemos312@gmail.com
-              </a>
-            </p>
-            <p>
-              <a href="mailto:agroinovagola@ango.com">
-                agroinovagola@ango.com
-              </a>
-            </p>
-             <p>
-              <a href="mailto:agroinovagola@ango.com">
-                heythansantos@gmail.com
-              </a>
-            </p>
-          </div>
+          <a
+            href="mailto:cardosoLemos312@gmail.com"
+            className="block break-all text-sm leading-6 hover:text-green-400"
+          >
+            cardosoLemos312@gmail.com
+          </a>
 
-          <div className="footer-column footer-developer">
-            <h3>Desenvolvimento</h3>
-            <h4>Cardoso Lemos</h4>
-            <p>Programador e Desenvolvedor Web</p>
-            <p className="footer-company">CJSL-SOLUÇÕES DIGITAIS</p>
-            <p>BE-SMART · ASUS-FILMES</p>
-            <a
-              className="footer-button"
-              href="mailto:cardosolemos312@gmail.com"
-            >
-              Contactar
+          <a
+            href="mailto:agroinova.angola@inova.com"
+            className="mt-1 block break-all text-sm leading-6 hover:text-green-400"
+          >
+            agroinova.angola@inova.com
+          </a>
+
+          <p className="mb-2 mt-5 text-xs font-semibold uppercase tracking-wider text-green-300">
+            Telefone
+          </p>
+
+          <div className="space-y-1 text-sm">
+            <a href="tel:+244939329199" className="block hover:text-green-400">
+              +244 939 329 199
+            </a>
+            <a href="tel:+244933395847" className="block hover:text-green-400">
+              +244 933 395 847
+            </a>
+            <a href="tel:+244958057984" className="block hover:text-green-400">
+              +244 958 057 984
+            </a>
+            <a href="tel:+244921644522" className="block hover:text-green-400">
+              +244 921 644 522
             </a>
           </div>
+
+          <nav aria-label="Links do rodapé" className="mt-5 flex flex-wrap gap-x-3 gap-y-2">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-xs text-gray-400 transition hover:text-green-400"
+              >
+                {link.nome}
+              </Link>
+            ))}
+          </nav>
+        </section>
+      </div>
+
+      {/* DIREITOS DE AUTOR */}
+      <div className="border-t border-white/10 bg-black/15">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-4 text-xs text-gray-400 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {ano} AGROINOVA-ANGOLA. Todos os direitos reservados.
+          </p>
+
+          <p className="font-medium text-green-400">
+            Conhecimento • Tecnologia • Inovação
+          </p>
         </div>
-
-        <div className="footer-social">
-          <span>Acompanhe a AGROINOVA-ANGOLA:</span>
-          <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">Facebook</a>
-          <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
-          <a href="https://www.youtube.com/" target="_blank" rel="noreferrer">YouTube</a>
-          <a href="https://www.tiktok.com/" target="_blank" rel="noreferrer">TikTok</a>
-          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>
-        </div>
-
-        <div className="footer-bottom">
-          <span>© {ano} AGROINOVA-ANGOLA. Todos os direitos reservados.</span>
-          <span>Desenvolvido por <strong>CJSL-SOLUÇÕES DIGITAIS</strong></span>
-        </div>
-      </footer>
-
-      <style>{`
-        .agro-footer,
-        .agro-footer * {
-          box-sizing: border-box;
-        }
-
-        .agro-footer {
-          --green: #00bd86;
-          --gold: #f7b928;
-          width: 100%;
-          background: #10251d;
-          color: #fff;
-          border-top: 4px solid var(--green);
-          font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .footer-horizontal {
-          width: 96%;
-          max-width: 1600px;
-          margin: auto;
-          padding: 35px 0;
-          display: grid;
-          grid-template-columns: 1.25fr 1fr 1fr 1.35fr 1.3fr;
-          gap: 24px;
-          align-items: start;
-        }
-
-        .footer-brand,
-        .footer-column {
-          min-width: 0;
-        }
-
-        .footer-logo {
-          display: inline-block;
-          margin-bottom: 12px;
-          color: #fff;
-          font-size: 21px;
-          font-weight: 900;
-          text-decoration: none;
-        }
-
-        .footer-logo span {
-          color: var(--green);
-        }
-
-        .agro-footer p {
-          margin: 7px 0;
-          color: #c2d0c7;
-          font-size: 12px;
-          line-height: 1.7;
-          overflow-wrap: anywhere;
-        }
-
-        .footer-column h3 {
-          margin: 0 0 14px;
-          padding-bottom: 9px;
-          border-bottom: 2px solid var(--green);
-          color: #fff;
-          font-size: 14px;
-        }
-
-        .footer-links {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px 12px;
-        }
-
-        .footer-links a,
-        .footer-contact a {
-          color: #c2d0c7;
-          font-size: 12px;
-          line-height: 1.6;
-          text-decoration: none;
-          overflow-wrap: anywhere;
-        }
-
-        .footer-links a:hover,
-        .footer-contact a:hover,
-        .footer-social a:hover {
-          color: var(--green);
-        }
-
-        .footer-developer h4 {
-          margin: 0 0 6px;
-          color: var(--gold);
-          font-size: 16px;
-        }
-
-        .footer-company {
-          color: var(--green) !important;
-          font-weight: 800;
-        }
-
-        .footer-button {
-          display: inline-block;
-          margin-top: 8px;
-          padding: 8px 15px;
-          border: 1px solid var(--green);
-          border-radius: 20px;
-          color: #fff;
-          font-size: 12px;
-          text-decoration: none;
-        }
-
-        .footer-button:hover {
-          background: var(--green);
-          color: #10251d;
-        }
-
-        .footer-social {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          justify-content: center;
-          gap: 12px 20px;
-          padding: 16px 3%;
-          border-top: 1px solid #31443a;
-          border-bottom: 1px solid #31443a;
-        }
-
-        .footer-social span {
-          color: #fff;
-          font-size: 12px;
-          font-weight: 700;
-        }
-
-        .footer-social a {
-          color: #c2d0c7;
-          font-size: 12px;
-          text-decoration: none;
-        }
-
-        .footer-bottom {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          justify-content: space-between;
-          gap: 10px 20px;
-          padding: 15px 3%;
-          background: #0b1b14;
-          color: #c2d0c7;
-          font-size: 11px;
-        }
-
-        .footer-bottom strong {
-          color: var(--green);
-        }
-
-        @media (max-width: 1100px) {
-          .footer-horizontal {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-          }
-        }
-
-        @media (max-width: 650px) {
-          .footer-horizontal {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 24px 16px;
-            padding: 28px 0;
-          }
-
-          .footer-brand {
-            grid-column: 1 / -1;
-          }
-
-          .footer-bottom {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-        }
-
-        @media (max-width: 380px) {
-          .footer-horizontal {
-            grid-template-columns: 1fr;
-          }
-
-          .footer-brand {
-            grid-column: auto;
-          }
-        }
-      `}</style>
-    </>
+      </div>
+    </footer>
   );
 }
