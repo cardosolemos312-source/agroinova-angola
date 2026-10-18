@@ -48,7 +48,10 @@ const CAMPOS: Record<Entidade, string[]> = {
 function respostaErro(mensagem: string, status: number) {
   return NextResponse.json(
     { sucesso: false, erro: mensagem },
-    { status, headers: { "Cache-Control": "no-store" } }
+    {
+      status,
+      headers: { "Cache-Control": "no-store" },
+    }
   );
 }
 
@@ -72,7 +75,10 @@ function validarEstado(valor: unknown): boolean {
   );
 }
 
-function validarDados(entidade: Entidade, dados: Dados): string | null {
+function validarDados(
+  entidade: Entidade,
+  dados: Dados
+): string | null {
   if (entidade === "evento") {
     if (
       typeof dados.titulo !== "string" ||
@@ -172,6 +178,15 @@ function obterId(valor: unknown): string | null {
   return null;
 }
 
+function semCache() {
+  return { "Cache-Control": "no-store" };
+}
+
+/**
+ * GET
+ * Devolve os eventos ativos e os arquivados separadamente.
+ * A propriedade "eventos" contém apenas os que não estão arquivados.
+ */
 export async function GET() {
   try {
     if (!(await administradorAutenticado())) {
@@ -197,31 +212,57 @@ export async function GET() {
         .order("criado_em", { ascending: false }),
     ]);
 
-    const erro = eventos.error || instituicoes.error || inscricoes.error;
+    const erro =
+      eventos.error || instituicoes.error || inscricoes.error;
 
     if (erro) {
-      console.error("Erro ao consultar a AgroAcademia:", erro.message);
+      console.error(
+        "Erro ao consultar a AgroAcademia:",
+        erro.message
+      );
+
       return respostaErro(
-        "Nao foi possivel consultar os registos. Verifica as tabelas do Supabase.",
+        "Nao foi possivel consultar os registos do Supabase.",
         500
       );
     }
 
+    const todosEventos = eventos.data ?? [];
+
+    const eventosAtivos = todosEventos.filter(
+      (evento) =>
+        String(evento.estado ?? "").toLowerCase() !== "arquivado"
+    );
+
+    const eventosArquivados = todosEventos.filter(
+      (evento) =>
+        String(evento.estado ?? "").toLowerCase() === "arquivado"
+    );
+
     return NextResponse.json(
       {
         sucesso: true,
-        eventos: eventos.data ?? [],
+        eventos: eventosAtivos,
+        eventosArquivados,
         instituicoes: instituicoes.data ?? [],
         inscricoes: inscricoes.data ?? [],
       },
-      { headers: { "Cache-Control": "no-store" } }
+      { headers: semCache() }
     );
   } catch (erro) {
-    console.error("Erro na API administrativa da AgroAcademia:", erro);
+    console.error(
+      "Erro na API administrativa da AgroAcademia:",
+      erro
+    );
+
     return respostaErro("Ocorreu um erro interno.", 500);
   }
 }
 
+/**
+ * POST
+ * Cria eventos ou instituições.
+ */
 export async function POST(request: Request) {
   try {
     if (!(await administradorAutenticado())) {
@@ -233,10 +274,17 @@ export async function POST(request: Request) {
     try {
       corpo = await request.json();
     } catch {
-      return respostaErro("O corpo do pedido nao contem JSON valido.", 400);
+      return respostaErro(
+        "O corpo do pedido nao contem JSON valido.",
+        400
+      );
     }
 
-    if (!corpo || typeof corpo !== "object" || Array.isArray(corpo)) {
+    if (
+      !corpo ||
+      typeof corpo !== "object" ||
+      Array.isArray(corpo)
+    ) {
       return respostaErro("Os dados enviados sao invalidos.", 400);
     }
 
@@ -255,7 +303,10 @@ export async function POST(request: Request) {
       typeof pedido.dados !== "object" ||
       Array.isArray(pedido.dados)
     ) {
-      return respostaErro("Os dados do registo sao invalidos.", 400);
+      return respostaErro(
+        "Os dados do registo sao invalidos.",
+        400
+      );
     }
 
     const dados = filtrarDados(entidade, pedido.dados as Dados);
@@ -275,19 +326,31 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error("Erro ao criar registo:", error.message);
-      return respostaErro("Nao foi possivel criar o registo.", 500);
+
+      return respostaErro(
+        "Nao foi possivel criar o registo.",
+        500
+      );
     }
 
     return NextResponse.json(
       { sucesso: true, registo: data },
-      { status: 201, headers: { "Cache-Control": "no-store" } }
+      { status: 201, headers: semCache() }
     );
   } catch (erro) {
-    console.error("Erro ao criar registo da AgroAcademia:", erro);
+    console.error(
+      "Erro ao criar registo da AgroAcademia:",
+      erro
+    );
+
     return respostaErro("Ocorreu um erro interno.", 500);
   }
 }
 
+/**
+ * PATCH
+ * Atualiza eventos, instituições ou inscrições.
+ */
 export async function PATCH(request: Request) {
   try {
     if (!(await administradorAutenticado())) {
@@ -299,10 +362,17 @@ export async function PATCH(request: Request) {
     try {
       corpo = await request.json();
     } catch {
-      return respostaErro("O corpo do pedido nao contem JSON valido.", 400);
+      return respostaErro(
+        "O corpo do pedido nao contem JSON valido.",
+        400
+      );
     }
 
-    if (!corpo || typeof corpo !== "object" || Array.isArray(corpo)) {
+    if (
+      !corpo ||
+      typeof corpo !== "object" ||
+      Array.isArray(corpo)
+    ) {
       return respostaErro("Os dados enviados sao invalidos.", 400);
     }
 
@@ -311,7 +381,10 @@ export async function PATCH(request: Request) {
     const id = obterId(pedido.id);
 
     if (!entidade || !id) {
-      return respostaErro("A entidade ou o identificador sao invalidos.", 400);
+      return respostaErro(
+        "A entidade ou o identificador sao invalidos.",
+        400
+      );
     }
 
     if (
@@ -319,13 +392,19 @@ export async function PATCH(request: Request) {
       typeof pedido.dados !== "object" ||
       Array.isArray(pedido.dados)
     ) {
-      return respostaErro("Os dados do registo sao invalidos.", 400);
+      return respostaErro(
+        "Os dados do registo sao invalidos.",
+        400
+      );
     }
 
     const dados = filtrarDados(entidade, pedido.dados as Dados);
 
     if (Object.keys(dados).length === 0) {
-      return respostaErro("Nao existem campos validos para actualizar.", 400);
+      return respostaErro(
+        "Nao existem campos validos para actualizar.",
+        400
+      );
     }
 
     const erroValidacao = validarDados(entidade, dados);
@@ -344,8 +423,15 @@ export async function PATCH(request: Request) {
       .maybeSingle();
 
     if (error) {
-      console.error("Erro ao actualizar registo:", error.message);
-      return respostaErro("Nao foi possivel actualizar o registo.", 500);
+      console.error(
+        "Erro ao actualizar registo:",
+        error.message
+      );
+
+      return respostaErro(
+        "Nao foi possivel actualizar o registo.",
+        500
+      );
     }
 
     if (!data) {
@@ -354,23 +440,43 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json(
       { sucesso: true, registo: data },
-      { headers: { "Cache-Control": "no-store" } }
+      { headers: semCache() }
     );
   } catch (erro) {
-    console.error("Erro ao actualizar registo da AgroAcademia:", erro);
+    console.error(
+      "Erro ao actualizar registo da AgroAcademia:",
+      erro
+    );
+
     return respostaErro("Ocorreu um erro interno.", 500);
   }
 }
 
+/**
+ * DELETE
+ * Elimina definitivamente quando não existem inscrições.
+ * Se existirem inscrições, arquiva o evento para preservar o histórico.
+ * Os eventos arquivados deixam de aparecer na lista ativa devolvida pelo GET.
+ */
 export async function DELETE(request: Request) {
   try {
     if (!(await administradorAutenticado())) {
       return respostaErro("Acesso nao autorizado.", 401);
     }
 
-    const corpo = await request.json().catch(() => null);
-    const entidade = obterEntidade(corpo?.entidade);
-    const id = obterId(corpo?.id);
+    const corpo: unknown = await request.json().catch(() => null);
+
+    if (
+      !corpo ||
+      typeof corpo !== "object" ||
+      Array.isArray(corpo)
+    ) {
+      return respostaErro("Os dados enviados sao invalidos.", 400);
+    }
+
+    const pedido = corpo as Record<string, unknown>;
+    const entidade = obterEntidade(pedido.entidade);
+    const id = obterId(pedido.id);
 
     if (
       (entidade !== "evento" && entidade !== "instituicao") ||
@@ -385,6 +491,28 @@ export async function DELETE(request: Request) {
     const supabase = obterSupabaseAdmin();
 
     if (entidade === "evento") {
+      const { data: evento, error: erroEvento } = await supabase
+        .from(TABELAS.evento)
+        .select("id, estado, titulo")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (erroEvento) {
+        console.error(
+          "Erro ao consultar evento:",
+          erroEvento.message
+        );
+
+        return respostaErro(
+          "Nao foi possivel consultar o evento.",
+          500
+        );
+      }
+
+      if (!evento) {
+        return respostaErro("O evento nao foi encontrado.", 404);
+      }
+
       const { data: inscricoes, error: erroInscricoes } =
         await supabase
           .from(TABELAS.inscricao)
@@ -407,22 +535,31 @@ export async function DELETE(request: Request) {
       if (inscricoes && inscricoes.length > 0) {
         const { data, error } = await supabase
           .from(TABELAS.evento)
-          .update({ estado: "arquivado" })
+          .update({
+            estado: "arquivado",
+            destaque: false,
+          })
           .eq("id", id)
           .select("id")
           .maybeSingle();
 
         if (error) {
-          console.error("Erro ao arquivar evento:", error.message);
+          console.error(
+            "Erro ao arquivar evento:",
+            error.message
+          );
 
           return respostaErro(
-            "Existem inscricoes, mas nao foi possivel arquivar o evento.",
+            "O evento tem inscricoes associadas e nao foi possivel arquiva-lo.",
             500
           );
         }
 
         if (!data) {
-          return respostaErro("O evento nao foi encontrado.", 404);
+          return respostaErro(
+            "O evento nao foi encontrado.",
+            404
+          );
         }
 
         return NextResponse.json(
@@ -430,9 +567,9 @@ export async function DELETE(request: Request) {
             sucesso: true,
             arquivado: true,
             mensagem:
-              "O evento foi arquivado. As inscricoes foram preservadas.",
+              "O evento foi retirado da lista ativa. As inscricoes foram preservadas e o evento ficou arquivado.",
           },
-          { headers: { "Cache-Control": "no-store" } }
+          { headers: semCache() }
         );
       }
     }
@@ -445,10 +582,13 @@ export async function DELETE(request: Request) {
       .maybeSingle();
 
     if (error) {
-      console.error("Erro ao eliminar registo:", error.message);
+      console.error(
+        "Erro ao eliminar registo:",
+        error.message
+      );
 
       return respostaErro(
-        "Nao foi possivel eliminar o registo. Pode ter dados associados.",
+        "Nao foi possivel eliminar o registo. Verifica se existem dados associados.",
         500
       );
     }
@@ -460,12 +600,16 @@ export async function DELETE(request: Request) {
     return NextResponse.json(
       {
         sucesso: true,
+        eliminado: true,
         mensagem: "Registo eliminado definitivamente.",
       },
-      { headers: { "Cache-Control": "no-store" } }
+      { headers: semCache() }
     );
   } catch (erro) {
-    console.error("Erro ao eliminar registo da AgroAcademia:", erro);
+    console.error(
+      "Erro ao eliminar registo da AgroAcademia:",
+      erro
+    );
 
     return respostaErro("Ocorreu um erro interno.", 500);
   }
