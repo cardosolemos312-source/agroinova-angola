@@ -126,6 +126,10 @@ export default function AgroIAPage() {
   const [faqAberta, setFaqAberta] = useState<number | null>(0);
   const [estadoIA, setEstadoIA] = useState<"a verificar" | "disponivel" | "indisponivel">("a verificar");
   const [modeloIA, setModeloIA] = useState("qwen2.5:0.5b");
+  const [fabricanteDrone, setFabricanteDrone] = useState("DJI");
+  const [provinciaDrone, setProvinciaDrone] = useState("");
+  const [culturaDrone, setCulturaDrone] = useState("");
+  const [estadoMissaoDrone, setEstadoMissaoDrone] = useState("");
   const chatRef = useRef<HTMLDivElement>(null);
   const fotoInputRef = useRef<HTMLInputElement>(null);
 
@@ -451,9 +455,33 @@ export default function AgroIAPage() {
         .agroia-form-result p { color: #304b37; font-size: 13px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
         .agroia-form-note { color: #849084; font-size: 10px; line-height: 1.7; margin-top: 18px; }
         .agroia-form-actions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+        .agroia-drone-section { padding: 75px 0; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 55%, #f5faf6 100%); }
+        .agroia-drone-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: stretch; }
+        .agroia-drone-intro { padding: 30px; border-radius: 14px; color: white; background: linear-gradient(145deg, #123d27, #166534); position: relative; overflow: hidden; }
+        .agroia-drone-intro h2 { font-size: clamp(27px, 3vw, 38px); line-height: 1.15; margin: 10px 0 16px; }
+        .agroia-drone-intro p { color: #d9eee0; font-size: 13px; line-height: 1.9; }
+        .agroia-drone-kicker { color: #a7f3b9; font-size: 11px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; }
+        .agroia-drone-points { display: grid; gap: 11px; margin-top: 22px; }
+        .agroia-drone-point { display: flex; gap: 10px; align-items: flex-start; color: #f0fff3; font-size: 12px; line-height: 1.7; }
+        .agroia-drone-point span { color: #86efac; font-weight: 900; }
+        .agroia-drone-workspace { padding: 25px; border: 1px solid #dce9de; border-radius: 14px; background: white; box-shadow: 0 14px 38px #123d270c; min-width: 0; }
+        .agroia-drone-workspace h3 { margin: 0 0 8px; color: #183d28; font-size: 20px; }
+        .agroia-drone-workspace > p { margin: 0 0 20px; color: #64748b; font-size: 12px; line-height: 1.8; }
+        .agroia-drone-status { display: flex; align-items: flex-start; gap: 11px; padding: 13px; margin-bottom: 18px; border: 1px solid #f1d9a7; border-radius: 8px; background: #fffbeb; }
+        .agroia-drone-status strong { display: block; color: #854d0e; font-size: 12px; margin-bottom: 4px; }
+        .agroia-drone-status span { display: block; color: #92400e; font-size: 11px; line-height: 1.7; }
+        .agroia-drone-form { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+        .agroia-drone-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+        .agroia-drone-field.full { grid-column: 1 / -1; }
+        .agroia-drone-field label { color: #2d4934; font-size: 11px; font-weight: 800; }
+        .agroia-drone-field select { width: 100%; min-width: 0; padding: 11px; border: 1px solid #dce6dd; border-radius: 6px; color: #263b2b; background: white; font-size: 12px; }
+        .agroia-drone-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 17px; }
+        .agroia-drone-message { margin-top: 14px; padding: 12px; border: 1px solid #cfe6d4; border-radius: 7px; background: #f7fcf8; color: #245332; font-size: 12px; line-height: 1.8; }
+        .agroia-drone-footnote { margin-top: 15px; color: #849084; font-size: 10px; line-height: 1.7; }
         @keyframes agroia-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes agroia-fade { from { opacity: 0; } to { opacity: 1; } }
         @media (max-width: 900px) {
+          .agroia-drone-panel { grid-template-columns: 1fr; }
           .agroia-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
           .agroia-feature, .agroia-chat-layout, .agroia-faq-grid { grid-template-columns: 1fr; gap: 30px; }
           .agroia-feature-image > img { height: 340px; }
@@ -468,6 +496,9 @@ export default function AgroIAPage() {
           .agroia-metric:nth-child(2) { border-right: 0; }
           .agroia-metric:nth-child(-n+2) { border-bottom: 1px solid #e8eee9; }
           .agroia-grid { grid-template-columns: 1fr; }
+          .agroia-drone-intro, .agroia-drone-workspace { padding: 21px; }
+          .agroia-drone-form { grid-template-columns: 1fr; }
+          .agroia-drone-field.full { grid-column: auto; }
           .agroia-card-image { height: 220px; }
           .agroia-cta-inner { align-items: flex-start; flex-direction: column; }
           .agroia-form-grid { grid-template-columns: 1fr; }
@@ -562,6 +593,68 @@ export default function AgroIAPage() {
               </article>
             ))}
             {tecnologiasFiltradas.length === 0 && <div className="agroia-empty">Não encontrámos tecnologias para essa pesquisa.</div>}
+          </div>
+        </div>
+      </section>
+
+      <section className="agroia-drone-section" id="agroia-visao-aerea">
+        <div className="agroia-container">
+          <div className="agroia-heading">
+            <span className="agroia-kicker" style={{ color: "#166534" }}>Novo módulo · Em preparação</span>
+            <h2>AgroIA Visão Aérea</h2>
+            <p>Uma estrutura preparada para, no futuro, receber dados de drones compatíveis e apoiar a monitorização das culturas em Angola.</p>
+          </div>
+          <div className="agroia-drone-panel">
+            <div className="agroia-drone-intro">
+              <span className="agroia-drone-kicker">Agricultura de precisão</span>
+              <h2>Do voo ao conhecimento sobre a plantação.</h2>
+              <p>A proposta é integrar imagens aéreas, localização e dados de sensores para produzir mapas e relatórios que ajudem agricultores e técnicos a identificar zonas que merecem atenção.</p>
+              <div className="agroia-drone-points">
+                <div className="agroia-drone-point"><span>✓</span><div>Registo de explorações, parcelas, culturas e missões.</div></div>
+                <div className="agroia-drone-point"><span>✓</span><div>Preparação para integração API com fabricantes compatíveis.</div></div>
+                <div className="agroia-drone-point"><span>✓</span><div>Futura análise de imagens, mapas de vigor e relatórios técnicos.</div></div>
+                <div className="agroia-drone-point"><span>✓</span><div>Possibilidade de adicionar sensores multiespectrais e térmicos compatíveis.</div></div>
+              </div>
+            </div>
+            <div className="agroia-drone-workspace">
+              <h3>Painel de ligação ao drone</h3>
+              <p>Configura os dados previstos para uma futura missão. Este painel ainda não comunica com um drone real.</p>
+              <div className="agroia-drone-status" role="status">
+                <span aria-hidden="true">●</span>
+                <div><strong>Integração por configurar</strong><span>Sem drone ligado, credenciais API ou transmissão de dados. Nenhum voo será iniciado a partir deste painel nesta fase.</span></div>
+              </div>
+              <div className="agroia-drone-form">
+                <div className="agroia-drone-field full">
+                  <label htmlFor="agroia-drone-fabricante">Fabricante / integração pretendida</label>
+                  <select id="agroia-drone-fabricante" value={fabricanteDrone} onChange={(event) => setFabricanteDrone(event.target.value)}>
+                    <option value="DJI">DJI — avaliar API compatível</option>
+                    <option value="Autel">Autel Robotics — avaliar integração</option>
+                    <option value="ArduPilot/PX4">ArduPilot / PX4 — avaliar integração</option>
+                    <option value="Outro">Outro fabricante / padrão aberto</option>
+                  </select>
+                </div>
+                <div className="agroia-drone-field">
+                  <label htmlFor="agroia-drone-provincia">Província da exploração</label>
+                  <select id="agroia-drone-provincia" value={provinciaDrone} onChange={(event) => setProvinciaDrone(event.target.value)}>
+                    <option value="">Seleccionar</option>
+                    {provincias.map((item) => <option key={item} value={item}>{item}</option>)}
+                  </select>
+                </div>
+                <div className="agroia-drone-field">
+                  <label htmlFor="agroia-drone-cultura">Cultura a monitorizar</label>
+                  <select id="agroia-drone-cultura" value={culturaDrone} onChange={(event) => setCulturaDrone(event.target.value)}>
+                    <option value="">Seleccionar</option>
+                    {culturas.map((item) => <option key={item} value={item}>{item}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="agroia-drone-actions">
+                <button type="button" className="agroia-btn agroia-btn-primary" onClick={() => setEstadoMissaoDrone(provinciaDrone && culturaDrone ? `Registo de demonstração preparado: ${culturaDrone}, província de ${provinciaDrone}, integração pretendida ${fabricanteDrone}. Ainda não foi criada uma missão real nem contactado qualquer drone.` : "Selecciona a província e a cultura para preparar o registo de demonstração.")}>Preparar missão de demonstração</button>
+                <button type="button" className="agroia-btn agroia-btn-outline" onClick={() => setEstadoMissaoDrone(`A integração ${fabricanteDrone} requer avaliação técnica, equipamento compatível, documentação e credenciais autorizadas. Nenhuma ligação foi iniciada.`)}>Ver requisitos da API</button>
+              </div>
+              {estadoMissaoDrone && <div className="agroia-drone-message" role="status">{estadoMissaoDrone}</div>}
+              <div className="agroia-drone-footnote">Indicadores como NDVI exigem imagens multiespectrais adequadas. A humidade do solo requer sensores ou fontes de dados próprias; não pode ser medida directamente por uma fotografia RGB comum. Os resultados futuros deverão indicar se são medições, estimativas ou alertas de IA.</div>
+            </div>
           </div>
         </div>
       </section>
