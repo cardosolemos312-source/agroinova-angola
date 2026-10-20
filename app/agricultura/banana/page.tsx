@@ -331,6 +331,12 @@ const fontes = [
       "Referência especializada sobre murcha de Fusarium e biossegurança.",
     url: "https://www.promusa.org/Fusarium%20wilt",
   },
+  {
+    titulo: "ICL — Cultivo de banana: nutrição e boas práticas",
+    descricao:
+      "Referência técnica internacional sobre pH, temperatura, nutrição, sintomas de deficiências e manejo da bananeira. As recomendações devem ser adaptadas às condições locais.",
+    url: "https://icl-growingsolutions.com/pt-br/agriculture/crops/banana/",
+  },
 ];
 
 function Card({ titulo, children }: CardProps) {
@@ -421,8 +427,10 @@ export default function BananaPage() {
             ["Solo", "solo"],
             ["Plantação", "plantacao"],
             ["Manejo", "manejo"],
+            ["Nutrição", "nutricao"],
             ["Sanidade", "sanidade"],
             ["Colheita", "colheita"],
+            ["Perguntas frequentes", "perguntas-frequentes"],
             ["Angola", "angola"],
             ["Províncias", "provincias"],
             ["Investigação", "investigacao"],
@@ -917,10 +925,159 @@ export default function BananaPage() {
           </div>
         </section>
 
+
+        <section id="nutricao" className="mt-14 scroll-mt-24">
+          <div className="mb-6">
+            <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">
+              06 • Nutrição da cultura
+            </p>
+            <h2 className="mt-2 text-3xl font-black text-emerald-950">
+              Nutrição mineral e diagnóstico de deficiências
+            </h2>
+            <p className="mt-3 max-w-3xl text-slate-600">
+              Esta secção incorpora orientações técnicas publicadas pela ICL.
+              São referências internacionais para estudo, não uma receita de
+              fertilização validada para todas as zonas agroecológicas de Angola.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card titulo="Nitrogénio (N)">
+              <p>
+                Participa na formação da clorofila, no crescimento vegetativo e
+                na produção de folhas. Uma nutrição equilibrada ajuda a formar
+                a área foliar necessária ao desenvolvimento do cacho.
+              </p>
+              <p>
+                <strong>Sinais possíveis de deficiência:</strong> folhas
+                pequenas e verde-pálidas, nervura central e pecíolos
+                avermelhados, menor emissão de folhas e crescimento atrofiado.
+              </p>
+            </Card>
+
+            <Card titulo="Fósforo (P)">
+              <p>
+                É importante para o estabelecimento das raízes, a divisão
+                celular e a transferência de energia, sobretudo nas fases
+                iniciais de crescimento.
+              </p>
+              <p>
+                <strong>Sinais possíveis de deficiência:</strong> vigor reduzido,
+                raízes pouco desenvolvidas, margens cloróticas nas folhas mais
+                velhas e, em casos graves, manchas castanho-arroxeadas.
+              </p>
+            </Card>
+
+            <Card titulo="Potássio (K)">
+              <p>
+                Tem papel central na regulação da água, no transporte de
+                carboidratos e no desenvolvimento, enchimento e qualidade dos
+                frutos. A exigência deve ser avaliada em conjunto com os demais
+                nutrientes.
+              </p>
+              <p>
+                <strong>Sinais possíveis de deficiência:</strong> amarelecimento
+                das folhas mais velhas, secagem das margens, folhas pendentes e
+                cachos menores.
+              </p>
+            </Card>
+
+            <Card titulo="Cálcio (Ca)">
+              <p>
+                Contribui para a estrutura das paredes celulares e para o
+                desenvolvimento das raízes e dos tecidos dos frutos.
+              </p>
+              <p>
+                <strong>Sinais possíveis de desequilíbrio:</strong> alterações
+                nas folhas jovens e menor firmeza ou integridade dos frutos.
+                Estes sinais não confirmam, por si só, uma deficiência.
+              </p>
+            </Card>
+
+            <Card titulo="Magnésio (Mg)">
+              <p>
+                É um componente central da clorofila e participa na
+                fotossíntese e na actividade de várias enzimas.
+              </p>
+              <p>
+                <strong>Sinais possíveis de deficiência:</strong> amarelecimento
+                nas margens das folhas mais velhas, mantendo-se por vezes uma
+                faixa verde junto à nervura central.
+              </p>
+            </Card>
+
+            <Card titulo="Enxofre (S)">
+              <p>
+                Participa na formação de proteínas e no funcionamento de
+                processos metabólicos importantes para o crescimento.
+              </p>
+              <p>
+                <strong>Sinais possíveis de deficiência:</strong> clorose
+                relativamente uniforme, inclusive em folhas jovens, crescimento
+                lento e folhas com desenvolvimento anormal.
+              </p>
+            </Card>
+          </div>
+
+          <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            <Card titulo="Valores de referência para o ambiente">
+              <ul className="list-disc space-y-2 pl-5">
+                <li>
+                  <strong>pH:</strong> a página técnica da ICL indica 5,5–6,5
+                  como intervalo de referência para o solo.
+                </li>
+                <li>
+                  <strong>Temperatura:</strong> cerca de 25–30 °C para a
+                  emergência foliar óptima indicada pela ICL.
+                </li>
+                <li>
+                  <strong>Frio:</strong> a fonte descreve danos por frio abaixo
+                  de 10 °C e risco de danos irreversíveis por geada quando as
+                  folhas ficam expostas a −2 °C durante 10–15 minutos.
+                </li>
+                <li>
+                  <strong>Solo:</strong> evitar compactação e combinar humidade
+                  suficiente com drenagem adequada.
+                </li>
+              </ul>
+            </Card>
+
+            <Card titulo="Como construir um plano de fertilização">
+              <ol className="list-decimal space-y-2 pl-5">
+                <li>Recolher amostras representativas e analisar o solo.</li>
+                <li>Considerar cultivar, idade do bananal e fase do ciclo.</li>
+                <li>Avaliar a água disponível, a rega e o regime de chuvas.</li>
+                <li>Definir a produção esperada com base em dados realistas.</li>
+                <li>
+                  Sempre que possível, complementar a observação visual com
+                  análise foliar e acompanhamento técnico.
+                </li>
+                <li>Registar doses, datas, custos e resposta das plantas.</li>
+              </ol>
+            </Card>
+          </div>
+
+          <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-50 p-6">
+            <h3 className="font-bold text-amber-900">
+              Nota importante sobre doses e unidades
+            </h3>
+            <p className="mt-2 text-sm leading-7 text-amber-950">
+              A ICL apresenta exemplos de necessidades nutricionais e de
+              fertilização para determinados contextos de produção. Esses
+              números não devem ser copiados directamente para uma exploração
+              angolana: a dose correcta depende da análise do solo e, quando
+              disponível, das folhas, da cultivar, da produtividade pretendida,
+              da água e dos fertilizantes disponíveis. A identificação visual
+              de sintomas é indicativa; deficiências diferentes podem produzir
+              sinais semelhantes.
+            </p>
+          </div>
+        </section>
+
         <section id="sanidade" className="mt-14 scroll-mt-24">
           <div className="mb-6">
             <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">
-              06 • Sanidade vegetal
+              07 • Sanidade vegetal
             </p>
             <h2 className="mt-2 text-3xl font-black text-emerald-950">
               Principais riscos sanitários
@@ -1010,7 +1167,7 @@ export default function BananaPage() {
         <section id="colheita" className="mt-14 scroll-mt-24">
           <div className="mb-6">
             <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">
-              07 • Colheita e pós-colheita
+              08 • Colheita e pós-colheita
             </p>
             <h2 className="mt-2 text-3xl font-black text-emerald-950">
               Da maturação ao mercado
@@ -1068,7 +1225,7 @@ export default function BananaPage() {
         <section id="angola" className="mt-14 scroll-mt-24">
           <div className="mb-6">
             <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">
-              08 • Banana em Angola
+              09 • Banana em Angola
             </p>
             <h2 className="mt-2 text-3xl font-black text-emerald-950">
               Uma cultura com forte presença nacional
@@ -1153,7 +1310,7 @@ export default function BananaPage() {
         <section id="provincias" className="mt-14 scroll-mt-24">
           <div className="mb-6">
             <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">
-              09 • Distribuição territorial
+              10 • Distribuição territorial
             </p>
             <h2 className="mt-2 text-3xl font-black text-emerald-950">
               Banana nas províncias de Angola
@@ -1289,10 +1446,105 @@ export default function BananaPage() {
           </div>
         </section>
 
+        <section id="perguntas-frequentes" className="mt-14 scroll-mt-24">
+          <div className="mb-6">
+            <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">
+              Guia prático • Perguntas frequentes
+            </p>
+            <h2 className="mt-2 text-3xl font-black text-emerald-950">
+              Dúvidas frequentes sobre a bananeira
+            </h2>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card titulo="Quanto tempo demora até à colheita?">
+              <p>
+                Segundo a ICL, muitas variedades podem levar aproximadamente
+                9–12 meses entre a plantação e a colheita. O ciclo pode variar
+                com a variedade, temperatura, nutrição, água e condições locais;
+                não se deve usar este intervalo como calendário garantido para
+                todas as províncias de Angola.
+              </p>
+            </Card>
+
+            <Card titulo="Porque é que as folhas se rasgam?">
+              <p>
+                O vento pode rasgar naturalmente as folhas. Contudo, folhas
+                anormalmente frágeis, amarelecimento ou crescimento fraco podem
+                estar relacionados com desequilíbrios nutricionais, água ou
+                outros factores. É necessário observar o conjunto dos sintomas
+                antes de decidir qualquer tratamento.
+              </p>
+            </Card>
+
+            <Card titulo="Porque é que a bananeira não forma cacho?">
+              <p>
+                Entre as causas possíveis estão planta ainda imatura,
+                temperatura baixa, stress hídrico, drenagem deficiente e
+                nutrição desequilibrada, incluindo insuficiência de potássio.
+                A avaliação deve considerar também a profundidade de plantação
+                e o estado das raízes.
+              </p>
+            </Card>
+
+            <Card titulo="Com que frequência se deve regar?">
+              <p>
+                O objectivo é manter humidade suficiente na zona radicular sem
+                saturar o solo. A frequência depende da textura do solo, clima,
+                fase da cultura e método de irrigação. Verificar a humidade no
+                campo é mais seguro do que adoptar um calendário universal.
+              </p>
+            </Card>
+
+            <Card titulo="Quando se deve aplicar fertilizante?">
+              <p>
+                A nutrição deve acompanhar as fases de desenvolvimento e ser
+                ajustada à fertilidade do solo, à água disponível e ao tipo de
+                fertilizante. A ICL refere que a frequência de aplicação varia
+                conforme o país e o sistema de produção.
+              </p>
+            </Card>
+
+            <Card titulo="Como confirmar uma deficiência nutricional?">
+              <p>
+                Os sintomas visuais ajudam a orientar a observação, mas não
+                confirmam isoladamente um diagnóstico. A análise do solo e,
+                quando disponível, a análise foliar ajudam a identificar
+                desequilíbrios antes de decidir correcções.
+              </p>
+            </Card>
+
+            <Card titulo="O que fazer com as mudas que não pegaram?">
+              <p>
+                A ICL sugere verificar falhas de estabelecimento e replantar
+                falhas cerca de 30–40 dias depois da plantação. Antes de
+                replantar, confirme a causa da falha, a qualidade da muda, a
+                humidade e a drenagem.
+              </p>
+            </Card>
+
+            <Card titulo="Quando remover o coração e ensacar o cacho?">
+              <p>
+                A referência ICL descreve a remoção do coração pouco depois da
+                abertura, cerca de 10–20 cm abaixo da última penca, e o ensaque
+                do cacho após essa operação e a remoção das flores masculinas
+                persistentes, quando aplicável. Confirme a adequação à variedade
+                e às práticas fitossanitárias locais.
+              </p>
+            </Card>
+          </div>
+
+          <p className="mt-5 text-xs leading-6 text-slate-500">
+            Base técnica desta secção: ICL, “Cultivo de Banana”. O conteúdo foi
+            resumido e adaptado para fins educativos; não substitui diagnóstico
+            agronómico nem recomendações oficiais locais.
+          </p>
+        </section>
+
         <section id="investigacao" className="mt-14 scroll-mt-24">
           <div className="mb-6">
             <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">
-              10 • Investigação
+              11 • Investigação
             </p>
             <h2 className="mt-2 text-3xl font-black text-emerald-950">
               Perguntas para investigação agrícola em Angola
@@ -1405,7 +1657,7 @@ export default function BananaPage() {
         <section id="fontes" className="mt-14 scroll-mt-24">
           <div className="mb-6">
             <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">
-              11 • Fontes
+              12 • Fontes
             </p>
             <h2 className="mt-2 text-3xl font-black text-emerald-950">
               Referências utilizadas

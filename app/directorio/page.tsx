@@ -1,580 +1,3782 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-type Curso = {
-  nome: string;
-  grau: string;
-  duracao: string;
-  descricao: string;
-  plano: { ano: string; disciplinas: string[] }[];
-  saidas: string[];
+/* =========================================================
+   TIPOS
+========================================================= */
+
+type NivelLocalizacao = "exacta" | "aproximada";
+
+type Imagem = {
+  url: string;
+  legenda: string;
+  fonte: string;
 };
 
-type Instituicao = {
-  id: string;
+type Fazenda = {
+  id: number;
   nome: string;
-  sigla: string;
-  tipo: string;
   provincia: string;
-  local: string;
+  municipio: string;
+  local?: string;
+
+  actividade: string[];
+  culturas: string[];
+  pecuaria: string[];
+
+  estado:
+    | "Operacional"
+    | "Em desenvolvimento"
+    | "Projecto"
+    | "Referência pública"
+    | "A confirmar";
+
+  areaTotal?: number;
+  areaCultivada?: number;
+  areaNaoCultivada?: number;
+
+  usoSolo:
+    | "Verificado"
+    | "Histórico"
+    | "Projectado"
+    | "Não disponível";
+
+  potencial: number;
+
   descricao: string;
-  portal: string;
-  imagem?: string;
-  imagemFonte?: string;
-  legendaImagem?: string;
-  areas: string[];
-  cursos: Curso[];
-  contactos: string[];
+  especial: string[];
+
+  lat: number;
+  lng: number;
+
+  nivelLocalizacao: NivelLocalizacao;
+
+  coordenadasTexto?: string;
+
+  imagens: Imagem[];
+
+  fonte: string;
+  urlFonte?: string;
+
   observacao?: string;
 };
 
-const instituicoes: Instituicao[] = [
+/* =========================================================
+   COORDENADAS TERRITORIAIS
+   ---------------------------------------------------------
+   Estas posições são referências aproximadas de município/
+   província quando não existe uma coordenada pública exacta
+   da fazenda.
+========================================================= */
+
+const coordenadasMunicipios: Record<
+  string,
+  { lat: number; lng: number }
+> = {
+  Luanda: { lat: -8.8383, lng: 13.2344 },
+  Viana: { lat: -8.9025, lng: 13.3711 },
+  Cacuaco: { lat: -8.805, lng: 13.23 },
+  Camama: { lat: -9.0, lng: 13.27 },
+  Ramiros: { lat: -9.17, lng: 13.27 },
+  Zango: { lat: -8.92, lng: 13.55 },
+
+  Huambo: { lat: -12.7761, lng: 15.7392 },
+  Bailundo: { lat: -12.05, lng: 15.85 },
+  Ekunha: { lat: -12.35, lng: 15.93 },
+  Cachiungo: { lat: -12.56, lng: 15.72 },
+
+  "Cuanza Sul": { lat: -10.95, lng: 14.95 },
+  "Cela": { lat: -11.45, lng: 15.12 },
+  "Waku Kungo": { lat: -11.36, lng: 15.12 },
+  Quibala: { lat: -10.73, lng: 14.98 },
+  Mussende: { lat: -10.9, lng: 15.2 },
+  "Porto Amboim": { lat: -10.72, lng: 13.76 },
+  Ebo: { lat: -11.0, lng: 14.55 },
+  Cassongue: { lat: -11.83, lng: 15.04 },
+  Libolo: { lat: -10.12, lng: 14.95 },
+  Kibala: { lat: -10.7, lng: 14.98 },
+
+  Benguela: { lat: -12.5763, lng: 13.4055 },
+  Catumbela: { lat: -12.43, lng: 13.55 },
+  Cavaco: { lat: -12.56, lng: 13.42 },
+  Bocoio: { lat: -12.47, lng: 14.18 },
+
+  Malanje: { lat: -9.54, lng: 16.34 },
+  Cacuso: { lat: -9.32, lng: 15.25 },
+
+  Uíge: { lat: -7.61, lng: 15.06 },
+  Negage: { lat: -7.77, lng: 15.27 },
+  Buengas: { lat: -7.05, lng: 15.05 },
+  Kangola: { lat: -7.28, lng: 15.18 },
+  Puri: { lat: -7.6, lng: 15.15 },
+
+  Bengo: { lat: -8.58, lng: 13.66 },
+  Caxito: { lat: -8.58, lng: 13.66 },
+  Dande: { lat: -8.57, lng: 13.66 },
+
+  "Cuanza Norte": { lat: -9.3, lng: 14.91 },
+  "N'dalatando": { lat: -9.3, lng: 14.91 },
+  Lucala: { lat: -9.0, lng: 15.12 },
+  Banga: { lat: -9.3, lng: 15.0 },
+
+  Bié: { lat: -12.38, lng: 17.7 },
+  Chinguar: { lat: -12.2, lng: 16.33 },
+  Chinguar: { lat: -12.2, lng: 16.33 },
+
+  Huíla: { lat: -14.92, lng: 13.49 },
+  Lubango: { lat: -14.92, lng: 13.49 },
+  Humpata: { lat: -15.0, lng: 13.37 },
+  Chibia: { lat: -15.18, lng: 13.7 },
+
+  Zaire: { lat: -6.27, lng: 14.24 },
+  Nzeto: { lat: -7.23, lng: 12.87 },
+
+  Moxico: { lat: -11.2, lng: 20.4 },
+  Luena: { lat: -11.78, lng: 19.92 },
+
+  Lunda: { lat: -7.0, lng: 20.0 },
+  "Lunda Norte": { lat: -7.38, lng: 20.83 },
+  Dundo: { lat: -7.38, lng: 20.83 },
+  Tchitato: { lat: -7.38, lng: 20.83 },
+
+  Saurimo: { lat: -9.66, lng: 20.39 },
+  Cacolo: { lat: -10.15, lng: 19.3 },
+
+  Cuando: { lat: -17.07, lng: 19.0 },
+  Cunene: { lat: -17.07, lng: 15.73 },
+};
+
+/* =========================================================
+   FUNÇÃO DE POSIÇÃO APROXIMADA
+========================================================= */
+
+function gerarPosicao(
+  provincia: string,
+  municipio: string,
+  index: number
+) {
+  const base =
+    coordenadasMunicipios[municipio] ||
+    coordenadasMunicipios[provincia] ||
+    { lat: -11.2, lng: 17.87 };
+
+  /*
+    Pequeno deslocamento determinístico para evitar que
+    dezenas de fazendas fiquem exactamente sobre o mesmo
+    ponto quando apenas a localidade é conhecida.
+  */
+
+  const angulo = (index * 137.5 * Math.PI) / 180;
+
+  const distancia = 0.015 + (index % 7) * 0.004;
+
+  return {
+    lat: base.lat + Math.sin(angulo) * distancia,
+    lng: base.lng + Math.cos(angulo) * distancia,
+  };
+}
+
+/* =========================================================
+   BASE DAS 79 FAZENDAS DO DIRECTÓRIO PÚBLICO
+========================================================= */
+
+const basePublica: Array<{
+  nome: string;
+  provincia: string;
+  municipio: string;
+  local?: string;
+  actividade?: string[];
+  culturas?: string[];
+  pecuaria?: string[];
+}> = [
   {
-    id: "ujes-agronomia",
-    nome: "Faculdade de Ciências Agrárias — Universidade José Eduardo dos Santos",
-    sigla: "FCA-UJES",
-    tipo: "Ensino superior",
-    provincia: "Huambo",
-    local: "Chianga, Huambo",
-    descricao:
-      "Unidade universitária dedicada ao ensino, à investigação e à formação de quadros nas ciências agrárias e florestais. A sua actividade enquadra-se na produção de conhecimento aplicado aos sistemas agrícolas, aos recursos naturais e ao desenvolvimento rural.",
-    portal: "https://www.ujes.ao/unidade-de-ensino/faculdade-de-ciencias-agrarias",
-    imagem:
-      "https://www.ujes.ao/assets/uploads/instituicao/instituicao_16092023060929.jpeg",
-    imagemFonte:
-      "https://www.ujes.ao/unidade-de-ensino/faculdade-de-ciencias-agrarias",
-    legendaImagem: "Fotografia publicada no portal oficial da Faculdade de Ciências Agrárias.",
-    areas: ["Agronomia", "Ciências agrárias", "Florestas", "Investigação aplicada"],
-    cursos: [
-      {
-        nome: "Formação em Ciências Agrárias",
-        grau: "Oferta a confirmar no catálogo vigente",
-        duracao: "Consultar o plano curricular oficial",
-        descricao:
-          "A página institucional apresenta a Faculdade como unidade de ensino e investigação agrária. Confirme junto da Faculdade os cursos, graus e planos curriculares actualmente em vigor antes de publicar uma lista definitiva.",
-        plano: [
-          {
-            ano: "Plano curricular oficial",
-            disciplinas: [
-              "Solicitar à Faculdade o plano curricular vigente",
-              "Confirmar disciplinas, carga horária e regime de avaliação",
-            ],
-          },
-        ],
-        saidas: [
-          "Produção e assistência técnica agrícola, conforme a formação concluída",
-          "Investigação e extensão rural, conforme requisitos da entidade empregadora",
-          "Gestão de recursos naturais, conforme especialização",
-        ],
-      },
-    ],
-    contactos: [
-      "Localização publicada: Chianga, Huambo",
-      "Correio electrónico: fcaujes@gmail.com",
-      "Correio electrónico institucional: contacto@ujes.ao",
-      "Telefone publicado: +244 949 321 444",
-    ],
-    observacao:
-      "Os dados de cursos e planos curriculares devem ser confirmados no portal ou directamente junto da instituição antes de serem considerados uma oferta académica actual.",
+    nome: "ABMartins & Filhos - Quinta",
+    provincia: "Luanda",
+    municipio: "Viana",
+    local: "Kikuxi",
+    actividade: ["Agricultura"],
   },
   {
-    id: "ujes-veterinaria",
-    nome: "Faculdade de Medicina Veterinária — Universidade José Eduardo dos Santos",
-    sigla: "FMV-UJES",
-    tipo: "Ensino superior",
-    provincia: "Huambo",
-    local: "Huambo",
-    descricao:
-      "Unidade de ensino superior associada à formação veterinária. A página serve como ponto de entrada para estudantes interessados em saúde animal, produção pecuária, prevenção de doenças e apoio técnico aos sistemas de produção.",
-    portal: "https://www.ujes.ao/",
-    imagem:
-      "https://www.ujes.ao/assets/uploads/notice/noticia_25092025080918.jpeg",
-    imagemFonte:
-      "https://www.ujes.ao/ujes-na-expo-huambo-2025-ciencia-inovacao-e-servico-a-comunidadei",
-    legendaImagem:
-      "Imagem de uma actividade institucional da UJES na Expo Huambo 2025; não é apresentada como fotografia da fachada da Faculdade.",
-    areas: ["Medicina veterinária", "Saúde animal", "Produção pecuária", "Investigação"],
-    cursos: [
-      {
-        nome: "Medicina Veterinária",
-        grau: "Licenciatura — confirmar oferta e designação vigentes",
-        duracao: "Consultar o plano curricular oficial",
-        descricao:
-          "Formação orientada para a saúde e o bem-estar animal, prevenção e diagnóstico de doenças, saúde pública veterinária e apoio à produção pecuária.",
-        plano: [
-          {
-            ano: "Plano curricular oficial",
-            disciplinas: [
-              "Solicitar à Faculdade o plano curricular vigente",
-              "Confirmar disciplinas, carga horária, estágios e requisitos de conclusão",
-            ],
-          },
-        ],
-        saidas: [
-          "Clínica e assistência veterinária, nos termos legais aplicáveis",
-          "Serviços veterinários e saúde pública",
-          "Produção animal, investigação e extensão",
-        ],
-      },
-    ],
-    contactos: [
-      "Portal geral da Universidade: https://www.ujes.ao/",
-      "Consultar o portal oficial para contactos actualizados da Faculdade.",
-    ],
-    observacao:
-      "A fotografia é de uma actividade institucional da UJES. Os cursos, planos e contactos específicos devem ser confirmados junto da Faculdade.",
+    nome:
+      "Angolaves - Empreendimentos Avícolas e Agropecuários, Lda.",
+    provincia: "Luanda",
+    municipio: "Cacuaco",
+    local: "Panguila",
+    actividade: ["Pecuária", "Avicultura"],
+    pecuaria: ["Aves"],
   },
   {
-    id: "umn-ondjiva",
-    nome: "Instituto Politécnico de Ondjiva — Universidade Mandume ya Ndemufayo",
-    sigla: "IPO-UMN",
-    tipo: "Ensino superior",
-    provincia: "Cunene",
-    local: "Ondjiva, Cunene",
-    descricao:
-      "Unidade de ensino superior da Universidade Mandume ya Ndemufayo. O portal institucional disponibiliza informação académica, incluindo referência à formação em Engenharia Agronómica. Consulte sempre a publicação oficial mais recente para confirmar vagas e plano curricular.",
-    portal: "https://www.umn.edu.ao/",
-    imagem:
-      "https://www.umn.edu.ao/umn/cache/f/3fc73aa20ecf71d99204fe43543e5cc0.jpg",
-    imagemFonte:
-      "https://www.umn.edu.ao/umn/index.php/uteis/noticias-e-eventos/1095-baptismo-de-caloiros-marca-encerramento-da-semana-do-verdinho",
-    legendaImagem:
-      "Fotografia de actividade académica publicada no portal da UMN; não é identificada como fachada do Instituto.",
-    areas: ["Engenharia agronómica", "Produção vegetal", "Solos", "Desenvolvimento rural"],
-    cursos: [
-      {
-        nome: "Engenharia Agronómica",
-        grau: "Ensino superior — designação indicada no portal institucional",
-        duracao: "Consultar o plano curricular oficial",
-        descricao:
-          "Formação ligada aos sistemas de produção vegetal, solos, água, tecnologias agrícolas e gestão da produção. A organização exacta das unidades curriculares deve ser consultada no plano oficial.",
-        plano: [
-          {
-            ano: "Plano curricular oficial",
-            disciplinas: [
-              "Consultar o plano curricular publicado pela UMN",
-              "Confirmar unidades curriculares por ano, carga horária e estágio",
-            ],
-          },
-        ],
-        saidas: [
-          "Produção vegetal e assistência técnica",
-          "Gestão de explorações agrícolas",
-          "Projectos de desenvolvimento rural e investigação aplicada",
-        ],
-      },
-    ],
-    contactos: [
-      "Portal institucional: https://www.umn.edu.ao/",
-      "Consultar o portal da UMN para contactos e calendário académico actualizados.",
-    ],
-    observacao:
-      "A fotografia é de uma actividade académica divulgada pela UMN. Não substitui uma fotografia identificada do campus.",
+    nome: "Cofriang U.E.E.",
+    provincia: "Luanda",
+    municipio: "Luanda",
+    actividade: ["Agricultura", "Pecuária"],
   },
   {
-    id: "umn-huila",
-    nome: "Instituto Politécnico da Huíla — Universidade Mandume ya Ndemufayo",
-    sigla: "IPH-UMN",
-    tipo: "Ensino superior",
+    nome: "Fazenda 27, Lda.",
+    provincia: "Cuanza Sul",
+    municipio: "Waku Kungo",
+    actividade: ["Agro-indústria"],
+  },
+  {
+    nome: "Fazenda Abóbora",
+    provincia: "Luanda",
+    municipio: "Luanda",
+    actividade: ["Agricultura"],
+    culturas: ["Café"],
+  },
+  {
+    nome:
+      "Fazenda Agrícola Sambundo de António Jeremias",
+    provincia: "Benguela",
+    municipio: "Catumbela",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Agrilminha",
+    provincia: "Angola",
+    municipio: "Angola",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Agro7",
+    provincia: "Luanda",
+    municipio: "Luanda",
+    actividade: ["Agropecuária"],
+  },
+  {
+    nome: "Fazenda Agropecuária",
     provincia: "Huíla",
-    local: "Huíla",
+    municipio: "Lubango",
+    actividade: ["Agricultura", "Pecuária"],
+    pecuaria: ["Animais"],
+  },
+  {
+    nome: "Fazenda Ajomal",
+    provincia: "Malanje",
+    municipio: "Malanje",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Aldeia Nova",
+    provincia: "Cuanza Sul",
+    municipio: "Waku Kungo",
+    actividade: ["Agricultura", "Pecuária", "Avicultura"],
+    culturas: ["Milho"],
+    pecuaria: ["Aves", "Bovinos"],
+  },
+  {
+    nome: "Fazenda ALVAN",
+    provincia: "Luanda",
+    municipio: "Luanda",
+    local: "Morro Bento",
+    actividade: ["Agricultura", "Pecuária"],
+  },
+  {
+    nome: "Fazenda Atapada, Lda.",
+    provincia: "Huíla",
+    municipio: "Chibia",
+    local: "Mpapa",
+    actividade: ["Agricultura", "Pecuária"],
+  },
+  {
+    nome: "Fazenda Auria Machado",
+    provincia: "Huambo",
+    municipio: "Huambo",
+    actividade: ["Pecuária"],
+    pecuaria: ["Animais"],
+  },
+  {
+    nome: "Fazenda Aurora",
+    provincia: "Bengo",
+    municipio: "Dande",
+    actividade: ["Pecuária", "Agro-indústria"],
+    culturas: ["Leite"],
+    pecuaria: ["Bovinos"],
+  },
+  {
+    nome: "Fazenda Avícola",
+    provincia: "Luanda",
+    municipio: "Luanda",
+    actividade: ["Avicultura"],
+    pecuaria: ["Aves"],
+  },
+  {
+    nome: "Fazenda Avó Teté",
+    provincia: "Bengo",
+    municipio: "Caxito",
+    actividade: ["Agricultura", "Pecuária"],
+  },
+  {
+    nome: "Fazenda Barragem do Manso",
+    provincia: "Uíge",
+    municipio: "Negage",
+    actividade: ["Agricultura", "Pecuária", "Avicultura"],
+    culturas: ["Milho", "Soja", "Hortícolas"],
+    pecuaria: ["Bovinos", "Aves"],
+  },
+  {
+    nome: "Fazenda Boa Esperança",
+    provincia: "Cuanza Sul",
+    municipio: "Cuanza Sul",
+    actividade: ["Agricultura"],
+    culturas: ["Café"],
+  },
+  {
+    nome: "Fazenda Boa Nova",
+    provincia: "Luanda",
+    municipio: "Ramiros",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Campos Belos",
+    provincia: "Cuanza Norte",
+    municipio: "Cuanza Norte",
+    local: "Sambacaju",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda DGIL Agricultura",
+    provincia: "Luanda",
+    municipio: "Camama",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Divuidi Comércio, Lda.",
+    provincia: "Uíge",
+    municipio: "Uíge",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda do Futuro",
+    provincia: "Angola",
+    municipio: "Angola",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Durão",
+    provincia: "Uíge",
+    municipio: "Uíge",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Elavoco Construção, Lda.",
+    provincia: "Uíge",
+    municipio: "Buengas",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Essência do Campo",
+    provincia: "Bengo",
+    municipio: "Caxito",
+    actividade: ["Agricultura"],
+    culturas: ["Bambu"],
+  },
+  {
+    nome: "Fazenda FILHOS DE MARITÓ",
+    provincia: "Luanda",
+    municipio: "Cacuaco",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Filomena",
+    provincia: "Luanda",
+    municipio: "Cacuaco",
+    local: "Panguila",
+    actividade: ["Avicultura", "Agricultura"],
+    pecuaria: ["Aves"],
+  },
+  {
+    nome: "Fazenda GIKISA & Filhos, Lda.",
+    provincia: "Cuanza Sul",
+    municipio: "Porto Amboim",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Girassol",
+    provincia: "Zaire",
+    municipio: "Nzeto",
+    actividade: ["Agricultura", "Horticultura"],
+    culturas: ["Banana", "Mamão", "Hortícolas"],
+  },
+  {
+    nome: "Fazenda Hortangola",
+    provincia: "Malanje",
+    municipio: "Cacuso",
+    actividade: ["Horticultura"],
+    culturas: ["Hortícolas"],
+  },
+  {
+    nome: "Fazenda J.W Catering",
+    provincia: "Cuanza Norte",
+    municipio: "Lucala",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Kambondo",
+    provincia: "Cuanza Sul",
+    municipio: "Quibala",
+    actividade: ["Agricultura"],
+    culturas: ["Sementes"],
+  },
+  {
+    nome: "Fazenda Kibaxi",
+    provincia: "Bengo",
+    municipio: "Bengo",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Kumbira",
+    provincia: "Luanda",
+    municipio: "Luanda",
+    actividade: ["Agricultura", "Avicultura"],
+  },
+  {
+    nome: "Fazenda LN2, Lda.",
+    provincia: "Cuanza Sul",
+    municipio: "Cuanza Sul",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Lumana",
+    provincia: "Benguela",
+    municipio: "Cavaco",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda M. Umba",
+    provincia: "Benguela",
+    municipio: "Benguela",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Manquete",
+    provincia: "Cunene",
+    municipio: "Cunene",
+    actividade: ["Agricultura", "Pecuária"],
+  },
+  {
+    nome: "Fazenda Maria Emília",
+    provincia: "Angola",
+    municipio: "Angola",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Mati",
+    provincia: "Cuanza Sul",
+    municipio: "Waku Kungo",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Mudiaquelele",
+    provincia: "Uíge",
+    municipio: "Puri",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Nguendalica - Huambo",
+    provincia: "Huambo",
+    municipio: "Huambo",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda No 4, Lágrimas Chorona",
+    provincia: "Luanda",
+    municipio: "Luanda",
+    local: "Rio Longa",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Nonail Humpata",
+    provincia: "Huíla",
+    municipio: "Humpata",
+    actividade: ["Horticultura", "Pecuária"],
+    culturas: ["Hortícolas"],
+    pecuaria: ["Aves", "Suínos", "Bovinos"],
+  },
+  {
+    nome: "Fazenda Oligario Cacambo",
+    provincia: "Luanda",
+    municipio: "Camama",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Pai Timóteo",
+    provincia: "Bengo",
+    municipio: "Bengo",
+    actividade: ["Agricultura", "Ecoturismo"],
+  },
+  {
+    nome: "Fazenda Palmarito Mussende",
+    provincia: "Cuanza Sul",
+    municipio: "Mussende",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Quifica Vunge (SU), Lda.",
+    provincia: "Uíge",
+    municipio: "Negage",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Quizenga",
+    provincia: "Malanje",
+    municipio: "Malanje",
+    actividade: ["Agricultura"],
+    culturas: ["Produção orgânica"],
+  },
+  {
+    nome: "Fazenda Ramos de Milho",
+    provincia: "Benguela",
+    municipio: "Cavaco",
+    actividade: ["Agricultura"],
+    culturas: ["Milho"],
+  },
+  {
+    nome: "Fazenda Real",
+    provincia: "Huambo",
+    municipio: "Bailundo",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Renascer",
+    provincia: "Cuanza Sul",
+    municipio: "Ebo",
+    actividade: ["Agricultura"],
+    culturas: ["Abacate", "Pimentos", "Batata rena"],
+  },
+  {
+    nome: "Fazenda Robic",
+    provincia: "Cuanza Sul",
+    municipio: "Quibala",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Rolina Comercial, Lda.",
+    provincia: "Cuanza Norte",
+    municipio: "Banga",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Sabores do Huambo",
+    provincia: "Huambo",
+    municipio: "Huambo",
+    local: "Bairro Cruzeiro",
+    actividade: ["Agricultura"],
+    culturas: ["Feijão"],
+  },
+  {
+    nome: "Fazenda Santa Filomena",
+    provincia: "Benguela",
+    municipio: "Cavaco",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Santa Margarida",
+    provincia: "Uíge",
+    municipio: "Kangola",
+    actividade: ["Horticultura"],
+    culturas: [
+      "Alho",
+      "Cebola",
+      "Tomate",
+      "Cenoura",
+      "Repolho"
+    ],
+  },
+  {
+    nome: "Fazenda SCRL TXISSOPA",
+    provincia: "Angola",
+    municipio: "Angola",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome:
+      "Fazenda Serdul de Sérgio Casimiro Alexandre, Lda.",
+    provincia: "Cuanza Sul",
+    municipio: "Cela",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Socamia",
+    provincia: "Malanje",
+    municipio: "Malanje",
+    actividade: ["Agro-indústria"],
+    culturas: ["Milho"],
+  },
+  {
+    nome: "Fazenda Sociedade Starfih, Lda.",
+    provincia: "Cuanza Sul",
+    municipio: "Porto Amboim",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Sopemba",
+    provincia: "Angola",
+    municipio: "Angola",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Tchitogo",
+    provincia: "Malanje",
+    municipio: "Malanje",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Terra Arável e Agro - Pecuária, Lda.",
+    provincia: "Cuanza Sul",
+    municipio: "Libolo",
+    local: "Munenga / Catanda",
+    actividade: ["Agricultura", "Pecuária"],
+  },
+  {
+    nome: "Fazenda Tia Jóia",
+    provincia: "Benguela",
+    municipio: "Bocoio",
+    local: "Monte Belo",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome:
+      "Fazenda Ting - Inteligente Colectivo, Lda.",
+    provincia: "Cuanza Sul",
+    municipio: "Porto Amboim",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Token Locolisa",
+    provincia: "Luanda",
+    municipio: "Zango",
+    actividade: ["Agricultura"],
+    culturas: ["Produtos do campo"],
+  },
+  {
+    nome: "Fazenda Tonilsan & Filhos",
+    provincia: "Cuanza Sul",
+    municipio: "Cassongue",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Vemser Incorporation, Lda.",
+    provincia: "Lunda Sul",
+    municipio: "Saurimo",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Vinevala",
+    provincia: "Bié",
+    municipio: "Chinguar",
+    actividade: ["Agricultura"],
+    culturas: ["Trigo"],
+  },
+  {
+    nome: "Fazenda Vissolela",
+    provincia: "Cuanza Sul",
+    municipio: "Kibala",
+    actividade: ["Agricultura"],
+    culturas: ["Café"],
+  },
+  {
+    nome: "Fazenda VT - HT & Filhos, Lda.",
+    provincia: "Lunda Norte",
+    municipio: "Tchitato",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Fazenda Yitumbo",
+    provincia: "Cuanza Sul",
+    municipio: "Cuanza Sul",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Quinta Calemene Mucuacuiza Uahiana",
+    provincia: "Lunda Norte",
+    municipio: "Dundo",
+    local: "Camaquenzo II",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Quinta Carioca, Lda.",
+    provincia: "Luanda",
+    municipio: "Cacuaco",
+    local: "Funda / Kilunda",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Quinta Maria do Carmo, Lda.",
+    provincia: "Luanda",
+    municipio: "Viana",
+    actividade: ["Agricultura"],
+  },
+  {
+    nome: "Turiagro - Turismo e Agro Pecuária, Lda.",
+    provincia: "Bengo",
+    municipio: "Caxito",
+    actividade: ["Agricultura", "Pecuária"],
+  }
+];
+
+/* =========================================================
+   DADOS ENRIQUECIDOS
+========================================================= */
+
+const dadosEspeciais: Record<
+  string,
+  Partial<Fazenda>
+> = {
+  "Fazenda 7 Quintas": {
+    estado: "Operacional",
+    areaTotal: 1978.81,
+    areaCultivada: 150,
+    areaNaoCultivada: 1828.81,
+    usoSolo: "Verificado",
+    potencial: 91,
+    culturas: ["Soja", "Milho", "Feijão"],
+    pecuaria: ["Bovinos", "Pastagem"],
+    lat: -11.3999416,
+    lng: 15.1520282,
+    nivelLocalizacao: "exacta",
+    coordenadasTexto: "-11.3999416, 15.1520282",
     descricao:
-      "Unidade da Universidade Mandume ya Ndemufayo com referência institucional às áreas de Agronomia e Zootecnia. A oferta efectiva, os requisitos de ingresso e os planos curriculares devem ser confirmados para o ano académico em causa.",
-    portal: "https://www.umn.edu.ao/",
-    areas: ["Agronomia", "Zootecnia", "Produção animal", "Produção vegetal"],
-    cursos: [
-      {
-        nome: "Agronomia",
-        grau: "Ensino superior — confirmar a oferta anual",
-        duracao: "Consultar o plano curricular oficial",
-        descricao:
-          "Área de formação ligada à produção vegetal, aos solos, à água e à gestão de sistemas agrícolas.",
-        plano: [
-          {
-            ano: "Plano curricular oficial",
-            disciplinas: [
-              "Solicitar o plano curricular vigente ao Instituto",
-              "Confirmar unidades curriculares, carga horária e estágio",
-            ],
-          },
-        ],
-        saidas: ["Produção agrícola", "Assistência técnica", "Gestão de explorações e projectos rurais"],
-      },
-      {
-        nome: "Zootecnia",
-        grau: "Ensino superior — confirmar a oferta anual",
-        duracao: "Consultar o plano curricular oficial",
-        descricao:
-          "Área de formação ligada à produção animal, alimentação, maneio, reprodução e gestão de sistemas pecuários.",
-        plano: [
-          {
-            ano: "Plano curricular oficial",
-            disciplinas: [
-              "Solicitar o plano curricular vigente ao Instituto",
-              "Confirmar unidades curriculares, carga horária e estágio",
-            ],
-          },
-        ],
-        saidas: ["Produção pecuária", "Assistência técnica", "Gestão de explorações animais"],
-      },
+      "Exploração agropecuária de grande dimensão localizada na Cela. A documentação pública apresenta aproximadamente 1.978,81 hectares de área total e 150 hectares de área agrícola documentada.",
+    especial: [
+      "Grande disponibilidade territorial",
+      "Produção agrícola",
+      "Produção pecuária",
+      "Sistema de irrigação",
+      "Pastagem",
+      "Potencial de expansão"
     ],
-    contactos: [
-      "Portal institucional: https://www.umn.edu.ao/",
-      "Consultar o portal da UMN para contactos actualizados.",
+    fonte:
+      "PDAC — Plano de Gestão Ambiental e Social",
+    urlFonte:
+      "https://pdac.ao/wp-content/uploads/2020/07/PGAS-No-64-Fazenda-7-Quintas.pdf"
+  },
+
+  "Fazenda Girassol": {
+    estado: "Operacional",
+    areaCultivada: 238,
+    usoSolo: "Histórico",
+    potencial: 90,
+    culturas: [
+      "Banana",
+      "Mamão",
+      "Hortícolas"
     ],
-    observacao:
-      "Não foi inserida fotografia específica do Instituto sem confirmação de que a imagem representa essa unidade.",
+    descricao:
+      "Exploração agrícola localizada no Nzeto, com produção hortícola e frutícola, estruturas de cultivo protegido e sistemas de irrigação.",
+    especial: [
+      "Estufas",
+      "Irrigação",
+      "Banana",
+      "Mamão",
+      "Reservatórios de água"
+    ],
+    imagens: [
+      {
+        url:
+          "https://cdn.prod.website-files.com/5b03c2c5f551b29f01058a3a/5f156fca3d0267f32f2b1377_Fazenda%20Girassol%20-%20Agricultura%20.jpeg",
+        legenda:
+          "Infraestrutura agrícola da Fazenda Girassol",
+        fonte:
+          "Economia & Mercado"
+      }
+    ],
+    fonte:
+      "Economia & Mercado"
   },
-];
 
-const modelosTecnicos = [
-  {
-    id: "tecnico-1",
-    titulo: "Instituto Médio Agrário",
-    provincia: "Adicionar província",
-    descricao: "",
-    imagem: "",
-    portal: "",
+  "Fazenda Mungo": {
+    estado: "Em desenvolvimento",
+    areaTotal: 2500,
+    usoSolo: "Histórico",
+    potencial: 94,
+    culturas: [
+      "Abacate",
+      "Café Arábica",
+      "Macadâmia",
+      "Ananás"
+    ],
+    lat: -11.735911,
+    lng: 16.437011,
+    nivelLocalizacao: "exacta",
+    coordenadasTexto:
+      "11°44'9.28\" S 16°26'13.24\" E",
+    descricao:
+      "Projecto agrícola de grande dimensão no planalto do Huambo. O abacate é uma das principais linhas de desenvolvimento, existindo ensaios com café arábica, macadâmia, ananás e plantas aromáticas.",
+    especial: [
+      "Produção de abacate",
+      "Viveiro",
+      "Café arábica",
+      "Macadâmia",
+      "Ananás",
+      "Agricultura de altitude"
+    ],
+    fonte:
+      "Fazenda Mungo",
+    urlFonte:
+      "https://fazendamungo.com/"
   },
-  {
-    id: "tecnico-2",
-    titulo: "Instituto Médio de Veterinária",
-    provincia: "Adicionar província",
-    descricao: "",
-    imagem: "",
-    portal: "",
+
+  "Fazenda Yolele": {
+    estado: "Operacional",
+    areaTotal: 149.55,
+    areaCultivada: 100,
+    areaNaoCultivada: 49.55,
+    usoSolo: "Verificado",
+    potencial: 86,
+    culturas: [
+      "Milho",
+      "Feijão",
+      "Batata"
+    ],
+    descricao:
+      "Exploração agrícola localizada no Bailundo. O projecto documentado pelo PDAC apresenta 149,55 hectares de área total e aproximadamente 100 hectares de área agrícola utilizada.",
+    especial: [
+      "Rio Colenle",
+      "Agricultura irrigada",
+      "Agricultura de sequeiro",
+      "Milho",
+      "Feijão",
+      "Batata"
+    ],
+    fonte:
+      "PDAC — Fazenda Yolele",
+    urlFonte:
+      "https://pdac.ao/wp-content/uploads/2020/07/PGAS-No-168-FAZENDA-Yoleli-A-Publicar.pdf"
   },
-  {
-    id: "tecnico-3",
-    titulo: "Escola Técnica de Produção Agropecuária",
-    provincia: "Adicionar província",
-    descricao: "",
-    imagem: "",
-    portal: "",
+
+  "Fazenda Pedras Negras": {
+    estado: "Referência pública",
+    areaTotal: 10000,
+    usoSolo: "Histórico",
+    potencial: 96,
+    culturas: [
+      "Milho",
+      "Soja",
+      "Massambala",
+      "Feijão"
+    ],
+    descricao:
+      "Grande empreendimento agrícola associado ao pólo agro-industrial de Pungo Andongo. As fontes públicas apresentam valores de área diferentes conforme o período, sendo os números tratados como históricos.",
+    especial: [
+      "Grande escala agrícola",
+      "Pungo Andongo",
+      "Cereais",
+      "Soja",
+      "Agro-indústria"
+    ],
+    imagens: [
+      {
+        url:
+          "https://media.licdn.com/dms/image/v2/D4D22AQFnSZeyVn7O6w/feedshare-shrink_800/B4DZX1YPiuGwAs-/0/1743579688324?e=2147483647&t=8_Si6VZz-vjC6NphaMRg6SOeKeETD_LTwDbDXkt50Q0&v=beta",
+        legenda:
+          "Vista publicada da Fazenda Pedras Negras",
+        fonte:
+          "Publicação pública"
+      }
+    ],
+    fonte:
+      "Fontes públicas e documentação de projecto"
   },
-  {
-    id: "tecnico-4",
-    titulo: "Instituto Técnico de Recursos Florestais",
-    provincia: "Adicionar província",
-    descricao: "",
-    imagem: "",
-    portal: "",
+
+  "Fazenda Catito": {
+    estado: "Referência pública",
+    usoSolo: "Histórico",
+    potencial: 95,
+    culturas: [
+      "Milho",
+      "Feijão",
+      "Soja",
+      "Batata",
+      "Mandioca",
+      "Citrinos"
+    ],
+    pecuaria: ["Bovinos"],
+    descricao:
+      "Grande projecto agropecuário localizado no Bailundo, com referências públicas a produção agrícola diversificada, pecuária e aquicultura.",
+    especial: [
+      "Grande escala",
+      "Milho",
+      "Soja",
+      "Batata",
+      "Mandioca",
+      "Pecuária",
+      "Aquicultura"
+    ],
+    fonte:
+      "Fontes públicas sobre o projecto"
   },
-];
 
-type Separador = "Visão geral" | "Cursos" | "Planos curriculares" | "Saídas profissionais" | "Contactos";
+  "Nova Agrolider": {
+    estado: "Operacional",
+    potencial: 94,
+    culturas: [
+      "Hortícolas",
+      "Café",
+      "Abacate",
+      "Tubérculos"
+    ],
+    descricao:
+      "Exploração agro-industrial associada à produção de hortícolas, café, abacate e tubérculos, com sistemas de irrigação por pivô.",
+    especial: [
+      "Irrigação por pivô",
+      "Café",
+      "Abacate",
+      "Hortícolas",
+      "Tubérculos"
+    ],
+    imagens: [
+      {
+        url:
+          "https://www.ispsn.org/sites/default/files/images/news/img_6062.jpeg",
+        legenda:
+          "Áreas agrícolas com irrigação por pivô",
+        fonte: "ISPSN"
+      }
+    ],
+    fonte: "ISPSN"
+  },
 
-export default function DirectorioAgropecuario() {
-  const [pesquisa, setPesquisa] = useState("");
-  const [filtroProvincia, setFiltroProvincia] = useState("Todas");
-  const [filtroTipo, setFiltroTipo] = useState("Todos");
-  const [selecionada, setSelecionada] = useState<Instituicao | null>(null);
-  const [separador, setSeparador] = useState<Separador>("Visão geral");
-  const [cursoAtivo, setCursoAtivo] = useState(0);
+  "Fazenda Quizenga": {
+    estado: "Operacional",
+    potencial: 88,
+    culturas: ["Produção agrícola"],
+    descricao:
+      "Exploração agrícola localizada em Lutete, Malanje, associada a actividade agrícola e geração de emprego rural.",
+    especial: [
+      "Produção agrícola",
+      "Emprego rural",
+      "Cacuso",
+      "Produção comercial"
+    ],
+    imagens: [
+      {
+        url:
+          "https://plataformacipra.gov.ao/public/ficheiros/noticias/580709230941541694076114.jpeg",
+        legenda:
+          "Vista da Fazenda Quizenga",
+        fonte: "CIPRA"
+      }
+    ],
+    fonte:
+      "CIPRA — Presidência da República de Angola"
+  },
 
-  const lista = useMemo(() => {
-    const termo = pesquisa.trim().toLocaleLowerCase("pt-PT");
-    return instituicoes.filter((item) => {
-      const correspondeTexto =
-        !termo ||
-        [item.nome, item.sigla, item.provincia, item.local, item.descricao, ...item.areas]
-          .join(" ")
-          .toLocaleLowerCase("pt-PT")
-          .includes(termo);
-      const correspondeProvincia = filtroProvincia === "Todas" || item.provincia === filtroProvincia;
-      const correspondeTipo = filtroTipo === "Todos" || item.tipo === filtroTipo;
-      return correspondeTexto && correspondeProvincia && correspondeTipo;
-    });
-  }, [pesquisa, filtroProvincia, filtroTipo]);
+  "Fazenda Vinevala": {
+    estado: "Operacional",
+    potencial: 89,
+    culturas: ["Trigo"],
+    descricao:
+      "Exploração agrícola localizada no Bié e associada a campanhas de produção de trigo.",
+    especial: [
+      "Produção de trigo",
+      "Agricultura cerealífera",
+      "Bié",
+      "Produção comercial"
+    ],
+    imagens: [
+      {
+        url:
+          "https://plataformacipra.gov.ao/public/ficheiros/noticias/551107240332001720708320.jpg",
+        legenda:
+          "Campanha de produção de trigo",
+        fonte: "CIPRA"
+      }
+    ],
+    fonte:
+      "CIPRA — Presidência da República de Angola"
+  },
 
-  useEffect(() => {
-    if (!selecionada) return;
-    const anterior = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    function fecharComEscape(evento: KeyboardEvent) {
-      if (evento.key === "Escape") setSelecionada(null);
-    }
-    window.addEventListener("keydown", fecharComEscape);
-    return () => {
-      document.body.style.overflow = anterior;
-      window.removeEventListener("keydown", fecharComEscape);
+  "Fazenda José João Neto": {
+    areaTotal: 190,
+    usoSolo: "Verificado",
+    potencial: 78,
+    descricao:
+      "Exploração agrícola identificada em documentação pública do PDAC no município do Lucala.",
+    especial: [
+      "Área documentada",
+      "Lucala",
+      "Projecto agrícola",
+      "Emprego rural"
+    ],
+    fonte: "PDAC"
+  },
+
+  "Fazenda JW&A": {
+    estado: "Operacional",
+    potencial: 79,
+    culturas: ["Culturas agrícolas"],
+    descricao:
+      "Exploração agrícola localizada na região de Lucala, com actividade de produção agrícola documentada através de imagens públicas.",
+    especial: [
+      "Produção agrícola",
+      "Lucala",
+      "Produção rural",
+      "Exploração empresarial"
+    ],
+    imagens: [
+      {
+        url:
+          "https://fazendajwa.com/images/IMG-20250620-WA0013.jpg",
+        legenda:
+          "Área de produção da Fazenda JW&A",
+        fonte: "Fazenda JW&A"
+      }
+    ],
+    fonte: "Fazenda JW&A",
+    urlFonte: "https://fazendajwa.com/"
+  }
+};
+
+/* =========================================================
+   CRIAÇÃO FINAL DAS 79 FAZENDAS
+========================================================= */
+
+const fazendas: Fazenda[] = basePublica.map(
+  (base, index) => {
+    const posicao = gerarPosicao(
+      base.provincia,
+      base.municipio,
+      index
+    );
+
+    const extra =
+      dadosEspeciais[base.nome] || {};
+
+    const areaTotal =
+      extra.areaTotal;
+
+    const areaCultivada =
+      extra.areaCultivada;
+
+    const areaNaoCultivada =
+      extra.areaNaoCultivada ??
+      (areaTotal !== undefined &&
+      areaCultivada !== undefined
+        ? areaTotal - areaCultivada
+        : undefined);
+
+    return {
+      id: index + 1,
+
+      nome: base.nome,
+
+      provincia: base.provincia,
+
+      municipio: base.municipio,
+
+      local: base.local,
+
+      actividade:
+        extra.actividade ||
+        base.actividade ||
+        ["Agricultura"],
+
+      culturas:
+        extra.culturas ||
+        base.culturas ||
+        [],
+
+      pecuaria:
+        extra.pecuaria ||
+        base.pecuaria ||
+        [],
+
+      estado:
+        extra.estado ||
+        "Referência pública",
+
+      areaTotal,
+
+      areaCultivada,
+
+      areaNaoCultivada,
+
+      usoSolo:
+        extra.usoSolo ||
+        "Não disponível",
+
+      potencial:
+        extra.potencial ||
+        70,
+
+      descricao:
+        extra.descricao ||
+        `${base.nome} está identificada no directório público de explorações do agronegócio em Angola, com referência territorial em ${base.municipio}, ${base.provincia}.`,
+
+      especial:
+        extra.especial ||
+        [
+          base.provincia,
+          base.municipio,
+          ...(base.culturas || []),
+          ...(base.pecuaria || [])
+        ].slice(0, 6),
+
+      lat:
+        extra.lat ??
+        posicao.lat,
+
+      lng:
+        extra.lng ??
+        posicao.lng,
+
+      nivelLocalizacao:
+        extra.nivelLocalizacao ||
+        "aproximada",
+
+      coordenadasTexto:
+        extra.coordenadasTexto,
+
+      imagens:
+        extra.imagens ||
+        [],
+
+      fonte:
+        extra.fonte ||
+        "AgroPortal — Directório público de Fazendas",
+
+      urlFonte:
+        extra.urlFonte ||
+        "https://agroportal.ao/component/mtree/business/companies.html",
+
+      observacao:
+        extra.observacao ||
+        "A localização apresentada no mapa é aproximada porque a fonte pública consultada fornece a localidade, município ou província, mas não uma coordenada exacta da propriedade."
     };
-  }, [selecionada]);
+  }
+);
 
-  function abrir(item: Instituicao) {
-    setSelecionada(item);
-    setSeparador("Visão geral");
-    setCursoAtivo(0);
+/* =========================================================
+   COMPONENTE
+========================================================= */
+
+export default function DirectorioFazendas() {
+  const [pesquisa, setPesquisa] =
+    useState("");
+
+  const [provincia, setProvincia] =
+    useState("Todas");
+
+  const [actividade, setActividade] =
+    useState("Todas");
+
+  const [estado, setEstado] =
+    useState("Todos");
+
+  const [localizacao, setLocalizacao] =
+    useState("Todas");
+
+  const [selecionada, setSelecionada] =
+    useState<Fazenda | null>(null);
+
+  const [slide, setSlide] =
+    useState(0);
+
+  const [mostrarMapa, setMostrarMapa] =
+    useState(false);
+
+  const provincias = useMemo(
+    () => [
+      "Todas",
+      ...Array.from(
+        new Set(
+          fazendas.map(
+            (f) => f.provincia
+          )
+        )
+      ).sort()
+    ],
+    []
+  );
+
+  const actividades = useMemo(
+    () => [
+      "Todas",
+      ...Array.from(
+        new Set(
+          fazendas.flatMap(
+            (f) => f.actividade
+          )
+        )
+      ).sort()
+    ],
+    []
+  );
+
+  const resultados = useMemo(() => {
+    const termo =
+      pesquisa.toLowerCase().trim();
+
+    return fazendas.filter((f) => {
+      const texto =
+        `${f.nome} ${f.provincia} ${f.municipio} ${
+          f.local || ""
+        } ${f.culturas.join(" ")} ${
+          f.actividade.join(" ")
+        }`.toLowerCase();
+
+      const pesquisaOK =
+        !termo ||
+        texto.includes(termo);
+
+      const provinciaOK =
+        provincia === "Todas" ||
+        f.provincia === provincia;
+
+      const actividadeOK =
+        actividade === "Todas" ||
+        f.actividade.includes(
+          actividade
+        );
+
+      const estadoOK =
+        estado === "Todos" ||
+        f.estado === estado;
+
+      const localizacaoOK =
+        localizacao === "Todas" ||
+        f.nivelLocalizacao ===
+          localizacao;
+
+      return (
+        pesquisaOK &&
+        provinciaOK &&
+        actividadeOK &&
+        estadoOK &&
+        localizacaoOK
+      );
+    });
+  }, [
+    pesquisa,
+    provincia,
+    actividade,
+    estado,
+    localizacao
+  ]);
+
+  const totalArea = fazendas.reduce(
+    (total, f) =>
+      total + (f.areaTotal || 0),
+    0
+  );
+
+  const totalCultivada =
+    fazendas.reduce(
+      (total, f) =>
+        total +
+        (f.areaCultivada || 0),
+      0
+    );
+
+  const localizacoesExactas =
+    fazendas.filter(
+      (f) =>
+        f.nivelLocalizacao ===
+        "exacta"
+    ).length;
+
+  const imagens =
+    fazendas.filter(
+      (f) => f.imagens.length > 0
+    ).length;
+
+  const provinciasComDados =
+    new Set(
+      fazendas.map(
+        (f) => f.provincia
+      )
+    ).size;
+
+  function abrirFazenda(
+    fazenda: Fazenda
+  ) {
+    setSelecionada(fazenda);
+    setSlide(0);
+  }
+
+  function fecharFazenda() {
+    setSelecionada(null);
+  }
+
+  function proximoSlide() {
+    if (
+      !selecionada ||
+      selecionada.imagens.length === 0
+    ) {
+      return;
+    }
+
+    setSlide(
+      (actual) =>
+        actual ===
+        selecionada.imagens.length - 1
+          ? 0
+          : actual + 1
+    );
+  }
+
+  function slideAnterior() {
+    if (
+      !selecionada ||
+      selecionada.imagens.length === 0
+    ) {
+      return;
+    }
+
+    setSlide(
+      (actual) =>
+        actual === 0
+          ? selecionada.imagens.length - 1
+          : actual - 1
+    );
+  }
+
+  function abrirMapa(
+    fazenda: Fazenda
+  ) {
+    const url =
+      `https://www.openstreetmap.org/?mlat=${fazenda.lat}&mlon=${fazenda.lng}#map=14/${fazenda.lat}/${fazenda.lng}`;
+
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+
+  function mapaEmbed(
+    fazenda: Fazenda
+  ) {
+    const delta =
+      fazenda.nivelLocalizacao ===
+      "exacta"
+        ? 0.025
+        : 0.06;
+
+    const left =
+      fazenda.lng - delta;
+
+    const right =
+      fazenda.lng + delta;
+
+    const top =
+      fazenda.lat + delta;
+
+    const bottom =
+      fazenda.lat - delta;
+
+    return (
+      `https://www.openstreetmap.org/export/embed.html?bbox=` +
+      `${left}%2C${bottom}%2C${right}%2C${top}` +
+      `&layer=mapnik&marker=${fazenda.lat}%2C${fazenda.lng}`
+    );
   }
 
   return (
-    <main className="diretorio-page">
-      <style jsx global>{`
-        .diretorio-page{min-height:100vh;background:#f5f7f6;color:#17221b;font-family:Arial,sans-serif}
-        .dir-hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#052e25 0%,#14532d 58%,#166534 100%);color:#fff;padding:64px max(24px,calc((100vw - 1200px)/2)) 58px}
-        .dir-hero:after{content:"";position:absolute;width:440px;height:440px;border:1px solid rgba(255,255,255,.14);border-radius:50%;right:-120px;top:-190px;box-shadow:0 0 0 42px rgba(255,255,255,.035),0 0 0 84px rgba(255,255,255,.025)}
-        .dir-eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bbf7d0;margin:0 0 15px}
-        .dir-hero h1{font-size:clamp(30px,4vw,48px);line-height:1.1;max-width:850px;margin:0 0 18px;font-weight:800;letter-spacing:-1px}
-        .dir-hero p{max-width:760px;color:#e5f5e9;line-height:1.75;font-size:16px;margin:0}
-        .dir-container{max-width:1200px;margin:0 auto;padding:32px 24px 70px}
-        .dir-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:-22px;position:relative}
-        .dir-stat{background:#fff;border:1px solid #e2e8f0;border-radius:15px;padding:20px;box-shadow:0 12px 28px rgba(15,23,42,.07)}
-        .dir-stat strong{display:block;font-size:25px;color:#166534;margin-bottom:6px}
-        .dir-stat span{font-size:13px;color:#64748b}
-        .dir-filter{display:grid;grid-template-columns:minmax(0,1fr) 220px 220px;gap:12px;margin:30px 0 24px}
-        .dir-filter input,.dir-filter select{width:100%;background:#fff;border:1px solid #d7e1da;border-radius:10px;padding:13px 14px;color:#17221b;outline:none}
-        .dir-filter input:focus,.dir-filter select:focus{border-color:#166534;box-shadow:0 0 0 3px rgba(34,197,94,.13)}
-        .dir-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
-        .dir-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;box-shadow:0 5px 18px rgba(15,23,42,.045);transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;min-width:0}
-        .dir-card:hover{transform:translateY(-5px);box-shadow:0 18px 35px rgba(20,83,45,.13)}
-        .dir-photo{height:205px;background:#e7f4e9;position:relative;overflow:hidden}
-        .dir-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
-        .dir-card:hover .dir-photo img{transform:scale(1.045)}
-        .dir-photo-empty{height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#166534;font-size:13px;font-weight:700;background:linear-gradient(145deg,#f0fdf4,#dcefe0)}
-        .dir-card-body{padding:20px;display:flex;flex-direction:column;gap:12px;flex:1}
-        .dir-kicker{font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:#15803d}
-        .dir-card h2{font-size:18px;line-height:1.35;margin:0;color:#14532d}
-        .dir-card p{font-size:13px;line-height:1.7;color:#64748b;margin:0}
-        .dir-location{font-size:12px;color:#475569}
-        .dir-tags{display:flex;flex-wrap:wrap;gap:6px}
-        .dir-tag{background:#f0fdf4;color:#166534;border:1px solid #dcfce7;border-radius:999px;padding:5px 8px;font-size:11px}
-        .dir-action{margin-top:auto;border:0;border-radius:9px;background:#166534;color:#fff;padding:12px 15px;font-weight:700;cursor:pointer;transition:background .2s}
-        .dir-action:hover{background:#14532d}
-        .dir-section-title{margin:48px 0 10px;color:#14532d;font-size:25px;letter-spacing:-.4px}
-        .dir-section-intro{max-width:850px;line-height:1.75;color:#64748b;margin:0 0 22px;font-size:14px}
-        .dir-tech-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-        .dir-tech-card{background:#fff;border:1px dashed #9ebda5;border-radius:14px;overflow:hidden;min-width:0}
-        .dir-tech-photo{height:145px;background:#f0fdf4;border-bottom:1px dashed #9ebda5;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;color:#166534;font-size:12px;font-weight:700}
-        .dir-tech-body{padding:16px}
-        .dir-tech-body h3{font-size:15px;color:#14532d;margin:0 0 9px}
-        .dir-tech-body p{font-size:12px;color:#64748b;line-height:1.65;margin:0 0 10px}
-        .dir-tech-placeholder{display:block;border-radius:7px;background:#f8fafc;border:1px solid #e2e8f0;padding:8px;font-size:11px;color:#64748b;margin-top:7px}
-        .dir-empty{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:30px;text-align:center;color:#64748b;grid-column:1/-1}
-        .dir-modal-backdrop{position:fixed;inset:0;z-index:1000;background:rgba(3,20,12,.72);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:22px;animation:dirFade .18s ease-out}
-        .dir-modal{width:min(100%,1000px);max-height:min(92vh,900px);overflow:auto;background:#fff;border-radius:20px;box-shadow:0 28px 100px rgba(0,0,0,.35);animation:dirRise .28s cubic-bezier(.2,.75,.25,1)}
-        .dir-modal-top{background:linear-gradient(120deg,#052e25,#166534);color:#fff;padding:27px 30px;position:relative}
-        .dir-modal-top h2{font-size:clamp(21px,3vw,30px);line-height:1.25;margin:8px 45px 8px 0}
-        .dir-modal-top p{font-size:13px;color:#d9fbe3;margin:0}
-        .dir-modal-close{position:absolute;right:20px;top:18px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.1);color:#fff;width:38px;height:38px;border-radius:50%;font-size:24px;cursor:pointer}
-        .dir-modal-tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 20px;border-bottom:1px solid #e2e8f0;background:#fff;position:sticky;top:0;z-index:2}
-        .dir-tab{white-space:nowrap;border:1px solid transparent;background:transparent;border-radius:9px;padding:10px 13px;color:#64748b;font-weight:700;font-size:12px;cursor:pointer}
-        .dir-tab.active{color:#166534;background:#f0fdf4;border-color:#bbf7d0}
-        .dir-modal-content{padding:25px 30px 32px}
-        .dir-modal-photo{width:100%;max-height:310px;object-fit:cover;border-radius:13px;border:1px solid #e2e8f0;margin-bottom:8px}
-        .dir-caption{font-size:11px;line-height:1.5;color:#64748b;margin:0 0 20px}
-        .dir-modal-content h3{font-size:19px;color:#14532d;margin:0 0 12px}
-        .dir-modal-content p{font-size:14px;line-height:1.8;color:#475569}
-        .dir-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
-        .dir-info{background:#f8faf9;border:1px solid #e2e8f0;border-radius:12px;padding:15px}
-        .dir-info small{display:block;color:#64748b;font-size:11px;margin-bottom:7px}
-        .dir-info strong{font-size:13px;color:#14532d;line-height:1.5}
-        .dir-course-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:18px}
-        .dir-course-button{border:1px solid #dce7df;background:#fff;text-align:left;padding:14px;border-radius:10px;cursor:pointer;color:#14532d;font-weight:700}
-        .dir-course-button.active{background:#f0fdf4;border-color:#22c55e}
-        .dir-course-detail{border:1px solid #e2e8f0;border-radius:14px;padding:20px;background:#fbfdfb}
-        .dir-course-detail ul{padding-left:20px;color:#475569;font-size:13px;line-height:1.9}
-        .dir-source-link{color:#166534;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
-        .dir-modal-footer{padding:16px 30px 24px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-        .dir-secondary{border:1px solid #cbd5e1;background:#fff;color:#334155;border-radius:9px;padding:11px 15px;font-weight:700;cursor:pointer}
-        .dir-primary-link{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:11px 15px;background:#166534;color:#fff;text-decoration:none;font-size:13px;font-weight:700}
-        @keyframes dirFade{from{opacity:0}to{opacity:1}}
-        @keyframes dirRise{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
-        @media(max-width:950px){.dir-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dir-tech-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-        @media(max-width:680px){.dir-hero{padding:46px 22px}.dir-container{padding:25px 16px 50px}.dir-stat-grid{grid-template-columns:1fr;gap:10px;margin-top:18px}.dir-stat{padding:15px}.dir-filter{grid-template-columns:1fr}.dir-grid,.dir-tech-grid{grid-template-columns:1fr}.dir-modal-backdrop{padding:8px}.dir-modal{max-height:96vh;border-radius:14px}.dir-modal-top{padding:22px 20px}.dir-modal-content{padding:20px}.dir-modal-footer{padding:15px 20px}.dir-info-grid,.dir-course-list{grid-template-columns:1fr}.dir-modal-tabs{padding:9px}.dir-tab{padding:9px 10px}}
-        @media(prefers-reduced-motion:reduce){.dir-card,.dir-photo img,.dir-modal-backdrop,.dir-modal{animation:none;transition:none}}
-      `}</style>
+    <main className="pagina">
 
-      <header className="dir-hero">
-        <p className="dir-eyebrow">AGROINOVA ANGOLA · ENSINO E INVESTIGAÇÃO</p>
-        <h1>Directório Nacional de Formação Agropecuária</h1>
-        <p>
-          Encontre instituições de ensino superior ligadas à agricultura, pecuária e medicina veterinária.
-          Consulte informação institucional, áreas de formação, planos curriculares e contactos oficiais.
-        </p>
-      </header>
+      {/* ===================================================
+          HERO
+      =================================================== */}
 
-      <div className="dir-container">
-        <div className="dir-stat-grid">
-          <div className="dir-stat"><strong>{instituicoes.length}</strong><span>Registos institucionais nesta página</span></div>
-          <div className="dir-stat"><strong>21</strong><span>Províncias consideradas no filtro nacional</span></div>
-          <div className="dir-stat"><strong>Ensino superior e técnico</strong><span>Áreas de formação representadas</span></div>
-        </div>
+      <section className="hero">
 
-        <div className="dir-filter">
-          <input
-            aria-label="Pesquisar instituições"
-            value={pesquisa}
-            onChange={(e) => setPesquisa(e.target.value)}
-            placeholder="Pesquisar por instituição, curso, área ou província..."
-          />
-          <select aria-label="Filtrar por província" value={filtroProvincia} onChange={(e) => setFiltroProvincia(e.target.value)}>
-            {["Todas", "Bengo", "Benguela", "Bié", "Cabinda", "Cuando", "Cubango", "Cuanza Norte", "Cuanza Sul", "Cunene", "Huambo", "Huíla", "Icolo e Bengo", "Luanda", "Lunda Norte", "Lunda Sul", "Malanje", "Moxico", "Moxico Leste", "Namibe", "Uíge", "Zaire"].map((p) => <option key={p} value={p}>{p === "Todas" ? "Todas as províncias" : p}</option>)}
-          </select>
-          <select aria-label="Filtrar por tipo" value={filtroTipo} onChange={(e) => setFiltroTipo(e.target.value)}>
-            {["Todos", "Ensino superior"].map((t) => <option key={t} value={t}>{t === "Todos" ? "Todos os níveis" : t}</option>)}
-          </select>
-        </div>
+        <img
+          className="heroImagem"
+          src="https://www.ispsn.org/sites/default/files/images/news/img_6062.jpeg"
+          alt="Paisagem agrícola de Angola"
+        />
 
-        <div className="dir-grid">
-          {lista.map((item) => (
-            <article className="dir-card" key={item.id}>
-              <div className="dir-photo">
-                {item.imagem ? (
-                  <img src={item.imagem} alt={item.legendaImagem || item.nome} loading="lazy" />
-                ) : (
-                  <div className="dir-photo-empty">Fotografia institucional a inserir após confirmação da fonte oficial</div>
-                )}
-              </div>
-              <div className="dir-card-body">
-                <span className="dir-kicker">{item.tipo} · {item.sigla}</span>
-                <h2>{item.nome}</h2>
-                <span className="dir-location">{item.local} · {item.provincia}</span>
-                <p>{item.descricao}</p>
-                <div className="dir-tags">{item.areas.slice(0, 3).map((area) => <span className="dir-tag" key={area}>{area}</span>)}</div>
-                <button className="dir-action" onClick={() => abrir(item)}>Ver instituição e cursos</button>
-              </div>
-            </article>
-          ))}
-          {lista.length === 0 && <div className="dir-empty">Não foram encontradas instituições com esses critérios. Altere a pesquisa ou os filtros.</div>}
-        </div>
+        <div className="heroEscuro" />
 
-        <section>
-          <h2 className="dir-section-title">Ensino médio e formação técnica agropecuária</h2>
-          <p className="dir-section-intro">
-            Estes cartões ficam preparados para completar manualmente com o nome oficial da escola, fotografia própria,
-            província, descrição, cursos e ligação para o portal. Os títulos abaixo são modelos de preenchimento e não
-            confirmam, por si só, a existência de instituições com essas designações exactas.
-          </p>
-          <div className="dir-tech-grid">
-            {modelosTecnicos.map((item) => (
-              <article className="dir-tech-card" key={item.id}>
-                <div className="dir-tech-photo">Espaço reservado para fotografia da escola</div>
-                <div className="dir-tech-body">
-                  <h3>{item.titulo}</h3>
-                  <p>{item.descricao || "Adicionar aqui a descrição da instituição, os cursos técnicos e a informação de admissão."}</p>
-                  <span className="dir-tech-placeholder">Província: {item.provincia}</span>
-                  <span className="dir-tech-placeholder">Fotografia: inserir depois</span>
-                  <span className="dir-tech-placeholder">Cursos: preencher depois</span>
-                  <span className="dir-tech-placeholder">Portal/contacto: preencher depois</span>
-                </div>
-              </article>
-            ))}
+        <div className="heroConteudo">
+
+          <div className="linha">
+
+            <span>
+              AGROINOVA ANGOLA
+            </span>
+
+            <span>
+              DIRECTÓRIO AGRÍCOLA
+            </span>
+
+            <span>
+              GIS TERRITORIAL
+            </span>
+
           </div>
+
+          <h1>
+            Fazendas
+            <br />
+            de Angola
+          </h1>
+
+          <p>
+            Directório territorial de explorações
+            agrícolas e agropecuárias com localização,
+            produção, área documentada e informação
+            pública disponível.
+          </p>
+
+        </div>
+
+      </section>
+
+      {/* ===================================================
+          ESTATÍSTICAS
+      =================================================== */}
+
+      <section className="estatisticas">
+
+        <div>
+          <strong>
+            {fazendas.length}
+          </strong>
+
+          <span>
+            Registos
+          </span>
+        </div>
+
+        <div>
+          <strong>
+            {provinciasComDados}
+          </strong>
+
+          <span>
+            Províncias
+          </span>
+        </div>
+
+        <div>
+          <strong>
+            {localizacoesExactas}
+          </strong>
+
+          <span>
+            Coordenadas exactas
+          </span>
+        </div>
+
+        <div>
+          <strong>
+            {imagens}
+          </strong>
+
+          <span>
+            Imagens públicas
+          </span>
+        </div>
+
+        <div>
+          <strong>
+            {totalArea > 0
+              ? totalArea.toLocaleString(
+                  "pt-PT",
+                  {
+                    maximumFractionDigits: 1
+                  }
+                )
+              : "N/D"}
+          </strong>
+
+          <span>
+            ha documentados
+          </span>
+        </div>
+
+      </section>
+
+      {/* ===================================================
+          CONTROLO
+      =================================================== */}
+
+      <section className="controle">
+
+        <div className="cabecalho">
+
+          <div>
+            <span>
+              DIRECTÓRIO NACIONAL
+            </span>
+
+            <h2>
+              Explorar as fazendas
+            </h2>
+
+            <p>
+              Consulte as explorações por província,
+              actividade, localização e informação
+              territorial disponível.
+            </p>
+          </div>
+
+          <button
+            className="botaoMapa"
+            onClick={() =>
+              setMostrarMapa(
+                !mostrarMapa
+              )
+            }
+          >
+            {mostrarMapa
+              ? "FECHAR MAPA"
+              : "ABRIR MAPA GIS"}
+          </button>
+
+        </div>
+
+        <div className="filtros">
+
+          <div className="campo grande">
+
+            <label>
+              PESQUISAR
+            </label>
+
+            <input
+              value={pesquisa}
+              onChange={(e) =>
+                setPesquisa(
+                  e.target.value
+                )
+              }
+              placeholder="Fazenda, município, cultura..."
+            />
+
+          </div>
+
+          <div className="campo">
+
+            <label>
+              PROVÍNCIA
+            </label>
+
+            <select
+              value={provincia}
+              onChange={(e) =>
+                setProvincia(
+                  e.target.value
+                )
+              }
+            >
+              {provincias.map(
+                (p) => (
+                  <option
+                    key={p}
+                    value={p}
+                  >
+                    {p}
+                  </option>
+                )
+              )}
+            </select>
+
+          </div>
+
+          <div className="campo">
+
+            <label>
+              ACTIVIDADE
+            </label>
+
+            <select
+              value={actividade}
+              onChange={(e) =>
+                setActividade(
+                  e.target.value
+                )
+              }
+            >
+              {actividades.map(
+                (a) => (
+                  <option
+                    key={a}
+                    value={a}
+                  >
+                    {a}
+                  </option>
+                )
+              )}
+            </select>
+
+          </div>
+
+          <div className="campo">
+
+            <label>
+              LOCALIZAÇÃO
+            </label>
+
+            <select
+              value={localizacao}
+              onChange={(e) =>
+                setLocalizacao(
+                  e.target.value
+                )
+              }
+            >
+
+              <option value="Todas">
+                Todas
+              </option>
+
+              <option value="exacta">
+                Coordenada exacta
+              </option>
+
+              <option value="aproximada">
+                Localização aproximada
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <div className="linhaFiltros">
+
+          <select
+            value={estado}
+            onChange={(e) =>
+              setEstado(
+                e.target.value
+              )
+            }
+          >
+            <option value="Todos">
+              Todos os estados
+            </option>
+
+            <option value="Operacional">
+              Operacional
+            </option>
+
+            <option value="Em desenvolvimento">
+              Em desenvolvimento
+            </option>
+
+            <option value="Projecto">
+              Projecto
+            </option>
+
+            <option value="Referência pública">
+              Referência pública
+            </option>
+          </select>
+
+          <span>
+            {resultados.length}
+            {" "}
+            fazendas encontradas
+          </span>
+
+        </div>
+
+      </section>
+
+      {/* ===================================================
+          MAPA COMPACTO
+      =================================================== */}
+
+      {mostrarMapa && (
+
+        <section className="mapaArea">
+
+          <div className="mapaTopo">
+
+            <div>
+
+              <span>
+                GIS AGROINOVA
+              </span>
+
+              <h2>
+                Distribuição territorial
+              </h2>
+
+              <p>
+                As 79 referências são representadas
+                territorialmente. Os pontos aproximados
+                correspondem à localidade pública conhecida;
+                não representam o limite cadastral da fazenda.
+              </p>
+
+            </div>
+
+            <div className="legenda">
+
+              <div>
+                <i className="verde" />
+                Exacta
+              </div>
+
+              <div>
+                <i className="amarelo" />
+                Aproximada
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="mapaCompacto">
+
+            <div className="mapaPaisagem">
+
+              <div className="textoMapa">
+                ANGOLA
+              </div>
+
+              {fazendas.map(
+                (fazenda) => {
+
+                  const x =
+                    50 +
+                    ((fazenda.lng - 17) /
+                      10) *
+                      50;
+
+                  const y =
+                    50 +
+                    ((-11.5 -
+                      fazenda.lat) /
+                      12) *
+                      45;
+
+                  const left =
+                    Math.max(
+                      5,
+                      Math.min(
+                        95,
+                        x
+                      )
+                    );
+
+                  const top =
+                    Math.max(
+                      7,
+                      Math.min(
+                        90,
+                        y
+                      )
+                    );
+
+                  return (
+                    <button
+                      key={fazenda.id}
+                      className={
+                        fazenda.nivelLocalizacao ===
+                        "exacta"
+                          ? "ponto exacto"
+                          : "ponto aproximado"
+                      }
+                      style={{
+                        left: `${left}%`,
+                        top: `${top}%`
+                      }}
+                      title={
+                        fazenda.nome
+                      }
+                      onClick={() =>
+                        abrirFazenda(
+                          fazenda
+                        )
+                      }
+                    >
+                      <span />
+
+                      <small>
+                        {fazenda.nome}
+                      </small>
+                    </button>
+                  );
+                }
+              )}
+
+              <div className="linhaMapa l1" />
+              <div className="linhaMapa l2" />
+              <div className="linhaMapa l3" />
+
+            </div>
+
+            <div className="mapaInfo">
+
+              <span>
+                {fazendas.length} referências
+              </span>
+
+              <span>
+                {localizacoesExactas} exactas
+              </span>
+
+              <span>
+                {fazendas.length -
+                  localizacoesExactas} aproximadas
+              </span>
+
+            </div>
+
+          </div>
+
         </section>
 
-        <p style={{ marginTop: 28, fontSize: 12, lineHeight: 1.7, color: "#64748b" }}>
-          Nota editorial: a presença de uma instituição neste directório não substitui a confirmação da oferta académica
-          para o ano lectivo em curso. As imagens de actividades estão identificadas como tal. Use sempre o portal oficial
-          para confirmar cursos, vagas, planos curriculares e contactos.
-        </p>
-      </div>
+      )}
+
+      {/* ===================================================
+          LISTAGEM
+      =================================================== */}
+
+      <section className="directorio">
+
+        <div className="tituloDirectorio">
+
+          <div>
+
+            <span>
+              EXPLORAÇÕES
+            </span>
+
+            <h2>
+              Todas as fazendas
+            </h2>
+
+          </div>
+
+          <p>
+            A informação territorial é apresentada
+            conforme os dados públicos encontrados.
+          </p>
+
+        </div>
+
+        <div className="grid">
+
+          {resultados.map(
+            (fazenda) => (
+
+              <article
+                className="card"
+                key={fazenda.id}
+              >
+
+                <div className="cardImagem">
+
+                  {fazenda.imagens.length >
+                  0 ? (
+
+                    <img
+                      src={
+                        fazenda.imagens[0]
+                          .url
+                      }
+                      alt={
+                        fazenda.nome
+                      }
+                    />
+
+                  ) : (
+
+                    <div className="semFoto">
+
+                      <span>
+                        AGROINOVA
+                      </span>
+
+                      <strong>
+                        {fazenda.nome}
+                      </strong>
+
+                      <small>
+                        Fotografia pública
+                        não localizada
+                      </small>
+
+                    </div>
+
+                  )}
+
+                  <span className="badge">
+                    {fazenda.nivelLocalizacao ===
+                    "exacta"
+                      ? "LOCALIZAÇÃO EXACTA"
+                      : "LOCALIZAÇÃO APROXIMADA"}
+                  </span>
+
+                </div>
+
+                <div className="cardCorpo">
+
+                  <div className="local">
+                    {fazenda.provincia}
+                    {" · "}
+                    {fazenda.municipio}
+                  </div>
+
+                  <h3>
+                    {fazenda.nome}
+                  </h3>
+
+                  <p>
+                    {fazenda.descricao}
+                  </p>
+
+                  <div className="tags">
+
+                    {fazenda.actividade
+                      .slice(0, 3)
+                      .map(
+                        (item) => (
+                          <span
+                            key={item}
+                          >
+                            {item}
+                          </span>
+                        )
+                      )}
+
+                    {fazenda.culturas
+                      .slice(0, 2)
+                      .map(
+                        (item) => (
+                          <span
+                            key={item}
+                          >
+                            {item}
+                          </span>
+                        )
+                      )}
+
+                  </div>
+
+                  <div className="miniDados">
+
+                    <div>
+                      <small>
+                        ÁREA
+                      </small>
+
+                      <strong>
+                        {fazenda.areaTotal
+                          ? `${fazenda.areaTotal.toLocaleString(
+                              "pt-PT"
+                            )} ha`
+                          : "N/D"}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <small>
+                        CULTIVADA
+                      </small>
+
+                      <strong>
+                        {fazenda.areaCultivada
+                          ? `${fazenda.areaCultivada.toLocaleString(
+                              "pt-PT"
+                            )} ha`
+                          : "N/D"}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <small>
+                        POTENCIAL
+                      </small>
+
+                      <strong>
+                        {fazenda.potencial}%
+                      </strong>
+                    </div>
+
+                  </div>
+
+                  <button
+                    className="abrir"
+                    onClick={() =>
+                      abrirFazenda(
+                        fazenda
+                      )
+                    }
+                  >
+                    VER FICHA COMPLETA
+                  </button>
+
+                </div>
+
+              </article>
+
+            )
+          )}
+
+        </div>
+
+      </section>
+
+      {/* ===================================================
+          MODAL
+      =================================================== */}
 
       {selecionada && (
-        <div className="dir-modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setSelecionada(null); }}>
-          <section className="dir-modal" role="dialog" aria-modal="true" aria-labelledby="dir-modal-title">
-            <div className="dir-modal-top">
-              <button className="dir-modal-close" onClick={() => setSelecionada(null)} aria-label="Fechar janela">×</button>
-              <span className="dir-eyebrow">{selecionada.sigla} · {selecionada.tipo}</span>
-              <h2 id="dir-modal-title">{selecionada.nome}</h2>
-              <p>{selecionada.local} · {selecionada.provincia}</p>
-            </div>
-            <nav className="dir-modal-tabs" aria-label="Secções da instituição">
-              {(["Visão geral", "Cursos", "Planos curriculares", "Saídas profissionais", "Contactos"] as Separador[]).map((tab) => (
-                <button key={tab} className={`dir-tab ${separador === tab ? "active" : ""}`} onClick={() => setSeparador(tab)}>{tab}</button>
-              ))}
-            </nav>
-            <div className="dir-modal-content">
-              {separador === "Visão geral" && (
+
+        <div
+          className="modal"
+          onClick={
+            fecharFazenda
+          }
+        >
+
+          <div
+            className="janela"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
+
+            <button
+              className="fechar"
+              onClick={
+                fecharFazenda
+              }
+            >
+              FECHAR
+            </button>
+
+            {/* TOPO */}
+
+            <header className="modalHeader">
+
+              <div>
+
+                <span>
+                  {selecionada.provincia}
+                  {" · "}
+                  {selecionada.municipio}
+                </span>
+
+                <h2>
+                  {selecionada.nome}
+                </h2>
+
+                <p>
+                  {selecionada.estado}
+                </p>
+
+              </div>
+
+              <div className="score">
+
+                <strong>
+                  {selecionada.potencial}%
+                </strong>
+
+                <span>
+                  Índice AGROINOVA
+                </span>
+
+              </div>
+
+            </header>
+
+            {/* IMAGEM */}
+
+            <section className="galeria">
+
+              {selecionada.imagens.length >
+              0 ? (
+
                 <>
-                  {selecionada.imagem && <img className="dir-modal-photo" src={selecionada.imagem} alt={selecionada.legendaImagem || selecionada.nome} />}
-                  {selecionada.legendaImagem && <p className="dir-caption">{selecionada.legendaImagem}</p>}
-                  <h3>Perfil institucional</h3>
-                  <p>{selecionada.descricao}</p>
-                  <div className="dir-info-grid">
-                    <div className="dir-info"><small>Instituição</small><strong>{selecionada.sigla}</strong></div>
-                    <div className="dir-info"><small>Localização</small><strong>{selecionada.local}</strong></div>
-                    <div className="dir-info"><small>Áreas de interesse</small><strong>{selecionada.areas.join(" · ")}</strong></div>
+
+                  <img
+                    src={
+                      selecionada.imagens[
+                        slide
+                      ].url
+                    }
+                    alt={
+                      selecionada.imagens[
+                        slide
+                      ].legenda
+                    }
+                  />
+
+                  {selecionada.imagens.length >
+                    1 && (
+
+                    <>
+                      <button
+                        className="seta esquerda"
+                        onClick={
+                          slideAnterior
+                        }
+                      >
+                        ‹
+                      </button>
+
+                      <button
+                        className="seta direita"
+                        onClick={
+                          proximoSlide
+                        }
+                      >
+                        ›
+                      </button>
+                    </>
+                  )}
+
+                  <div className="fonteFoto">
+                    {
+                      selecionada.imagens[
+                        slide
+                      ].fonte
+                    }
                   </div>
-                  {selecionada.observacao && <p><strong>Nota de confirmação:</strong> {selecionada.observacao}</p>}
-                  <p><strong>Fonte institucional:</strong> <a className="dir-source-link" href={selecionada.portal} target="_blank" rel="noreferrer">{selecionada.portal}</a></p>
-                  {selecionada.imagemFonte && <p><strong>Fonte da fotografia:</strong> <a className="dir-source-link" href={selecionada.imagemFonte} target="_blank" rel="noreferrer">{selecionada.imagemFonte}</a></p>}
+
                 </>
+
+              ) : (
+
+                <div className="semImagemGrande">
+
+                  <strong>
+                    IMAGEM REAL NÃO DISPONÍVEL
+                  </strong>
+
+                  <p>
+                    Esta ficha não utiliza
+                    fotografias genéricas.
+                  </p>
+
+                </div>
+
               )}
 
-              {separador === "Cursos" && (
-                <>
-                  <h3>Cursos e áreas de formação</h3>
-                  <p>Seleccione um curso para consultar o resumo. Os detalhes assinalados para confirmação devem ser validados no plano oficial da instituição.</p>
-                  <div className="dir-course-list">
-                    {selecionada.cursos.map((curso, i) => (
-                      <button key={curso.nome} className={`dir-course-button ${cursoAtivo === i ? "active" : ""}`} onClick={() => setCursoAtivo(i)}>
-                        {curso.nome}<br /><span style={{ fontSize: 11, fontWeight: 400 }}>{curso.grau}</span>
-                      </button>
-                    ))}
+            </section>
+
+            {/* GRID */}
+
+            <section className="informacao">
+
+              <div>
+
+                <span className="label">
+                  IDENTIFICAÇÃO
+                </span>
+
+                <h3>
+                  Localização
+                </h3>
+
+                <div className="lista">
+
+                  <div>
+                    <span>
+                      Província
+                    </span>
+
+                    <strong>
+                      {selecionada.provincia}
+                    </strong>
                   </div>
-                  {selecionada.cursos[cursoAtivo] && (
-                    <div className="dir-course-detail">
-                      <h3>{selecionada.cursos[cursoAtivo].nome}</h3>
-                      <p>{selecionada.cursos[cursoAtivo].descricao}</p>
-                      <div className="dir-info-grid">
-                        <div className="dir-info"><small>Grau/designação</small><strong>{selecionada.cursos[cursoAtivo].grau}</strong></div>
-                        <div className="dir-info"><small>Duração</small><strong>{selecionada.cursos[cursoAtivo].duracao}</strong></div>
-                        <div className="dir-info"><small>Área</small><strong>{selecionada.areas.join(" · ")}</strong></div>
-                      </div>
+
+                  <div>
+                    <span>
+                      Município
+                    </span>
+
+                    <strong>
+                      {selecionada.municipio}
+                    </strong>
+                  </div>
+
+                  {selecionada.local && (
+                    <div>
+                      <span>
+                        Local
+                      </span>
+
+                      <strong>
+                        {selecionada.local}
+                      </strong>
                     </div>
                   )}
-                </>
+
+                  <div>
+                    <span>
+                      Localização
+                    </span>
+
+                    <strong>
+                      {selecionada.nivelLocalizacao ===
+                      "exacta"
+                        ? "Coordenada exacta"
+                        : "Referência aproximada"}
+                    </strong>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div>
+
+                <span className="label">
+                  PRODUÇÃO
+                </span>
+
+                <h3>
+                  Actividades e culturas
+                </h3>
+
+                <div className="producao">
+
+                  {selecionada.actividade.map(
+                    (item) => (
+                      <span
+                        key={item}
+                      >
+                        {item}
+                      </span>
+                    )
+                  )}
+
+                  {selecionada.culturas.map(
+                    (item) => (
+                      <span
+                        key={item}
+                      >
+                        {item}
+                      </span>
+                    )
+                  )}
+
+                  {selecionada.pecuaria.map(
+                    (item) => (
+                      <span
+                        key={item}
+                      >
+                        {item}
+                      </span>
+                    )
+                  )}
+
+                </div>
+
+              </div>
+
+            </section>
+
+            {/* TERRENO */}
+
+            <section className="bloco">
+
+              <span className="label">
+                ESTRUTURA TERRITORIAL
+              </span>
+
+              <h3>
+                Área da exploração
+              </h3>
+
+              <div className="areaGrid">
+
+                <div>
+                  <small>
+                    ÁREA TOTAL
+                  </small>
+
+                  <strong>
+                    {selecionada.areaTotal !==
+                    undefined
+                      ? `${selecionada.areaTotal.toLocaleString(
+                          "pt-PT"
+                        )} ha`
+                      : "N/D"}
+                  </strong>
+                </div>
+
+                <div>
+                  <small>
+                    ÁREA CULTIVADA
+                  </small>
+
+                  <strong>
+                    {selecionada.areaCultivada !==
+                    undefined
+                      ? `${selecionada.areaCultivada.toLocaleString(
+                          "pt-PT"
+                        )} ha`
+                      : "N/D"}
+                  </strong>
+                </div>
+
+                <div>
+                  <small>
+                    NÃO CULTIVADA
+                  </small>
+
+                  <strong>
+                    {selecionada.areaNaoCultivada !==
+                    undefined
+                      ? `${selecionada.areaNaoCultivada.toLocaleString(
+                          "pt-PT"
+                        )} ha`
+                      : "N/D"}
+                  </strong>
+                </div>
+
+                <div>
+                  <small>
+                    USO DO SOLO
+                  </small>
+
+                  <strong>
+                    {selecionada.usoSolo}
+                  </strong>
+                </div>
+
+              </div>
+
+              {selecionada.areaTotal !==
+                undefined &&
+                selecionada.areaCultivada !==
+                  undefined && (
+
+                <div className="barra">
+
+                  <div
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        (selecionada.areaCultivada /
+                          selecionada.areaTotal) *
+                          100
+                      )}%`
+                    }}
+                  />
+
+                </div>
+
               )}
 
-              {separador === "Planos curriculares" && (
-                <>
-                  <h3>Planos curriculares</h3>
-                  <p>Para evitar publicar disciplinas não confirmadas, esta secção distingue os planos curriculares oficiais das descrições gerais. Consulte a instituição para obter a versão vigente.</p>
-                  {selecionada.cursos.map((curso) => (
-                    <div className="dir-course-detail" key={curso.nome} style={{ marginBottom: 14 }}>
-                      <h3>{curso.nome}</h3>
-                      {curso.plano.map((ano) => (
-                        <div key={ano.ano}>
-                          <strong>{ano.ano}</strong>
-                          <ul>{ano.disciplinas.map((disciplina) => <li key={disciplina}>{disciplina}</li>)}</ul>
-                        </div>
-                      ))}
+              <p className="nota">
+
+                Quando a área total e a área cultivada
+                estão documentadas, a área não cultivada
+                é calculada automaticamente pela diferença.
+                Quando a fonte não apresenta esses dados,
+                a plataforma mantém “N/D” em vez de inventar
+                valores.
+
+              </p>
+
+            </section>
+
+            {/* MAPA */}
+
+            <section className="bloco">
+
+              <div className="mapaTituloModal">
+
+                <div>
+
+                  <span className="label">
+                    GIS
+                  </span>
+
+                  <h3>
+                    Localização geográfica
+                  </h3>
+
+                </div>
+
+                <span
+                  className={
+                    selecionada.nivelLocalizacao ===
+                    "exacta"
+                      ? "tipoExacto"
+                      : "tipoAproximado"
+                  }
+                >
+                  {selecionada.nivelLocalizacao ===
+                  "exacta"
+                    ? "COORDENADA EXACTA"
+                    : "LOCALIZAÇÃO APROXIMADA"}
+                </span>
+
+              </div>
+
+              <div className="mapaFicha">
+
+                <iframe
+                  src={mapaEmbed(
+                    selecionada
+                  )}
+                  title={
+                    `Mapa ${selecionada.nome}`
+                  }
+                  loading="lazy"
+                />
+
+              </div>
+
+              <div className="coordenadas">
+
+                <span>
+                  LAT:
+                  {" "}
+                  {selecionada.lat.toFixed(
+                    6
+                  )}
+                </span>
+
+                <span>
+                  LNG:
+                  {" "}
+                  {selecionada.lng.toFixed(
+                    6
+                  )}
+                </span>
+
+                <button
+                  onClick={() =>
+                    abrirMapa(
+                      selecionada
+                    )
+                  }
+                >
+                  ABRIR MAPA
+                </button>
+
+              </div>
+
+              <p className="nota">
+
+                {selecionada.nivelLocalizacao ===
+                "exacta"
+                  ? "Esta localização possui coordenadas geográficas públicas associadas à exploração."
+                  : "Esta posição é uma referência aproximada da localidade/município. Não representa o limite da propriedade nem deve ser utilizada como coordenada cadastral."}
+
+              </p>
+
+            </section>
+
+            {/* POTENCIAL */}
+
+            <section className="bloco">
+
+              <span className="label">
+                ANÁLISE AGROINOVA
+              </span>
+
+              <h3>
+                Potencial da exploração
+              </h3>
+
+              <div className="potencialLinha">
+
+                <div className="potencialBarra">
+
+                  <div
+                    style={{
+                      width:
+                        `${selecionada.potencial}%`
+                    }}
+                  />
+
+                </div>
+
+                <strong>
+                  {selecionada.potencial}%
+                </strong>
+
+              </div>
+
+              <p className="nota">
+
+                O Índice AGROINOVA é um indicador
+                analítico da plataforma. Não constitui
+                classificação oficial de uma entidade
+                pública.
+
+              </p>
+
+            </section>
+
+            {/* ESPECIAL */}
+
+            <section className="bloco">
+
+              <span className="label">
+                INFORMAÇÃO ESPECIAL
+              </span>
+
+              <h3>
+                Características
+              </h3>
+
+              <div className="especialGrid">
+
+                {selecionada.especial.map(
+                  (item) => (
+                    <div key={item}>
+                      {item}
                     </div>
-                  ))}
-                  <p>Não foi inventada uma lista de cadeiras. Quando tiver o plano curricular oficial em PDF ou no portal, pode substituir os campos desta secção pelas disciplinas exactas e respectivas cargas horárias.</p>
-                </>
+                  )
+                )}
+
+              </div>
+
+            </section>
+
+            {/* FONTE */}
+
+            <section className="fonte">
+
+              <div>
+
+                <span>
+                  FONTE
+                </span>
+
+                <strong>
+                  {selecionada.fonte}
+                </strong>
+
+              </div>
+
+              {selecionada.urlFonte && (
+                <a
+                  href={
+                    selecionada.urlFonte
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  CONSULTAR FONTE
+                </a>
               )}
 
-              {separador === "Saídas profissionais" && (
-                <>
-                  <h3>Possíveis áreas profissionais</h3>
-                  <p>As saídas dependem do grau obtido, da especialização, dos requisitos legais e das oportunidades de emprego. A lista abaixo é indicativa e não representa garantia de emprego.</p>
-                  {selecionada.cursos.map((curso) => (
-                    <div className="dir-course-detail" key={curso.nome} style={{ marginBottom: 14 }}>
-                      <h3>{curso.nome}</h3>
-                      <ul>{curso.saidas.map((saida) => <li key={saida}>{saida}</li>)}</ul>
-                    </div>
-                  ))}
-                </>
-              )}
+            </section>
 
-              {separador === "Contactos" && (
-                <>
-                  <h3>Contactos e canais oficiais</h3>
-                  <ul>{selecionada.contactos.map((contacto) => <li key={contacto} style={{ marginBottom: 10, color: "#475569", lineHeight: 1.7 }}>{contacto}</li>)}</ul>
-                  <p>Para confirmar admissões, propinas, calendário académico e planos curriculares, utilize os canais publicados pela própria instituição.</p>
-                  <a className="dir-primary-link" href={selecionada.portal} target="_blank" rel="noreferrer">Abrir portal institucional</a>
-                </>
-              )}
-            </div>
-            <div className="dir-modal-footer">
-              <button className="dir-secondary" onClick={() => setSelecionada(null)}>Fechar</button>
-              <a className="dir-primary-link" href={selecionada.portal} target="_blank" rel="noreferrer">Consultar portal oficial</a>
-            </div>
-          </section>
+            {/* OBSERVAÇÃO */}
+
+            {selecionada.observacao && (
+
+              <div className="observacao">
+
+                <strong>
+                  NOTA TERRITORIAL
+                </strong>
+
+                <p>
+                  {selecionada.observacao}
+                </p>
+
+              </div>
+
+            )}
+
+          </div>
+
         </div>
       )}
+
+      {/* ===================================================
+          CSS
+      =================================================== */}
+
+      <style jsx>{`
+
+        * {
+          box-sizing: border-box;
+        }
+
+        .pagina {
+          min-height: 100vh;
+          background: #f4f7f4;
+          color: #18231c;
+          font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+        }
+
+        /* HERO */
+
+        .hero {
+          height: 480px;
+          position: relative;
+          overflow: hidden;
+          background: #102b1a;
+        }
+
+        .heroImagem {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .heroEscuro {
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(
+              90deg,
+              rgba(3,20,10,.95),
+              rgba(3,20,10,.68),
+              rgba(3,20,10,.20)
+            );
+        }
+
+        .heroConteudo {
+          position: relative;
+          max-width: 1300px;
+          margin: auto;
+          padding: 55px 30px;
+          color: white;
+        }
+
+        .linha {
+          display: flex;
+          gap: 28px;
+          font-size: 10px;
+          letter-spacing: 2px;
+          font-weight: 800;
+          opacity: .82;
+          margin-bottom: 90px;
+        }
+
+        .hero h1 {
+          margin: 0;
+          font-size: clamp(
+            50px,
+            7vw,
+            86px
+          );
+          line-height: .92;
+          letter-spacing: -4px;
+        }
+
+        .hero p {
+          max-width: 650px;
+          margin-top: 25px;
+          color: rgba(
+            255,
+            255,
+            255,
+            .78
+          );
+          line-height: 1.7;
+          font-size: 16px;
+        }
+
+        /* ESTATÍSTICAS */
+
+        .estatisticas {
+          max-width: 1250px;
+          margin: -35px auto 0;
+          position: relative;
+          z-index: 5;
+          background: white;
+          border-radius: 10px;
+          display: grid;
+          grid-template-columns:
+            repeat(5, 1fr);
+          overflow: hidden;
+          box-shadow:
+            0 15px 45px
+            rgba(20,50,30,.11);
+        }
+
+        .estatisticas div {
+          padding: 23px;
+          border-right:
+            1px solid #e4e9e4;
+        }
+
+        .estatisticas div:last-child {
+          border: 0;
+        }
+
+        .estatisticas strong {
+          display: block;
+          font-size: 24px;
+          color: #14733f;
+        }
+
+        .estatisticas span {
+          display: block;
+          margin-top: 6px;
+          font-size: 9px;
+          color: #78827b;
+          text-transform: uppercase;
+          letter-spacing: .8px;
+        }
+
+        /* CONTROLO */
+
+        .controle,
+        .directorio,
+        .mapaArea {
+          max-width: 1250px;
+          margin: 85px auto;
+          padding: 0 25px;
+        }
+
+        .cabecalho,
+        .tituloDirectorio {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 30px;
+        }
+
+        .cabecalho span,
+        .tituloDirectorio span,
+        .mapaTopo span,
+        .label {
+          font-size: 10px;
+          color: #168047;
+          font-weight: 900;
+          letter-spacing: 2px;
+        }
+
+        .cabecalho h2,
+        .tituloDirectorio h2,
+        .mapaTopo h2 {
+          margin: 8px 0;
+          font-size: 35px;
+          letter-spacing: -1.4px;
+        }
+
+        .cabecalho p,
+        .tituloDirectorio p,
+        .mapaTopo p {
+          color: #707b73;
+          line-height: 1.6;
+          max-width: 600px;
+        }
+
+        .botaoMapa {
+          height: 46px;
+          border: 1px solid #176f3e;
+          background: #176f3e;
+          color: white;
+          padding: 0 20px;
+          font-size: 9px;
+          font-weight: 900;
+          letter-spacing: 1px;
+          cursor: pointer;
+          border-radius: 4px;
+        }
+
+        .botaoMapa:hover {
+          background: #10542e;
+        }
+
+        .filtros {
+          margin-top: 30px;
+          display: grid;
+          grid-template-columns:
+            2fr 1fr 1fr 1fr;
+          gap: 12px;
+        }
+
+        .campo label {
+          display: block;
+          margin-bottom: 7px;
+          font-size: 9px;
+          font-weight: 900;
+          color: #69746d;
+          letter-spacing: 1px;
+        }
+
+        .campo input,
+        .campo select,
+        .linhaFiltros select {
+          width: 100%;
+          height: 47px;
+          border: 1px solid #d9e0da;
+          border-radius: 5px;
+          background: white;
+          padding: 0 13px;
+          font-size: 13px;
+          outline: none;
+        }
+
+        .campo input:focus,
+        .campo select:focus,
+        .linhaFiltros select:focus {
+          border-color: #168047;
+        }
+
+        .linhaFiltros {
+          margin-top: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .linhaFiltros select {
+          width: 220px;
+        }
+
+        .linhaFiltros span {
+          font-size: 11px;
+          color: #778178;
+        }
+
+        /* MAPA */
+
+        .mapaArea {
+          margin-top: 40px;
+          background: white;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow:
+            0 8px 30px
+            rgba(30,60,35,.06);
+        }
+
+        .mapaTopo {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          gap: 30px;
+          margin-bottom: 20px;
+        }
+
+        .mapaTopo h2 {
+          font-size: 27px;
+        }
+
+        .mapaTopo p {
+          margin: 0;
+          max-width: 700px;
+          font-size: 12px;
+        }
+
+        .legenda {
+          display: flex;
+          gap: 18px;
+          font-size: 10px;
+          color: #69736c;
+        }
+
+        .legenda div {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .legenda i {
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          display: block;
+        }
+
+        .verde {
+          background: #11783e;
+        }
+
+        .amarelo {
+          background: #d59b2c;
+        }
+
+        .mapaCompacto {
+          height: 390px;
+          border-radius: 8px;
+          overflow: hidden;
+          border: 1px solid #dce4dd;
+          position: relative;
+        }
+
+        .mapaPaisagem {
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(
+              135deg,
+              #e5eee3,
+              #d3e3d2
+            );
+          overflow: hidden;
+        }
+
+        .textoMapa {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform:
+            translate(-50%, -50%);
+          font-size: 100px;
+          font-weight: 900;
+          color: rgba(
+            30,
+            75,
+            40,
+            .055
+          );
+          letter-spacing: 8px;
+        }
+
+        .linhaMapa {
+          position: absolute;
+          background:
+            rgba(
+              91,
+              129,
+              94,
+              .13
+            );
+          height: 1px;
+          width: 120%;
+          left: -10%;
+          transform: rotate(-18deg);
+        }
+
+        .l1 {
+          top: 30%;
+        }
+
+        .l2 {
+          top: 54%;
+          transform:
+            rotate(12deg);
+        }
+
+        .l3 {
+          top: 76%;
+          transform:
+            rotate(-7deg);
+        }
+
+        .ponto {
+          position: absolute;
+          transform:
+            translate(-50%, -50%);
+          border: 0;
+          background: transparent;
+          z-index: 10;
+          cursor: pointer;
+        }
+
+        .ponto span {
+          display: block;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          border: 2px solid white;
+          box-shadow:
+            0 2px 9px
+            rgba(0,0,0,.25);
+        }
+
+        .ponto.exacto span {
+          background: #11783e;
+        }
+
+        .ponto.aproximado span {
+          background: #d59b2c;
+        }
+
+        .ponto small {
+          display: none;
+          position: absolute;
+          top: 16px;
+          left: 50%;
+          transform:
+            translateX(-50%);
+          white-space: nowrap;
+          background: white;
+          padding: 6px 8px;
+          border-radius: 3px;
+          font-size: 9px;
+          color: #26342b;
+          box-shadow:
+            0 4px 12px
+            rgba(0,0,0,.13);
+        }
+
+        .ponto:hover {
+          z-index: 30;
+        }
+
+        .ponto:hover small {
+          display: block;
+        }
+
+        .mapaInfo {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(
+            255,
+            255,
+            255,
+            .94
+          );
+          display: flex;
+          justify-content: flex-end;
+          gap: 25px;
+          padding: 11px 16px;
+          font-size: 9px;
+          color: #657168;
+          letter-spacing: .6px;
+        }
+
+        /* DIRECTÓRIO */
+
+        .tituloDirectorio {
+          margin-bottom: 30px;
+        }
+
+        .tituloDirectorio p {
+          max-width: 400px;
+          margin: 0;
+          font-size: 12px;
+        }
+
+        .grid {
+          display: grid;
+          grid-template-columns:
+            repeat(3, 1fr);
+          gap: 20px;
+        }
+
+        .card {
+          background: white;
+          border: 1px solid #e0e6e1;
+          border-radius: 8px;
+          overflow: hidden;
+          transition: .2s ease;
+        }
+
+        .card:hover {
+          transform:
+            translateY(-4px);
+          box-shadow:
+            0 15px 35px
+            rgba(30,60,35,.09);
+        }
+
+        .cardImagem {
+          height: 205px;
+          position: relative;
+          overflow: hidden;
+          background: #e3eae3;
+        }
+
+        .cardImagem img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .semFoto {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          text-align: center;
+          padding: 20px;
+          background:
+            linear-gradient(
+              135deg,
+              #edf2ed,
+              #dfe8df
+            );
+        }
+
+        .semFoto span {
+          font-size: 8px;
+          color: #819087;
+          letter-spacing: 2px;
+          font-weight: 900;
+        }
+
+        .semFoto strong {
+          margin-top: 10px;
+          font-size: 17px;
+          color: #3b4a40;
+        }
+
+        .semFoto small {
+          margin-top: 7px;
+          color: #7c877f;
+          font-size: 10px;
+        }
+
+        .badge {
+          position: absolute;
+          right: 12px;
+          top: 12px;
+          background: white;
+          padding: 6px 8px;
+          font-size: 8px;
+          font-weight: 900;
+          letter-spacing: .5px;
+          border-radius: 3px;
+        }
+
+        .cardCorpo {
+          padding: 19px;
+        }
+
+        .local {
+          color: #168047;
+          font-size: 9px;
+          font-weight: 900;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+
+        .card h3 {
+          margin: 7px 0;
+          font-size: 19px;
+        }
+
+        .card p {
+          color: #707b73;
+          font-size: 12px;
+          line-height: 1.6;
+          min-height: 76px;
+        }
+
+        .tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5px;
+          margin: 13px 0;
+        }
+
+        .tags span,
+        .producao span {
+          background: #edf5ee;
+          color: #21683e;
+          padding: 6px 8px;
+          border-radius: 3px;
+          font-size: 9px;
+        }
+
+        .miniDados {
+          display: grid;
+          grid-template-columns:
+            repeat(3, 1fr);
+          border-top:
+            1px solid #e5eae5;
+          border-bottom:
+            1px solid #e5eae5;
+          padding: 12px 0;
+        }
+
+        .miniDados div {
+          border-right:
+            1px solid #e5eae5;
+          padding-left: 9px;
+        }
+
+        .miniDados div:first-child {
+          padding-left: 0;
+        }
+
+        .miniDados div:last-child {
+          border: 0;
+        }
+
+        .miniDados small {
+          display: block;
+          font-size: 7px;
+          color: #879189;
+          letter-spacing: .6px;
+        }
+
+        .miniDados strong {
+          display: block;
+          margin-top: 4px;
+          font-size: 12px;
+        }
+
+        .abrir {
+          width: 100%;
+          height: 42px;
+          margin-top: 15px;
+          background: #176f3e;
+          color: white;
+          border: 0;
+          border-radius: 4px;
+          font-size: 9px;
+          font-weight: 900;
+          letter-spacing: 1px;
+          cursor: pointer;
+        }
+
+        .abrir:hover {
+          background: #10552f;
+        }
+
+        /* MODAL */
+
+        .modal {
+          position: fixed;
+          inset: 0;
+          background:
+            rgba(4,17,9,.78);
+          z-index: 100;
+          overflow-y: auto;
+          padding: 25px;
+        }
+
+        .janela {
+          max-width: 1050px;
+          margin: auto;
+          background: #f5f8f5;
+          border-radius: 10px;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .fechar {
+          position: absolute;
+          right: 18px;
+          top: 18px;
+          z-index: 20;
+          border: 0;
+          background: white;
+          padding: 9px 12px;
+          font-size: 8px;
+          font-weight: 900;
+          cursor: pointer;
+        }
+
+        .modalHeader {
+          background: white;
+          padding: 38px;
+          display: flex;
+          justify-content: space-between;
+          gap: 25px;
+        }
+
+        .modalHeader span {
+          font-size: 9px;
+          color: #168047;
+          letter-spacing: 1.3px;
+          font-weight: 900;
+        }
+
+        .modalHeader h2 {
+          font-size: 34px;
+          margin: 8px 0;
+          letter-spacing: -1px;
+        }
+
+        .modalHeader p {
+          color: #778178;
+          font-size: 12px;
+          margin: 0;
+        }
+
+        .score {
+          text-align: right;
+        }
+
+        .score strong {
+          display: block;
+          color: #168047;
+          font-size: 43px;
+        }
+
+        .score span {
+          color: #778178;
+          font-size: 8px;
+        }
+
+        .galeria {
+          height: 400px;
+          position: relative;
+          background:
+            #dfe7df;
+        }
+
+        .galeria > img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .semImagemGrande {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          color: #6f7b72;
+        }
+
+        .semImagemGrande strong {
+          font-size: 11px;
+          letter-spacing: 2px;
+        }
+
+        .semImagemGrande p {
+          font-size: 12px;
+        }
+
+        .fonteFoto {
+          position: absolute;
+          bottom: 12px;
+          left: 12px;
+          background:
+            rgba(0,0,0,.62);
+          color: white;
+          padding: 7px 9px;
+          font-size: 8px;
+        }
+
+        .seta {
+          position: absolute;
+          top: 50%;
+          transform:
+            translateY(-50%);
+          width: 40px;
+          height: 40px;
+          border: 0;
+          border-radius: 50%;
+          background: white;
+          font-size: 25px;
+          cursor: pointer;
+        }
+
+        .esquerda {
+          left: 15px;
+        }
+
+        .direita {
+          right: 15px;
+        }
+
+        .informacao {
+          padding: 35px;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 30px;
+          background: white;
+        }
+
+        .informacao h3,
+        .bloco h3 {
+          font-size: 22px;
+          margin: 8px 0 20px;
+        }
+
+        .lista {
+          border-top:
+            1px solid #e2e8e2;
+        }
+
+        .lista div {
+          display: flex;
+          justify-content: space-between;
+          padding: 12px 0;
+          border-bottom:
+            1px solid #e2e8e2;
+        }
+
+        .lista span {
+          color: #7a857d;
+          font-size: 11px;
+        }
+
+        .lista strong {
+          font-size: 11px;
+        }
+
+        .producao {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 7px;
+        }
+
+        .bloco {
+          margin: 20px 35px;
+          padding: 25px;
+          background: white;
+          border: 1px solid #e0e6e0;
+        }
+
+        .areaGrid {
+          display: grid;
+          grid-template-columns:
+            repeat(4, 1fr);
+          border-top:
+            1px solid #e4e9e4;
+          border-bottom:
+            1px solid #e4e9e4;
+        }
+
+        .areaGrid div {
+          padding: 18px 10px;
+          border-right:
+            1px solid #e4e9e4;
+        }
+
+        .areaGrid div:last-child {
+          border: 0;
+        }
+
+        .areaGrid small {
+          display: block;
+          font-size: 7px;
+          color: #89938c;
+          letter-spacing: .7px;
+        }
+
+        .areaGrid strong {
+          display: block;
+          margin-top: 7px;
+          font-size: 15px;
+        }
+
+        .barra,
+        .potencialBarra {
+          height: 9px;
+          background: #e2e8e2;
+          border-radius: 10px;
+          overflow: hidden;
+          margin-top: 20px;
+        }
+
+        .barra div,
+        .potencialBarra div {
+          height: 100%;
+          background: #168047;
+        }
+
+        .nota {
+          color: #7a857d;
+          font-size: 10px;
+          line-height: 1.6;
+        }
+
+        .mapaTituloModal {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .tipoExacto,
+        .tipoAproximado {
+          font-size: 8px;
+          font-weight: 900;
+          padding: 7px 9px;
+          border-radius: 3px;
+        }
+
+        .tipoExacto {
+          color: #126d39;
+          background: #e5f2e8;
+        }
+
+        .tipoAproximado {
+          color: #8a6518;
+          background: #f8efd9;
+        }
+
+        .mapaFicha {
+          height: 330px;
+          overflow: hidden;
+          border: 1px solid #dbe2dc;
+          border-radius: 5px;
+        }
+
+        .mapaFicha iframe {
+          width: 100%;
+          height: 100%;
+          border: 0;
+        }
+
+        .coordenadas {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-top: 10px;
+          font-family: monospace;
+          font-size: 10px;
+          color: #667169;
+        }
+
+        .coordenadas button {
+          margin-left: auto;
+          border: 0;
+          background: #176f3e;
+          color: white;
+          padding: 9px 12px;
+          font-size: 8px;
+          font-weight: 900;
+          cursor: pointer;
+        }
+
+        .potencialLinha {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .potencialBarra {
+          flex: 1;
+          margin-top: 0;
+        }
+
+        .potencialLinha strong {
+          color: #168047;
+          font-size: 20px;
+        }
+
+        .especialGrid {
+          display: grid;
+          grid-template-columns:
+            repeat(3, 1fr);
+          gap: 8px;
+        }
+
+        .especialGrid div {
+          padding: 13px;
+          background: #f1f5f1;
+          border: 1px solid #e1e7e1;
+          font-size: 10px;
+          color: #526057;
+        }
+
+        .fonte {
+          margin: 30px 35px;
+          padding: 20px 0;
+          border-top:
+            1px solid #dce3dc;
+          border-bottom:
+            1px solid #dce3dc;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .fonte span {
+          display: block;
+          color: #168047;
+          font-size: 8px;
+          font-weight: 900;
+          letter-spacing: 1px;
+        }
+
+        .fonte strong {
+          display: block;
+          margin-top: 5px;
+          font-size: 11px;
+        }
+
+        .fonte a {
+          background: #176f3e;
+          color: white;
+          padding: 10px 13px;
+          text-decoration: none;
+          font-size: 8px;
+          font-weight: 900;
+        }
+
+        .observacao {
+          margin: 0 35px 35px;
+          background: #edf3ed;
+          border-left:
+            3px solid #176f3e;
+          padding: 18px;
+        }
+
+        .observacao strong {
+          color: #176f3e;
+          font-size: 8px;
+          letter-spacing: 1px;
+        }
+
+        .observacao p {
+          color: #68736c;
+          font-size: 11px;
+          line-height: 1.6;
+          margin-bottom: 0;
+        }
+
+        /* RESPONSIVO */
+
+        @media(max-width: 1000px) {
+
+          .estatisticas {
+            grid-template-columns:
+              repeat(3, 1fr);
+            margin: 20px;
+          }
+
+          .filtros {
+            grid-template-columns:
+              1fr 1fr;
+          }
+
+          .grid {
+            grid-template-columns:
+              1fr 1fr;
+          }
+
+        }
+
+        @media(max-width: 700px) {
+
+          .hero {
+            height: 570px;
+          }
+
+          .heroConteudo {
+            padding: 35px 20px;
+          }
+
+          .linha {
+            flex-wrap: wrap;
+            margin-bottom: 70px;
+          }
+
+          .hero h1 {
+            font-size: 48px;
+            letter-spacing: -2px;
+          }
+
+          .estatisticas {
+            grid-template-columns:
+              1fr 1fr;
+          }
+
+          .filtros {
+            grid-template-columns:
+              1fr;
+          }
+
+          .cabecalho,
+          .tituloDirectorio,
+          .mapaTopo {
+            display: block;
+          }
+
+          .botaoMapa {
+            margin-top: 20px;
+          }
+
+          .linhaFiltros {
+            display: block;
+          }
+
+          .linhaFiltros select {
+            width: 100%;
+          }
+
+          .linhaFiltros span {
+            display: block;
+            margin-top: 10px;
+          }
+
+          .mapaArea {
+            padding: 18px;
+          }
+
+          .mapaCompacto {
+            height: 330px;
+          }
+
+          .grid {
+            grid-template-columns:
+              1fr;
+          }
+
+          .modal {
+            padding: 0;
+          }
+
+          .janela {
+            min-height: 100vh;
+            border-radius: 0;
+          }
+
+          .modalHeader {
+            padding: 30px 20px;
+            display: block;
+          }
+
+          .score {
+            text-align: left;
+            margin-top: 15px;
+          }
+
+          .galeria {
+            height: 300px;
+          }
+
+          .informacao {
+            grid-template-columns:
+              1fr;
+            padding: 25px 20px;
+          }
+
+          .bloco {
+            margin: 15px 20px;
+            padding: 20px;
+          }
+
+          .areaGrid {
+            grid-template-columns:
+              1fr 1fr;
+          }
+
+          .areaGrid div:nth-child(2) {
+            border-right: 0;
+          }
+
+          .especialGrid {
+            grid-template-columns:
+              1fr 1fr;
+          }
+
+          .fonte {
+            margin: 25px 20px;
+            display: block;
+          }
+
+          .fonte a {
+            display: inline-block;
+            margin-top: 12px;
+          }
+
+          .observacao {
+            margin: 0 20px 25px;
+          }
+
+          .coordenadas {
+            flex-wrap: wrap;
+          }
+
+          .coordenadas button {
+            margin-left: 0;
+          }
+
+        }
+
+      `}</style>
+
     </main>
   );
 }
