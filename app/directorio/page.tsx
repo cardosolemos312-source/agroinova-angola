@@ -122,7 +122,6 @@ const coordenadasMunicipios: Record<
 
   Bié: { lat: -12.38, lng: 17.7 },
   Chinguar: { lat: -12.2, lng: 16.33 },
-  Chinguar: { lat: -12.2, lng: 16.33 },
 
   Huíla: { lat: -14.92, lng: 13.49 },
   Lubango: { lat: -14.92, lng: 13.49 },
@@ -2523,8 +2522,8 @@ export default function DirectorioFazendas() {
               <div className="especialGrid">
 
                 {selecionada.especial.map(
-                  (item) => (
-                    <div key={item}>
+                  (item, index) => (
+                    <div key={`${item}-${index}`}>
                       {item}
                     </div>
                   )
