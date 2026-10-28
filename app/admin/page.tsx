@@ -11,9 +11,10 @@ import {
 } from "react";
 
 import GestaoTecnicos from "@/components/admin/GestaoTecnicos";
+import GestaoMercado from "@/components/admin/GestaoMercado";
 
 type EstadoNoticia = "rascunho" | "publicada" | "arquivada";
-type SecaoAdmin = "visao-geral" | "noticias" | "tecnicos";
+type SecaoAdmin = "visao-geral" | "noticias" | "tecnicos" | "mercado";
 
 type Noticia = {
   id: string;
@@ -1164,6 +1165,17 @@ export default function AdminPage() {
                 className="agro-admin-menu"
                 style={{
                   ...estilos.menuBotao,
+                  ...(secao === "mercado" ? estilos.menuAtivo : {}),
+                }}
+                onClick={() => navegar("mercado")}
+              >
+                <span>▦</span> Mercado AGROINOVA
+              </button>
+              <button
+                type="button"
+                className="agro-admin-menu"
+                style={{
+                  ...estilos.menuBotao,
                   ...(secao === "noticias" ? estilos.menuAtivo : {}),
                 }}
                 onClick={() => navegar("noticias")}
@@ -1276,7 +1288,7 @@ export default function AdminPage() {
                   ? "Visão geral da plataforma"
                   : secao === "noticias"
                     ? "Gestão de notícias"
-                    : "Técnicos e investigadores"}
+                    : secao === "mercado" ? "Gestão do Mercado" : "Técnicos e investigadores"}
               </h1>
 
               <p style={estilos.subtitulo}>
@@ -1284,11 +1296,11 @@ export default function AdminPage() {
                   ? "Acompanhe os conteúdos registados na plataforma."
                   : secao === "noticias"
                     ? "Crie, edite, publique e organize as notícias."
-                    : "Gira o directório de especialistas da AGROINOVA ANGOLA."}
+                    : secao === "mercado" ? "Analise, aprove, rejeite ou elimine anúncios submetidos pelos vendedores." : "Gira o directório de especialistas da AGROINOVA ANGOLA."}
               </p>
             </div>
 
-            {secao !== "tecnicos" && (
+            {secao !== "tecnicos" && secao !== "mercado" && (
               <div style={{ display: "flex", gap: 9, flexWrap: "wrap" }}>
                 <button
                   type="button"
@@ -1328,7 +1340,7 @@ export default function AdminPage() {
               Terminar sessão
             </button>          </header>
 
-          {erro && !modalAberto && secao !== "tecnicos" && (
+          {erro && !modalAberto && secao !== "tecnicos" && secao !== "mercado" && (
             <div
               role="alert"
               style={{
@@ -1355,7 +1367,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {sucesso && secao !== "tecnicos" && (
+          {sucesso && secao !== "tecnicos" && secao !== "mercado" && (
             <div
               role="status"
               style={{
@@ -1383,7 +1395,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {secao !== "tecnicos" && (
+          {secao !== "tecnicos" && secao !== "mercado" && (
             <div
               className="agro-admin-indicadores"
               style={estilos.grelhaIndicadores}
@@ -2002,6 +2014,7 @@ export default function AdminPage() {
           )}
 
           {secao === "tecnicos" && <GestaoTecnicos />}
+          {secao === "mercado" && <GestaoMercado />}
 
           <footer
             style={{
