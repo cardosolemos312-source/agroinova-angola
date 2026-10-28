@@ -812,6 +812,9 @@ export default function Header() {
             <Link href="/noticias" onClick={fecharMenu}>
               Notícias
             </Link>
+            <Link href="/mercado" onClick={fecharMenu}>
+              Mercado
+            </Link>
 
             {/* ACÇÕES PARA TELEMÓVEIS */}
 
