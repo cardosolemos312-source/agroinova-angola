@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
@@ -33,6 +34,7 @@ type Produto = {
 type Resposta = {
   sucesso?: boolean;
   erro?: string;
+  mensagem?: string;
   produtos?: Produto[];
   produto?: Produto;
 };
@@ -53,8 +55,35 @@ function formatarData(valor: string) {
 }
 
 function formatarPreco(valor: number | null) {
-  if (valor === null || !Number.isFinite(valor)) return "Preço não indicado";
+  if (valor === null || !Number.isFinite(valor)) {
+    return "Preço não indicado";
+  }
+
   return `${valor.toLocaleString("pt-PT")} Kz`;
+}
+
+function estadoLegivel(estado: string) {
+  const estados: Record<string, string> = {
+    pendente: "Pendente",
+    aprovado: "Aprovado",
+    rejeitado: "Rejeitado",
+    arquivado: "Arquivado",
+  };
+
+  return estados[estado.toLowerCase()] || estado;
+}
+
+function estiloEstado(estado: string) {
+  switch (estado.toLowerCase()) {
+    case "aprovado":
+      return "bg-green-50 text-green-800";
+    case "rejeitado":
+      return "bg-red-50 text-red-800";
+    case "arquivado":
+      return "bg-slate-100 text-slate-700";
+    default:
+      return "bg-amber-50 text-amber-800";
+  }
 }
 
 export default function GestaoMercado() {
@@ -78,7 +107,9 @@ export default function GestaoMercado() {
       const dados = (await resposta.json()) as Resposta;
 
       if (!resposta.ok || dados.sucesso !== true) {
-        throw new Error(dados.erro || "Não foi possível carregar os anúncios.");
+        throw new Error(
+          dados.erro || "Não foi possível carregar os anúncios.",
+        );
       }
 
       setProdutos(Array.isArray(dados.produtos) ? dados.produtos : []);
@@ -105,6 +136,13 @@ export default function GestaoMercado() {
     setSucesso("");
 
     let motivo = "";
+
+    if (acao === "aprovar" || acao === "rejeitar") {
+      if (produto.estado.toLowerCase() !== "pendente") {
+        setErro("Só podes aprovar ou rejeitar anúncios pendentes.");
+        return;
+      }
+    }
 
     if (acao === "rejeitar") {
       const respostaMotivo = window.prompt(
@@ -143,19 +181,29 @@ export default function GestaoMercado() {
         body: JSON.stringify(
           eliminar
             ? { id: produto.id, confirmar: true }
-            : { id: produto.id, acao, ...(acao === "rejeitar" ? { motivo } : {}) },
+            : {
+                id: produto.id,
+                acao,
+                ...(acao === "rejeitar" ? { motivo } : {}),
+              },
         ),
       });
 
       const dados = (await resposta.json()) as Resposta;
 
       if (!resposta.ok || dados.sucesso !== true) {
-        throw new Error(dados.erro || "Não foi possível concluir a operação.");
+        throw new Error(
+          dados.erro || "Não foi possível concluir a operação.",
+        );
       }
 
-      setProdutos((anteriores) =>
-        anteriores.filter((item) => item.id !== produto.id),
-      );
+      if (eliminar) {
+        setProdutos((anteriores) =>
+          anteriores.filter((item) => item.id !== produto.id),
+        );
+      } else {
+        await carregarProdutos();
+      }
 
       setSucesso(
         acao === "aprovar"
@@ -175,15 +223,24 @@ export default function GestaoMercado() {
     }
   }
 
+  const pendentes = produtos.filter(
+    (produto) => produto.estado.toLowerCase() === "pendente",
+  ).length;
+
+  const aprovados = produtos.filter(
+    (produto) => produto.estado.toLowerCase() === "aprovado",
+  ).length;
+
   return (
     <section className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-900">
-            Moderação de anúncios
+            Gestão do Mercado
           </h2>
           <p className="mt-1 text-sm text-slate-600">
-            Analisa os anúncios submetidos antes da sua publicação no Mercado.
+            Consulta os anúncios, modera as novas submissões e elimina anúncios
+            de qualquer estado.
           </p>
         </div>
 
@@ -198,11 +255,27 @@ export default function GestaoMercado() {
         </button>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4">
-        <p className="text-sm text-slate-500">Anúncios pendentes de análise</p>
-        <p className="mt-1 text-3xl font-bold text-slate-900">
-          {produtos.length}
-        </p>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <p className="text-sm text-slate-500">Total de anúncios listados</p>
+          <p className="mt-1 text-3xl font-bold text-slate-900">
+            {produtos.length}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+          <p className="text-sm text-amber-800">Pendentes de análise</p>
+          <p className="mt-1 text-3xl font-bold text-amber-900">
+            {pendentes}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-green-200 bg-green-50 p-4">
+          <p className="text-sm text-green-800">Anúncios aprovados</p>
+          <p className="mt-1 text-3xl font-bold text-green-900">
+            {aprovados}
+          </p>
+        </div>
       </div>
 
       {erro && (
@@ -229,23 +302,28 @@ export default function GestaoMercado() {
         </div>
       ) : erro && produtos.length === 0 ? (
         <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-600">
-          Não foi possível apresentar a lista. Verifica a ligação à API e tenta atualizar.
+          Não foi possível apresentar a lista. Verifica a ligação à API e tenta
+          atualizar.
         </div>
       ) : produtos.length === 0 ? (
         <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
           <h3 className="font-semibold text-slate-800">
-            Não existem anúncios pendentes
+            Não existem anúncios para apresentar
           </h3>
           <p className="mt-2 text-sm text-slate-500">
-            Quando os vendedores submeterem novos anúncios, aparecerão aqui para análise.
+            Os anúncios submetidos aparecerão aqui depois de carregados pela
+            API administrativa.
           </p>
         </div>
       ) : (
         <div className="space-y-4">
           {produtos.map((produto) => {
             const ocupado = aProcessar === produto.id;
+            const pendente = produto.estado.toLowerCase() === "pendente";
+
             const imagem = produto.imagens?.find(
-              (valor) => typeof valor === "string" && valor.trim().length > 0,
+              (valor) =>
+                typeof valor === "string" && valor.trim().length > 0,
             );
 
             return (
@@ -256,7 +334,6 @@ export default function GestaoMercado() {
                 <div className="grid gap-4 p-4 md:grid-cols-[180px_1fr]">
                   <div className="overflow-hidden rounded-lg bg-slate-100">
                     {imagem ? (
-                      // A imagem vem do anúncio submetido pelo vendedor.
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={imagem}
@@ -280,14 +357,26 @@ export default function GestaoMercado() {
                           {produto.nome}
                         </h3>
                       </div>
-                      <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800">
-                        Pendente
+
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${estiloEstado(
+                          produto.estado,
+                        )}`}
+                      >
+                        {estadoLegivel(produto.estado)}
                       </span>
                     </div>
 
                     <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600">
                       {produto.descricao || "Sem descrição."}
                     </p>
+
+                    {produto.motivo_rejeicao && (
+                      <div className="mt-3 rounded-lg border border-red-100 bg-red-50 p-3 text-sm text-red-800">
+                        <strong>Motivo da rejeição:</strong>{" "}
+                        {produto.motivo_rejeicao}
+                      </div>
+                    )}
 
                     <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                       <div>
@@ -338,25 +427,33 @@ export default function GestaoMercado() {
                     </div>
 
                     <div className="mt-4 flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        style={botaoBase}
-                        className="border-green-700 bg-green-700 text-white hover:bg-green-800 disabled:opacity-50"
-                        disabled={ocupado}
-                        onClick={() => void executarAcao(produto, "aprovar")}
-                      >
-                        Aprovar anúncio
-                      </button>
+                      {pendente && (
+                        <>
+                          <button
+                            type="button"
+                            style={botaoBase}
+                            className="border-green-700 bg-green-700 text-white hover:bg-green-800 disabled:opacity-50"
+                            disabled={ocupado}
+                            onClick={() =>
+                              void executarAcao(produto, "aprovar")
+                            }
+                          >
+                            Aprovar anúncio
+                          </button>
 
-                      <button
-                        type="button"
-                        style={botaoBase}
-                        className="border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 disabled:opacity-50"
-                        disabled={ocupado}
-                        onClick={() => void executarAcao(produto, "rejeitar")}
-                      >
-                        Rejeitar
-                      </button>
+                          <button
+                            type="button"
+                            style={botaoBase}
+                            className="border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 disabled:opacity-50"
+                            disabled={ocupado}
+                            onClick={() =>
+                              void executarAcao(produto, "rejeitar")
+                            }
+                          >
+                            Rejeitar
+                          </button>
+                        </>
+                      )}
 
                       <button
                         type="button"
@@ -365,7 +462,7 @@ export default function GestaoMercado() {
                         disabled={ocupado}
                         onClick={() => void executarAcao(produto, "eliminar")}
                       >
-                        Eliminar
+                        Eliminar anúncio
                       </button>
 
                       {ocupado && (

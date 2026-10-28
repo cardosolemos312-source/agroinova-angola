@@ -88,15 +88,11 @@ export async function GET() {
 
   try {
     const supabase = obterSupabaseAdmin();
-
     const { data, error } = await supabase
-      .from("mercado_produtos")
-      .select(
-        "id,vendedor_id,nome,descricao,categoria,preco,preco_negociavel,quantidade,unidade,provincia,municipio,imagens,estado,motivo_rejeicao,created_at",
-      )
-      .eq("estado", "pendente")
-      .order("created_at", { ascending: true })
-      .limit(200);
+  .from("mercado_produtos")
+  .select("id,vendedor_id,nome,descricao,categoria,preco,preco_negociavel,quantidade,unidade,provincia,municipio,imagens,estado,motivo_rejeicao,created_at")
+  .order("created_at", { ascending: false })
+  .limit(200);
 
     if (error) {
       console.error("Erro ao carregar anuncios pendentes:", error.message);

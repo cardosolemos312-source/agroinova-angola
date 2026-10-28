@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
 type Produto = {
   id: string;
@@ -205,6 +206,58 @@ export default function MercadoPage() {
   const [erro, setErro] = useState("");
   const [consultaConcluida, setConsultaConcluida] = useState(false);
 
+  const [perfilVendedorAtivo, setPerfilVendedorAtivo] = useState(false);
+  const [aVerificarVendedor, setAVerificarVendedor] = useState(true);
+
+  useEffect(() => {
+    const supabase = createClient();
+    let ativo = true;
+
+    async function verificarVendedor() {
+      try {
+        const {
+          data: { user },
+          error: erroSessao,
+        } = await supabase.auth.getUser();
+
+        if (erroSessao || !user) {
+          if (ativo) setPerfilVendedorAtivo(false);
+          return;
+        }
+
+        const { data: perfil, error } = await supabase
+          .from("mercado_vendedores")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("estado", "ativo")
+          .maybeSingle();
+
+        if (ativo) {
+          setPerfilVendedorAtivo(!error && Boolean(perfil));
+        }
+      } catch {
+        if (ativo) setPerfilVendedorAtivo(false);
+      } finally {
+        if (ativo) setAVerificarVendedor(false);
+      }
+    }
+
+    void verificarVendedor();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
+      window.setTimeout(() => {
+        if (ativo) void verificarVendedor();
+      }, 0);
+    });
+
+    return () => {
+      ativo = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
   const atualizarProdutos = useCallback(async () => {
     setCarregando(true);
     setErro("");
@@ -378,6 +431,15 @@ export default function MercadoPage() {
                 >
                   Explorar produtos
                 </a>
+
+                {perfilVendedorAtivo && !aVerificarVendedor && (
+                  <Link
+                    href="/mercado/perfil"
+                    className="inline-flex min-h-12 items-center justify-center rounded-xl border border-green-200 bg-white px-6 py-3 font-bold text-green-900 shadow-sm transition hover:bg-green-50"
+                  >
+                    Perfil de vendedor
+                  </Link>
+                )}
 
                 <Link
                   href="/mercado/entrar"

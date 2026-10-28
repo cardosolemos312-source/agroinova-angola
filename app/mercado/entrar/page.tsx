@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -88,7 +89,7 @@ export default function EntrarMercadoPage() {
       return destino;
     }
 
-    return "/mercado/publicar";
+    return "/mercado/perfil";
   }
 
   async function garantirPerfil(
@@ -134,8 +135,6 @@ export default function EntrarMercadoPage() {
       );
     }
 
-    // Aceita apenas os tipos definidos na restrição da base de dados.
-    // Contas antigas com um tipo inválido ficam com o tipo predefinido.
     const tipoGuardado: TipoVendedor = tipoValido(metadata.tipo)
       ? metadata.tipo
       : "produtor";
@@ -216,14 +215,22 @@ export default function EntrarMercadoPage() {
           });
 
         if (erroRegisto) {
-          throw new Error(erroRegisto.message);
+          console.error("Erro original do registo Supabase:", {
+            code: erroRegisto.code,
+            message: erroRegisto.message,
+            status: erroRegisto.status,
+          });
+
+          throw new Error(
+            `Falha no registo (${erroRegisto.code || erroRegisto.status}): ${erroRegisto.message}`,
+          );
         }
 
         if (data.session && data.user) {
           await garantirPerfil(supabase, data.user);
 
           setMensagem(
-            "Conta criada com sucesso. A abrir o Mercado...",
+            "Conta criada com sucesso. A abrir o teu perfil de gestão...",
           );
 
           router.push(destinoAposAutenticacao());
@@ -232,7 +239,7 @@ export default function EntrarMercadoPage() {
         }
 
         setMensagem(
-          "Registo iniciado. Confirma o teu email. Depois, inicia sessão para aceder ao Mercado.",
+          "Registo iniciado. Confirma o teu email. Depois, inicia sessão para aceder ao teu perfil de gestão.",
         );
 
         setModo("entrar");
@@ -243,11 +250,26 @@ export default function EntrarMercadoPage() {
             password,
           });
 
-        if (erroLogin) {
-          throw new Error(
-            "Não foi possível iniciar sessão. Confirma o email e a palavra-passe.",
-          );
-        }
+        
+if (erroLogin) {
+  const codigo = erroLogin.code ?? "desconhecido";
+  const mensagemOriginal =
+    erroLogin.message ?? "O Supabase não forneceu uma mensagem.";
+  const estado = erroLogin.status ?? "desconhecido";
+
+  console.error("Erro original do Supabase:", {
+    codigo,
+    mensagem: mensagemOriginal,
+    estado,
+    erroCompleto: String(erroLogin),
+    propriedades: Object.getOwnPropertyNames(erroLogin),
+  });
+
+  throw new Error(
+    `Falha na autenticação (${codigo}): ${mensagemOriginal}`,
+  );
+}
+
 
         if (!data.user) {
           throw new Error(
@@ -258,7 +280,7 @@ export default function EntrarMercadoPage() {
         await garantirPerfil(supabase, data.user);
 
         setMensagem(
-          "Sessão iniciada. A abrir a área de publicação...",
+          "Sessão iniciada. A abrir o teu perfil de gestão...",
         );
 
         router.push(destinoAposAutenticacao());
@@ -306,8 +328,8 @@ export default function EntrarMercadoPage() {
           </h1>
 
           <p className="mt-3 leading-6 text-gray-600">
-            Acede à plataforma para preparar os teus anúncios de produtos
-            agrícolas e equipamentos.
+            Acede à plataforma para gerir o teu perfil e preparar
+            os teus anúncios de produtos agrícolas e equipamentos.
           </p>
 
           <div className="mt-7 grid grid-cols-2 rounded-xl bg-gray-100 p-1">
