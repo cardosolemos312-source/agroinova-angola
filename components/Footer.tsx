@@ -32,12 +32,6 @@ const equipa = [
     cargo: "PhD, Professor Doutor",
     iniciais: "BV",
   },
-
-  {
-    nome: "Messias Mengawaco",
-    cargo: "Eng.º Agrónomo",
-    iniciais: "MM",
-  },
 ];
 
 const empresas = [
@@ -50,11 +44,6 @@ const empresas = [
     nome: "BE-SMART",
     cargo: "Parceria, Divulgação e Segurança",
     iniciais: "BE",
-  },
-  {
-    nome: "ASUS-FILMES",
-    cargo: "Marketing e Publicidade",
-    iniciais: "AF",
   },
 ];
 
@@ -173,7 +162,7 @@ export default function Footer() {
             href="mailto:cardosoLemos312@gmail.com"
             className="block break-all text-sm leading-6 hover:text-green-400"
           >
-            cardosoLemos312@gmail.com
+            cardosolemos312@gmail.com
           </a>
 
           <a

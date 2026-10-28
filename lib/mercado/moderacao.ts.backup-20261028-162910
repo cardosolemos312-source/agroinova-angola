@@ -1,0 +1,52 @@
+function normalizarTexto(valor: string): string {
+  return valor
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const expressoesProibidas: Array<{
+  regra: string;
+  expressao: RegExp;
+}> = [
+  {
+    regra: "Armas ou municoes",
+    expressao: /\b(arma de fogo|armas de fogo|municao|municoes)\b/,
+  },
+  {
+    regra: "Explosivos",
+    expressao: /\b(explosivo|explosivos|explosivos caseiros)\b/,
+  },
+  {
+    regra: "Drogas recreativas proibidas",
+    expressao: /\b(cocaina|heroina|metanfetamina|maconha para consumo recreativo)\b/,
+  },
+  {
+    regra: "Produtos declarados roubados",
+    expressao: /\b(produto roubado|mercadoria roubada|equipamento roubado)\b/,
+  },
+  {
+    regra: "Documentacao falsa",
+    expressao: /\b(documento falso|documentos falsos|certificado falso)\b/,
+  },
+];
+
+export function verificarPoliticaMercado(nome: string, categoria: string) {
+  const texto = normalizarTexto(`${nome} ${categoria}`);
+
+  for (const item of expressoesProibidas) {
+    if (item.expressao.test(texto)) {
+      return {
+        permitido: false,
+        regra: item.regra,
+      };
+    }
+  }
+
+  return {
+    permitido: true,
+    regra: null,
+  };
+}

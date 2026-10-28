@@ -2188,7 +2188,7 @@ export default function PecuariaPage() {
           <div className="max-w-4xl text-white">
 
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-green-300">
-              AGROINOVA ANGOLA é PECUÁRIA
+              AGROINOVA-ANGOLA/PECUÁRIA
             </p>
 
             <h1 className="mt-6 text-5xl font-black leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">

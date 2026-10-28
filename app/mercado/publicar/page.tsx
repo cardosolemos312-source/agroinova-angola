@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -11,8 +11,8 @@ const provincias = [
   "Benguela",
   "Bié",
   "Cabinda",
-  "Cubango",
   "Cuando",
+  "Cubango",
   "Cuanza Norte",
   "Cuanza Sul",
   "Cunene",
@@ -58,6 +58,11 @@ const unidades = [
 const campo =
   "mt-1 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100";
 
+const MAX_FOTOS = 5;
+const MAX_TAMANHO_FOTO = 5 * 1024 * 1024;
+
+const TIPOS_IMAGEM = ["image/jpeg", "image/png", "image/webp"];
+
 export default function PublicarProdutoPage() {
   const router = useRouter();
 
@@ -70,7 +75,12 @@ export default function PublicarProdutoPage() {
   const [unidade, setUnidade] = useState("kg");
   const [provincia, setProvincia] = useState("");
   const [municipio, setMunicipio] = useState("");
-  const [telefone, setTelefone] = useState("");
+
+  const [fotos, setFotos] = useState<File[]>([]);
+  const [previsualizacoes, setPrevisualizacoes] = useState<
+    { nome: string; url: string }[]
+  >([]);
+
   const [aCarregar, setACarregar] = useState(false);
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
@@ -87,14 +97,18 @@ export default function PublicarProdutoPage() {
         if (cancelado) return;
 
         if (error || !data.user) {
-          router.replace("/mercado/entrar?redirect=%2Fmercado%2Fpublicar");
+          router.replace(
+            "/mercado/entrar?redirect=%2Fmercado%2Fpublicar",
+          );
           return;
         }
 
         setVerificandoSessao(false);
       } catch {
         if (!cancelado) {
-          router.replace("/mercado/entrar?redirect=%2Fmercado%2Fpublicar");
+          router.replace(
+            "/mercado/entrar?redirect=%2Fmercado%2Fpublicar",
+          );
         }
       }
     }
@@ -106,7 +120,86 @@ export default function PublicarProdutoPage() {
     };
   }, [router]);
 
-  async function submeterFormulario(event: FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    const urls = fotos.map((foto) => ({
+      nome: foto.name,
+      url: URL.createObjectURL(foto),
+    }));
+
+    setPrevisualizacoes(urls);
+
+    return () => {
+      urls.forEach((foto) => URL.revokeObjectURL(foto.url));
+    };
+  }, [fotos]);
+
+  function selecionarFotos(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const selecionadas = Array.from(event.target.files ?? []);
+
+    // Permite voltar a escolher os mesmos ficheiros.
+    event.target.value = "";
+
+    if (selecionadas.length === 0) return;
+
+    setErro("");
+    setSucesso("");
+
+    const restantes = MAX_FOTOS - fotos.length;
+
+    if (restantes <= 0) {
+      setErro(`Podes selecionar no máximo ${MAX_FOTOS} fotografias.`);
+      return;
+    }
+
+    const aceites: File[] = [];
+    const problemas: string[] = [];
+
+    for (const foto of selecionadas) {
+      if (aceites.length >= restantes) {
+        problemas.push(`O limite é de ${MAX_FOTOS} fotografias.`);
+        break;
+      }
+
+      if (!TIPOS_IMAGEM.includes(foto.type)) {
+        problemas.push(
+          `"${foto.name}" não é JPG, PNG ou WebP.`,
+        );
+        continue;
+      }
+
+      if (foto.size > MAX_TAMANHO_FOTO) {
+        problemas.push(
+          `"${foto.name}" ultrapassa o limite de 5 MB.`,
+        );
+        continue;
+      }
+
+      aceites.push(foto);
+    }
+
+    if (aceites.length > 0) {
+      setFotos((anteriores) => [
+        ...anteriores,
+        ...aceites,
+      ]);
+    }
+
+    if (problemas.length > 0) {
+      setErro(problemas.join(" "));
+    }
+  }
+
+  function removerFoto(indice: number) {
+    setFotos((anteriores) =>
+      anteriores.filter((_, i) => i !== indice),
+    );
+  }
+
+  async function submeterFormulario(
+    event: FormEvent<HTMLFormElement>,
+  ) {
     event.preventDefault();
     setErro("");
     setSucesso("");
@@ -122,9 +215,13 @@ export default function PublicarProdutoPage() {
     }
 
     const quantidadeNumerica = Number(quantidade);
-    const precoNumerico = preco.trim() === "" ? null : Number(preco);
+    const precoNumerico =
+      preco.trim() === "" ? null : Number(preco);
 
-    if (!Number.isFinite(quantidadeNumerica) || quantidadeNumerica <= 0) {
+    if (
+      !Number.isFinite(quantidadeNumerica) ||
+      quantidadeNumerica <= 0
+    ) {
       setErro("Indica uma quantidade válida.");
       return;
     }
@@ -145,8 +242,37 @@ export default function PublicarProdutoPage() {
         await supabase.auth.getUser();
 
       if (erroSessao || !sessao.user) {
-        router.push("/mercado/entrar?redirect=/mercado/publicar");
+        router.push(
+          "/mercado/entrar?redirect=%2Fmercado%2Fpublicar",
+        );
         return;
+      }
+
+      const imagensCarregadas: string[] = [];
+
+      for (const foto of fotos) {
+        const extensao = foto.name.split(".").pop()?.toLowerCase() || "jpg";
+        const nomeSeguro = `${crypto.randomUUID()}.${extensao}`;
+        const caminho = `${sessao.user.id}/${nomeSeguro}`;
+
+        const { error: erroUpload } = await supabase.storage
+          .from("mercado-produtos")
+          .upload(caminho, foto, {
+            contentType: foto.type,
+            upsert: false,
+          });
+
+        if (erroUpload) {
+          throw new Error(
+            `Não foi possível carregar a fotografia "${foto.name}": ${erroUpload.message}`,
+          );
+        }
+
+        const { data: imagemPublica } = supabase.storage
+          .from("mercado-produtos")
+          .getPublicUrl(caminho);
+
+        imagensCarregadas.push(imagemPublica.publicUrl);
       }
 
       const resposta = await fetch("/api/mercado/produtos", {
@@ -164,6 +290,7 @@ export default function PublicarProdutoPage() {
           unidade,
           provincia,
           municipio: municipio.trim(),
+          imagens: imagensCarregadas,
         }),
       });
 
@@ -171,7 +298,8 @@ export default function PublicarProdutoPage() {
 
       if (!resposta.ok) {
         throw new Error(
-          resultado.erro || "Não foi possível publicar o anúncio.",
+          resultado.erro ||
+            "Não foi possível publicar o anúncio.",
         );
       }
 
@@ -189,7 +317,7 @@ export default function PublicarProdutoPage() {
       setUnidade("kg");
       setProvincia("");
       setMunicipio("");
-      setTelefone("");
+      setFotos([]);
     } catch (e) {
       setErro(
         e instanceof Error
@@ -204,7 +332,9 @@ export default function PublicarProdutoPage() {
   if (verificandoSessao) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 text-gray-800">
-        <p role="status" className="font-semibold">A verificar a sessão...</p>
+        <p role="status" className="font-semibold">
+          A verificar a sessão...
+        </p>
       </main>
     );
   }
@@ -242,7 +372,7 @@ export default function PublicarProdutoPage() {
             {erro && (
               <div
                 role="alert"
-                className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+                className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800"
               >
                 {erro}
               </div>
@@ -269,7 +399,9 @@ export default function PublicarProdutoPage() {
             )}
 
             <div>
-              <h2 className="text-xl font-bold">Informações do produto</h2>
+              <h2 className="text-xl font-bold">
+                Informações do produto
+              </h2>
               <p className="mt-1 text-sm text-gray-500">
                 Os campos assinalados com * são obrigatórios.
               </p>
@@ -292,7 +424,10 @@ export default function PublicarProdutoPage() {
             </div>
 
             <div>
-              <label htmlFor="descricao" className="text-sm font-semibold">
+              <label
+                htmlFor="descricao"
+                className="text-sm font-semibold"
+              >
                 Descrição *
               </label>
               <textarea
@@ -310,7 +445,10 @@ export default function PublicarProdutoPage() {
 
             <div className="grid gap-5 sm:grid-cols-2">
               <div>
-                <label htmlFor="categoria" className="text-sm font-semibold">
+                <label
+                  htmlFor="categoria"
+                  className="text-sm font-semibold"
+                >
                   Categoria *
                 </label>
                 <select
@@ -330,7 +468,10 @@ export default function PublicarProdutoPage() {
               </div>
 
               <div>
-                <label htmlFor="unidade" className="text-sm font-semibold">
+                <label
+                  htmlFor="unidade"
+                  className="text-sm font-semibold"
+                >
                   Unidade de venda *
                 </label>
                 <select
@@ -349,7 +490,10 @@ export default function PublicarProdutoPage() {
               </div>
 
               <div>
-                <label htmlFor="quantidade" className="text-sm font-semibold">
+                <label
+                  htmlFor="quantidade"
+                  className="text-sm font-semibold"
+                >
                   Quantidade disponível *
                 </label>
                 <input
@@ -365,7 +509,10 @@ export default function PublicarProdutoPage() {
               </div>
 
               <div>
-                <label htmlFor="preco" className="text-sm font-semibold">
+                <label
+                  htmlFor="preco"
+                  className="text-sm font-semibold"
+                >
                   Preço em kwanzas (Kz)
                 </label>
                 <input
@@ -391,12 +538,89 @@ export default function PublicarProdutoPage() {
               </div>
             </div>
 
-            <div className="border-t border-gray-200 pt-6">
-              <h2 className="text-xl font-bold">Localização do produto</h2>
+            <section className="border-t border-gray-200 pt-6">
+              <h2 className="text-xl font-bold">
+                Fotografias do produto
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-gray-600">
+                Escolhe até {MAX_FOTOS} fotografias reais do produto.
+                São aceites JPG, PNG e WebP, até 5 MB por imagem.
+              </p>
+
+              <label
+                htmlFor="fotos"
+                className="mt-4 flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-green-300 bg-green-50 px-5 py-8 text-center transition hover:border-green-600 hover:bg-green-100"
+              >
+                <span className="text-3xl" aria-hidden="true">
+                  +
+                </span>
+                <span className="mt-2 font-semibold text-green-900">
+                  Selecionar fotografias
+                </span>
+                <span className="mt-1 text-sm text-gray-600">
+                  {fotos.length} de {MAX_FOTOS} fotografias selecionadas
+                </span>
+                <input
+                  id="fotos"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  multiple
+                  onChange={selecionarFotos}
+                  disabled={fotos.length >= MAX_FOTOS}
+                  className="sr-only"
+                />
+              </label>
+
+              {previsualizacoes.length > 0 && (
+                <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                  {previsualizacoes.map((foto, indice) => (
+                    <div
+                      key={`${foto.nome}-${indice}`}
+                      className="overflow-hidden rounded-xl border border-gray-200 bg-white"
+                    >
+                      <div className="aspect-square bg-gray-100">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={foto.url}
+                          alt={`Pré-visualização ${indice + 1}: ${foto.nome}`}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div className="p-3">
+                        <p className="truncate text-xs text-gray-600">
+                          {foto.nome}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => removerFoto(indice)}
+                          className="mt-2 text-sm font-semibold text-red-700 hover:underline"
+                        >
+                          Remover fotografia
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <p className="mt-3 text-xs leading-5 text-gray-500">
+                Nota: nesta primeira etapa, as fotografias são apenas
+                pré-visualizadas no formulário. A ligação para as guardar
+                no Supabase será feita na próxima alteração.
+              </p>
+            </section>
+
+            <section className="border-t border-gray-200 pt-6">
+              <h2 className="text-xl font-bold">
+                Localização do produto
+              </h2>
 
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="provincia" className="text-sm font-semibold">
+                  <label
+                    htmlFor="provincia"
+                    className="text-sm font-semibold"
+                  >
                     Província *
                   </label>
                   <select
@@ -416,7 +640,10 @@ export default function PublicarProdutoPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="municipio" className="text-sm font-semibold">
+                  <label
+                    htmlFor="municipio"
+                    className="text-sm font-semibold"
+                  >
                     Município
                   </label>
                   <input
@@ -429,16 +656,15 @@ export default function PublicarProdutoPage() {
                   />
                 </div>
               </div>
-            </div>
+            </section>
 
             <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-              <p className="font-semibold">Como funciona a aprovação?</p>
+              <p className="font-semibold">
+                Como funciona a aprovação?
+              </p>
               <p className="mt-1">
                 Depois do envio, o anúncio fica pendente de aprovação.
                 Só será apresentado aos compradores quando for aprovado.
-              </p>
-              <p className="mt-2">
-                Nesta etapa, as fotografias ainda não são carregadas.
               </p>
             </div>
 
@@ -447,7 +673,9 @@ export default function PublicarProdutoPage() {
               disabled={aCarregar}
               className="inline-flex w-full items-center justify-center rounded-xl bg-green-800 px-6 py-4 font-semibold text-white transition hover:bg-green-900 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
-              {aCarregar ? "A enviar anúncio..." : "Enviar para aprovação"}
+              {aCarregar
+                ? "A enviar anúncio..."
+                : "Enviar para aprovação"}
             </button>
 
             <p className="text-xs leading-5 text-gray-500">

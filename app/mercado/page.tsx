@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 type Produto = {
@@ -150,6 +150,51 @@ function formatarPreco(preco: number | null, unidade: string) {
   }).format(preco)} Kz / ${unidade}`;
 }
 
+function converterProduto(valor: unknown): Produto | null {
+  if (!valor || typeof valor !== "object") return null;
+
+  const item = valor as Record<string, unknown>;
+
+  if (typeof item.id !== "string" || typeof item.nome !== "string") {
+    return null;
+  }
+
+  const imagens = Array.isArray(item.imagens) ? item.imagens : [];
+
+  const imagem =
+    typeof item.imagem === "string"
+      ? item.imagem
+      : imagens.find(
+          (entrada): entrada is string =>
+            typeof entrada === "string" && entrada.trim().length > 0,
+        ) ?? "";
+
+  const preco =
+    typeof item.preco === "number" && Number.isFinite(item.preco)
+      ? item.preco
+      : null;
+
+  return {
+    id: item.id,
+    nome: item.nome,
+    categoria:
+      typeof item.categoria === "string" ? item.categoria : "Outros",
+    provincia: typeof item.provincia === "string" ? item.provincia : "",
+    municipio: typeof item.municipio === "string" ? item.municipio : "",
+    preco,
+    unidade: typeof item.unidade === "string" ? item.unidade : "unidade",
+    imagem,
+    descricao: typeof item.descricao === "string" ? item.descricao : "",
+    negociavel:
+      typeof item.negociavel === "boolean"
+        ? item.negociavel
+        : typeof item.preco_negociavel === "boolean"
+          ? item.preco_negociavel
+          : false,
+    demonstracao: false,
+  };
+}
+
 export default function MercadoPage() {
   const [pesquisa, setPesquisa] = useState("");
   const [categoria, setCategoria] = useState("Todos");
@@ -158,14 +203,19 @@ export default function MercadoPage() {
   const [produtos, setProdutos] = useState<Produto[]>(exemplos);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState("");
+  const [consultaConcluida, setConsultaConcluida] = useState(false);
 
-  async function atualizarProdutos() {
+  const atualizarProdutos = useCallback(async () => {
     setCarregando(true);
     setErro("");
 
     try {
       const resposta = await fetch("/api/mercado/produtos", {
+        method: "GET",
         cache: "no-store",
+        headers: {
+          Accept: "application/json",
+        },
       });
 
       if (!resposta.ok) {
@@ -174,39 +224,59 @@ export default function MercadoPage() {
 
       const dados: unknown = await resposta.json();
 
-      const lista =
-        Array.isArray(dados)
-          ? dados
-          : dados &&
-              typeof dados === "object" &&
-              "produtos" in dados &&
-              Array.isArray((dados as { produtos: unknown }).produtos)
-            ? (dados as { produtos: unknown[] }).produtos
-            : null;
+      const lista: unknown[] | null = Array.isArray(dados)
+        ? dados
+        : dados &&
+            typeof dados === "object" &&
+            "produtos" in dados &&
+            Array.isArray((dados as { produtos: unknown }).produtos)
+          ? (dados as { produtos: unknown[] }).produtos
+          : null;
 
       if (!lista) {
         throw new Error("A resposta da API não tem o formato esperado.");
       }
 
-      const validos = lista.filter(
-        (item): item is Produto =>
-          !!item &&
-          typeof item === "object" &&
-          "id" in item &&
-          "nome" in item &&
-          typeof item.id === "string" &&
-          typeof item.nome === "string",
-      );
+      const validos = lista
+        .map(converterProduto)
+        .filter((produto): produto is Produto => produto !== null);
 
       setProdutos(validos);
+      setConsultaConcluida(true);
     } catch {
       setErro(
-        "Não foi possível atualizar os anúncios. Os exemplos ilustrativos continuam disponíveis.",
+        "Não foi possível atualizar os anúncios. Verifica a ligação e tenta novamente.",
       );
     } finally {
       setCarregando(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    void atualizarProdutos();
+
+    const intervalo = window.setInterval(() => {
+      if (document.visibilityState === "visible") {
+        void atualizarProdutos();
+      }
+    }, 30_000);
+
+    const aoVoltarAoSeparador = () => {
+      if (document.visibilityState === "visible") {
+        void atualizarProdutos();
+      }
+    };
+
+    document.addEventListener("visibilitychange", aoVoltarAoSeparador);
+
+    return () => {
+      window.clearInterval(intervalo);
+      document.removeEventListener(
+        "visibilitychange",
+        aoVoltarAoSeparador,
+      );
+    };
+  }, [atualizarProdutos]);
 
   const produtosFiltrados = useMemo(() => {
     const termo = pesquisa.trim().toLocaleLowerCase("pt-PT");
@@ -287,13 +357,14 @@ export default function MercadoPage() {
               <p className="mt-6 max-w-2xl text-base leading-8 text-green-50 sm:text-lg">
                 Um espaço para aproximar agricultores, cooperativas,
                 fazendas, empresas e compradores de produtos agropecuários
-                  em Angola.
+                em Angola.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/mercado/publicar"
-                  className="inline-flex min-h-12 items-center justify-center rounded-xl bg-green-700 px-6 py-3 font-bold !text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-green-800" style={{ backgroundColor: "#166534", color: "#ffffff" }}
+                  className="inline-flex min-h-12 items-center justify-center rounded-xl px-6 py-3 font-bold !text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-green-800"
+                  style={{ backgroundColor: "#166534", color: "#ffffff" }}
                 >
                   Publicar produto
                   <span className="ml-2" aria-hidden="true">
@@ -307,6 +378,7 @@ export default function MercadoPage() {
                 >
                   Explorar produtos
                 </a>
+
                 <Link
                   href="/mercado/entrar"
                   className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/50 px-6 py-3 font-bold text-white transition hover:bg-white/10"
@@ -408,13 +480,19 @@ export default function MercadoPage() {
 
           <button
             type="button"
-            onClick={atualizarProdutos}
+            onClick={() => void atualizarProdutos()}
             disabled={carregando}
             className="inline-flex min-h-11 items-center justify-center rounded-xl border border-green-200 bg-white px-5 py-3 text-sm font-bold text-green-800 transition hover:bg-green-50 disabled:cursor-wait disabled:opacity-60"
           >
             {carregando ? "A atualizar..." : "Atualizar anúncios"}
           </button>
         </div>
+
+        {carregando && !consultaConcluida && (
+          <p className="mt-5 text-sm text-gray-600" role="status">
+            A carregar os anúncios mais recentes...
+          </p>
+        )}
 
         <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5">
           <div className="grid gap-4 md:grid-cols-[1.5fr_1fr_1fr]">
@@ -499,12 +577,20 @@ export default function MercadoPage() {
         </div>
 
         {erro && (
-          <p
+          <div
             role="status"
             className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
           >
-            {erro}
-          </p>
+            <p>{erro}</p>
+            <button
+              type="button"
+              onClick={() => void atualizarProdutos()}
+              disabled={carregando}
+              className="mt-2 font-bold underline underline-offset-4 disabled:opacity-50"
+            >
+              Tentar novamente
+            </button>
+          </div>
         )}
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
@@ -541,7 +627,10 @@ export default function MercadoPage() {
               >
                 <div className="relative overflow-hidden bg-gray-100">
                   <img
-                    src={produto.imagem || "/imagens/mercado/produto-placeholder.jpg"}
+                    src={
+                      produto.imagem ||
+                      "/imagens/mercado/produto-placeholder.jpg"
+                    }
                     alt={produto.nome}
                     loading="lazy"
                     className="h-52 w-full object-cover transition duration-500 group-hover:scale-105"
@@ -560,11 +649,9 @@ export default function MercadoPage() {
                 </div>
 
                 <div className="p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="text-lg font-extrabold leading-6 text-gray-900">
-                      {produto.nome}
-                    </h3>
-                  </div>
+                  <h3 className="text-lg font-extrabold leading-6 text-gray-900">
+                    {produto.nome}
+                  </h3>
 
                   <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-gray-600">
                     {produto.descricao}
@@ -625,22 +712,24 @@ export default function MercadoPage() {
         ) : (
           <div className="mt-6 rounded-2xl border border-dashed border-gray-300 bg-white px-5 py-16 text-center">
             <h3 className="text-xl font-extrabold text-gray-900">
-              Nenhum produto encontrado
+              {carregando
+                ? "A carregar produtos..."
+                : consultaConcluida
+                  ? "Nenhum produto aprovado disponível"
+                  : "Nenhum produto encontrado"}
             </h3>
             <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-gray-600">
-              Experimenta alterar a pesquisa ou selecionar outra categoria ou
-              província.
+              {consultaConcluida
+                ? "Quando existirem anúncios aprovados, aparecerão automaticamente nesta vitrine. Podes também publicar o teu produto."
+                : "Experimenta alterar a pesquisa ou selecionar outra categoria ou província."}
             </p>
             <button
               type="button"
-              onClick={() => {
-                setPesquisa("");
-                setCategoria("Todos");
-                setProvincia("Todas");
-              }}
-              className="mt-5 rounded-xl bg-green-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-green-800"
+              onClick={() => void atualizarProdutos()}
+              disabled={carregando}
+              className="mt-5 rounded-xl bg-green-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-green-800 disabled:opacity-50"
             >
-              Mostrar todos os produtos
+              {carregando ? "A carregar..." : "Atualizar anúncios"}
             </button>
           </div>
         )}
@@ -661,7 +750,8 @@ export default function MercadoPage() {
             </div>
             <Link
               href="/mercado/publicar"
-              className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-xl bg-green-700 px-6 py-3 font-bold !text-white transition hover:bg-green-800" style={{ backgroundColor: "#166534", color: "#ffffff" }}
+              className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-xl px-6 py-3 font-bold !text-white transition hover:bg-green-800"
+              style={{ backgroundColor: "#166534", color: "#ffffff" }}
             >
               Começar a publicar
               <span className="ml-2" aria-hidden="true">

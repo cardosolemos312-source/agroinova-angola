@@ -60,6 +60,17 @@ type Fazenda = {
   urlFonte?: string;
 
   observacao?: string;
+
+  // Dados comerciais e produtivos separados de actividade/cultura registada.
+  situacaoProducao:
+    | "Produção confirmada"
+    | "Actividade documentada em fonte pública"
+    | "Actividade registada; actualidade por confirmar"
+    | "Sem dados de produção confirmados";
+  produtosComerciais: string[];
+  disponibilidadeComercial: string;
+  capacidadeProducao: string;
+  ultimaConfirmacao: string;
 };
 
 /* =========================================================
@@ -712,6 +723,52 @@ const basePublica: Array<{
     provincia: "Bengo",
     municipio: "Caxito",
     actividade: ["Agricultura", "Pecuária"],
+  },
+  {
+    nome: "Fazenda Novagrolíder",
+    provincia: "Cuanza Sul",
+    municipio: "Quibala",
+    actividade: ["Agricultura", "Pecuária", "Agro-indústria"],
+    culturas: ["Café", "Batata-rena", "Cebola", "Cenoura", "Alface", "Abóbora", "Batata-doce", "Morangos", "Citrinos", "Goiaba", "Maracujá"],
+    pecuaria: ["Bovinos", "Produção de leite"],
+  },
+  {
+    nome: "Fazenda MCA-Agro — Waku Kungo",
+    provincia: "Cuanza Sul",
+    municipio: "Waku Kungo",
+    actividade: ["Agricultura", "Cafeicultura"],
+    culturas: ["Café", "Ananás"],
+  },
+  {
+    nome: "Fazenda Sofia",
+    provincia: "Cuanza Sul",
+    municipio: "Amboim",
+    local: "Gabela",
+    actividade: ["Agricultura", "Cafeicultura"],
+    culturas: ["Café"],
+  },
+  {
+    nome: "Fazenda Jimbo",
+    provincia: "Cuanza Sul",
+    municipio: "Amboim",
+    local: "Região da Gabela",
+    actividade: ["Agricultura", "Cafeicultura", "Recuperação de plantações"],
+    culturas: ["Café Robusta Amboim"],
+  },
+  {
+    nome: "Fazenda Topoagro",
+    provincia: "Angola",
+    municipio: "Localização por confirmar",
+    actividade: ["Cafeicultura"],
+    culturas: ["Café"],
+  },
+  {
+    nome: "Fazenda do Bumbo — sopé da Serra da Chela",
+    provincia: "Huíla",
+    municipio: "Lubango",
+    local: "Referência histórica na zona da Serra da Chela",
+    actividade: ["Agricultura histórica"],
+    culturas: ["Cana-de-açúcar (referência histórica)"],
   }
 ];
 
@@ -723,6 +780,105 @@ const dadosEspeciais: Record<
   string,
   Partial<Fazenda>
 > = {
+  "Fazenda Novagrolíder": {
+    estado: "Referência pública",
+    usoSolo: "Histórico",
+    potencial: 95,
+    culturas: ["Café", "Batata-rena", "Cebola", "Cenoura", "Alface", "Abóbora", "Batata-doce", "Morangos", "Citrinos", "Goiaba", "Maracujá"],
+    pecuaria: ["Bovinos", "Leite"],
+    situacaoProducao: "Actividade documentada em fonte pública",
+    produtosComerciais: ["Produtos hortícolas", "Frutas", "Café", "Leite e derivados", "Carne", "Rações"],
+    disponibilidadeComercial: "A confirmar directamente com a empresa",
+    capacidadeProducao: "Fonte pública refere mais de 150 mil toneladas/ano para o conjunto da exploração; valor e período devem ser reconfirmados",
+    ultimaConfirmacao: "Fonte pública institucional consultada em 2024",
+    descricao: "Exploração agroindustrial associada ao Grupo Líder. Uma fonte institucional angolana descreve produção diversificada, cerca de 250 hectares de café, pecuária leiteira e processamento agroindustrial. A fonte refere 63 culturas agrícolas, incluindo hortícolas, frutas e café; os números são apresentados como informação publicada, não como medição actual independente.",
+    especial: ["Cerca de 250 ha de café referidos na fonte", "Hortícolas e fruticultura", "Pecuária leiteira", "Processamento de café, carne e leite", "Produção de rações", "Fonte institucional"],
+    fonte: "Embaixada de Angola na Turquia / informação institucional sobre a Fazenda Novagrolíder",
+    urlFonte: "https://turquia.mirex.gov.ao/web/noticias/fazenda-novagrol-der-produz-mais-de-150-mil-toneladasano"
+  },
+
+  "Fazenda MCA-Agro — Waku Kungo": {
+    estado: "Referência pública",
+    usoSolo: "Histórico",
+    potencial: 84,
+    culturas: ["Café", "Ananás"],
+    situacaoProducao: "Actividade documentada em fonte pública",
+    produtosComerciais: ["Café; disponibilidade de venda por confirmar"],
+    disponibilidadeComercial: "Consultar a empresa",
+    capacidadeProducao: "Não publicada na fonte consultada",
+    ultimaConfirmacao: "Publicação empresarial consultada, cerca de 2023",
+    descricao: "O Grupo MCA publicou que a sua fazenda no Waku Kungo cultivava café e ananás e distribuía mudas de café a agricultores locais, acompanhadas de formação. A publicação descreve actividades e iniciativa de fomento, mas não comprova o volume actual de produção.",
+    especial: ["Cafeicultura", "Ananás", "Distribuição de mudas", "Formação de agricultores", "Waku Kungo, Cuanza Sul"],
+    fonte: "Grupo MCA — publicação empresarial sobre a fazenda no Waku Kungo",
+    urlFonte: "https://pt.linkedin.com/posts/grupo-mca_mcagroup-empoweringlivesforgenerations-activity-7149096495617654784-87BC"
+  },
+
+  "Fazenda Sofia": {
+    estado: "Referência pública",
+    usoSolo: "Histórico",
+    areaTotal: 800,
+    potencial: 82,
+    culturas: ["Café"],
+    situacaoProducao: "Actividade documentada em fonte pública",
+    produtosComerciais: ["Café; disponibilidade comercial actual por confirmar"],
+    disponibilidadeComercial: "Não publicada; contactar o operador",
+    capacidadeProducao: "Área de cafezal indicada pela fonte: cerca de 800 ha",
+    ultimaConfirmacao: "Estudo de caso publicado em 2026",
+    descricao: "Cafezal de aproximadamente 800 hectares na região da Gabela, Amboim, Cuanza Sul. O estudo de caso descreve intervenções de gestão da água, controlo da erosão e melhoria dos acessos. A área e a actividade são as reportadas pela fonte; não equivalem a uma confirmação independente da colheita actual.",
+    especial: ["Café", "Cerca de 800 ha reportados", "Gestão de água", "Controlo da erosão", "Gabela, Amboim"],
+    fonte: "Estudo de caso técnico Fazenda Sofia",
+    urlFonte: "https://nunomam edesantos.pt/casos/fazenda-sofia/".replace(" ", "")
+  },
+
+  "Fazenda Jimbo": {
+    estado: "Em desenvolvimento",
+    usoSolo: "Projectado",
+    areaTotal: 180,
+    potencial: 80,
+    culturas: ["Café Robusta Amboim"],
+    situacaoProducao: "Actividade documentada em fonte pública",
+    produtosComerciais: ["Café — comercialização actual por confirmar"],
+    disponibilidadeComercial: "Não publicada",
+    capacidadeProducao: "Projecto divulgado com 180 ha de café; produção actual não publicada",
+    ultimaConfirmacao: "Página institucional consultada em 2026",
+    descricao: "Projecto cafeeiro da Botera na região do Amboim, apresentado como iniciativa de café regenerativo e recuperação de património edificado. A fonte refere 180 hectares de café e trabalho de recuperação; não apresenta um volume actual de colheita confirmado.",
+    especial: ["Café Robusta Amboim", "180 ha de projecto reportados", "Cafeicultura regenerativa", "Recuperação de património", "Região do Amboim"],
+    fonte: "Botera — projectos cafeeiros no Cuanza Sul",
+    urlFonte: "https://www.botera.co.ao/?lang=pt"
+  },
+
+  "Fazenda Topoagro": {
+    estado: "Referência pública",
+    usoSolo: "Não disponível",
+    potencial: 65,
+    culturas: ["Café"],
+    situacaoProducao: "Actividade registada; actualidade por confirmar",
+    produtosComerciais: ["Não informado"],
+    disponibilidadeComercial: "Não informado",
+    capacidadeProducao: "Não encontrada em fonte pública consultada",
+    ultimaConfirmacao: "Referência institucional histórica; data exacta não indicada",
+    descricao: "A Topoagro é mencionada entre as empresas cafeícolas registadas pelo INCA em referências públicas sobre o sector. Não foi possível confirmar com fonte pública suficientemente detalhada a localização exacta da fazenda, as variedades, a dimensão ou o volume actual de produção.",
+    especial: ["Empresa referida no sector cafeeiro", "Café", "Localização por confirmar", "Volume de produção não publicado"],
+    fonte: "Referência sectorial citando registos do INCA",
+    urlFonte: "https://www.economiaemercado.com/artigo/pais-exporta-mais-de-1-6-mil-toneladas-de-cafe-em-2020"
+  },
+
+  "Fazenda do Bumbo — sopé da Serra da Chela": {
+    estado: "Referência pública",
+    usoSolo: "Histórico",
+    potencial: 45,
+    culturas: ["Cana-de-açúcar (referência histórica)"],
+    situacaoProducao: "Sem dados de produção confirmados",
+    produtosComerciais: [],
+    disponibilidadeComercial: "Não aplicável sem confirmação de actividade actual",
+    capacidadeProducao: "Sem dados actuais publicados",
+    ultimaConfirmacao: "Referência histórica; não comprova actividade actual",
+    descricao: "A Fazenda do Bumbo é referida em documentação histórica como situada no sopé da Serra da Chela, com cultivo de cana-de-açúcar no século XIX. Foi incluída como referência histórica e territorial, não como exploração actualmente operacional.",
+    especial: ["Serra da Chela", "Fazenda histórica do Bumbo", "Cana-de-açúcar em registos históricos", "Actividade actual não confirmada"],
+    fonte: "Estudo histórico sobre a colonização e as fazendas na região da Serra da Chela",
+    urlFonte: "https://gredos.usal.es/bitstream/handle/10366/125978/DHMMC_AzevedoJM_Coloniza%C3%A7ao.pdf?isAllowed=y&sequence=1"
+  },
+
   "Fazenda 7 Quintas": {
     estado: "Operacional",
     areaTotal: 1978.81,
@@ -815,6 +971,39 @@ const dadosEspeciais: Record<
       "Fazenda Mungo",
     urlFonte:
       "https://fazendamungo.com/"
+  },
+
+  "Fazenda Vissolela": {
+    estado: "Referência pública",
+    usoSolo: "Histórico",
+    potencial: 91,
+    culturas: ["Café"],
+    pecuaria: ["Gado (referido em fonte sectorial)", "Estrume utilizado como fertilizante"],
+    situacaoProducao: "Actividade documentada em fonte pública",
+    produtosComerciais: ["Café verde; marca Café Romana mencionada em fonte sectorial"],
+    disponibilidadeComercial: "Contactar directamente a exploração; disponibilidade actual não confirmada",
+    capacidadeProducao: "Relatórios anteriores descrevem 360 ha plantados em 2023; outras fontes reportam área e produção diferentes em anos anteriores",
+    ultimaConfirmacao: "Fontes sectoriais de 2023; números não devem ser lidos como actuais",
+    descricao: "Fazenda cafeeira localizada em Kissiquele, município da Quibala, Cuanza Sul. Fontes sectoriais descrevem cultivo de café, apoio a pequenos produtores e utilização de estrume do gado; os números de área e produção variam por ano e devem ser tratados como históricos.",
+    especial: ["Café", "Quibala, Cuanza Sul", "Apoio a pequenos produtores", "Gado associado à exploração em fonte sectorial", "Exportação referida em fontes anteriores"],
+    fonte: "RVO / Rabo Partnerships e imprensa económica sobre a Fazenda Vissolela",
+    urlFonte: "https://www.rvo.nl/sites/default/files/2023-08/boosting-the-food-and-agribusiness-sector-in-angola.pdf"
+  },
+
+  "Fazenda Boa Esperança": {
+    estado: "Referência pública",
+    usoSolo: "Não disponível",
+    potencial: 70,
+    culturas: ["Café"],
+    situacaoProducao: "Actividade registada; actualidade por confirmar",
+    produtosComerciais: ["Café; disponibilidade actual não confirmada"],
+    disponibilidadeComercial: "Não informada em fonte pública consultada",
+    capacidadeProducao: "Não encontrada em fonte pública consultada",
+    ultimaConfirmacao: "Referência sectorial histórica; data exacta não indicada",
+    descricao: "A Fazenda Boa Esperança é mencionada entre as explorações/empresas ligadas à cafeicultura angolana em referências sectoriais. A informação pública consultada não permite afirmar a localização precisa, área plantada ou volume actual de café.",
+    especial: ["Café", "Exploração mencionada em referências sectoriais", "Área e volume actual não publicados"],
+    fonte: "Referência sectorial sobre empresas cafeícolas registadas pelo INCA",
+    urlFonte: "https://www.economiaemercado.com/artigo/pais-exporta-mais-de-1-6-mil-toneladas-de-cafe-em-2020"
   },
 
   "Fazenda Yolele": {
@@ -1142,7 +1331,25 @@ const fazendas: Fazenda[] = basePublica.map(
 
       observacao:
         extra.observacao ||
-        "A localização apresentada no mapa é aproximada porque a fonte pública consultada fornece a localidade, município ou província, mas não uma coordenada exacta da propriedade."
+        "A localização apresentada no mapa é aproximada porque a fonte pública consultada fornece a localidade, município ou província, mas não uma coordenada exacta da propriedade.",
+
+      situacaoProducao:
+        extra.situacaoProducao ||
+        ((base.culturas?.length || base.pecuaria?.length)
+          ? "Actividade registada; actualidade por confirmar"
+          : "Sem dados de produção confirmados"),
+
+      produtosComerciais:
+        extra.produtosComerciais || [],
+
+      disponibilidadeComercial:
+        extra.disponibilidadeComercial || "Não informado",
+
+      capacidadeProducao:
+        extra.capacidadeProducao || "Não informado",
+
+      ultimaConfirmacao:
+        extra.ultimaConfirmacao || "Não informada"
     };
   }
 );
@@ -2266,6 +2473,47 @@ export default function DirectorioFazendas() {
 
                 </div>
 
+              </div>
+
+              <div className="estadoProducao">
+                <span className="label">SITUAÇÃO DA PRODUÇÃO</span>
+                <strong>{selecionada.situacaoProducao}</strong>
+                <p>
+                  {selecionada.situacaoProducao === "Produção confirmada"
+                    ? "Produção confirmada por fonte actual identificada no perfil."
+                    : selecionada.situacaoProducao === "Actividade documentada em fonte pública"
+                      ? "Actividade descrita na fonte indicada abaixo; consulte a data e a fonte para distinguir informação publicada de produção actual."
+                      : selecionada.situacaoProducao === "Actividade registada; actualidade por confirmar"
+                        ? "A fonte consultada regista esta actividade, mas não apresenta confirmação recente da produção."
+                        : "Não foi encontrada confirmação pública suficiente da produção actual."}
+                </p>
+              </div>
+
+              <div className="comercialGrid">
+                <div>
+                  <span className="label">PRODUTOS À VENDA</span>
+                  {selecionada.produtosComerciais.length > 0 ? (
+                    <ul>
+                      {selecionada.produtosComerciais.map((produto, index) => (
+                        <li key={`${produto}-${index}`}>{produto}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <strong>Não informado</strong>
+                  )}
+                </div>
+                <div>
+                  <span className="label">DISPONIBILIDADE</span>
+                  <strong>{selecionada.disponibilidadeComercial}</strong>
+                </div>
+                <div>
+                  <span className="label">CAPACIDADE DE PRODUÇÃO</span>
+                  <strong>{selecionada.capacidadeProducao}</strong>
+                </div>
+                <div>
+                  <span className="label">ÚLTIMA CONFIRMAÇÃO</span>
+                  <strong>{selecionada.ultimaConfirmacao}</strong>
+                </div>
               </div>
 
             </section>
@@ -3415,6 +3663,55 @@ export default function DirectorioFazendas() {
           border: 1px solid #e0e6e0;
         }
 
+        .estadoProducao {
+          margin-top: 18px;
+          padding: 18px;
+          border: 1px solid #bbf7d0;
+          border-radius: 16px;
+          background: #f0fdf4;
+        }
+
+        .estadoProducao strong,
+        .comercialGrid strong {
+          display: block;
+          margin-top: 7px;
+          color: #166534;
+          line-height: 1.5;
+        }
+
+        .estadoProducao p {
+          margin: 9px 0 0;
+          color: #475569;
+          font-size: 13px;
+          line-height: 1.65;
+        }
+
+        .comercialGrid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px;
+          margin-top: 14px;
+        }
+
+        .comercialGrid > div {
+          min-width: 0;
+          padding: 16px;
+          border: 1px solid #e2e8f0;
+          border-radius: 14px;
+          background: #fff;
+        }
+
+        .comercialGrid ul {
+          margin: 8px 0 0;
+          padding-left: 19px;
+          color: #334155;
+        }
+
+        .comercialGrid li {
+          margin: 4px 0;
+        }
+
+
         .areaGrid {
           display: grid;
           grid-template-columns:
@@ -3734,6 +4031,10 @@ export default function DirectorioFazendas() {
           .bloco {
             margin: 15px 20px;
             padding: 20px;
+          }
+
+          .comercialGrid {
+            grid-template-columns: 1fr;
           }
 
           .areaGrid {
