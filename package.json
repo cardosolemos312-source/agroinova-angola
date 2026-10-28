@@ -9,7 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.117.3",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
     "leaflet": "^1.9.4",
     "next": "16.3.8",
     "openai": "^7.32.0",
