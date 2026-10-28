@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -74,6 +74,37 @@ export default function PublicarProdutoPage() {
   const [aCarregar, setACarregar] = useState(false);
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
+  const [verificandoSessao, setVerificandoSessao] = useState(true);
+
+  useEffect(() => {
+    let cancelado = false;
+
+    async function verificarSessao() {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase.auth.getUser();
+
+        if (cancelado) return;
+
+        if (error || !data.user) {
+          router.replace("/mercado/entrar?redirect=%2Fmercado%2Fpublicar");
+          return;
+        }
+
+        setVerificandoSessao(false);
+      } catch {
+        if (!cancelado) {
+          router.replace("/mercado/entrar?redirect=%2Fmercado%2Fpublicar");
+        }
+      }
+    }
+
+    void verificarSessao();
+
+    return () => {
+      cancelado = true;
+    };
+  }, [router]);
 
   async function submeterFormulario(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -168,6 +199,14 @@ export default function PublicarProdutoPage() {
     } finally {
       setACarregar(false);
     }
+  }
+
+  if (verificandoSessao) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 text-gray-800">
+        <p role="status" className="font-semibold">A verificar a sessão...</p>
+      </main>
+    );
   }
 
   return (

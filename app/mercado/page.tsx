@@ -293,7 +293,7 @@ export default function MercadoPage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/mercado/publicar"
-                  className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-6 py-3 font-bold text-green-900 shadow-lg transition hover:-translate-y-0.5 hover:bg-green-50"
+                  className="inline-flex min-h-12 items-center justify-center rounded-xl bg-green-700 px-6 py-3 font-bold !text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-green-800" style={{ backgroundColor: "#166534", color: "#ffffff" }}
                 >
                   Publicar produto
                   <span className="ml-2" aria-hidden="true">
@@ -661,7 +661,7 @@ export default function MercadoPage() {
             </div>
             <Link
               href="/mercado/publicar"
-              className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-xl bg-white px-6 py-3 font-bold text-green-900 transition hover:bg-green-50"
+              className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-xl bg-green-700 px-6 py-3 font-bold !text-white transition hover:bg-green-800" style={{ backgroundColor: "#166534", color: "#ffffff" }}
             >
               Começar a publicar
               <span className="ml-2" aria-hidden="true">
