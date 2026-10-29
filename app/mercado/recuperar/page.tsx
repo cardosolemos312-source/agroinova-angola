@@ -1,73 +1,23 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { FormEvent } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
-type Modo = "pedir" | "definir";
+type Modo = "pedir" | "validar" | "definir";
 
 export default function RecuperarPalavraPassePage() {
   const [modo, setModo] = useState<Modo>("pedir");
   const [email, setEmail] = useState("");
+  const [codigo, setCodigo] = useState("");
   const [password, setPassword] = useState("");
   const [confirmarPassword, setConfirmarPassword] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [erro, setErro] = useState("");
   const [aProcessar, setAProcessar] = useState(false);
-  const [sessaoValida, setSessaoValida] = useState(false);
-
-  useEffect(() => {
-    let ativo = true;
-
-    async function verificarLigacao() {
-      const parametros = new URLSearchParams(window.location.search);
-      const hash = window.location.hash;
-
-      const aDefinir =
-        parametros.get("modo") === "definir" ||
-        hash.includes("type=recovery");
-
-      if (!aDefinir) return;
-
-      if (ativo) {
-        setModo("definir");
-        setMensagem("");
-        setErro("");
-      }
-
-      try {
-        const supabase = createClient();
-
-        const { data, error } = await supabase.auth.getSession();
-
-        if (error) throw error;
-
-        if (ativo) {
-          setSessaoValida(Boolean(data.session));
-          if (!data.session) {
-            setErro(
-              "A ligação de recuperação não está válida ou expirou. Solicita um novo e-mail.",
-            );
-          }
-        }
-      } catch {
-        if (ativo) {
-          setSessaoValida(false);
-          setErro(
-            "Não foi possível validar a ligação. Solicita um novo e-mail de recuperação.",
-          );
-        }
-      }
-    }
-
-    void verificarLigacao();
-
-    return () => {
-      ativo = false;
-    };
-  }, []);
+  const [codigoValidado, setCodigoValidado] = useState(false);
 
   async function submeterPedido(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -87,14 +37,58 @@ export default function RecuperarPalavraPassePage() {
 
       if (error) throw error;
 
+      setCodigo("");
+      setCodigoValidado(false);
+      setModo("validar");
       setMensagem(
-        "Se existir uma conta associada a este e-mail, receberás uma mensagem com as instruções de recuperação. Verifica também a pasta de spam.",
+        "Se existir uma conta associada a este e-mail, receberás um código de recuperação. Verifica também a pasta de spam.",
       );
     } catch (e) {
       setErro(
         e instanceof Error
           ? e.message
-          : "Não foi possível enviar o pedido. Tenta novamente.",
+          : "Não foi possível enviar o código. Tenta novamente.",
+      );
+    } finally {
+      setAProcessar(false);
+    }
+  }
+
+  async function validarCodigo(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setErro("");
+    setMensagem("");
+
+    const token = codigo.trim();
+
+    if (!/^\d{6,8}$/.test(token)) {
+      setErro("Introduz o código recebido por e-mail, com 6 a 8 dígitos.");
+      return;
+    }
+
+    setAProcessar(true);
+
+    try {
+      const supabase = createClient();
+
+      const { error } = await supabase.auth.verifyOtp({
+        email: email.trim(),
+        token,
+        type: "recovery",
+      });
+
+      if (error) throw error;
+
+      setCodigoValidado(true);
+      setModo("definir");
+      setMensagem(
+        "Código validado com sucesso. Já podes definir uma nova palavra-passe.",
+      );
+    } catch (e) {
+      setErro(
+        e instanceof Error
+          ? `Não foi possível validar o código: ${e.message}`
+          : "Não foi possível validar o código. Solicita um código novo e tenta novamente.",
       );
     } finally {
       setAProcessar(false);
@@ -108,10 +102,8 @@ export default function RecuperarPalavraPassePage() {
     setErro("");
     setMensagem("");
 
-    if (!sessaoValida) {
-      setErro(
-        "A ligação não é válida. Solicita um novo e-mail de recuperação.",
-      );
+    if (!codigoValidado) {
+      setErro("Valida primeiro o código recebido por e-mail.");
       return;
     }
 
@@ -138,19 +130,28 @@ export default function RecuperarPalavraPassePage() {
 
       setPassword("");
       setConfirmarPassword("");
+      setCodigo("");
+      setCodigoValidado(false);
       setMensagem(
         "Palavra-passe alterada com sucesso. Já podes iniciar sessão com a nova palavra-passe.",
       );
-      setSessaoValida(false);
     } catch (e) {
       setErro(
         e instanceof Error
           ? e.message
-          : "Não foi possível alterar a palavra-passe. Solicita uma nova ligação.",
+          : "Não foi possível alterar a palavra-passe. Tenta novamente.",
       );
     } finally {
       setAProcessar(false);
     }
+  }
+
+  function solicitarOutroCodigo() {
+    setModo("pedir");
+    setCodigo("");
+    setMensagem("");
+    setErro("");
+    setCodigoValidado(false);
   }
 
   return (
@@ -186,16 +187,20 @@ export default function RecuperarPalavraPassePage() {
           <h1 className="mt-5 text-3xl font-bold">
             {modo === "pedir"
               ? "Recuperar palavra-passe"
-              : "Definir nova palavra-passe"}
+              : modo === "validar"
+                ? "Validar código"
+                : "Definir nova palavra-passe"}
           </h1>
 
           <p className="mt-3 leading-6 text-gray-600">
             {modo === "pedir"
-              ? "Introduz o e-mail da tua conta de vendedor. Enviaremos as instruções para recuperares o acesso ao Mercado."
-              : "Cria uma nova palavra-passe para voltares a aceder à tua conta de vendedor."}
+              ? "Introduz o e-mail da tua conta de vendedor para receberes o código de recuperação."
+              : modo === "validar"
+                ? "Introduz o código de recuperação enviado para o teu e-mail."
+                : "Cria uma nova palavra-passe para voltares a aceder à tua conta de vendedor."}
           </p>
 
-          {modo === "pedir" ? (
+          {modo === "pedir" && (
             <form onSubmit={submeterPedido} className="mt-7 space-y-5">
               <div>
                 <label
@@ -221,10 +226,72 @@ export default function RecuperarPalavraPassePage() {
                 disabled={aProcessar}
                 className="w-full rounded-xl bg-green-800 px-5 py-3 font-semibold text-white transition hover:bg-green-900 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {aProcessar ? "A enviar..." : "Enviar recuperação"}
+                {aProcessar ? "A enviar..." : "Enviar código"}
               </button>
             </form>
-          ) : (
+          )}
+
+          {modo === "validar" && (
+            <form onSubmit={validarCodigo} className="mt-7 space-y-5">
+              <div>
+                <label
+                  htmlFor="codigo"
+                  className="mb-2 block text-sm font-semibold"
+                >
+                  Código de recuperação
+                </label>
+
+                <input
+                  id="codigo"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  pattern="[0-9]{6,8}"
+                  maxLength={8}
+                  required
+                  value={codigo}
+                  onChange={(e) =>
+                    setCodigo(
+                      e.target.value.replace(/\D/g, "").slice(0, 8),
+                    )
+                  }
+                  placeholder="Introduz o código"
+                  aria-describedby="ajuda-codigo"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 text-center text-2xl tracking-[0.3em] outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100"
+                />
+
+                <p
+                  id="ajuda-codigo"
+                  className="mt-2 text-xs text-gray-500"
+                >
+                  Introduz todos os dígitos do e-mail, sem espaços.
+                </p>
+
+                <p className="mt-2 text-xs text-gray-500">
+                  E-mail de recuperação: {email}
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={aProcessar}
+                className="w-full rounded-xl bg-green-800 px-5 py-3 font-semibold text-white transition hover:bg-green-900 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {aProcessar ? "A validar..." : "Validar código"}
+              </button>
+
+              <button
+                type="button"
+                disabled={aProcessar}
+                onClick={solicitarOutroCodigo}
+                className="w-full rounded-xl border border-gray-300 px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+              >
+                Solicitar outro código
+              </button>
+            </form>
+          )}
+
+          {modo === "definir" && (
             <form
               onSubmit={submeterNovaPassword}
               className="mt-7 space-y-5"
@@ -236,6 +303,7 @@ export default function RecuperarPalavraPassePage() {
                 >
                   Nova palavra-passe
                 </label>
+
                 <input
                   id="password"
                   type="password"
@@ -256,6 +324,7 @@ export default function RecuperarPalavraPassePage() {
                 >
                   Confirmar palavra-passe
                 </label>
+
                 <input
                   id="confirmarPassword"
                   type="password"
@@ -271,7 +340,7 @@ export default function RecuperarPalavraPassePage() {
 
               <button
                 type="submit"
-                disabled={aProcessar || !sessaoValida}
+                disabled={aProcessar || !codigoValidado}
                 className="w-full rounded-xl bg-green-800 px-5 py-3 font-semibold text-white transition hover:bg-green-900 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {aProcessar ? "A guardar..." : "Guardar nova palavra-passe"}
@@ -297,7 +366,7 @@ export default function RecuperarPalavraPassePage() {
             </div>
           )}
 
-          {modo === "definir" && mensagem && (
+          {mensagem.includes("alterada com sucesso") && (
             <Link
               href="/mercado/entrar"
               className="mt-5 block w-full rounded-xl border border-green-800 px-5 py-3 text-center font-semibold text-green-900 hover:bg-green-50"
@@ -319,7 +388,7 @@ export default function RecuperarPalavraPassePage() {
 
         <p className="mt-6 text-center text-xs leading-5 text-gray-500">
           A recuperação destina-se às contas de vendedor do Mercado AGROINOVA.
-          Nunca partilhes a tua palavra-passe ou o link de recuperação.
+          Nunca partilhes a tua palavra-passe ou o código de recuperação.
         </p>
       </div>
     </main>
