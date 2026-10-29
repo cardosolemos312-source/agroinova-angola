@@ -6,8 +6,226 @@ import { useMemo, useState } from "react";
 type Provincia = {
   nome: string;
   regiao: string;
-  observacao: string;
+  contexto: string;
+  planeamento: string;
+  solo: string;
+  agua: string;
+  atencao: string;
+  evidencia: string;
 };
+
+const provincias: Provincia[] = [
+  {
+    nome: "Bengo",
+    regiao: "Norte litoral",
+    contexto: "A produção deve ser planeada por município e parcela. A proximidade de zonas costeiras e vales agrícolas não significa que todas as áreas tenham as mesmas condições.",
+    planeamento: "Definir a sementeira de acordo com o início efectivo das chuvas ou com a disponibilidade segura de irrigação; evitar escolher uma data fixa para toda a província.",
+    solo: "Verificar drenagem, profundidade, acidez e fertilidade antes da instalação. Em áreas baixas, confirmar que a água não permanece junto às raízes.",
+    agua: "Se houver irrigação, dimensioná-la conforme a fonte disponível e a fase da cultura; evitar encharcamento.",
+    atencao: "Monitorizar doenças favorecidas por humidade elevada e confirmar a adaptação do material de feijão antes de ampliar a área.",
+    evidencia: "Orientação agronómica geral adaptada ao contexto regional; não constitui um mapa oficial de aptidão nem uma recomendação varietal específica."
+  },
+  {
+    nome: "Benguela",
+    regiao: "Centro-Oeste litoral",
+    contexto: "A disponibilidade de água varia muito entre zonas costeiras, vales e áreas do interior. A escolha da parcela é determinante para a viabilidade da cultura.",
+    planeamento: "Antes da sementeira, confirmar a duração provável da estação húmida ou garantir água para todo o ciclo. Não assumir que a chuva é suficiente em todos os municípios.",
+    solo: "Analisar salinidade quando a parcela ou a água de rega possam apresentar esse risco; avaliar fertilidade, textura e drenagem.",
+    agua: "Dar prioridade à eficiência de rega e à disponibilidade real de água. Evitar iniciar uma área cuja água não cubra as fases críticas da cultura.",
+    atencao: "Em zonas secas, o stress hídrico pode limitar a produção; usar apenas materiais e calendários validados para o local.",
+    evidencia: "Orientação agronómica geral; confirmar dados de solo, água e calendário com serviços técnicos locais."
+  },
+  {
+    nome: "Bié",
+    regiao: "Planalto central",
+    contexto: "A agricultura de sequeiro pode ser considerada onde a chuva e o solo o permitam. A altitude, o relevo e a variação local criam diferenças entre explorações.",
+    planeamento: "Acompanhar o início das chuvas e o tempo necessário para a maturação do material escolhido; evitar sementeira em solo ainda demasiado seco ou saturado.",
+    solo: "Verificar acidez, fósforo, matéria orgânica e drenagem. Em declives, reduzir erosão através de mobilização adequada e conservação do solo.",
+    agua: "Proteger a humidade do solo e assegurar drenagem durante períodos de chuva intensa.",
+    atencao: "Registar a cultivar, a data de sementeira e o resultado de cada campanha para comparar materiais localmente.",
+    evidencia: "Contexto regional e práticas agronómicas gerais. Não são atribuídos rendimentos nem cultivares recomendadas sem ensaios locais."
+  },
+  {
+    nome: "Cabinda",
+    regiao: "Norte litoral",
+    contexto: "Condições quentes e húmidas podem aumentar a importância da drenagem, da ventilação do coberto e da vigilância fitossanitária.",
+    planeamento: "Escolher uma janela de cultivo que reduza a exposição prolongada das plantas e vagens à humidade; confirmar a época local com técnicos agrícolas.",
+    solo: "Evitar parcelas encharcadas; verificar drenagem, acidez e fertilidade antes da sementeira.",
+    agua: "A necessidade pode ser menos relacionada com falta de chuva e mais com drenagem e distribuição da água. Não irrigar sem avaliar a humidade do solo.",
+    atencao: "Inspeccionar regularmente folhas, caules e vagens; utilizar semente sã e evitar guardar semente de lotes com sintomas suspeitos.",
+    evidencia: "Orientação geral baseada em princípios agronómicos para ambientes húmidos; a validação deve ser feita por município e parcela."
+  },
+  {
+    nome: "Cuando",
+    regiao: "Sudeste",
+    contexto: "A recomendação deve considerar a distância aos mercados e fornecedores, a disponibilidade de sementes e as condições concretas da exploração.",
+    planeamento: "Ajustar a sementeira ao início e ao fim das chuvas observadas localmente e ao ciclo do material escolhido.",
+    solo: "Avaliar textura, acidez, fertilidade e drenagem; não inferir as propriedades da parcela apenas pelo nome da província.",
+    agua: "Planear a cultura de acordo com a chuva efectiva e a capacidade de reserva ou rega disponível.",
+    atencao: "Testar primeiro em área limitada materiais de origem conhecida e registar emergência, sanidade e colheita antes de expandir.",
+    evidencia: "Orientação técnica geral; não há aqui dados provinciais validados de rendimento, calendário ou cultivar."
+  },
+  {
+    nome: "Cubango",
+    regiao: "Sudeste",
+    contexto: "A produção depende das condições locais de chuva, solo, acesso a insumos e distância aos pontos de comercialização.",
+    planeamento: "Usar observações locais de chuva e duração do ciclo para definir a sementeira; evitar datas fixas sem validação municipal.",
+    solo: "Analisar fertilidade e acidez e confirmar que a parcela tem drenagem adequada, sobretudo em áreas baixas.",
+    agua: "Evitar stress hídrico nas fases de floração e enchimento das vagens; planear a água antes de aumentar a área.",
+    atencao: "Guardar registos por campanha e comparar os resultados por material, parcela e método de maneio.",
+    evidencia: "Orientação agronómica geral, sem alegação de aptidão uniforme para toda a província."
+  },
+  {
+    nome: "Cuanza Norte",
+    regiao: "Norte interior",
+    contexto: "A escolha da parcela deve considerar a distribuição da chuva, o relevo e a facilidade de acesso a sementes e assistência técnica.",
+    planeamento: "Acompanhar o início das chuvas e evitar semear em solo saturado; adequar o ciclo do material à janela de cultivo disponível.",
+    solo: "Verificar drenagem, acidez e nutrientes; em terrenos inclinados, adoptar práticas que reduzam a erosão.",
+    agua: "Proteger o solo contra escorrimento e encharcamento e assegurar água suficiente durante a fase reprodutiva.",
+    atencao: "Monitorizar doenças e validar localmente qualquer recomendação de cultivar, fertilização ou densidade.",
+    evidencia: "Recomendação de boas práticas, não substitui análise de solo nem ensaios regionais."
+  },
+  {
+    nome: "Cuanza Sul",
+    regiao: "Centro-Oeste",
+    contexto: "A diversidade de relevo e condições de água exige decisões ao nível da exploração, e não uma única recomendação para toda a província.",
+    planeamento: "Definir a janela de sementeira a partir da chuva local ou da disponibilidade de irrigação e do ciclo do material escolhido.",
+    solo: "Analisar fertilidade, acidez e drenagem. Ajustar a preparação ao tipo de solo e evitar mobilização excessiva em áreas vulneráveis à erosão.",
+    agua: "Em parcelas irrigadas, acompanhar a humidade do solo e evitar excesso de água; em sequeiro, planear com base na chuva observada.",
+    atencao: "Comparar materiais em parcelas de demonstração antes de os recomendar em larga escala.",
+    evidencia: "Orientação geral; calendários e cultivares devem ser confirmados com dados locais."
+  },
+  {
+    nome: "Cunene",
+    regiao: "Sul",
+    contexto: "A limitação de água é um factor importante a avaliar, mas o risco varia com a localização, a fonte de água e o sistema de produção.",
+    planeamento: "Só estabelecer a cultura quando a chuva efectiva ou a irrigação prevista puderem sustentar o ciclo; considerar a duração do material seleccionado.",
+    solo: "Verificar salinidade, acidez, textura e drenagem, especialmente quando se usa água de rega.",
+    agua: "Dar prioridade à gestão eficiente da água e proteger as fases de floração e formação das vagens contra stress hídrico.",
+    atencao: "Não recomendar produção de sequeiro sem avaliar o risco climático local; confirmar a qualidade da água de rega.",
+    evidencia: "Orientação geral para planeamento em ambientes com risco de défice hídrico; não é uma previsão climática nem garantia de produção."
+  },
+  {
+    nome: "Huambo",
+    regiao: "Planalto central",
+    contexto: "Existem referências de produção de feijão e investigação local. Em 2026, foi divulgado um estudo experimental sobre Catarina e Manteiga em Mbave, Chicala-Choloanga; os resultados são específicos desse ensaio.",
+    planeamento: "Ajustar a sementeira ao início das chuvas, ao ciclo do material e às condições da parcela. Registar datas e resultados por município.",
+    solo: "A acidez e a fertilidade devem ser avaliadas por análise. A correcção do solo e a adubação devem seguir resultados analíticos e aconselhamento técnico.",
+    agua: "Evitar tanto o défice hídrico nas fases críticas como o encharcamento; usar drenagem e conservação da humidade adequadas à parcela.",
+    atencao: "Catarina e Manteiga aparecem em investigação local, mas um ensaio não prova superioridade em todos os ambientes nem substitui semente de qualidade.",
+    evidencia: "Fontes listadas nesta página: workshop técnico MINAGRIF/PDAC de 2026 e estudo da Revista Científica da Universidade José Eduardo dos Santos sobre Catarina e Manteiga."
+  },
+  {
+    nome: "Huíla",
+    regiao: "Sul / planalto e zonas de altitude",
+    contexto: "A altitude, a temperatura, o relevo e a disponibilidade de água podem diferir substancialmente entre municípios e explorações.",
+    planeamento: "Escolher a época com base na chuva local, temperatura e duração do ciclo; não extrapolar o calendário de um município para toda a província.",
+    solo: "Avaliar acidez, fertilidade, profundidade e drenagem. Em declives, reduzir erosão e conservar matéria orgânica.",
+    agua: "Planear água para floração e enchimento das vagens e evitar encharcamento em parcelas com drenagem deficiente.",
+    atencao: "Confirmar adaptação varietal e risco de doenças com técnicos locais antes de adoptar recomendações de outras regiões.",
+    evidencia: "Orientação geral; requer validação agroclimática e agronómica local."
+  },
+  {
+    nome: "Icolo e Bengo",
+    regiao: "Norte / zona centro-norte",
+    contexto: "A produção deve ser planeada considerando o acesso à água, a pressão urbana sobre a terra e as condições particulares de cada parcela.",
+    planeamento: "Definir a sementeira segundo a chuva local ou uma fonte de irrigação fiável; avaliar custos de insumos e acesso ao mercado.",
+    solo: "Verificar fertilidade, compactação, salinidade e drenagem conforme o histórico da parcela e a qualidade da água utilizada.",
+    agua: "Garantir água de qualidade e gestão de rega; evitar uso de fontes cuja qualidade não tenha sido avaliada.",
+    atencao: "A proximidade de mercados não elimina a necessidade de validar custos, sanidade, água e adaptação do material.",
+    evidencia: "Orientação geral; não representa um levantamento cartográfico da aptidão agrícola de Icolo e Bengo."
+  },
+  {
+    nome: "Luanda",
+    regiao: "Norte litoral / área metropolitana",
+    contexto: "A produção comercial deve considerar a disponibilidade e o custo da água, a qualidade do solo, o uso do espaço e a logística de comercialização.",
+    planeamento: "Avaliar previamente a viabilidade económica, a origem da água e o ciclo do material; em produção irrigada, programar a sementeira conforme os recursos disponíveis.",
+    solo: "Analisar salinidade, contaminação potencial, fertilidade e drenagem, sobretudo em parcelas próximas de áreas urbanas.",
+    agua: "Confirmar qualidade e regularidade da água antes de a utilizar para rega; ajustar a aplicação à necessidade real da cultura.",
+    atencao: "Não assumir que uma parcela urbana ou periurbana é segura para produção alimentar sem avaliação de solo e água.",
+    evidencia: "Orientação geral para produção; é necessária avaliação específica da parcela e da qualidade da água."
+  },
+  {
+    nome: "Lunda Norte",
+    regiao: "Leste",
+    contexto: "A escolha da área deve considerar o regime de chuvas, o relevo, a drenagem e a disponibilidade de semente e assistência técnica.",
+    planeamento: "Acompanhar a chuva observada e seleccionar material cujo ciclo caiba na janela de cultivo; evitar sementeira em solo encharcado.",
+    solo: "Verificar drenagem e fertilidade; proteger a estrutura do solo e evitar erosão em terrenos inclinados.",
+    agua: "Gerir o excesso de água durante períodos chuvosos e prevenir stress hídrico caso ocorram pausas de chuva.",
+    atencao: "A humidade não confirma, por si só, que a parcela é adequada; vigiar doenças e usar semente sadia.",
+    evidencia: "Orientação agronómica geral, sem dados específicos de rendimento ou recomendação varietal provincial."
+  },
+  {
+    nome: "Lunda Sul",
+    regiao: "Leste",
+    contexto: "As decisões de produção devem basear-se na parcela, no calendário real das chuvas e nos recursos disponíveis para maneio.",
+    planeamento: "Adequar a época à chuva local e ao ciclo da cultivar; guardar registos de sementeira, emergência, floração e colheita.",
+    solo: "Analisar acidez, fertilidade e drenagem. Usar práticas de conservação do solo onde exista risco de erosão.",
+    agua: "Evitar encharcamento e observar períodos sem chuva, sobretudo durante floração e enchimento das vagens.",
+    atencao: "Confirmar materiais e práticas com serviços técnicos; não usar resultados de outras províncias como recomendação automática.",
+    evidencia: "Orientação geral sujeita a validação local."
+  },
+  {
+    nome: "Malanje",
+    regiao: "Norte interior",
+    contexto: "A escolha do local e da época deve considerar a chuva, o relevo, a fertilidade e a facilidade de acesso a semente de qualidade.",
+    planeamento: "Programar a sementeira a partir das condições observadas no campo e do ciclo do material, não apenas pelo mês do calendário.",
+    solo: "Analisar pH, fósforo, potássio e matéria orgânica; assegurar drenagem e conservar o solo em áreas inclinadas.",
+    agua: "Manter humidade suficiente nas fases críticas sem saturar a zona radicular.",
+    atencao: "Validar cultivares, densidade e adubação em condições locais antes de recomendar a outros produtores.",
+    evidencia: "Orientação agronómica geral; dados de rendimento e calendários provinciais não são apresentados sem fonte verificada."
+  },
+  {
+    nome: "Moxico",
+    regiao: "Leste",
+    contexto: "A produção deve acompanhar as condições de chuva e as características da parcela; o acesso a insumos e mercados também influencia a decisão.",
+    planeamento: "Observar o estabelecimento efectivo das chuvas e garantir que o ciclo escolhido termine dentro da janela disponível.",
+    solo: "Verificar fertilidade, acidez e drenagem e adoptar práticas de conservação quando o relevo e a chuva favoreçam erosão.",
+    agua: "Planejar para pausas de chuva e evitar excesso de água em solos com drenagem insuficiente.",
+    atencao: "Registar o desempenho de cada material e não assumir adaptação com base apenas na origem geográfica.",
+    evidencia: "Orientação geral; necessita de dados locais para calendário, variedade e rendimento."
+  },
+  {
+    nome: "Moxico Leste",
+    regiao: "Leste",
+    contexto: "Como noutras zonas do leste, a recomendação deve ser feita com base em condições locais observadas e não apenas na divisão administrativa.",
+    planeamento: "Confirmar o início das chuvas, a duração da estação e o ciclo da semente disponível com assistência técnica local.",
+    solo: "Analisar acidez, nutrientes e drenagem antes de decidir sobre calagem e fertilização.",
+    agua: "Ajustar o maneio à chuva efectiva; assegurar drenagem e acompanhar a humidade nas fases reprodutivas.",
+    atencao: "Promover ensaios de campo e registos de produtividade antes de publicar recomendações varietais para a província.",
+    evidencia: "Orientação agronómica geral; não foram atribuídos valores de produtividade ou cultivares específicas sem evidência provincial."
+  },
+  {
+    nome: "Namibe",
+    regiao: "Sul litoral / zona árida",
+    contexto: "A disponibilidade de água e a sua qualidade devem ser avaliadas antes de iniciar a cultura, sobretudo em sistemas irrigados.",
+    planeamento: "Confirmar fonte de água, custo da rega e duração do ciclo antes de semear; a produção de sequeiro não deve ser presumida viável.",
+    solo: "Avaliar salinidade, textura, fertilidade e drenagem; analisar também a qualidade da água de irrigação.",
+    agua: "Aplicar rega eficiente e monitorizar a humidade do solo. Evitar acumulação de sais e défice hídrico nas fases críticas.",
+    atencao: "A viabilidade deve ser calculada por exploração, considerando água, energia, mão-de-obra e mercado.",
+    evidencia: "Orientação geral para ambiente árido; requer dados locais de água e solo antes de recomendar produção."
+  },
+  {
+    nome: "Uíge",
+    regiao: "Norte",
+    contexto: "A selecção da parcela deve considerar a distribuição das chuvas, o relevo, a drenagem e a disponibilidade de semente de qualidade.",
+    planeamento: "Ajustar a sementeira à chuva observada e ao ciclo do material; evitar períodos em que a humidade favoreça problemas fitossanitários.",
+    solo: "Verificar drenagem, acidez e fertilidade; conservar matéria orgânica e reduzir erosão em terrenos inclinados.",
+    agua: "Evitar encharcamento e acompanhar a humidade ao longo do ciclo, especialmente na floração e formação das vagens.",
+    atencao: "Inspeccionar regularmente a cultura e validar a escolha varietal com ensaios e assistência técnica local.",
+    evidencia: "Orientação geral; não constitui recomendação oficial de cultivar ou calendário para todo o Uíge."
+  },
+  {
+    nome: "Zaire",
+    regiao: "Norte litoral",
+    contexto: "O planeamento deve considerar humidade, drenagem, distribuição das chuvas e condições específicas da exploração.",
+    planeamento: "Escolher a janela de cultivo com base na chuva local e na duração do ciclo; evitar sementeira em solo saturado.",
+    solo: "Avaliar drenagem, acidez, fertilidade e risco de erosão; a análise da parcela deve preceder decisões de correcção.",
+    agua: "Dar prioridade à drenagem em áreas sujeitas a excesso de água e ajustar rega apenas quando necessária.",
+    atencao: "Usar semente sã e monitorizar doenças; confirmar recomendações por município antes de as generalizar.",
+    evidencia: "Orientação agronómica geral, sem alegação de aptidão uniforme nem dados provinciais de rendimento."
+  },
+];
 
 type Material = {
   nome: string;
@@ -16,135 +234,6 @@ type Material = {
   evidencia: string;
   observacao: string;
 };
-
-const provincias: Provincia[] = [
-  {
-    nome: "Bengo",
-    regiao: "Norte",
-    observacao:
-      "A aptidão deve ser avaliada localmente considerando chuva, temperatura, solo e disponibilidade de água.",
-  },
-  {
-    nome: "Benguela",
-    regiao: "Centro-Oeste",
-    observacao:
-      "A produção depende fortemente do ambiente local e, em zonas mais secas, da disponibilidade de água.",
-  },
-  {
-    nome: "Bié",
-    regiao: "Centro",
-    observacao:
-      "Província com tradição agrícola e presença documentada de produção de leguminosas.",
-  },
-  {
-    nome: "Cabinda",
-    regiao: "Norte",
-    observacao:
-      "O excesso de humidade deve ser considerado na escolha da área e no maneio fitossanitário.",
-  },
-  {
-    nome: "Cuando",
-    regiao: "Leste",
-    observacao:
-      "A recomendação de materiais deve ser baseada em ensaios locais e disponibilidade de semente.",
-  },
-  {
-    nome: "Cubango",
-    regiao: "Leste",
-    observacao:
-      "A seleção da época deve considerar o regime de chuvas e o período necessário para maturação.",
-  },
-  {
-    nome: "Cuanza Norte",
-    regiao: "Norte",
-    observacao:
-      "Devem ser considerados drenagem, fertilidade e distribuição das chuvas.",
-  },
-  {
-    nome: "Cuanza Sul",
-    regiao: "Centro-Oeste",
-    observacao:
-      "A escolha da cultivar deve considerar o ambiente específico da exploração.",
-  },
-  {
-    nome: "Cunene",
-    regiao: "Sul",
-    observacao:
-      "Em ambientes secos, o planeamento hídrico é determinante para a cultura.",
-  },
-  {
-    nome: "Huambo",
-    regiao: "Centro",
-    observacao:
-      "Existe investigação recente sobre feijão comum e disponibilidade de sementes no Huambo.",
-  },
-  {
-    nome: "Huíla",
-    regiao: "Sul",
-    observacao:
-      "Altitude, temperatura, época de cultivo e disponibilidade de água devem orientar o sistema.",
-  },
-  {
-    nome: "Icolo e Bengo",
-    regiao: "Norte",
-    observacao:
-      "A recomendação deve ser feita por ambiente de produção e não apenas pela localização administrativa.",
-  },
-  {
-    nome: "Luanda",
-    regiao: "Norte",
-    observacao:
-      "A produção comercial depende sobretudo de disponibilidade de água, solo adequado e maneio intensivo.",
-  },
-  {
-    nome: "Lunda Norte",
-    regiao: "Leste",
-    observacao:
-      "A drenagem e o controlo de doenças favorecem ambientes com maior humidade.",
-  },
-  {
-    nome: "Lunda Sul",
-    regiao: "Leste",
-    observacao:
-      "Devem ser considerados regime pluviométrico, fertilidade e conservação do solo.",
-  },
-  {
-    nome: "Malanje",
-    regiao: "Norte",
-    observacao:
-      "A seleção de materiais deve ser confirmada por ensaios e disponibilidade de sementes adaptadas.",
-  },
-  {
-    nome: "Moxico",
-    regiao: "Leste",
-    observacao:
-      "O calendário agrícola deve acompanhar o início e o fim das chuvas.",
-  },
-  {
-    nome: "Moxico Leste",
-    regiao: "Leste",
-    observacao:
-      "A recomendação varietal deverá ser apoiada por investigação e ensaios locais.",
-  },
-  {
-    nome: "Namibe",
-    regiao: "Sul",
-    observacao:
-      "A disponibilidade de água é uma das principais condicionantes para produção agrícola.",
-  },
-  {
-    nome: "Uíge",
-    regiao: "Norte",
-    observacao:
-      "Devem ser priorizados solos bem drenados e práticas de prevenção de doenças.",
-  },
-  {
-    nome: "Zaire",
-    regiao: "Norte",
-    observacao:
-      "A humidade e a drenagem devem ser consideradas no planeamento da cultura.",
-  },
-];
 
 const materiais: Material[] = [
   {
@@ -172,7 +261,7 @@ const materiais: Material[] = [
     evidencia:
       "O catálogo do INE/IDREA regista ocorrências de feijão Catarino.",
     observacao:
-      "A ocorrência no inquérito não significa, por si só, que seja uma variedade oficialmente srecomendada.",
+      "A ocorrência no inquérito não significa, por si só, que seja uma variedade oficialmente recomendada.",
   },
   {
     nome: "Ervilha",
@@ -423,6 +512,39 @@ export default function FeijaoPage() {
 
   const provinciaAtual =
     provincias.find((item) => item.nome === provincia) ?? provincias[0];
+
+  // A consulta é automática, mas separa evidência local de materiais que ainda
+  // precisam de validação. Não transforma ocorrência em recomendação oficial.
+  const orientacaoCultivar =
+    provinciaAtual.nome === "Huambo"
+      ? {
+          nivel: "Evidência local disponível",
+          titulo: "Materiais para comparar primeiro",
+          materiais: ["Catarina", "Manteiga"],
+          motivo:
+            "Os dois materiais foram avaliados num ensaio em Mbave, município de Chicala-Choloanga, no Huambo. O resultado desse ensaio não garante superioridade noutras parcelas ou municípios.",
+          acao:
+            "Confirmar a identidade e a qualidade da semente e comparar os materiais numa parcela-piloto, registando emergência, sanidade, ciclo e rendimento.",
+        }
+      : provinciaAtual.nome === "Bié"
+        ? {
+            nivel: "Evidência de produção regional; validação varietal necessária",
+            titulo: "Materiais para ensaio local",
+            materiais: ["Manteiga", "Catarino", "Catarina"],
+            motivo:
+              "O feijão é produzido no Planalto Central e há registos nacionais de diferentes tipos de feijão. A informação disponível nesta página não confirma uma cultivar oficialmente recomendada especificamente para toda a província do Bié.",
+            acao:
+              "Consultar os serviços agrários locais e comparar apenas sementes de origem identificada em ensaios pequenos antes de ampliar a área.",
+          }
+        : {
+            nivel: "Triagem inicial — sem recomendação provincial confirmada",
+            titulo: "Materiais documentados para avaliar na província",
+            materiais: ["Manteiga", "Catarino", "Catarina"],
+            motivo:
+              "Estes nomes aparecem em fontes angolanas, mas a página não dispõe de ensaios varietais validados para esta província. A lista é uma base para consulta e ensaio, não uma recomendação automática de plantio.",
+            acao:
+              "Antes de escolher, confirmar com os serviços agrários do município a adaptação à chuva, temperatura, solo, doenças, duração do ciclo e disponibilidade de semente certificada ou de origem conhecida.",
+          };
 
   return (
     <main className="min-h-screen bg-stone-50 text-stone-900">
@@ -1104,8 +1226,53 @@ export default function FeijaoPage() {
         </p>
 
         <h2 className="mt-2 text-3xl font-bold">
-          Informação territorial
+          Plano agronómico do feijão por província
         </h2>
+
+        <p className="mt-4 max-w-4xl leading-7 text-stone-600">
+          Seleccione uma das 21 províncias para consultar orientações específicas
+          de planeamento e consultar automaticamente materiais de feijão
+          documentados para avaliação. A indicação distingue evidência local
+          de triagem preliminar e não declara uma recomendação oficial sem fonte
+          provincial verificável. Confirme a escolha com os serviços agrários
+          e com as condições reais da parcela.
+        </p>
+
+        <div className="mt-6 rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-emerald-800">
+              Consulta automática
+            </span>
+            <span className="text-sm font-semibold text-stone-600">
+              {orientacaoCultivar.nivel}
+            </span>
+          </div>
+          <h3 className="mt-3 text-xl font-bold text-emerald-950">
+            {orientacaoCultivar.titulo} · {provinciaAtual.nome}
+          </h3>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {orientacaoCultivar.materiais.map((nome) => (
+              <span
+                key={nome}
+                className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-900"
+              >
+                {nome}
+              </span>
+            ))}
+          </div>
+          <p className="mt-4 leading-7 text-stone-700">
+            {orientacaoCultivar.motivo}
+          </p>
+          <div className="mt-4 rounded-xl bg-stone-50 p-4">
+            <p className="text-sm font-bold text-stone-800">Próxima acção recomendada</p>
+            <p className="mt-1 text-sm leading-6 text-stone-600">
+              {orientacaoCultivar.acao}
+            </p>
+          </div>
+          <p className="mt-4 text-xs leading-5 text-stone-500">
+            Importante: a selecção muda automaticamente com a província, mas não substitui uma recomendação oficial do IIA/MINAGRIF nem um ensaio local. Os nomes podem designar tipos comerciais ou materiais locais; confirmar a identidade da semente antes da compra.
+          </p>
+        </div>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[320px_1fr]">
           <div>
@@ -1128,6 +1295,17 @@ export default function FeijaoPage() {
                 </option>
               ))}
             </select>
+
+            <div className="mt-5 rounded-2xl border border-stone-200 bg-white p-5">
+              <p className="text-sm font-semibold text-stone-800">
+                Como usar esta informação
+              </p>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-stone-600">
+                <li>Confirmar as condições da parcela e a origem da semente.</li>
+                <li>Registar a data de sementeira, chuva, maneio e colheita.</li>
+                <li>Comparar resultados de campo antes de recomendar um material.</li>
+              </ul>
+            </div>
           </div>
 
           <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-7">
@@ -1139,14 +1317,51 @@ export default function FeijaoPage() {
               Feijão em {provinciaAtual.nome}
             </h3>
 
-            <p className="mt-4 max-w-3xl leading-7 text-emerald-900">
-              {provinciaAtual.observacao}
+            <p className="mt-4 leading-7 text-emerald-950">
+              {provinciaAtual.contexto}
             </p>
 
-            <p className="mt-4 text-sm leading-6 text-emerald-800">
-              Esta ferramenta não classifica automaticamente a província como
-              “apta” ou “não apta”. A aptidão agrícola precisa de informação
-              edafoclimática e agronómica suficientemente detalhada.
+            <div className="mt-6 grid gap-5 md:grid-cols-2">
+              <div className="rounded-xl border border-emerald-100 bg-white p-5">
+                <h4 className="font-bold text-emerald-900">Época e planeamento</h4>
+                <p className="mt-2 text-sm leading-7 text-stone-700">
+                  {provinciaAtual.planeamento}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-emerald-100 bg-white p-5">
+                <h4 className="font-bold text-emerald-900">Solo e fertilidade</h4>
+                <p className="mt-2 text-sm leading-7 text-stone-700">
+                  {provinciaAtual.solo}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-emerald-100 bg-white p-5">
+                <h4 className="font-bold text-emerald-900">Gestão da água</h4>
+                <p className="mt-2 text-sm leading-7 text-stone-700">
+                  {provinciaAtual.agua}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-emerald-100 bg-white p-5">
+                <h4 className="font-bold text-emerald-900">Prioridade técnica</h4>
+                <p className="mt-2 text-sm leading-7 text-stone-700">
+                  {provinciaAtual.atencao}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-100/70 p-5">
+              <h4 className="font-bold text-emerald-950">Base e nível de evidência</h4>
+              <p className="mt-2 text-sm leading-7 text-emerald-950">
+                {provinciaAtual.evidencia}
+              </p>
+            </div>
+
+            <p className="mt-5 text-sm leading-6 text-emerald-900">
+              Nota: esta consulta não classifica automaticamente a província
+              como “apta” ou “não apta”. A aptidão deve ser determinada à escala
+              da parcela com informação edafoclimática e agronómica adequada.
             </p>
           </div>
         </div>
