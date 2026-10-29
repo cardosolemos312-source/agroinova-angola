@@ -156,7 +156,7 @@ const imagens: Imagem[] = [
     fonte: "World Vision International — Northern Angola",
   },
   {
-    src: "https://assets.website-files.com/64877880cd79ee4fea4032cf/64ae1d210bf39682b9ca22e7_menina-com-mucua.jpg",
+    src: "https://images.openai.com/static-rsc-4/kkEaIgr0v54wAj5Z08RpcZ6hUbgPfGEAYEEMA038xtsIvlh82qH1Iy0ooYUqE4vNjYXGiayyIomJsJcldVZol1l7tMWmpybBMhgv0nSfhnGetyE70hAfdh3EM2RGtqJtuFMu8so9T3T6S06x5zNtBesozIb-HNTwV7vmWpcH1bkBYrRrV_Xg-d5zrJpa8j8o?purpose=fullsize",
     href: "https://fbs.ao/",
     alt: "Colheita de amendoim em ambiente rural angolano",
     legenda:
