@@ -243,6 +243,7 @@ export default function EntrarMercadoPage() {
         );
 
         setModo("entrar");
+        setPassword("");
       } else {
         const { data, error: erroLogin } =
           await supabase.auth.signInWithPassword({
@@ -250,26 +251,17 @@ export default function EntrarMercadoPage() {
             password,
           });
 
-        
-if (erroLogin) {
-  const codigo = erroLogin.code ?? "desconhecido";
-  const mensagemOriginal =
-    erroLogin.message ?? "O Supabase não forneceu uma mensagem.";
-  const estado = erroLogin.status ?? "desconhecido";
+        if (erroLogin) {
+          console.error("Erro original do Supabase:", {
+            code: erroLogin.code,
+            message: erroLogin.message,
+            status: erroLogin.status,
+          });
 
-  console.error("Erro original do Supabase:", {
-    codigo,
-    mensagem: mensagemOriginal,
-    estado,
-    erroCompleto: String(erroLogin),
-    propriedades: Object.getOwnPropertyNames(erroLogin),
-  });
-
-  throw new Error(
-    `Falha na autenticação (${codigo}): ${mensagemOriginal}`,
-  );
-}
-
+          throw new Error(
+            `Falha na autenticação (${erroLogin.code ?? "desconhecido"}): ${erroLogin.message}`,
+          );
+        }
 
         if (!data.user) {
           throw new Error(
@@ -304,6 +296,7 @@ if (erroLogin) {
     setModo(novoModo);
     setErro("");
     setMensagem("");
+    setPassword("");
   }
 
   return (
@@ -494,12 +487,23 @@ if (erroLogin) {
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="mb-2 block text-sm font-medium"
-              >
-                Palavra-passe
-              </label>
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium"
+                >
+                  Palavra-passe
+                </label>
+
+                {modo === "entrar" && (
+                  <Link
+                    href="/mercado/recuperar"
+                    className="text-sm font-semibold text-green-800 hover:text-green-950 hover:underline"
+                  >
+                    Esqueci-me da palavra-passe
+                  </Link>
+                )}
+              </div>
 
               <input
                 id="password"
