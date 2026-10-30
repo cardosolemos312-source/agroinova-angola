@@ -921,7 +921,7 @@ const especies: Especie[] = [
     singular: "equino",
     grupo: "Animais de trabalho",
     imagem:
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Horse.jpg",
+      "https://images.openai.com/static-rsc-4/XZL9N7lE4F7lx6pNnMaDZMEjif4BfByxE166dWgFed-2_kEIa1pqUSAkIk9DG8GrkbKppQpyLQc_ixeR5yxgIhYnaF3qBi7FzhoiUmw-Udc96D_HP_AWUEe-R8uvDECMPW6Iy_f-N_Af5GfAhFyQYdNyJ_jnQgou1eIefhX7DLs?purpose=inline",
     imagemFonte: "Wikimedia Commons",
     resumo:
       "Os equinos podem desempenhar funções de trabalho, transporte, reprodução e actividades desportivas.",
@@ -1321,7 +1321,7 @@ const especies: Especie[] = [
     singular: "colmeia",
     grupo: "Produção apícola",
     imagem:
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Honey%20bee%20on%20honeycomb.jpg",
+      "https://images.openai.com/static-rsc-4/uAA070DguUykQ7ZbI_8gnSxBMYDJzI8yvap1Vi3AclFf9BaZhY-4_IFCJzxANt3z20JGaisqiQ9UKycBj1xWOt6ub9TTo_2qjNzP5gyzXMtkZrUaE1KeC2gUR77fcxPAwE8dHQUpvIFHkLKllb2jJWrxv-4_3rq3bdY5_VO_zhLf-yN-2bH2_mw9FLthAABY?purpose=fullsize",
     imagemFonte: "Wikimedia Commons",
     resumo:
       "A apicultura depende da relação entre colónias de abelhas, recursos florais, ambiente, maneio e qualidade do produto.",

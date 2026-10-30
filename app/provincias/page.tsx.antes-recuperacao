@@ -1,0 +1,1387 @@
+type Secao = {
+  titulo: string;
+  conteudo: string[];
+};
+
+type FichaProvincia = {
+  capital: string;
+  populacao: string;
+  perfil: string;
+  enquadramento: string;
+  secoes: Secao[];
+};
+
+const fichas: Record<string, FichaProvincia> = {
+  bengo: {
+    capital: "Caxito",
+    populacao: "716 335 habitantes",
+    perfil: "Agricultura, pesca, pecuÃ¡ria e recursos naturais.",
+    enquadramento:
+      "O Bengo integra a faixa litoral-norte de Angola. A sua proximidade a Luanda representa uma vantagem para o abastecimento alimentar, a comercializaÃ§Ã£o de produtos frescos e o desenvolvimento de cadeias agroalimentares.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia apresenta paisagens costeiras, planÃ­cies, vales fluviais e Ã¡reas de vegetaÃ§Ã£o natural. O territÃ³rio reÃºne condiÃ§Ãµes diferentes de ocupaÃ§Ã£o agrÃ­cola e pecuÃ¡ria.",
+        "A rede hidrogrÃ¡fica, com destaque para o rio Dande, Ã© importante para as comunidades, a agricultura e os ecossistemas."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima varia entre condiÃ§Ãµes tropicais com influÃªncia marÃ­tima e Ã¡reas interiores mais quentes. A distribuiÃ§Ã£o da chuva Ã© sazonal e condiciona os calendÃ¡rios agrÃ­colas.",
+        "A gestÃ£o da Ã¡gua, a conservaÃ§Ã£o das margens dos rios e a utilizaÃ§Ã£o eficiente dos recursos hÃ­dricos sÃ£o fundamentais para a produÃ§Ã£o."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Entre as culturas de interesse encontram-se mandioca, milho, feijÃ£o, batata-doce, hortÃ­colas, banana, citrinos e outras fruteiras adaptadas Ã s condiÃ§Ãµes locais.",
+        "As zonas com disponibilidade de Ã¡gua podem apoiar a produÃ§Ã£o de hortÃ­colas durante diferentes perÃ­odos do ano. A proximidade do mercado de Luanda favorece a produÃ§Ã£o comercial de alimentos frescos.",
+        "A melhoria das sementes, da fertilidade dos solos, da irrigaÃ§Ã£o, da conservaÃ§Ã£o pÃ³s-colheita e do transporte pode aumentar a produtividade e reduzir perdas."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, caprinos, suÃ­nos e aves pode complementar o rendimento das famÃ­lias e o abastecimento dos mercados.",
+        "As prioridades incluem alimentaÃ§Ã£o animal, sanidade, instalaÃ§Ãµes adequadas, melhoramento genÃ©tico e acesso a serviÃ§os veterinÃ¡rios."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "A proximidade do litoral e a presenÃ§a de rios permitem actividades ligadas Ã  pesca. A aquicultura pode ser avaliada em locais com disponibilidade de Ã¡gua e condiÃ§Ãµes tÃ©cnicas adequadas.",
+        "A conservaÃ§Ã£o do pescado, o acesso ao gelo, o transporte e a organizaÃ§Ã£o dos circuitos comerciais sÃ£o importantes para reduzir perdas."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "O Bengo possui Ã¡reas de vegetaÃ§Ã£o natural e ecossistemas que desempenham funÃ§Ãµes de protecÃ§Ã£o dos solos, regulaÃ§Ã£o da Ã¡gua e conservaÃ§Ã£o da biodiversidade.",
+        "A exploraÃ§Ã£o sustentÃ¡vel dos recursos florestais deve ser acompanhada por medidas de prevenÃ§Ã£o de queimadas, desflorestaÃ§Ã£o e degradaÃ§Ã£o dos habitats."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A agricultura, a pesca, a pecuÃ¡ria, o comÃ©rcio e os serviÃ§os ligados ao abastecimento de Luanda constituem actividades relevantes.",
+        "Existem oportunidades para unidades de processamento de mandioca, secagem de frutas, transformaÃ§Ã£o de pescado, armazenamento e distribuiÃ§Ã£o de produtos agrÃ­colas."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "Melhorar a gestÃ£o da Ã¡gua, a conservaÃ§Ã£o dos solos, a produtividade das exploraÃ§Ãµes familiares e o acesso aos mercados.",
+        "A AGROINOVA poderÃ¡ acompanhar ensaios de variedades, sistemas de irrigaÃ§Ã£o, tecnologias pÃ³s-colheita, cadeias de valor hortÃ­colas e monitorizaÃ§Ã£o dos recursos naturais."
+      ]}
+    ]
+  },
+
+  benguela: {
+    capital: "Benguela",
+    populacao: "2 597 638 habitantes",
+    perfil: "Pesca, agricultura, pecuÃ¡ria, indÃºstria e actividade portuÃ¡ria.",
+    enquadramento:
+      "Benguela Ã© uma provÃ­ncia costeira com importÃ¢ncia agrÃ­cola, pesqueira, industrial e comercial. A ligaÃ§Ã£o entre o litoral, os vales agrÃ­colas e os corredores de transporte cria condiÃ§Ãµes para o desenvolvimento de cadeias de abastecimento.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "O territÃ³rio combina litoral atlÃ¢ntico, planÃ­cies costeiras, vales, zonas de transiÃ§Ã£o e Ã¡reas de relevo mais elevado no interior.",
+        "Os vales dos rios e as Ã¡reas com infra-estruturas de rega sÃ£o importantes para a agricultura comercial e familiar."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "A faixa litoral apresenta condiÃ§Ãµes relativamente secas, enquanto algumas Ã¡reas interiores recebem maior precipitaÃ§Ã£o. A irregularidade das chuvas exige planeamento da produÃ§Ã£o.",
+        "Os rios Catumbela, Cavaco e Coporolo sÃ£o referÃªncias hidrogrÃ¡ficas importantes para a provÃ­ncia. A disponibilidade efectiva de Ã¡gua varia conforme a estaÃ§Ã£o e as condiÃ§Ãµes das bacias."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "As culturas de interesse incluem milho, feijÃ£o, mandioca, batata-doce, hortÃ­colas, banana, citrinos e outras fruteiras.",
+        "Nos vales irrigados podem desenvolver-se sistemas de produÃ§Ã£o de hortÃ­colas e fruteiras. A gestÃ£o eficiente da Ã¡gua Ã© essencial nas zonas de maior aridez.",
+        "A produÃ§Ã£o de sementes, a mecanizaÃ§Ã£o adequada, a fertilizaÃ§Ã£o equilibrada e a assistÃªncia tÃ©cnica podem contribuir para melhorar os resultados agrÃ­colas."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, caprinos, ovinos, suÃ­nos e aves integra as possibilidades de produÃ§Ã£o pecuÃ¡ria.",
+        "A alimentaÃ§Ã£o animal, a disponibilidade de pastagens, a sanidade dos efectivos e o acesso a Ã¡gua sÃ£o factores determinantes para a sustentabilidade dos sistemas de criaÃ§Ã£o."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "A costa atlÃ¢ntica confere Ã  provÃ­ncia uma forte ligaÃ§Ã£o Ã  pesca marÃ­tima e Ã s actividades de apoio ao sector.",
+        "O desenvolvimento da cadeia de frio, do processamento, da conservaÃ§Ã£o e da comercializaÃ§Ã£o pode aumentar o valor acrescentado do pescado.",
+        "A aquicultura deve ser desenvolvida de acordo com estudos de disponibilidade de Ã¡gua, qualidade ambiental e viabilidade econÃ³mica."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "A vegetaÃ§Ã£o varia entre Ã¡reas costeiras mais secas e formaÃ§Ãµes do interior. A conservaÃ§Ã£o dos solos e da vegetaÃ§Ã£o natural Ã© importante para reduzir a erosÃ£o.",
+        "A gestÃ£o sustentÃ¡vel dos recursos naturais deve considerar a pressÃ£o sobre a lenha, as queimadas e a expansÃ£o das Ã¡reas de cultivo."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A economia provincial integra pesca, agricultura, pecuÃ¡ria, indÃºstria, comÃ©rcio, transportes e serviÃ§os.",
+        "Existem oportunidades para transformaÃ§Ã£o de cereais, processamento de frutas, conservaÃ§Ã£o de pescado, produÃ§Ã£o de raÃ§Ãµes e desenvolvimento de centros de armazenamento."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A escassez de Ã¡gua em determinadas zonas, a variabilidade climÃ¡tica, a conservaÃ§Ã£o pÃ³s-colheita e os custos de transporte sÃ£o desafios importantes.",
+        "As prioridades incluem agricultura irrigada eficiente, gestÃ£o de bacias hidrogrÃ¡ficas, tecnologias de conservaÃ§Ã£o do pescado e adaptaÃ§Ã£o de culturas Ã s condiÃ§Ãµes semiÃ¡ridas."
+      ]}
+    ]
+  },
+
+  bie: {
+    capital: "Cuito",
+    populacao: "2 264 874 habitantes",
+    perfil: "Agricultura de planalto, cereais, tubÃ©rculos e pecuÃ¡ria.",
+    enquadramento:
+      "O BiÃ© situa-se no planalto central e possui condiÃ§Ãµes agroecolÃ³gicas relevantes para a produÃ§Ã£o de alimentos. A agricultura familiar tem importÃ¢ncia na ocupaÃ§Ã£o do territÃ³rio e no abastecimento dos mercados.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "O relevo Ã© marcado por planaltos, superfÃ­cies onduladas, vales e Ã¡reas de altitude elevada. Estas condiÃ§Ãµes influenciam as temperaturas, a distribuiÃ§Ã£o das chuvas e a escolha das culturas.",
+        "A provÃ­ncia integra Ã¡reas importantes de cabeceiras e drenagem de rios, o que reforÃ§a a necessidade de proteger nascentes e zonas hÃºmidas."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima apresenta uma estaÃ§Ã£o chuvosa e uma estaÃ§Ã£o seca bem definidas. A Ã©poca das chuvas Ã© fundamental para os sistemas agrÃ­colas de sequeiro.",
+        "A conservaÃ§Ã£o da Ã¡gua no solo, a protecÃ§Ã£o das linhas de Ã¡gua e a utilizaÃ§Ã£o de pequenas infra-estruturas de rega podem reduzir os riscos da irregularidade climÃ¡tica."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Milho, feijÃ£o, batata, batata-doce, mandioca, hortÃ­colas e outras culturas alimentares constituem opÃ§Ãµes de interesse para os sistemas agrÃ­colas da provÃ­ncia.",
+        "As condiÃ§Ãµes de altitude permitem avaliar variedades adaptadas a temperaturas mais moderadas e a diferentes duraÃ§Ãµes do ciclo agrÃ­cola.",
+        "A rotaÃ§Ã£o de culturas, a adubaÃ§Ã£o orgÃ¢nica, o controlo da erosÃ£o e a utilizaÃ§Ã£o de sementes de qualidade sÃ£o prÃ¡ticas importantes."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, caprinos, suÃ­nos e aves pode complementar a agricultura e contribuir para a seguranÃ§a alimentar.",
+        "A integraÃ§Ã£o entre culturas e criaÃ§Ã£o animal permite aproveitar resÃ­duos agrÃ­colas, produzir estrume e diversificar o rendimento das famÃ­lias."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "A pesca continental pode ocorrer em rios, lagoas e outros corpos de Ã¡gua, devendo respeitar os perÃ­odos e regras de conservaÃ§Ã£o dos recursos.",
+        "A aquicultura pode representar uma oportunidade onde existam Ã¡gua de qualidade, alimentaÃ§Ã£o disponÃ­vel, assistÃªncia tÃ©cnica e acesso a mercados."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As formaÃ§Ãµes de vegetaÃ§Ã£o do planalto e as Ã¡reas de galeria florestal tÃªm importÃ¢ncia ecolÃ³gica e produtiva.",
+        "A prevenÃ§Ã£o de queimadas descontroladas, a recuperaÃ§Ã£o de Ã¡reas degradadas e a gestÃ£o sustentÃ¡vel da madeira e da lenha sÃ£o prioridades."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A agricultura, o comÃ©rcio, os serviÃ§os e a pecuÃ¡ria constituem actividades importantes. A ligaÃ§Ã£o aos mercados depende da qualidade das estradas, do armazenamento e da logÃ­stica.",
+        "O processamento de milho, batata, mandioca e feijÃ£o pode criar oportunidades para pequenas e mÃ©dias unidades agro-industriais."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A melhoria da produtividade, a conservaÃ§Ã£o da fertilidade dos solos, o acesso a sementes e a reduÃ§Ã£o das perdas pÃ³s-colheita sÃ£o Ã¡reas prioritÃ¡rias.",
+        "A investigaÃ§Ã£o deverÃ¡ avaliar variedades, calendÃ¡rios de sementeira, fertilizaÃ§Ã£o, mecanizaÃ§Ã£o apropriada e sistemas de produÃ§Ã£o integrados."
+      ]}
+    ]
+  },
+
+  cabinda: {
+    capital: "Cabinda",
+    populacao: "903 370 habitantes",
+    perfil: "Florestas tropicais, agricultura, pesca e recursos costeiros.",
+    enquadramento:
+      "Cabinda apresenta caracterÃ­sticas geogrÃ¡ficas e ecolÃ³gicas prÃ³prias, com floresta tropical, litoral atlÃ¢ntico e Ã¡reas de elevada biodiversidade. A produÃ§Ã£o agrÃ­cola e a conservaÃ§Ã£o dos ecossistemas devem ser consideradas em conjunto.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia combina planÃ­cies costeiras, vales, Ã¡reas onduladas e formaÃ§Ãµes florestais tropicais.",
+        "A sua localizaÃ§Ã£o e configuraÃ§Ã£o territorial tornam importantes as ligaÃ§Ãµes comerciais, a gestÃ£o das fronteiras e a conservaÃ§Ã£o dos recursos naturais."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© tropical hÃºmido, com precipitaÃ§Ã£o significativa e perÃ­odos sazonais menos chuvosos.",
+        "Os rios e linhas de Ã¡gua sustentam comunidades, agricultura e ecossistemas florestais. A protecÃ§Ã£o das nascentes e das margens Ã© essencial."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Mandioca, banana, milho, feijÃ£o, hortÃ­colas, dendÃ©m, ananÃ¡s e fruteiras tropicais sÃ£o culturas de interesse.",
+        "Os sistemas agroflorestais podem combinar culturas alimentares e Ã¡rvores Ãºteis, reduzindo a pressÃ£o sobre a floresta natural.",
+        "A melhoria da transformaÃ§Ã£o da mandioca, da conservaÃ§Ã£o de frutas e do acesso a sementes pode aumentar o rendimento dos produtores."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de aves, suÃ­nos, caprinos e pequenos ruminantes pode complementar os sistemas familiares.",
+        "Ã‰ importante reforÃ§ar a biosseguranÃ§a, a alimentaÃ§Ã£o animal, o acompanhamento veterinÃ¡rio e a disponibilidade de instalaÃ§Ãµes adaptadas ao clima hÃºmido."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "O litoral oferece condiÃ§Ãµes para a pesca marÃ­tima, enquanto rios e outros recursos hÃ­dricos podem apoiar a pesca continental.",
+        "A conservaÃ§Ã£o do pescado, o processamento higiÃ©nico, o acesso a equipamentos e a organizaÃ§Ã£o das cooperativas sÃ£o Ã¡reas de desenvolvimento."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "Cabinda possui formaÃ§Ãµes florestais tropicais de elevado valor ecolÃ³gico. A floresta contribui para a regulaÃ§Ã£o do clima, protecÃ§Ã£o dos solos e conservaÃ§Ã£o da biodiversidade.",
+        "A exploraÃ§Ã£o madeireira deve obedecer a critÃ©rios de sustentabilidade, fiscalizaÃ§Ã£o e recuperaÃ§Ã£o das Ã¡reas utilizadas."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A economia integra petrÃ³leo, comÃ©rcio, pesca, agricultura, serviÃ§os e actividades ligadas ao transporte.",
+        "O processamento de mandioca, dendÃ©m, frutas, pescado e outros produtos locais pode diversificar a base econÃ³mica e gerar emprego."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A conservaÃ§Ã£o da floresta, a abertura de mercados para os produtores, as infra-estruturas rurais e a melhoria da produtividade sÃ£o desafios relevantes.",
+        "A investigaÃ§Ã£o pode concentrar-se em sistemas agroflorestais, culturas tropicais, saÃºde dos solos, biodiversidade e tecnologias de transformaÃ§Ã£o alimentar."
+      ]}
+    ]
+  },
+
+  cuando: {
+    capital: "Mavinga",
+    populacao: "138 770 habitantes",
+    perfil: "PecuÃ¡ria, recursos naturais, rios e ecossistemas do sudeste.",
+    enquadramento:
+      "Cuando Ã© uma provÃ­ncia do sudeste de Angola, com baixa densidade populacional e extensas Ã¡reas naturais. A sua realidade exige planeamento territorial, valorizaÃ§Ã£o dos recursos hÃ­dricos e desenvolvimento de sistemas de produÃ§Ã£o adaptados Ã s condiÃ§Ãµes locais.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "O territÃ³rio apresenta extensas superfÃ­cies naturais, savanas, Ã¡reas florestais e sistemas fluviais associados ao sudeste angolano.",
+        "A distÃ¢ncia entre povoaÃ§Ãµes e mercados torna especialmente importantes as estradas, a logÃ­stica e os serviÃ§os rurais."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima apresenta sazonalidade marcada, com perÃ­odos de chuva e de seca. A disponibilidade de Ã¡gua varia ao longo do ano.",
+        "A gestÃ£o de pontos de Ã¡gua, a protecÃ§Ã£o de rios e zonas hÃºmidas e o armazenamento de Ã¡gua sÃ£o fundamentais para a agricultura e a pecuÃ¡ria."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Milho, massango, massambala, mandioca, feijÃ£o, batata-doce e hortÃ­colas adaptadas Ã s condiÃ§Ãµes locais sÃ£o culturas de interesse a avaliar.",
+        "A produÃ§Ã£o deve considerar a duraÃ§Ã£o da estaÃ§Ã£o chuvosa, a fertilidade dos solos, a disponibilidade de sementes e a distÃ¢ncia aos mercados.",
+        "Sistemas de produÃ§Ã£o diversificados e tÃ©cnicas de conservaÃ§Ã£o da humidade do solo podem ajudar a reduzir os riscos climÃ¡ticos."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A pecuÃ¡ria extensiva e os sistemas de criaÃ§Ã£o de bovinos, caprinos e pequenos ruminantes podem ter relevÃ¢ncia nas zonas adequadas.",
+        "A disponibilidade de pastagens e Ã¡gua, o controlo sanitÃ¡rio, a prevenÃ§Ã£o de doenÃ§as e a gestÃ£o dos movimentos dos animais devem ser acompanhados."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "Os recursos fluviais e outros corpos de Ã¡gua podem sustentar actividades de pesca continental.",
+        "A aquicultura deve ser precedida de avaliaÃ§Ã£o da Ã¡gua, das espÃ©cies adequadas, dos custos de alimentaÃ§Ã£o e das possibilidades de comercializaÃ§Ã£o."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As savanas, formaÃ§Ãµes de miombo e outros ecossistemas naturais constituem patrimÃ³nio ambiental importante.",
+        "A prevenÃ§Ã£o de incÃªndios, a conservaÃ§Ã£o da fauna e a gestÃ£o sustentÃ¡vel dos recursos florestais sÃ£o essenciais."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A economia pode apoiar-se na pecuÃ¡ria, agricultura familiar, comÃ©rcio, recursos naturais e actividades ligadas Ã  conservaÃ§Ã£o da natureza.",
+        "A criaÃ§Ã£o de pontos de recolha, armazenamento de cereais, abate e conservaÃ§Ã£o de produtos pecuÃ¡rios pode melhorar o acesso aos mercados."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A baixa densidade populacional, a distÃ¢ncia aos mercados, a sazonalidade da Ã¡gua e as limitaÃ§Ãµes de infra-estruturas exigem soluÃ§Ãµes adequadas ao territÃ³rio.",
+        "A AGROINOVA poderÃ¡ apoiar estudos de pastagens, sistemas agro-silvo-pastoris, culturas tolerantes Ã  seca e gestÃ£o comunitÃ¡ria dos recursos naturais."
+      ]}
+    ]
+  },
+
+  cubango: {
+    capital: "Menongue",
+    populacao: "570 447 habitantes",
+    perfil: "Agricultura, pecuÃ¡ria, recursos hÃ­dricos e ecossistemas naturais.",
+    enquadramento:
+      "O Cubango possui uma localizaÃ§Ã£o estratÃ©gica no sudeste de Angola e recursos naturais relevantes. A actividade agropecuÃ¡ria deve ser desenvolvida de forma compatÃ­vel com a conservaÃ§Ã£o dos ecossistemas e dos recursos hÃ­dricos.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia integra Ã¡reas de savana, formaÃ§Ãµes de miombo, planÃ­cies e vales fluviais.",
+        "O rio Cubango e os seus sistemas associados sÃ£o referÃªncias importantes para a organizaÃ§Ã£o territorial e a conservaÃ§Ã£o ambiental."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima apresenta uma estaÃ§Ã£o chuvosa e outra seca. A distribuiÃ§Ã£o da precipitaÃ§Ã£o influencia directamente a produÃ§Ã£o agrÃ­cola e a disponibilidade de pastagens.",
+        "A gestÃ£o das Ã¡guas superficiais e subterrÃ¢neas deve apoiar a produÃ§Ã£o sem comprometer os ecossistemas."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Milho, massango, massambala, mandioca, feijÃ£o, batata-doce e hortÃ­colas sÃ£o culturas de interesse para avaliaÃ§Ã£o e desenvolvimento.",
+        "A agricultura familiar pode beneficiar de sementes adaptadas, conservaÃ§Ã£o da Ã¡gua, ferramentas adequadas e melhores condiÃ§Ãµes de escoamento.",
+        "A produÃ§Ã£o irrigada deve ser planeada com base na disponibilidade real de Ã¡gua e na capacidade de manutenÃ§Ã£o dos equipamentos."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, caprinos e pequenos ruminantes Ã© uma actividade com potencial em Ã¡reas com pastagens e Ã¡gua suficientes.",
+        "A sanidade animal, o melhoramento das pastagens, a suplementaÃ§Ã£o na Ã©poca seca e o acesso a serviÃ§os veterinÃ¡rios sÃ£o prioridades."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "Os recursos fluviais permitem actividades de pesca continental, importantes para a alimentaÃ§Ã£o e rendimento de algumas comunidades.",
+        "A aquicultura pode ser estudada em locais adequados, com controlo da qualidade da Ã¡gua, alimentaÃ§Ã£o e sanidade dos peixes."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As formaÃ§Ãµes de miombo e savana tÃªm valor ecolÃ³gico e apoiam actividades de recolha de produtos naturais.",
+        "A prevenÃ§Ã£o de queimadas, a conservaÃ§Ã£o da fauna e a utilizaÃ§Ã£o sustentÃ¡vel da madeira e de outros recursos devem integrar o ordenamento territorial."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "Agricultura, pecuÃ¡ria, comÃ©rcio, serviÃ§os e actividades ligadas aos recursos naturais sÃ£o componentes relevantes da economia.",
+        "Existem oportunidades para armazenagem, transformaÃ§Ã£o de cereais, processamento de mandioca, conservaÃ§Ã£o de pescado e valorizaÃ§Ã£o dos produtos pecuÃ¡rios."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A sazonalidade das chuvas, as distÃ¢ncias, as infra-estruturas e a necessidade de melhorar a produtividade constituem desafios.",
+        "As prioridades incluem sistemas de produÃ§Ã£o adaptados ao clima, gestÃ£o de pastagens, conservaÃ§Ã£o de solos e monitorizaÃ§Ã£o dos recursos hÃ­dricos."
+      ]}
+    ]
+  },
+
+  "cuanza-norte": {
+    capital: "Ndalatando",
+    populacao: "659 097 habitantes",
+    perfil: "Agricultura diversificada, cafÃ©, fruticultura e recursos hÃ­dricos.",
+    enquadramento:
+      "O Cuanza Norte apresenta condiÃ§Ãµes agroecolÃ³gicas diversificadas, com Ã¡reas de planalto, vales e vegetaÃ§Ã£o tropical. A agricultura familiar e as culturas permanentes podem contribuir para o desenvolvimento rural.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "O territÃ³rio combina Ã¡reas elevadas, vales, encostas e zonas de vegetaÃ§Ã£o tropical. Estas diferenÃ§as influenciam os sistemas agrÃ­colas e a ocupaÃ§Ã£o humana.",
+        "As ligaÃ§Ãµes rodoviÃ¡rias e a proximidade relativa a importantes mercados do paÃ­s podem favorecer o escoamento da produÃ§Ã£o."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© tropical, com variaÃ§Ãµes locais de temperatura e precipitaÃ§Ã£o em funÃ§Ã£o da altitude e do relevo.",
+        "Os rios e linhas de Ã¡gua sÃ£o importantes para o abastecimento, a agricultura e a conservaÃ§Ã£o dos ecossistemas."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Mandioca, milho, feijÃ£o, banana, cafÃ©, hortÃ­colas, citrinos e outras fruteiras sÃ£o culturas de interesse.",
+        "A recuperaÃ§Ã£o e valorizaÃ§Ã£o da cafeicultura, associada a boas prÃ¡ticas de cultivo, colheita e pÃ³s-colheita, pode contribuir para a diversificaÃ§Ã£o econÃ³mica.",
+        "A conservaÃ§Ã£o da fertilidade dos solos, a utilizaÃ§Ã£o de sementes melhoradas e a organizaÃ§Ã£o dos produtores sÃ£o fundamentais."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de aves, suÃ­nos, caprinos e bovinos pode complementar as exploraÃ§Ãµes agrÃ­colas.",
+        "A melhoria da alimentaÃ§Ã£o animal, da sanidade e das instalaÃ§Ãµes pode aumentar a produtividade e reduzir perdas."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "Os recursos fluviais permitem actividades de pesca continental em Ã¡reas adequadas.",
+        "A aquicultura poderÃ¡ ser desenvolvida mediante estudos de viabilidade, qualidade da Ã¡gua e acesso a mercados."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "A vegetaÃ§Ã£o tropical e as formaÃ§Ãµes florestais tÃªm importÃ¢ncia para a protecÃ§Ã£o das encostas, a conservaÃ§Ã£o da Ã¡gua e a biodiversidade.",
+        "A gestÃ£o das queimadas, a protecÃ§Ã£o das matas e a recuperaÃ§Ã£o de Ã¡reas degradadas sÃ£o medidas importantes."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "Agricultura, comÃ©rcio, serviÃ§os, pecuÃ¡ria e actividades ligadas ao cafÃ© constituem Ã¡reas de interesse econÃ³mico.",
+        "O beneficiamento do cafÃ©, a transformaÃ§Ã£o da mandioca, a secagem de frutas e o armazenamento de cereais podem criar oportunidades de negÃ³cio."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A melhoria das estradas rurais, o acesso a insumos, a assistÃªncia tÃ©cnica e a transformaÃ§Ã£o local sÃ£o desafios relevantes.",
+        "A investigaÃ§Ã£o poderÃ¡ concentrar-se na cafeicultura, fertilidade dos solos, sistemas agroflorestais e culturas alimentares."
+      ]}
+    ]
+  },
+
+  "cuanza-sul": {
+    capital: "Sumbe",
+    populacao: "2 327 981 habitantes",
+    perfil: "Agricultura, cafÃ©, fruticultura, pecuÃ¡ria e pesca costeira.",
+    enquadramento:
+      "O Cuanza Sul possui uma grande diversidade de paisagens, desde a costa atlÃ¢ntica atÃ© Ã s zonas interiores de maior altitude. Esta diversidade permite diferentes sistemas de produÃ§Ã£o agrÃ­cola e pecuÃ¡ria.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia apresenta litoral, planÃ­cies, vales fluviais, encostas e Ã¡reas de planalto.",
+        "A diversidade do relevo cria diferentes condiÃ§Ãµes de produÃ§Ã£o, exigindo recomendaÃ§Ãµes tÃ©cnicas adaptadas a cada zona."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "As condiÃ§Ãµes climÃ¡ticas variam entre a faixa costeira mais seca e Ã¡reas interiores com maior precipitaÃ§Ã£o.",
+        "Os rios e vales constituem recursos importantes para a agricultura e para o abastecimento das comunidades."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Milho, mandioca, feijÃ£o, cafÃ©, banana, citrinos, hortÃ­colas, batata-doce e outras fruteiras sÃ£o culturas de interesse.",
+        "A cafeicultura pode ser valorizada em zonas adequadas, com atenÃ§Ã£o Ã  selecÃ§Ã£o de variedades, sombra, nutriÃ§Ã£o, poda e qualidade do produto.",
+        "A produÃ§Ã£o hortÃ­cola e frutÃ­cola pode beneficiar de rega eficiente, conservaÃ§Ã£o pÃ³s-colheita e melhor organizaÃ§Ã£o comercial."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A provÃ­ncia permite avaliar sistemas de criaÃ§Ã£o de bovinos, caprinos, suÃ­nos e aves, de acordo com as condiÃ§Ãµes de cada municÃ­pio.",
+        "A disponibilidade de pastagens, Ã¡gua e serviÃ§os veterinÃ¡rios condiciona a produtividade dos efectivos."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "A costa atlÃ¢ntica permite actividades de pesca marÃ­tima e comÃ©rcio de pescado.",
+        "A conservaÃ§Ã£o, o processamento, a higiene, a cadeia de frio e a organizaÃ§Ã£o dos pescadores sÃ£o essenciais para valorizar o sector."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As formaÃ§Ãµes vegetais variam com a altitude e a precipitaÃ§Ã£o, incluindo Ã¡reas de vegetaÃ§Ã£o natural e zonas de transiÃ§Ã£o.",
+        "A conservaÃ§Ã£o das encostas, das nascentes e da vegetaÃ§Ã£o natural ajuda a reduzir a erosÃ£o e a proteger os recursos hÃ­dricos."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "Agricultura, pesca, pecuÃ¡ria, comÃ©rcio e serviÃ§os sÃ£o actividades relevantes.",
+        "O processamento de cafÃ©, frutas, mandioca, milho e pescado representa oportunidades para pequenas e mÃ©dias empresas."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A variabilidade climÃ¡tica, a conservaÃ§Ã£o dos solos, a disponibilidade de Ã¡gua e o acesso a mercados exigem soluÃ§Ãµes diferenciadas.",
+        "A investigaÃ§Ã£o deve apoiar a diversificaÃ§Ã£o agrÃ­cola, a produtividade do cafÃ©, a irrigaÃ§Ã£o e a transformaÃ§Ã£o agroalimentar."
+      ]}
+    ]
+  },
+
+  cunene: {
+    capital: "Ondjiva",
+    populacao: "1 806 417 habitantes",
+    perfil: "PecuÃ¡ria, pastagens, agricultura familiar e adaptaÃ§Ã£o Ã  seca.",
+    enquadramento:
+      "O Cunene Ã© uma provÃ­ncia do sul de Angola onde a pecuÃ¡ria tem grande importÃ¢ncia econÃ³mica, social e cultural. A gestÃ£o dos recursos hÃ­dricos e das pastagens Ã© determinante para a resiliÃªncia das comunidades.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "O territÃ³rio apresenta extensas Ã¡reas de savana, planÃ­cies e zonas de transiÃ§Ã£o semiÃ¡rida.",
+        "A ocupaÃ§Ã£o do espaÃ§o rural estÃ¡ fortemente relacionada com a disponibilidade de Ã¡gua, pastagens e pontos de abeberamento."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© semiÃ¡rido em grande parte da provÃ­ncia, com precipitaÃ§Ã£o irregular e perÃ­odos de seca que podem afectar a agricultura e a pecuÃ¡ria.",
+        "O rio Cunene Ã© um recurso estratÃ©gico. A gestÃ£o de furos, chimpacas, pequenas barragens e sistemas de armazenamento deve ser acompanhada tecnicamente."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Massango, massambala, milho, feijÃ£o, hortÃ­colas, mandioca e batata-doce podem integrar sistemas de produÃ§Ã£o adaptados Ã s condiÃ§Ãµes locais.",
+        "A escolha de variedades de ciclo curto, a sementeira ajustada Ã s chuvas e a conservaÃ§Ã£o da humidade do solo sÃ£o prÃ¡ticas importantes.",
+        "A agricultura irrigada pode complementar a produÃ§Ã£o de sequeiro, desde que exista disponibilidade de Ã¡gua e gestÃ£o sustentÃ¡vel."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos Ã© uma actividade de grande relevÃ¢ncia, acompanhada por sistemas de criaÃ§Ã£o de caprinos, ovinos e outras espÃ©cies.",
+        "A gestÃ£o de pastagens, a suplementaÃ§Ã£o alimentar na Ã©poca seca, a sanidade animal, o melhoramento dos efectivos e a gestÃ£o dos pontos de Ã¡gua sÃ£o prioridades.",
+        "A transumÃ¢ncia e os movimentos dos animais devem ser considerados no planeamento dos recursos e na prevenÃ§Ã£o de conflitos."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "A pesca continental pode ocorrer em rios e outros recursos hÃ­dricos, dependendo da disponibilidade de Ã¡gua.",
+        "A aquicultura pode ser avaliada em locais com condiÃ§Ãµes adequadas, mas exige estudos especÃ­ficos sobre Ã¡gua, alimentaÃ§Ã£o e viabilidade."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "A vegetaÃ§Ã£o inclui savanas e formaÃ§Ãµes adaptadas a condiÃ§Ãµes de menor precipitaÃ§Ã£o.",
+        "A gestÃ£o sustentÃ¡vel da lenha, a prevenÃ§Ã£o de incÃªndios e a protecÃ§Ã£o dos habitats sÃ£o importantes para manter os serviÃ§os dos ecossistemas."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A pecuÃ¡ria, o comÃ©rcio de animais, a agricultura e os serviÃ§os constituem actividades importantes.",
+        "A valorizaÃ§Ã£o da carne, do leite, das peles e de outros produtos pecuÃ¡rios depende de infra-estruturas sanitÃ¡rias, conservaÃ§Ã£o e acesso a mercados."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A seca, a degradaÃ§Ã£o das pastagens, a escassez de Ã¡gua e a vulnerabilidade dos sistemas familiares sÃ£o desafios centrais.",
+        "A investigaÃ§Ã£o deve dar prioridade a raÃ§as adaptadas, pastagens resistentes, alimentaÃ§Ã£o animal, captaÃ§Ã£o de Ã¡gua e sistemas agrÃ­colas resilientes."
+      ]}
+    ]
+  },
+
+  huambo: {
+    capital: "Huambo",
+    populacao: "2 691 902 habitantes",
+    perfil: "Agricultura de planalto, batata, milho, feijÃ£o e hortÃ­colas.",
+    enquadramento:
+      "O Huambo integra o planalto central e possui uma forte tradiÃ§Ã£o agrÃ­cola. A combinaÃ§Ã£o de altitude, solos variados e precipitaÃ§Ã£o sazonal permite a produÃ§Ã£o de diferentes culturas alimentares.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia apresenta relevo de planalto, colinas, vales e Ã¡reas de altitude elevada. As diferenÃ§as locais de altitude influenciam as temperaturas e o calendÃ¡rio agrÃ­cola.",
+        "As Ã¡reas de cabeceira e as nascentes exigem protecÃ§Ã£o para garantir a disponibilidade de Ã¡gua e reduzir a erosÃ£o."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© tropical de altitude, com estaÃ§Ã£o chuvosa e estaÃ§Ã£o seca. As temperaturas tendem a ser mais moderadas do que em muitas Ã¡reas baixas do paÃ­s.",
+        "A Ã¡gua dos rios, nascentes e pequenos cursos de Ã¡gua Ã© importante para as comunidades e para a produÃ§Ã£o agrÃ­cola."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Batata rena, milho, feijÃ£o, trigo em zonas adequadas, mandioca, batata-doce, hortÃ­colas e fruteiras sÃ£o culturas de interesse.",
+        "A produÃ§Ã£o de batata e hortÃ­colas pode beneficiar de sementes de qualidade, selecÃ§Ã£o de variedades, rotaÃ§Ã£o de culturas e armazenamento adequado.",
+        "O milho e o feijÃ£o sÃ£o importantes para a alimentaÃ§Ã£o e para os sistemas agrÃ­colas familiares. A fertilidade dos solos deve ser mantida atravÃ©s de prÃ¡ticas equilibradas."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, suÃ­nos, caprinos e aves complementa a actividade agrÃ­cola.",
+        "A integraÃ§Ã£o lavoura-pecuÃ¡ria pode melhorar a utilizaÃ§Ã£o dos resÃ­duos agrÃ­colas, a produÃ§Ã£o de estrume e a diversificaÃ§Ã£o dos rendimentos."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "A pesca continental pode ocorrer em rios, lagoas e albufeiras. A aquicultura representa uma possibilidade em locais com condiÃ§Ãµes de Ã¡gua e acesso a insumos.",
+        "A produÃ§Ã£o aquÃ­cola exige acompanhamento tÃ©cnico, controlo da qualidade da Ã¡gua, alimentaÃ§Ã£o e sanidade dos peixes."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As formaÃ§Ãµes de miombo e outras Ã¡reas de vegetaÃ§Ã£o natural tÃªm importÃ¢ncia para a protecÃ§Ã£o dos solos e das bacias hidrogrÃ¡ficas.",
+        "A prevenÃ§Ã£o de queimadas, a gestÃ£o da lenha e a recuperaÃ§Ã£o de Ã¡reas degradadas sÃ£o essenciais."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "Agricultura, comÃ©rcio, pecuÃ¡ria, educaÃ§Ã£o, serviÃ§os e actividades de transformaÃ§Ã£o sÃ£o componentes relevantes da economia.",
+        "O processamento de batata, milho, feijÃ£o, frutas e produtos pecuÃ¡rios pode criar oportunidades para cooperativas e empresas locais."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A erosÃ£o, a perda de fertilidade, a irregularidade das chuvas, as perdas pÃ³s-colheita e o acesso a mercados sÃ£o desafios importantes.",
+        "As prioridades incluem melhoramento de sementes, mecanizaÃ§Ã£o adequada, conservaÃ§Ã£o de solos, irrigaÃ§Ã£o de pequena escala e armazenamento de batata e cereais."
+      ]}
+    ]
+  },
+
+  huila: {
+    capital: "Lubango",
+    populacao: "3 302 866 habitantes",
+    perfil: "PecuÃ¡ria, cereais, horticultura e diversidade agroecolÃ³gica.",
+    enquadramento:
+      "A HuÃ­la apresenta uma grande diversidade de altitudes, paisagens e sistemas de produÃ§Ã£o. A provÃ­ncia combina zonas de pecuÃ¡ria, agricultura de sequeiro, horticultura e actividades comerciais.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "O territÃ³rio integra o planalto da HuÃ­la, Ã¡reas montanhosas, vales e zonas de transiÃ§Ã£o para regiÃµes mais secas.",
+        "A diversidade do relevo permite diferentes actividades agropecuÃ¡rias, mas exige recomendaÃ§Ãµes especÃ­ficas para cada zona."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima varia com a altitude e a localizaÃ§Ã£o. A estaÃ§Ã£o chuvosa Ã© determinante para a agricultura de sequeiro, enquanto a estaÃ§Ã£o seca aumenta a necessidade de gestÃ£o da Ã¡gua.",
+        "A protecÃ§Ã£o das nascentes, a gestÃ£o das bacias e o desenvolvimento de sistemas de rega eficientes sÃ£o importantes."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Milho, feijÃ£o, trigo em zonas adequadas, batata, hortÃ­colas, mandioca, batata-doce e fruteiras sÃ£o culturas de interesse.",
+        "A horticultura pode beneficiar de rega localizada, planeamento de culturas, selecÃ§Ã£o de variedades e boas prÃ¡ticas de colheita.",
+        "A produÃ§Ã£o de cereais e tubÃ©rculos pode ser reforÃ§ada com sementes de qualidade, mecanizaÃ§Ã£o apropriada e conservaÃ§Ã£o dos solos."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, caprinos, ovinos, suÃ­nos e aves tem importÃ¢ncia em diferentes sistemas produtivos.",
+        "A gestÃ£o das pastagens, a alimentaÃ§Ã£o na Ã©poca seca, a sanidade, a reproduÃ§Ã£o e o melhoramento dos efectivos sÃ£o Ã¡reas fundamentais."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "A pesca continental pode apoiar comunidades em zonas com rios, lagoas e albufeiras.",
+        "A aquicultura pode ser considerada em locais com disponibilidade de Ã¡gua, acesso a alimentaÃ§Ã£o e condiÃ§Ãµes de comercializaÃ§Ã£o."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "A provÃ­ncia possui formaÃ§Ãµes de vegetaÃ§Ã£o de altitude, savanas e Ã¡reas de miombo.",
+        "A conservaÃ§Ã£o das encostas e das zonas de nascente Ã© importante para evitar erosÃ£o, assoreamento e degradaÃ§Ã£o dos solos."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "Agricultura, pecuÃ¡ria, comÃ©rcio, turismo, serviÃ§os e transformaÃ§Ã£o de produtos alimentares integram a economia provincial.",
+        "Existem oportunidades para lacticÃ­nios, processamento de carne, moagem de cereais, conservaÃ§Ã£o de hortÃ­colas e transformaÃ§Ã£o de frutas."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A disponibilidade de Ã¡gua, a gestÃ£o das pastagens, a produtividade agrÃ­cola e a transformaÃ§Ã£o local sÃ£o desafios relevantes.",
+        "A investigaÃ§Ã£o poderÃ¡ apoiar a pecuÃ¡ria sustentÃ¡vel, a produÃ§Ã£o de forragens, a horticultura, a adaptaÃ§Ã£o climÃ¡tica e a conservaÃ§Ã£o dos solos."
+      ]}
+    ]
+  },
+
+  "icolo-e-bengo": {
+    capital: "Catete",
+    populacao: "1 523 457 habitantes",
+    perfil: "Agricultura, abastecimento de Luanda, fruticultura e produÃ§Ã£o periurbana.",
+    enquadramento:
+      "Icolo e Bengo Ã© uma provÃ­ncia com forte relaÃ§Ã£o funcional com a Ã¡rea metropolitana de Luanda. A proximidade de grandes mercados cria oportunidades para agricultura comercial, horticultura, avicultura e transformaÃ§Ã£o alimentar.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia integra Ã¡reas urbanas, periurbanas, rurais e vales com potencial agrÃ­cola.",
+        "A expansÃ£o urbana e das infra-estruturas deve ser articulada com a protecÃ§Ã£o dos solos agrÃ­colas e das Ã¡reas de produÃ§Ã£o."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© tropical, com uma estaÃ§Ã£o chuvosa e outra seca. A produÃ§Ã£o agrÃ­cola depende da gestÃ£o da precipitaÃ§Ã£o e da disponibilidade de Ã¡gua.",
+        "A utilizaÃ§Ã£o de Ã¡gua para rega deve considerar a qualidade, a disponibilidade e a sustentabilidade dos recursos."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "HortÃ­colas, mandioca, milho, banana, batata-doce, feijÃ£o e fruteiras sÃ£o culturas de interesse.",
+        "A proximidade do mercado de Luanda favorece a produÃ§Ã£o de alface, tomate, cebola, couve, pimento e outros produtos frescos, desde que exista Ã¡gua e logÃ­stica adequadas.",
+        "A agricultura periurbana pode beneficiar de estufas, rega localizada, viveiros, sementes certificadas e planeamento da produÃ§Ã£o."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A avicultura, a suinicultura e a criaÃ§Ã£o de pequenos ruminantes podem integrar sistemas comerciais e familiares.",
+        "A biosseguranÃ§a, a qualidade das raÃ§Ãµes, a gestÃ£o de resÃ­duos e a sanidade animal sÃ£o fundamentais em exploraÃ§Ãµes prÃ³ximas de zonas urbanas."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "A pesca em rios e zonas costeiras prÃ³ximas pode complementar o abastecimento alimentar.",
+        "A aquicultura poderÃ¡ ser desenvolvida mediante avaliaÃ§Ã£o de Ã¡gua, espÃ©cies, alimentaÃ§Ã£o e viabilidade econÃ³mica."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As Ã¡reas naturais e zonas hÃºmidas devem ser protegidas face Ã  expansÃ£o urbana e a outras pressÃµes sobre o territÃ³rio.",
+        "A recuperaÃ§Ã£o da vegetaÃ§Ã£o e a conservaÃ§Ã£o das linhas de Ã¡gua ajudam a manter os serviÃ§os ambientais."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A agricultura, o comÃ©rcio, os transportes, os serviÃ§os e as actividades ligadas ao abastecimento de Luanda tÃªm grande relevÃ¢ncia.",
+        "Existem oportunidades para centros de recolha, cÃ¢maras frigorÃ­ficas, processamento de hortÃ­colas, produÃ§Ã£o de raÃ§Ãµes e distribuiÃ§Ã£o alimentar."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A pressÃ£o urbana sobre as terras agrÃ­colas, a gestÃ£o da Ã¡gua, os custos de produÃ§Ã£o e a logÃ­stica sÃ£o desafios importantes.",
+        "A investigaÃ§Ã£o poderÃ¡ concentrar-se em agricultura periurbana, produÃ§Ã£o protegida, seguranÃ§a alimentar, gestÃ£o de resÃ­duos orgÃ¢nicos e cadeias de frio."
+      ]}
+    ]
+  },
+
+  luanda: {
+    capital: "Luanda",
+    populacao: "8 665 510 habitantes â€” valor corrigido pelo INE",
+    perfil: "Mercados, abastecimento alimentar, agricultura periurbana e logÃ­stica.",
+    enquadramento:
+      "Luanda Ã© o maior centro urbano e mercado consumidor de Angola. A sua importÃ¢ncia para a AGROINOVA estÃ¡ ligada ao abastecimento alimentar, Ã  distribuiÃ§Ã£o, Ã  transformaÃ§Ã£o, aos serviÃ§os e Ã  agricultura periurbana.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia apresenta uma forte concentraÃ§Ã£o urbana, Ã¡reas costeiras e zonas de expansÃ£o periurbana.",
+        "O crescimento das cidades aumenta a procura de alimentos e exige planeamento da ocupaÃ§Ã£o do solo, das infra-estruturas e dos sistemas de abastecimento."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© tropical seco, com estaÃ§Ã£o chuvosa relativamente curta e estaÃ§Ã£o seca prolongada.",
+        "A gestÃ£o da Ã¡gua Ã© central para a agricultura periurbana, os espaÃ§os verdes e o abastecimento das comunidades."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "A produÃ§Ã£o periurbana pode incluir hortÃ­colas, mandioca, banana, batata-doce e outras culturas adaptadas Ã s condiÃ§Ãµes locais.",
+        "Hortas comerciais, viveiros, estufas e sistemas de produÃ§Ã£o protegida podem contribuir para o abastecimento de produtos frescos.",
+        "A seguranÃ§a alimentar exige controlo da qualidade da Ã¡gua de rega, higiene, rastreabilidade e boas prÃ¡ticas agrÃ­colas."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A avicultura, a suinicultura e outras actividades pecuÃ¡rias podem abastecer o mercado urbano.",
+        "A biosseguranÃ§a, a gestÃ£o dos resÃ­duos, a alimentaÃ§Ã£o animal e o controlo veterinÃ¡rio sÃ£o essenciais para reduzir riscos sanitÃ¡rios."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "A actividade pesqueira costeira e o comÃ©rcio de pescado tÃªm importÃ¢ncia no abastecimento da populaÃ§Ã£o.",
+        "A conservaÃ§Ã£o em frio, o transporte higiÃ©nico, o processamento e a fiscalizaÃ§Ã£o sanitÃ¡ria sÃ£o fundamentais."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As Ã¡reas naturais remanescentes, zonas costeiras e espaÃ§os verdes desempenham funÃ§Ãµes ambientais importantes.",
+        "A protecÃ§Ã£o dos ecossistemas costeiros e a recuperaÃ§Ã£o de Ã¡reas degradadas devem integrar o planeamento urbano."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "Luanda concentra actividades de comÃ©rcio, serviÃ§os, logÃ­stica, transformaÃ§Ã£o, distribuiÃ§Ã£o e consumo alimentar.",
+        "HÃ¡ oportunidades para centros logÃ­sticos, armazenamento refrigerado, processamento de alimentos, mercados grossistas e plataformas digitais de comercializaÃ§Ã£o."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A dependÃªncia do abastecimento proveniente de outras provÃ­ncias, as perdas alimentares, os custos logÃ­sticos e a pressÃ£o sobre os recursos naturais sÃ£o desafios importantes.",
+        "A AGROINOVA poderÃ¡ acompanhar preÃ§os, fluxos de produtos, seguranÃ§a alimentar, agricultura urbana, rastreabilidade e eficiÃªncia das cadeias de abastecimento."
+      ]}
+    ]
+  },
+
+  "lunda-norte": {
+    capital: "Dundo",
+    populacao: "1 742 217 habitantes",
+    perfil: "Agricultura familiar, florestas, recursos hÃ­dricos e mineraÃ§Ã£o.",
+    enquadramento:
+      "A Lunda Norte apresenta extensas Ã¡reas naturais, rios e recursos minerais. A agricultura familiar e a conservaÃ§Ã£o ambiental sÃ£o importantes para diversificar a economia e reforÃ§ar a seguranÃ§a alimentar.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "O territÃ³rio apresenta planaltos, vales fluviais, Ã¡reas de floresta e paisagens de savana.",
+        "A distribuiÃ§Ã£o das povoaÃ§Ãµes e a distÃ¢ncia aos principais mercados tornam importantes as infra-estruturas de transporte e os serviÃ§os rurais."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© tropical, com estaÃ§Ã£o chuvosa e estaÃ§Ã£o seca. A precipitaÃ§Ã£o favorece sistemas agrÃ­colas de sequeiro em Ã¡reas adequadas.",
+        "Os rios e cursos de Ã¡gua devem ser protegidos contra poluiÃ§Ã£o, assoreamento e degradaÃ§Ã£o das margens."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Mandioca, milho, arroz em zonas apropriadas, feijÃ£o, amendoim, banana e hortÃ­colas sÃ£o culturas de interesse.",
+        "A diversificaÃ§Ã£o agrÃ­cola pode reduzir a dependÃªncia de uma Ãºnica cultura e melhorar a disponibilidade de alimentos.",
+        "A assistÃªncia tÃ©cnica, o acesso a sementes, a conservaÃ§Ã£o dos solos e o escoamento da produÃ§Ã£o sÃ£o factores importantes."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de aves, suÃ­nos, caprinos e bovinos pode ser desenvolvida conforme as condiÃ§Ãµes sanitÃ¡rias, alimentares e ambientais.",
+        "O reforÃ§o dos serviÃ§os veterinÃ¡rios e a melhoria da alimentaÃ§Ã£o animal sÃ£o prioridades."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "Os rios e outros recursos hÃ­dricos podem apoiar a pesca continental e a alimentaÃ§Ã£o das comunidades.",
+        "A aquicultura deve ser acompanhada por estudos sobre Ã¡gua, espÃ©cies, alimentaÃ§Ã£o e impactos ambientais."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As formaÃ§Ãµes florestais e savanas tÃªm valor ecolÃ³gico, econÃ³mico e social.",
+        "A exploraÃ§Ã£o de madeira, a expansÃ£o agrÃ­cola e as queimadas devem ser acompanhadas por prÃ¡ticas de gestÃ£o sustentÃ¡vel."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A mineraÃ§Ã£o, o comÃ©rcio, a agricultura, os serviÃ§os e os transportes integram a economia provincial.",
+        "A transformaÃ§Ã£o de mandioca, o beneficiamento de arroz, a moagem de cereais e o armazenamento podem contribuir para diversificar a economia."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A necessidade de melhorar a conectividade rural, a produtividade agrÃ­cola e a protecÃ§Ã£o dos recursos naturais Ã© central.",
+        "A investigaÃ§Ã£o poderÃ¡ apoiar a agricultura familiar, a recuperaÃ§Ã£o de solos, a pesca continental e a monitorizaÃ§Ã£o dos impactos ambientais."
+      ]}
+    ]
+  },
+
+  "lunda-sul": {
+    capital: "Saurimo",
+    populacao: "893 936 habitantes",
+    perfil: "Agricultura, recursos florestais, mineraÃ§Ã£o e actividade comercial.",
+    enquadramento:
+      "A Lunda Sul combina recursos naturais, Ã¡reas agrÃ­colas e actividades mineiras. O desenvolvimento rural pode beneficiar da diversificaÃ§Ã£o produtiva e da valorizaÃ§Ã£o das cadeias agroalimentares.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia apresenta planaltos, vales, savanas e formaÃ§Ãµes florestais.",
+        "A organizaÃ§Ã£o do territÃ³rio deve considerar as Ã¡reas de produÃ§Ã£o, os recursos hÃ­dricos e a coexistÃªncia entre actividades econÃ³micas."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima tropical apresenta uma estaÃ§Ã£o chuvosa e outra seca, com diferenÃ§as locais de precipitaÃ§Ã£o.",
+        "A protecÃ§Ã£o dos rios e a gestÃ£o da Ã¡gua sÃ£o importantes para a agricultura, a pesca e as comunidades."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Mandioca, milho, arroz em Ã¡reas adequadas, feijÃ£o, amendoim, banana e hortÃ­colas sÃ£o culturas de interesse.",
+        "A melhoria da produtividade depende de sementes de qualidade, prÃ¡ticas de conservaÃ§Ã£o dos solos, mecanizaÃ§Ã£o adequada e acesso aos mercados.",
+        "A produÃ§Ã£o familiar pode ser reforÃ§ada com armazenamento, transformaÃ§Ã£o local e organizaÃ§Ã£o cooperativa."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, caprinos, suÃ­nos e aves pode diversificar os sistemas de rendimento das famÃ­lias.",
+        "A disponibilidade de alimentos, a sanidade e a assistÃªncia tÃ©cnica sÃ£o condiÃ§Ãµes fundamentais."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "Os recursos fluviais podem apoiar a pesca continental e iniciativas de aquicultura em locais apropriados.",
+        "Ã‰ importante assegurar a conservaÃ§Ã£o do pescado e a gestÃ£o sustentÃ¡vel dos recursos."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As Ã¡reas de vegetaÃ§Ã£o natural e formaÃ§Ãµes de miombo desempenham funÃ§Ãµes importantes na conservaÃ§Ã£o da Ã¡gua e dos solos.",
+        "A prevenÃ§Ã£o de queimadas e a recuperaÃ§Ã£o de Ã¡reas degradadas devem acompanhar a expansÃ£o das actividades econÃ³micas."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A mineraÃ§Ã£o, a agricultura, o comÃ©rcio e os serviÃ§os tÃªm importÃ¢ncia na economia provincial.",
+        "A transformaÃ§Ã£o de produtos agrÃ­colas, o armazenamento e a distribuiÃ§Ã£o podem criar novas oportunidades para as comunidades."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A diversificaÃ§Ã£o econÃ³mica, a melhoria das infra-estruturas rurais e a gestÃ£o ambiental sÃ£o desafios importantes.",
+        "A investigaÃ§Ã£o poderÃ¡ acompanhar a agricultura familiar, a recuperaÃ§Ã£o de solos, a produÃ§Ã£o de mandioca e a relaÃ§Ã£o entre mineraÃ§Ã£o e ambiente."
+      ]}
+    ]
+  },
+
+  malanje: {
+    capital: "Malanje",
+    populacao: "1 298 250 habitantes",
+    perfil: "Mandioca, milho, feijÃ£o, arroz, fruticultura e agro-indÃºstria.",
+    enquadramento:
+      "Malanje possui condiÃ§Ãµes para uma agricultura diversificada e apresenta referÃªncias importantes para o desenvolvimento agro-industrial. A ligaÃ§Ã£o entre produÃ§Ã£o familiar, grandes exploraÃ§Ãµes e transformaÃ§Ã£o pode fortalecer a economia provincial.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "O territÃ³rio combina planaltos, vales, rios e Ã¡reas de vegetaÃ§Ã£o natural.",
+        "As diferenÃ§as de relevo e de disponibilidade de Ã¡gua permitem diferentes sistemas agrÃ­colas e pecuÃ¡rios."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© tropical, com estaÃ§Ã£o chuvosa e estaÃ§Ã£o seca. A precipitaÃ§Ã£o favorece diversas culturas, mas a gestÃ£o da Ã¡gua continua a ser importante.",
+        "Os rios e as bacias hidrogrÃ¡ficas podem apoiar a agricultura e a conservaÃ§Ã£o dos ecossistemas."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Mandioca, milho, arroz, feijÃ£o, amendoim, batata-doce, hortÃ­colas, banana e outras fruteiras sÃ£o culturas de interesse.",
+        "O arroz pode ser desenvolvido em Ã¡reas com condiÃ§Ãµes adequadas de Ã¡gua e solo. A produÃ§Ã£o deve ser acompanhada por avaliaÃ§Ã£o tÃ©cnica e econÃ³mica.",
+        "A transformaÃ§Ã£o da mandioca, a moagem de cereais e a conservaÃ§Ã£o de frutas podem aumentar o valor acrescentado da produÃ§Ã£o."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, caprinos, suÃ­nos e aves pode complementar os sistemas agrÃ­colas.",
+        "A disponibilidade de pastagens, alimentaÃ§Ã£o animal, sanidade e infra-estruturas de maneio sÃ£o factores determinantes."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "Os rios e outros corpos de Ã¡gua permitem actividades de pesca continental.",
+        "A aquicultura pode ser estudada em Ã¡reas com disponibilidade de Ã¡gua e condiÃ§Ãµes para fornecimento de raÃ§Ã£o e comercializaÃ§Ã£o."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "A provÃ­ncia possui Ã¡reas de vegetaÃ§Ã£o natural e ecossistemas com importÃ¢ncia para a biodiversidade.",
+        "A protecÃ§Ã£o das Ã¡reas florestais, o controlo das queimadas e a conservaÃ§Ã£o das margens dos rios devem integrar a gestÃ£o territorial."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A agricultura, a pecuÃ¡ria, o comÃ©rcio, a indÃºstria e os serviÃ§os ligados ao aproveitamento de recursos naturais sÃ£o componentes relevantes.",
+        "O PÃ³lo Agroindustrial de Capanda e a BIOCOM sÃ£o referÃªncias importantes no contexto agro-industrial da provÃ­ncia."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A produtividade, o acesso a insumos, o armazenamento, o transporte e a transformaÃ§Ã£o local sÃ£o Ã¡reas que necessitam de atenÃ§Ã£o.",
+        "A investigaÃ§Ã£o pode apoiar a produÃ§Ã£o de arroz, mandioca, milho, fruticultura, gestÃ£o da fertilidade e integraÃ§Ã£o entre agricultura e indÃºstria."
+      ]}
+    ]
+  },
+
+  moxico: {
+    capital: "Luena",
+    populacao: "574 253 habitantes",
+    perfil: "Florestas, rios, agricultura familiar e pecuÃ¡ria.",
+    enquadramento:
+      "O Moxico possui extensas Ã¡reas naturais e recursos hÃ­dricos importantes. A agricultura familiar, a pecuÃ¡ria e a gestÃ£o sustentÃ¡vel das florestas sÃ£o elementos centrais do desenvolvimento rural.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "O territÃ³rio integra planaltos, savanas, formaÃ§Ãµes de miombo e extensas Ã¡reas de drenagem fluvial.",
+        "A baixa densidade de povoamento em vÃ¡rias zonas torna importantes as redes de transporte e a prestaÃ§Ã£o de serviÃ§os Ã s comunidades rurais."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima apresenta estaÃ§Ã£o chuvosa e estaÃ§Ã£o seca. A precipitaÃ§Ã£o sazonal condiciona os calendÃ¡rios agrÃ­colas.",
+        "Os rios e zonas hÃºmidas sÃ£o recursos estratÃ©gicos para a agricultura, a pesca e a conservaÃ§Ã£o ambiental."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Mandioca, milho, arroz em zonas apropriadas, massango, feijÃ£o, amendoim e batata-doce sÃ£o culturas de interesse.",
+        "A agricultura familiar pode beneficiar de sementes adaptadas, ferramentas, assistÃªncia tÃ©cnica e melhores condiÃ§Ãµes de armazenamento.",
+        "A conservaÃ§Ã£o dos solos e a protecÃ§Ã£o das Ã¡reas florestais devem acompanhar a expansÃ£o agrÃ­cola."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, caprinos, suÃ­nos e aves pode contribuir para o rendimento e a seguranÃ§a alimentar.",
+        "A sanidade animal, a disponibilidade de pastagens, a alimentaÃ§Ã£o na estaÃ§Ã£o seca e os serviÃ§os veterinÃ¡rios devem ser reforÃ§ados."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "Os recursos fluviais oferecem condiÃ§Ãµes para a pesca continental em vÃ¡rias comunidades.",
+        "A aquicultura poderÃ¡ ser avaliada em locais com Ã¡gua de qualidade e condiÃ§Ãµes de produÃ§Ã£o e comercializaÃ§Ã£o."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As formaÃ§Ãµes de miombo e outros ecossistemas naturais sÃ£o importantes para a biodiversidade e para os meios de vida das comunidades.",
+        "A gestÃ£o de queimadas, a exploraÃ§Ã£o florestal sustentÃ¡vel e a conservaÃ§Ã£o de habitats sÃ£o prioridades."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "Agricultura, pecuÃ¡ria, comÃ©rcio, serviÃ§os e exploraÃ§Ã£o de recursos naturais integram a economia provincial.",
+        "O processamento de mandioca, arroz e milho, a conservaÃ§Ã£o de pescado e a criaÃ§Ã£o de centros de recolha podem fortalecer as cadeias de valor."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "As distÃ¢ncias, as infra-estruturas, o acesso a insumos e a valorizaÃ§Ã£o da produÃ§Ã£o sÃ£o desafios relevantes.",
+        "A investigaÃ§Ã£o deverÃ¡ apoiar sistemas agroflorestais, agricultura familiar, pesca continental, conservaÃ§Ã£o da biodiversidade e tecnologias pÃ³s-colheita."
+      ]}
+    ]
+  },
+
+  "moxico-leste": {
+    capital: "Cazombo",
+    populacao: "411 074 habitantes",
+    perfil: "Agricultura, pecuÃ¡ria, florestas e recursos hÃ­dricos.",
+    enquadramento:
+      "Moxico Leste apresenta um territÃ³rio com extensas Ã¡reas naturais, recursos hÃ­dricos e potencial para actividades agropecuÃ¡rias. A sua localizaÃ§Ã£o fronteiriÃ§a tambÃ©m torna importante o desenvolvimento das ligaÃ§Ãµes comerciais.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia integra paisagens de savana, florestas, vales e Ã¡reas de planalto.",
+        "A organizaÃ§Ã£o territorial deve considerar a dispersÃ£o das povoaÃ§Ãµes, as ligaÃ§Ãµes rodoviÃ¡rias e a proximidade das fronteiras internacionais."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima apresenta sazonalidade marcada, com uma Ã©poca de chuvas e outra seca.",
+        "Os rios, lagos e zonas hÃºmidas sÃ£o importantes para as comunidades, a pesca e a agricultura. A protecÃ§Ã£o da qualidade da Ã¡gua Ã© fundamental."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Mandioca, milho, arroz em zonas adequadas, feijÃ£o, amendoim, batata-doce e hortÃ­colas sÃ£o culturas de interesse.",
+        "A agricultura familiar pode ser reforÃ§ada com sementes de qualidade, conservaÃ§Ã£o da humidade do solo, ferramentas e assistÃªncia tÃ©cnica.",
+        "O armazenamento e a transformaÃ§Ã£o local podem reduzir perdas e facilitar o comÃ©rcio regional."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, caprinos, suÃ­nos e aves pode integrar os sistemas familiares e comerciais.",
+        "A sanidade, a alimentaÃ§Ã£o animal, a gestÃ£o de pastagens e o acesso a Ã¡gua devem ser prioridades."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "Os rios e lagos constituem recursos importantes para a pesca continental.",
+        "A conservaÃ§Ã£o do pescado, o processamento e a organizaÃ§Ã£o dos pescadores podem melhorar o rendimento das comunidades."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As formaÃ§Ãµes de miombo e outros ecossistemas naturais representam um patrimÃ³nio ambiental relevante.",
+        "A conservaÃ§Ã£o das florestas, a prevenÃ§Ã£o de queimadas e a gestÃ£o sustentÃ¡vel dos recursos naturais sÃ£o essenciais."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A agricultura, a pecuÃ¡ria, a pesca, o comÃ©rcio e as actividades transfronteiriÃ§as podem contribuir para a economia provincial.",
+        "Existem oportunidades para armazenamento de cereais, transformaÃ§Ã£o de mandioca, processamento de pescado e centros de comercializaÃ§Ã£o."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A conectividade, a assistÃªncia tÃ©cnica, a conservaÃ§Ã£o dos recursos naturais e o acesso aos mercados sÃ£o desafios importantes.",
+        "A investigaÃ§Ã£o poderÃ¡ apoiar a produÃ§Ã£o alimentar, a pesca continental, a pecuÃ¡ria adaptada e a gestÃ£o sustentÃ¡vel das florestas."
+      ]}
+    ]
+  },
+
+  namibe: {
+    capital: "MoÃ§Ã¢medes",
+    populacao: "815 708 habitantes",
+    perfil: "Pesca marÃ­tima, agricultura irrigada, pecuÃ¡ria e recursos costeiros.",
+    enquadramento:
+      "O Namibe apresenta condiÃ§Ãµes Ã¡ridas e semiÃ¡ridas, com forte influÃªncia do deserto e do oceano AtlÃ¢ntico. A produÃ§Ã£o agrÃ­cola depende de uma gestÃ£o rigorosa da Ã¡gua, enquanto a pesca e a pecuÃ¡ria tÃªm importÃ¢ncia econÃ³mica.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia combina litoral atlÃ¢ntico, deserto, planÃ­cies, Ã¡reas montanhosas e vales fluviais.",
+        "O Parque Nacional do Iona Ã© uma referÃªncia importante para a conservaÃ§Ã£o da biodiversidade e dos ecossistemas Ã¡ridos."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© predominantemente Ã¡rido e semiÃ¡rido, com precipitaÃ§Ã£o reduzida e irregular.",
+        "Os rios e sistemas de rega sÃ£o fundamentais para a agricultura. A eficiÃªncia hÃ­drica, a manutenÃ§Ã£o das infra-estruturas e o controlo da salinidade devem ser considerados."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "A agricultura irrigada pode apoiar a produÃ§Ã£o de hortÃ­colas, tomate, cebola, batata, milho em Ã¡reas adequadas, fruteiras e outras culturas.",
+        "As zonas agrÃ­colas dos vales devem ser avaliadas segundo a disponibilidade de Ã¡gua, a qualidade dos solos e a manutenÃ§Ã£o dos sistemas de rega.",
+        "A utilizaÃ§Ã£o de rega localizada, cobertura do solo e variedades adaptadas pode reduzir o consumo de Ã¡gua."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o extensiva de caprinos, ovinos e bovinos adaptados Ã s condiÃ§Ãµes Ã¡ridas tem importÃ¢ncia em diferentes comunidades.",
+        "A disponibilidade de Ã¡gua e pastagens, a suplementaÃ§Ã£o alimentar e a assistÃªncia veterinÃ¡ria sÃ£o fundamentais."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "A pesca marÃ­tima Ã© uma actividade de grande relevÃ¢ncia, associada ao litoral e Ã s comunidades piscatÃ³rias.",
+        "A cadeia de frio, o processamento, a conservaÃ§Ã£o, a seguranÃ§a alimentar e a organizaÃ§Ã£o dos operadores sÃ£o Ã¡reas essenciais para valorizar o pescado."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "Os ecossistemas Ã¡ridos e costeiros possuem espÃ©cies adaptadas a condiÃ§Ãµes ambientais extremas.",
+        "A Welwitschia mirabilis Ã© uma espÃ©cie emblemÃ¡tica da regiÃ£o. A conservaÃ§Ã£o dos habitats e o controlo das pressÃµes humanas sÃ£o importantes."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A pesca, o sal, a agricultura irrigada, a pecuÃ¡ria, o turismo, o comÃ©rcio e os transportes integram a economia provincial.",
+        "O processamento de pescado, a conservaÃ§Ã£o de hortÃ­colas, a transformaÃ§Ã£o de produtos pecuÃ¡rios e a logÃ­stica costeira sÃ£o oportunidades."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A escassez de Ã¡gua, a salinidade, a desertificaÃ§Ã£o e a vulnerabilidade das pastagens sÃ£o desafios centrais.",
+        "A investigaÃ§Ã£o deverÃ¡ apoiar agricultura de precisÃ£o hÃ­drica, gestÃ£o de solos Ã¡ridos, pecuÃ¡ria adaptada, pesca sustentÃ¡vel e conservaÃ§Ã£o da biodiversidade."
+      ]}
+    ]
+  },
+
+  uige: {
+    capital: "UÃ­ge",
+    populacao: "2 017 921 habitantes",
+    perfil: "CafÃ©, mandioca, banana, agricultura familiar e florestas.",
+    enquadramento:
+      "O UÃ­ge possui condiÃ§Ãµes tropicais favorÃ¡veis a vÃ¡rias culturas alimentares e permanentes. A cafeicultura constitui uma referÃªncia histÃ³rica e uma oportunidade para a valorizaÃ§Ã£o da produÃ§Ã£o agrÃ­cola.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia apresenta planaltos, vales, encostas e Ã¡reas de vegetaÃ§Ã£o tropical.",
+        "A diversidade do relevo influencia a distribuiÃ§Ã£o da chuva, a conservaÃ§Ã£o dos solos e a escolha das culturas."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© tropical, com estaÃ§Ã£o chuvosa e estaÃ§Ã£o seca. A precipitaÃ§Ã£o favorece culturas permanentes e alimentares em Ã¡reas adequadas.",
+        "A conservaÃ§Ã£o das nascentes, das margens dos rios e das zonas florestais Ã© importante para a estabilidade dos recursos hÃ­dricos."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "CafÃ© robusta, mandioca, milho, arroz em zonas apropriadas, feijÃ£o, banana, amendoim, citrinos, dendÃ©m e hortÃ­colas sÃ£o culturas de interesse.",
+        "A recuperaÃ§Ã£o da cafeicultura deve incluir viveiros, mudas de qualidade, selecÃ§Ã£o de variedades, boas prÃ¡ticas de poda, controlo fitossanitÃ¡rio e melhoria da pÃ³s-colheita.",
+        "A mandioca e a banana sÃ£o importantes para a alimentaÃ§Ã£o e podem ser valorizadas atravÃ©s de transformaÃ§Ã£o e comercializaÃ§Ã£o organizada."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de aves, suÃ­nos, caprinos e bovinos pode complementar os rendimentos agrÃ­colas.",
+        "A alimentaÃ§Ã£o animal, a sanidade, as instalaÃ§Ãµes e a assistÃªncia veterinÃ¡ria sÃ£o Ã¡reas importantes."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "Os rios e outros recursos hÃ­dricos permitem actividades de pesca continental.",
+        "A aquicultura pode ser desenvolvida em locais adequados, com acompanhamento da qualidade da Ã¡gua e da alimentaÃ§Ã£o dos peixes."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As formaÃ§Ãµes florestais tropicais tÃªm importÃ¢ncia para a conservaÃ§Ã£o da biodiversidade e a protecÃ§Ã£o dos solos.",
+        "A exploraÃ§Ã£o sustentÃ¡vel dos recursos florestais e a prevenÃ§Ã£o de queimadas sÃ£o essenciais."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "Agricultura, comÃ©rcio, pecuÃ¡ria, serviÃ§os e actividades ligadas ao cafÃ© integram a economia provincial.",
+        "O beneficiamento do cafÃ©, a transformaÃ§Ã£o da mandioca, a secagem de frutas e a produÃ§Ã£o de alimentos podem aumentar o valor acrescentado."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A produtividade agrÃ­cola, o envelhecimento de algumas plantaÃ§Ãµes, o acesso a mudas, o transporte e a transformaÃ§Ã£o local sÃ£o desafios importantes.",
+        "A investigaÃ§Ã£o deve dar prioridade ao cafÃ© robusta, mandioca, fruticultura, fertilidade dos solos e sistemas agroflorestais."
+      ]}
+    ]
+  },
+
+  zaire: {
+    capital: "Mbanza Kongo",
+    populacao: "682 658 habitantes",
+    perfil: "Agricultura, pesca, petrÃ³leo, gÃ¡s e recursos costeiros.",
+    enquadramento:
+      "O Zaire possui uma localizaÃ§Ã£o estratÃ©gica no norte de Angola, com litoral atlÃ¢ntico, rios e fronteira com a RepÃºblica DemocrÃ¡tica do Congo. A agricultura, a pesca e a agro-indÃºstria podem complementar a actividade petrolÃ­fera e comercial.",
+    secoes: [
+      { titulo: "Geografia e territÃ³rio", conteudo: [
+        "A provÃ­ncia combina litoral, planaltos, vales fluviais e Ã¡reas de vegetaÃ§Ã£o natural.",
+        "O rio Congo e outros cursos de Ã¡gua sÃ£o importantes para a pesca, o transporte, a agricultura e a conservaÃ§Ã£o ambiental."
+      ]},
+      { titulo: "Clima e recursos hÃ­dricos", conteudo: [
+        "O clima Ã© tropical, com variaÃ§Ãµes locais de precipitaÃ§Ã£o e temperatura.",
+        "A gestÃ£o da Ã¡gua deve considerar a agricultura, as comunidades, a pesca e as actividades econÃ³micas que podem exercer pressÃ£o sobre os ecossistemas."
+      ]},
+      { titulo: "Agricultura e culturas", conteudo: [
+        "Mandioca, milho, arroz em zonas adequadas, batata-doce, feijÃ£o, banana, ananÃ¡s, caju, citrinos, cafÃ© robusta e dendÃ©m sÃ£o culturas de interesse.",
+        "O ananÃ¡s e o caju apresentam oportunidades de valorizaÃ§Ã£o atravÃ©s de viveiros, boas prÃ¡ticas de cultivo, selecÃ§Ã£o, embalagem e transformaÃ§Ã£o.",
+        "A mandioca pode ser valorizada atravÃ©s da produÃ§Ã£o de farinha, fuba e outros derivados."
+      ]},
+      { titulo: "PecuÃ¡ria", conteudo: [
+        "A criaÃ§Ã£o de bovinos, caprinos, suÃ­nos e aves pode complementar os sistemas agrÃ­colas.",
+        "A sanidade, a alimentaÃ§Ã£o animal e a disponibilidade de serviÃ§os veterinÃ¡rios sÃ£o fundamentais para melhorar a produtividade."
+      ]},
+      { titulo: "Pesca e aquicultura", conteudo: [
+        "O litoral atlÃ¢ntico e os recursos fluviais permitem actividades de pesca marÃ­tima e continental.",
+        "A conservaÃ§Ã£o, o transporte, o processamento e a organizaÃ§Ã£o das cooperativas sÃ£o importantes para valorizar o pescado."
+      ]},
+      { titulo: "Florestas e biodiversidade", conteudo: [
+        "As formaÃ§Ãµes naturais e as Ã¡reas florestais tÃªm importÃ¢ncia ecolÃ³gica e econÃ³mica.",
+        "A gestÃ£o sustentÃ¡vel da madeira, a protecÃ§Ã£o das margens dos rios e a prevenÃ§Ã£o da degradaÃ§Ã£o ambiental devem ser acompanhadas."
+      ]},
+      { titulo: "Economia e agro-indÃºstria", conteudo: [
+        "A economia integra petrÃ³leo e gÃ¡s, pesca, agricultura, comÃ©rcio, transportes e serviÃ§os.",
+        "O desenvolvimento de unidades de transformaÃ§Ã£o de ananÃ¡s, caju, mandioca e pescado pode diversificar as actividades econÃ³micas."
+      ]},
+      { titulo: "Desafios e prioridades de investigaÃ§Ã£o", conteudo: [
+        "A melhoria das infra-estruturas rurais, a transformaÃ§Ã£o local, o acesso aos mercados e a conservaÃ§Ã£o ambiental sÃ£o desafios relevantes.",
+        "A investigaÃ§Ã£o poderÃ¡ apoiar a fruticultura, a produÃ§Ã£o de mandioca, a pesca sustentÃ¡vel, a aquicultura e a valorizaÃ§Ã£o agro-industrial."
+      ]}
+    ]
+  }
+};
+
+const populacoes: Record<string, string> = {
+  "Bengo": "716 335",
+  "Benguela": "2 597 638",
+  "BiÃ©": "2 264 874",
+  "Cabinda": "903 370",
+  "Cuando": "138 770",
+  "Cubango": "570 447",
+  "Cuanza Norte": "659 097",
+  "Cuanza Sul": "2 327 981",
+  "Cunene": "1 806 417",
+  "Huambo": "2 691 902",
+  "HuÃ­la": "3 302 866",
+  "Icolo e Bengo": "1 523 457",
+  "Luanda": "8 665 510",
+  "Lunda Norte": "1 742 217",
+  "Lunda Sul": "893 936",
+  "Malanje": "1 298 250",
+  "Moxico": "574 253",
+  "Moxico Leste": "411 074",
+  "Namibe": "815 708",
+  "UÃ­ge": "2 017 921",
+  "Zaire": "682 658"
+};
+
+const separadores = [
+  "VisÃ£o geral",
+  "Geografia",
+  "Clima e Ã¡gua",
+  "Agricultura",
+  "PecuÃ¡ria",
+  "Pesca",
+  "Florestas",
+  "Economia",
+  "InvestigaÃ§Ã£o"
+];
+
+export default function ProvinciasPage() {
+  const [provinciaSelecionada, setProvinciaSelecionada] = useState<string | null>(null);
+  const [separador, setSeparador] = useState("VisÃ£o geral");
+
+  const provincia = provincias.find((p) => p.nome === provinciaSelecionada);
+  const slugSelecionado = provinciaSelecionada
+    ? provinciaSelecionada.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, "-")
+    : "";
+
+  const ficha = fichas[slugSelecionado];
+
+  function abrirProvincia(nome: string) {
+    setProvinciaSelecionada(nome);
+    setSeparador("VisÃ£o geral");
+  }
+
+  function fecharProvincia() {
+    setProvinciaSelecionada(null);
+  }
+
+  const conteudoSelecionado = ficha?.secoes.find((secao) => {
+    const correspondencia: Record<string, string> = {
+      "Geografia": "Geografia e territÃ³rio",
+      "Clima e Ã¡gua": "Clima e recursos hÃ­dricos",
+      "Agricultura": "Agricultura e culturas",
+      "PecuÃ¡ria": "PecuÃ¡ria",
+      "Pesca": "Pesca e aquicultura",
+      "Florestas": "Florestas e biodiversidade",
+      "Economia": "Economia e agro-indÃºstria",
+      "InvestigaÃ§Ã£o": "Desafios e prioridades de investigaÃ§Ã£o"
+    };
+
+    return secao.titulo === correspondencia[separador];
+  });
+
+  return (
+    <main className="min-h-screen bg-[#f1f5f1] text-[#17221b]">
+      <header className="relative overflow-hidden bg-gradient-to-r from-green-950 via-green-900 to-emerald-800 text-white">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute -right-20 -top-28 h-96 w-96 rounded-full border-[45px] border-green-300" />
+          <div className="absolute -bottom-48 right-1/4 h-96 w-96 rounded-full border-[35px] border-lime-300" />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-5 py-5">
+          <nav className="flex flex-wrap items-center justify-between gap-4 border-b border-white/15 pb-5">
+            <Link href="/" className="text-2xl font-black tracking-tight">
+              AGROINOVA <span className="text-lime-300">ANGOLA</span>
+            </Link>
+
+            <div className="flex flex-wrap gap-3 text-sm font-semibold md:gap-6">
+              <Link href="/" className="hover:text-lime-300">InÃ­cio</Link>
+              <Link href="/mapa" className="hover:text-lime-300">Mapa AgrÃ­cola</Link>
+              <Link href="/provincias" className="text-lime-300">ProvÃ­ncias</Link>
+              <Link href="/dados" className="hover:text-lime-300">Dados</Link>
+            </div>
+          </nav>
+
+          <div className="grid items-center gap-8 py-12 md:grid-cols-[1.2fr_0.8fr] md:py-16">
+            <div>
+              <span className="inline-flex rounded-full bg-lime-400/20 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-lime-200">
+                TerritÃ³rio â€¢ Conhecimento â€¢ InovaÃ§Ã£o
+              </span>
+
+              <h1 className="mt-5 text-4xl font-black leading-tight md:text-6xl">
+                ProvÃ­ncias de <span className="text-lime-300">Angola</span>
+              </h1>
+
+              <p className="mt-5 max-w-2xl text-base leading-8 text-green-50 md:text-lg">
+                Explore as 21 provÃ­ncias de Angola atravÃ©s de informaÃ§Ã£o
+                territorial, demogrÃ¡fica, agrÃ­cola, pecuÃ¡ria, ambiental e econÃ³mica.
+              </p>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a href="#lista-provincias" className="rounded-xl bg-lime-400 px-6 py-3 font-bold text-green-950 shadow-lg transition hover:bg-lime-300">
+                  Explorar provÃ­ncias â†“
+                </a>
+                <Link href="/mapa" className="rounded-xl border border-white/40 px-6 py-3 font-bold text-white transition hover:bg-white/10">
+                  Abrir mapa agrÃ­cola
+                </Link>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-white/20 bg-white/10 p-3 shadow-2xl backdrop-blur-sm">
+              <img
+                src="https://images.openai.com/static-rsc-4/WH-K_92qscj6iw2iUJQBijxVKnmsZdnnqtmYpqmE8hj4Cj3VlGzE_g6rSaZAOkTd9kjSiemrbc9QufbIlFk8a3bJVNFSWtaNDSoSx6xq-dnGXdafHpr4_AoKhKB9GA9dALnYnR0q2_07uKqEdNhIA6mWeRMwWFtmdvv7r3JYkyhDwjwF9fhOa1bUY_I_a7YN?purpose=fullsize"
+                alt="Paisagem agrÃ­cola e campos verdes de Angola"
+                className="h-64 w-full rounded-2xl object-cover md:h-80"
+              />
+
+              <div className="flex items-center justify-between gap-3 px-3 py-4">
+                <div>
+                  <p className="text-lg font-bold">Conhecimento territorial</p>
+                  <p className="mt-1 text-sm text-green-100">Agricultura, pecuÃ¡ria e recursos naturais</p>
+                </div>
+                <div className="rounded-xl bg-lime-400 px-4 py-3 text-center text-green-950">
+                  <strong className="block text-2xl">21</strong>
+                  <span className="text-xs font-bold">ProvÃ­ncias</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section id="lista-provincias" className="mx-auto max-w-7xl px-5 py-12 md:py-16">
+        <div className="mb-8">
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-green-700">
+            ExploraÃ§Ã£o territorial
+          </p>
+          <h2 className="mt-2 text-3xl font-black text-green-950 md:text-4xl">
+            ConheÃ§a cada provÃ­ncia
+          </h2>
+          <p className="mt-3 max-w-3xl leading-7 text-slate-600">
+            Seleccione uma provÃ­ncia para consultar a sua ficha territorial,
+            caracterÃ­sticas naturais, actividades produtivas, oportunidades
+            econÃ³micas e prioridades de investigaÃ§Ã£o.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {provincias.map((item, indice) => {
+            const slug = item.nome
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replace(/\s+/g, "-");
+
+            return (
+              <article
+                key={item.nome}
+                className="group overflow-hidden rounded-2xl border border-white bg-white shadow-[0_8px_25px_rgba(15,60,30,0.09)] transition duration-300 hover:-translate-y-2 hover:shadow-[0_18px_38px_rgba(15,60,30,0.2)]"
+              >
+                <div className="relative h-52 overflow-hidden">
+                  <img
+                    src={item.imagem}
+                    alt={`Paisagem ilustrativa de ${item.nome}`}
+                    loading={indice < 4 ? "eager" : "lazy"}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                  />
+
+                  <div className={`absolute inset-0 bg-gradient-to-t ${item.cor} via-black/25 to-transparent`} />
+
+                  <span className="absolute left-4 top-4 rounded-full border border-white/30 bg-black/25 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md">
+                    ProvÃ­ncia {String(indice + 1).padStart(2, "0")}
+                  </span>
+
+                  <h3 className="absolute bottom-4 left-5 text-2xl font-black text-white drop-shadow-lg">
+                    {item.nome}
+                  </h3>
+                </div>
+
+                <div className="p-5">
+                  <p className="min-h-[52px] text-sm leading-6 text-slate-600">
+                    {item.descricao}
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={() => abrirProvincia(item.nome)}
+                    className="mt-5 flex w-full items-center justify-between rounded-xl bg-green-50 px-4 py-3 text-left font-bold text-green-900 transition hover:bg-green-800 hover:text-white"
+                  >
+                    <span>Explorar provÃ­ncia</span>
+                    <span aria-hidden="true">â†’</span>
+                  </button>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="mt-12 rounded-3xl bg-gradient-to-r from-green-900 to-emerald-800 p-7 text-white shadow-xl md:flex md:items-center md:justify-between md:gap-8 md:p-10">
+          <div>
+            <h2 className="text-2xl font-black md:text-3xl">
+              Explore Angola atravÃ©s dos dados
+            </h2>
+            <p className="mt-3 max-w-2xl leading-7 text-green-100">
+              Consulte o mapa agrÃ­cola e acompanhe a informaÃ§Ã£o territorial,
+              produtiva e ambiental disponibilizada pela AGROINOVA.
+            </p>
+          </div>
+
+          <Link href="/mapa" className="mt-6 inline-flex shrink-0 rounded-xl bg-lime-400 px-6 py-3 font-bold text-green-950 transition hover:bg-lime-300 md:mt-0">
+            Ir para o mapa â†’
+          </Link>
+        </div>
+      </section>
+
+      <footer className="bg-green-950 px-5 py-7 text-center text-sm text-green-100">
+        <p className="font-bold tracking-wide">AGROINOVA ANGOLA</p>
+        <p className="mt-2">Conhecimento, Tecnologia e InovaÃ§Ã£o ao ServiÃ§o do Campo Angolano.</p>
+      </footer>
+
+      {provinciaSelecionada && provincia && ficha && (
+        <div
+          className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-black/75 p-3 backdrop-blur-sm md:p-6"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) fecharProvincia();
+          }}
+        >
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-ficha-provincia"
+            className="my-3 w-full max-w-6xl overflow-hidden rounded-3xl bg-[#f7faf7] shadow-2xl md:my-8"
+          >
+            <div className="relative h-64 overflow-hidden md:h-80">
+              <img
+                src={provincia.imagem}
+                alt={`Paisagem de ${provinciaSelecionada}`}
+                className="h-full w-full object-cover"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-green-950 via-green-950/45 to-black/10" />
+
+              <button
+                type="button"
+                onClick={fecharProvincia}
+                aria-label="Fechar ficha da provÃ­ncia"
+                className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full border border-white/40 bg-black/40 text-2xl text-white transition hover:bg-white hover:text-green-950"
+              >
+                Ã—
+              </button>
+
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:p-9">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-lime-300">
+                  Ficha territorial AGROINOVA
+                </p>
+                <h2 id="titulo-ficha-provincia" className="mt-2 text-4xl font-black md:text-5xl">
+                  {provinciaSelecionada}
+                </h2>
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-green-50 md:text-base">
+                  {ficha.perfil}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-4 border-b border-green-100 bg-white p-5 sm:grid-cols-3 md:p-7">
+              <div className="rounded-xl bg-green-50 p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-green-700">Capital provincial</p>
+                <p className="mt-2 text-lg font-black text-green-950">{ficha.capital}</p>
+              </div>
+
+              <div className="rounded-xl bg-green-50 p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-green-700">PopulaÃ§Ã£o â€” Censo 2024</p>
+                <p className="mt-2 text-lg font-black text-green-950">
+                  {populacoes[provinciaSelecionada] || ficha.populacao}
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-green-50 p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-green-700">Ãrea de conhecimento</p>
+                <p className="mt-2 text-lg font-black text-green-950">Desenvolvimento territorial</p>
+              </div>
+            </div>
+
+            <div className="sticky top-0 z-10 border-b border-green-100 bg-white px-4 py-3">
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {separadores.map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => setSeparador(item)}
+                    className={`shrink-0 rounded-full px-4 py-2 text-sm font-bold transition ${
+                      separador === item
+                        ? "bg-green-800 text-white"
+                        : "bg-green-50 text-green-900 hover:bg-green-100"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-5 md:p-8">
+              {separador === "VisÃ£o geral" ? (
+                <div className="space-y-7">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-green-700">
+                      Enquadramento provincial
+                    </p>
+                    <h3 className="mt-2 text-2xl font-black text-green-950">
+                      Conhecer o territÃ³rio
+                    </h3>
+                    <p className="mt-4 text-base leading-8 text-slate-700">
+                      {ficha.enquadramento}
+                    </p>
+                  </div>
+
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+                      <img
+                        src={provincia.imagem}
+                        alt={`Paisagem e territÃ³rio de ${provinciaSelecionada}`}
+                        className="h-56 w-full object-cover"
+                      />
+                      <div className="p-4">
+                        <h4 className="font-black text-green-950">Paisagem provincial</h4>
+                        <p className="mt-2 text-sm leading-6 text-slate-600">
+                          Imagem de referÃªncia visual do territÃ³rio. A paisagem
+                          apresentada Ã© ilustrativa e nÃ£o substitui cartografia
+                          ou levantamento geogrÃ¡fico oficial.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl border border-green-100 bg-white p-5">
+                      <h4 className="text-lg font-black text-green-950">
+                        Perfil de desenvolvimento
+                      </h4>
+                      <p className="mt-3 leading-7 text-slate-700">
+                        {ficha.perfil}
+                      </p>
+                      <div className="mt-5 border-t border-green-100 pt-4">
+                        <p className="text-sm font-bold text-green-800">
+                          Ãreas a acompanhar
+                        </p>
+                        <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
+                          <li>â€¢ ProduÃ§Ã£o agrÃ­cola e seguranÃ§a alimentar</li>
+                          <li>â€¢ PecuÃ¡ria e saÃºde animal</li>
+                          <li>â€¢ Recursos naturais e ambiente</li>
+                          <li>â€¢ Infra-estruturas e mercados</li>
+                          <li>â€¢ InvestigaÃ§Ã£o e inovaÃ§Ã£o tecnolÃ³gica</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-green-950 p-6 text-white">
+                    <h4 className="text-xl font-black">Objectivo da ficha provincial</h4>
+                    <p className="mt-3 leading-7 text-green-50">
+                      Reunir conhecimento territorial, produtivo, ambiental e
+                      econÃ³mico para apoiar agricultores, tÃ©cnicos, investigadores,
+                      instituiÃ§Ãµes pÃºblicas, investidores e agentes da cadeia
+                      agroalimentar.
+                    </p>
+                  </div>
+                </div>
+              ) : conteudoSelecionado ? (
+                <article className="max-w-4xl">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-green-700">
+                    {provinciaSelecionada} â€¢ Conhecimento provincial
+                  </p>
+                  <h3 className="mt-2 text-3xl font-black text-green-950">
+                    {conteudoSelecionado.titulo}
+                  </h3>
+
+                  <div className="mt-6 space-y-5">
+                    {conteudoSelecionado.conteudo.map((paragrafo, index) => (
+                      <p key={index} className="text-base leading-8 text-slate-700">
+                        {paragrafo}
+                      </p>
+                    ))}
+                  </div>
+
+                  <div className="mt-8 overflow-hidden rounded-2xl bg-white shadow-sm">
+                    <img
+                      src={provincia.imagem}
+                      alt={`Imagem ilustrativa de ${conteudoSelecionado.titulo.toLowerCase()} em ${provinciaSelecionada}`}
+                      className="h-64 w-full object-cover"
+                    />
+                    <div className="p-4">
+                      <h4 className="font-bold text-green-950">
+                        {conteudoSelecionado.titulo} â€” {provinciaSelecionada}
+                      </h4>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">
+                        Imagem ilustrativa para contextualizaÃ§Ã£o da secÃ§Ã£o.
+                        A identificaÃ§Ã£o de culturas, espÃ©cies, infra-estruturas
+                        ou locais especÃ­ficos requer fotografia documental
+                        devidamente identificada.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              ) : (
+                <p className="py-10 text-center text-slate-600">
+                  InformaÃ§Ã£o desta secÃ§Ã£o em preparaÃ§Ã£o.
+                </p>
+              )}
+
+              <div className="mt-10 border-t border-green-100 pt-6">
+                <h4 className="font-black text-green-950">Fontes e enquadramento dos dados</h4>
+                <p className="mt-2 text-sm leading-7 text-slate-600">
+                  PopulaÃ§Ã£o: Recenseamento Geral da PopulaÃ§Ã£o e HabitaÃ§Ã£o de
+                  Angola 2024, Instituto Nacional de EstatÃ­stica (INE). As
+                  descriÃ§Ãµes sectoriais desta ficha representam enquadramento
+                  territorial e potencial produtivo; nÃ£o devem ser interpretadas
+                  como estatÃ­sticas de produÃ§Ã£o provincial sem confirmaÃ§Ã£o em
+                  fontes sectoriais oficiais.
+                </p>
+
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <a
+                    href="https://censo2024.ine.gov.ao/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-lg border border-green-200 px-4 py-2 text-sm font-bold text-green-900 hover:bg-green-50"
+                  >
+                    Consultar Censo 2024 â†—
+                  </a>
+                  <a
+                    href="https://www.ine.gov.ao/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-lg border border-green-200 px-4 py-2 text-sm font-bold text-green-900 hover:bg-green-50"
+                  >
+                    Portal do INE â†—
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-green-100 bg-white px-5 py-4 md:px-8">
+              <p className="text-xs text-slate-500">
+                AGROINOVA ANGOLA â€¢ Conhecimento, Tecnologia e InovaÃ§Ã£o
+              </p>
+              <button
+                type="button"
+                onClick={fecharProvincia}
+                className="rounded-xl bg-green-800 px-5 py-3 text-sm font-bold text-white transition hover:bg-green-950"
+              >
+                Fechar ficha
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
+    </main>
+  );
+}
+

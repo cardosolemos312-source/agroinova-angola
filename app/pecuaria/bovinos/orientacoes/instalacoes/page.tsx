@@ -56,16 +56,16 @@ const sistemas = [
   {
     titulo: "Criação semi-intensiva",
     descricao:
-      "Combina o aproveitamento da pastagem com períodos de permanência em instalações onde os animais podem receber suplementação, água, minerais e cuidados de manejo.",
+      "Combina o aproveitamento da pastagem com períodos de permanência em instalações onde os animais podem receber suplementação, água, minerais e cuidados de maneio.",
     pontos: [
       "Área de pastagem organizada.",
-      "Curral para manejo.",
+      "Curral para maneio.",
       "Comedouros e bebedouros.",
       "Zona de sombra.",
       "Local para armazenamento de alimentos.",
     ],
     imagem:
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Cattle_in_pasture.jpg?width=1400",
+      "https://images.openai.com/static-rsc-4/GoPYshfeVhG0sbzR3TWVjOLsk2bff0EHjwJ0SJxdlFEleKkwPtTrEisti371OkNUqlIA_nFvBoKgr1dwe-JXuyNv0Mv3Rr97Wa4osvx59MZi6WF9yJ9TzLd_E_QKWjjLd-m0qKf1vLAP9k_Y3k1q1KsaPrG2l-yeODUmb1JY0XYCUUDZ27ayjOD9Z5otFMNN?purpose=fullsize",
   },
   {
     titulo: "Criação intensiva",
@@ -79,7 +79,7 @@ const sistemas = [
       "Manejo adequado dos dejetos.",
     ],
     imagem:
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Cattle_feedlot.jpg?width=1400",
+      "https://images.openai.com/static-rsc-4/XBNOF8ttKPfZ05-V2kBpjbf5QCuGUoQmDQcb7eWZVdzRkfWrO-f4-hy5chuFgUujsBrFSx76OuHCzg51S6wZeDPSMmEdwaTVC_w-ZNbyk4REdDb0ZpCsvO_kMNLbTYYDBk-lOT9GKpSEUqt6rWgTLdqsHBvzoT_yCkCrOnedIOdyE4foA7ne4zXskLyUdU4e?purpose=fullsize",
   },
 ];
 
@@ -264,7 +264,7 @@ export default async function InstalacoesPage({
 
             <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/10 shadow-2xl">
               <img
-                src="https://commons.wikimedia.org/wiki/Special:FilePath/Cattle_shed.jpg?width=1400"
+                src="https://images.openai.com/static-rsc-4/XA7gi7Ir5PbI8Zh9A4vI9G4bSTIOXEmvMJ9XCxqD2JL2m0mdm_R4V4Nmi8gvDPVAYqIYwaC2-0vGXgi4k2EKp3fa9LTdMY5F7f4oBLCzatNSofa3HkWTXTppjwLlq7aYCgyCX0QC8rNh8eSx3fwnLlo81Hg0bql2D4c9z-5tr_yf-encguEGf_n3a60hh9Lq?purpose=fullsize"
                 alt="Instalações para criação de bovinos"
                 className="h-[320px] w-full object-cover"
               />

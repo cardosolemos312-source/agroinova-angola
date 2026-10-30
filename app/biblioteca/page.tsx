@@ -20,29 +20,29 @@ type Publicacao = {
 
 const imagens = {
   milho:
-    "https://images.unsplash.com/photo-1601593768792-4d5c1b3e9b6d?auto=format&fit=crop&w=1400&q=85",
+    "https://images.openai.com/static-rsc-4/S8jdqyRLBcvCncxFdqgC4DqFnGzWfh-FsmSiR22fACxwLNVLk3mmpeNu2BobyzTXo6NnWDdrAlHp2lOhfxykyLOb46zcrj0aJyTTd5BDjyx0vCLevRX3A-L3CWB41BtdRHxIAOdxdvITlumGXimNmhRFdWWZCfab_-KR1fId4sIiOCw30E2syX0iq2iP5GAO?purpose=fullsize",
   campo:
-    "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1400&q=85",
+    "https://images.openai.com/static-rsc-4/spkKnH9xk9vYI4WrDpXCLLfO5lWrfxje0ZvJvZ9rDFm9L2iUFcsdUohagaZBE0mj4PbGcoE09kfvD475r-TpZ35RgfO9IOoK0sFXAEogNWHaS6DAGd7N96YLutzKYLC3vSe5hoCh1QB-PckpiHsY_agtL9xnv_s4wPIURa27vyg?purpose=inline",
   horta:
-    "https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=1000&q=85",
+    "https://images.openai.com/static-rsc-4/38Wh-2eYd_r2jD2AmD_c9wwPVkSEFRbZrkVmflBG2WQ-rRjBdifk6kWbF_aJtwesm_M_7MY7S7M4iV11TIer8qVZPZLzLEFsxDDeYhr7l-LNbJ4VQ_h0090rmMMAch7D_pjCjPFrIlsupO97zojH7Gfaaoack8rdTlZKK5ZwkNk?purpose=inline",
   solo:
-    "https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?auto=format&fit=crop&w=1000&q=85",
+    "https://images.openai.com/static-rsc-4/8YDBaaf_gQbE13Qdo8uTegxOZ_bdrTclRK0lMF-9NVqUIul1S6xsVhBaHj1VIHf-Ba0ZYJBUDf-Hw6q4mjHA1ElnsiJabpGevBuvw9fh4X9y9ic7OQq_hw4znGHdmSOJ7lTi57nViXiw5Q6kBuNcw2HiT2KcJA7p2i--b_gWmqrG5sbNHfC-lQFxdyEihOOQ?purpose=fullsize",
   pecuaria:
-    "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1000&q=85",
+    "https://images.openai.com/static-rsc-4/vg8QKH_n5wVOJxlSVFKo_jOpid6lZLRPpzBOsmMbw8m1U2b2bf7eC8Xkcrodi9cqr3HOMnUey9MMWRwnGd9BGpGA0QWF1balEVOsIBjEaW7H11fSzyU7K8t9OPn8hVl1ttmgM8AJy58wOEanS_elVynorZjK8aeyuTrJvyuW5onfKoSvBKC3o3wHh1UfQ2iO?purpose=fullsize",
   floresta:
-    "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1000&q=85",
+    "https://images.openai.com/static-rsc-4/iEe7EDO-OhuW0NfpoNHssJ7tHZ2yxcGNWynVYieoLGa3RrIYMmicAXSHdOFD1cQQG_upXfwR2lEPZVDZUMbeOl87jU8-kTstGysJHYTKq97bzjH2dIeuC4irICZpzEKnvEBFD_qs0sPPsds5y2_rzxntbNm2Kj95DRCKgxhNDnAxYT3W1AraTTRbdiKpVd-r?purpose=fullsize",
   pesca:
-    "https://images.unsplash.com/photo-1510130387422-82bed34b37e9?auto=format&fit=crop&w=1000&q=85",
+    "https://images.openai.com/static-rsc-4/PSOSL1ah1IcQvvuZctWERo6Fbv6K6UVJmDsuUXzqLLvacAwdFXUrqSPeee4amiudWPy-p9b8nf1RBh2sWBhPHaHsCG01vv18pRCiQb9ElCUEGPThvcFoW5cCRVq_56Bc9TKlSQO1MKXU8wg9eDQJogWzBPT5_th48yIyV-XOV7w?purpose=inline",
   cafe:
-    "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=1000&q=85",
+    "https://images.openai.com/static-rsc-4/kCL8gmsTru5-1lAQjgrZVOFaGEd-8uTqqLP14glrrRDx-8SmGYTXNA3tHlvK-wTX6Uo-IuzLkEdeFWjXxTrDru8EW2cY0VjRsXyafovgD3KI8MQGt22mGIEOmGU-9qivm57S2f1-GnINC0lK2C-GSIkctZ2O29apFsw6JKLrMyLb-HJfaPf9fxSE1s7d9oE7?purpose=fullsize",
   mandioca:
-    "https://www.finagro.com.co/sites/default/files/2023-08/MicrosoftTeams-image%20%288%29.png",
+    "https://images.openai.com/static-rsc-4/9VTQZgkEPNrh04bJo8O5UDl_wb1fUlk181QObgac6z49N41RWQwW49P3NVPwQJec7JYdSF1MJ9dqQONX4OIj3SWwcztm8AW4SMxWAZY_Cychu92sXpNUWIGTGFb4dG0gEPtnojK_bomiSwDqRBBTK9g5lRg85s9qWsweognVv2QwZIJlJoHFMe4tjd29mNvb?purpose=fullsize",
   avicultura:
     "https://dancyu.jp/images/9801b.jpg",
   apicultura:
     "https://commons.wikimedia.org/wiki/Special:FilePath/Western_Honey_Bees_and_Honeycomb_Closeup.JPG?width=1200",
   bovinos:
-    "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1000&q=85",
+    "https://images.openai.com/static-rsc-4/4BWZsLdtxteeszhSIi5sayQnrqF23ahaX11iBkje0dKp_S9KOfH99trYNE6AI8dENILOS0YFD1Qy-1900PjVYOVU0dLTq-olRqmERfMZVIrdIyuuADwPXF5h-mMptqGUkGl2uan5XI3uXDiSAh4eh2TOWtVh0pF6lqShbyNcwZGKga3uRRXPBjwYZrbg1haY?purpose=fullsize",
 };
 
 const publicacoes: Publicacao[] = [
