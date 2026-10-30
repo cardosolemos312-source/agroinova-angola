@@ -303,7 +303,7 @@ const tecnologias: Tecnologia[] = [
     categoria: "Alfaias e preparação do solo",
     subtitulo: "Controlar vegetação e preparar a camada superficial.",
     resumo: "Equipamentos para mobilização superficial, controlo mecânico de infestantes e manutenção entre linhas.",
-    imagem: "https://www.noli.es/148-atmn_large/cultivador-modelo-cg-85.jpg",
+    imagem: "https://images.openai.com/static-rsc-4/C3rqz8hV6Z004O3vckLqXJVBnSa9-vJO-NuWS0ZelAPrhSawetCy9YZV8i1umuAqu6cnHbCn1m4VhGxu8bM_vV4WO6DCthaM3Au9_2sNK1ImHbuo5S9f3W9H8SvhEubprjcUyoFLv0NbL4rkls9GGoh6NJAwoUWwNJgaa7JDqx_psaoAxtJlnrYuSRPB9MaR?purpose=fullsize",
     imagemAlt: "Cultivador mecânico de hastes e molas para mobilização e controlo mecânico de infestantes.",
     impacto: "Elevado em operações bem seleccionadas",
     investimento: "Baixo a médio",
