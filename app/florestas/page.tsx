@@ -49,7 +49,7 @@ const capitulos: Capitulo[] = [
       "Conheça a estrutura, a distribuição, a composição e a importância dos ecossistemas florestais de Angola.",
     conteudo: [
       "Uma floresta é um ecossistema complexo. Não é constituída apenas por árvores: inclui arbustos, plantas herbáceas, animais, fungos, microrganismos, solo, água e atmosfera. Todos estes elementos interagem e contribuem para o equilíbrio ecológico.",
-      "A distribuição das florestas depende de fatores como precipitação, temperatura, altitude, relevo, tipo de solo, disponibilidade de água e ocorrência de fogo. A ação humana também influencia a estrutura e a capacidade de regeneração dos ecossistemas.",
+      "A distribuição das florestas depende de factores como precipitação, temperatura, altitude, relevo, tipo de solo, disponibilidade de água e ocorrência de fogo. A ação humana também influencia a estrutura e a capacidade de regeneração dos ecossistemas.",
       "Em Angola, o Maiombe constitui uma das formações de floresta tropical húmida mais conhecidas. Apresenta elevada diversidade biológica e presta serviços importantes, como proteção do solo, regulação hídrica e armazenamento de carbono.",
       "O Miombo ocupa extensas áreas do território angolano. É uma formação de savana arborizada associada, entre outros géneros, a Brachystegia, Julbernardia e Isoberlinia. Tem importância ecológica, económica, alimentar e cultural para muitas comunidades.",
       "Também existem florestas de galeria, vegetação ripícola, formações costeiras, mangais e povoamentos plantados. Cada formação possui características próprias e exige uma abordagem de gestão adequada.",
