@@ -65,7 +65,7 @@ type Modal =
 const areas = areasInvestigacao as unknown as AreaUI[];
 
 const imagemHero =
-  "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=85";
+  "https://images.openai.com/static-rsc-4/FqYm9RX_Tu7uKZURnb3X0UaltRosHJUThMBWsBLYGWJC76IKFieay4Rjjvhy7pIn5pjW7A-Rd28zo4ukbfS5BPvkRNjn-rgGZg7mWXCOjaWOWWKz_btCnCWn_J-BauIS4Z5nPO7-6AAJsMamUE6TvIwpfqg33LVBJPZOxZWiN2NsAeFO58-qTI-V1JWEKSl6?purpose=fullsize";
 
 const POR_PAGINA = 12;
 
