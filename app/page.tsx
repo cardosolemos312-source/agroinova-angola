@@ -63,20 +63,13 @@ const areas: Area[] = [
 ];
 
 const resultados: ResultadoPesquisa[] = [
-  /* ÁREAS PRINCIPAIS */
   {
     titulo: "Agricultura",
     descricao:
       "Culturas, produção vegetal, solos, irrigação, pragas, doenças e boas práticas.",
     href: "/agricultura",
     categoria: "Agricultura",
-    palavras: [
-      "agricultura",
-      "culturas",
-      "produção vegetal",
-      "campo",
-      "lavoura",
-    ],
+    palavras: ["agricultura", "culturas", "produção vegetal", "campo", "lavoura"],
   },
   {
     titulo: "Pecuária",
@@ -84,13 +77,7 @@ const resultados: ResultadoPesquisa[] = [
       "Conhecimento técnico sobre produção animal, alimentação, instalações, reprodução e sanidade.",
     href: "/pecuaria",
     categoria: "Pecuária",
-    palavras: [
-      "pecuária",
-      "animais",
-      "gado",
-      "produção animal",
-      "criação",
-    ],
+    palavras: ["pecuária", "animais", "gado", "produção animal", "criação"],
   },
   {
     titulo: "Pesca",
@@ -98,13 +85,7 @@ const resultados: ResultadoPesquisa[] = [
       "Espécies aquáticas, pesca, aquacultura, conservação e produção.",
     href: "/pesca",
     categoria: "Pesca",
-    palavras: [
-      "pesca",
-      "peixes",
-      "aquacultura",
-      "mar",
-      "pescado",
-    ],
+    palavras: ["pesca", "peixes", "aquacultura", "mar", "pescado"],
   },
   {
     titulo: "Floresta",
@@ -112,14 +93,7 @@ const resultados: ResultadoPesquisa[] = [
       "Florestas, biodiversidade, conservação, recursos naturais e produção florestal.",
     href: "/florestas",
     categoria: "Floresta",
-    palavras: [
-      "floresta",
-      "florestas",
-      "silvicultura",
-      "árvores",
-      "biodiversidade",
-      "madeira",
-    ],
+    palavras: ["floresta", "florestas", "silvicultura", "árvores", "biodiversidade", "madeira"],
   },
   {
     titulo: "Investigação",
@@ -127,13 +101,7 @@ const resultados: ResultadoPesquisa[] = [
       "Áreas de investigação, estudos, pesquisas, artigos e conhecimento científico.",
     href: "/investigacao",
     categoria: "Investigação",
-    palavras: [
-      "investigação",
-      "pesquisa",
-      "estudo",
-      "ciência",
-      "artigos",
-    ],
+    palavras: ["investigação", "pesquisa", "estudo", "ciência", "artigos"],
   },
   {
     titulo: "Biblioteca Digital",
@@ -141,14 +109,7 @@ const resultados: ResultadoPesquisa[] = [
       "Livros, artigos, teses, dissertações, relatórios e documentos técnicos.",
     href: "/biblioteca",
     categoria: "Conhecimento",
-    palavras: [
-      "biblioteca",
-      "livros",
-      "artigos",
-      "teses",
-      "dissertações",
-      "relatórios",
-    ],
+    palavras: ["biblioteca", "livros", "artigos", "teses", "dissertações", "relatórios"],
   },
   {
     titulo: "Dados",
@@ -156,13 +117,7 @@ const resultados: ResultadoPesquisa[] = [
       "Indicadores agrícolas, pecuários, informação territorial e estatísticas oficiais.",
     href: "/dados",
     categoria: "Dados",
-    palavras: [
-      "dados",
-      "estatísticas",
-      "indicadores",
-      "INE",
-      "produção",
-    ],
+    palavras: ["dados", "estatísticas", "indicadores", "INE", "produção"],
   },
   {
     titulo: "Clima",
@@ -170,14 +125,7 @@ const resultados: ResultadoPesquisa[] = [
       "Informação climática, precipitação, temperatura, previsões e relação com a agricultura.",
     href: "/clima",
     categoria: "Clima",
-    palavras: [
-      "clima",
-      "chuva",
-      "precipitação",
-      "temperatura",
-      "previsão",
-      "seca",
-    ],
+    palavras: ["clima", "chuva", "precipitação", "temperatura", "previsão", "seca"],
   },
   {
     titulo: "Solos",
@@ -185,14 +133,7 @@ const resultados: ResultadoPesquisa[] = [
       "Informação sobre solos, propriedades, culturas, uso agrícola e conservação.",
     href: "/solos",
     categoria: "Solos",
-    palavras: [
-      "solo",
-      "solos",
-      "fertilidade",
-      "erosão",
-      "argila",
-      "areia",
-    ],
+    palavras: ["solo", "solos", "fertilidade", "erosão", "argila", "areia"],
   },
   {
     titulo: "Tecnologias",
@@ -200,15 +141,7 @@ const resultados: ResultadoPesquisa[] = [
       "Agricultura digital, mecanização, inteligência artificial, equipamentos e inovação.",
     href: "/tecnologias",
     categoria: "Tecnologia",
-    palavras: [
-      "tecnologia",
-      "tecnologias",
-      "drone",
-      "máquinas",
-      "mecanização",
-      "inteligência artificial",
-      "IA",
-    ],
+    palavras: ["tecnologia", "tecnologias", "drone", "máquinas", "mecanização", "inteligência artificial", "IA"],
   },
   {
     titulo: "Mapa",
@@ -216,13 +149,7 @@ const resultados: ResultadoPesquisa[] = [
       "Informação territorial e visualização geográfica relacionada com Angola.",
     href: "/mapa",
     categoria: "Território",
-    palavras: [
-      "mapa",
-      "províncias",
-      "território",
-      "geografia",
-      "localização",
-    ],
+    palavras: ["mapa", "províncias", "território", "geografia", "localização"],
   },
   {
     titulo: "Notícias",
@@ -230,351 +157,193 @@ const resultados: ResultadoPesquisa[] = [
       "Notícias, iniciativas, acontecimentos e informação do sector agropecuário.",
     href: "/noticias",
     categoria: "Informação",
-    palavras: [
-      "notícias",
-      "noticia",
-      "acontecimentos",
-      "actualidade",
-    ],
+    palavras: ["notícias", "noticia", "acontecimentos", "actualidade"],
   },
 
-  /* CULTURAS */
+  // CULTURAS
   {
     titulo: "Milho",
-    descricao:
-      "Informação sobre a cultura do milho, produção, maneio, solos e práticas agrícolas.",
+    descricao: "Informação sobre a cultura do milho, produção, maneio, solos e práticas agrícolas.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "milho",
-      "milho amarelo",
-      "milho branco",
-      "cereal",
-      "cereais",
-    ],
+    palavras: ["milho", "milho amarelo", "milho branco", "cereal", "cereais"],
   },
   {
     titulo: "Mandioca",
-    descricao:
-      "Informação sobre produção de mandioca, implantação, maneo e utilização.",
+    descricao: "Informação sobre produção de mandioca, implantação, maneio e utilização.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "mandioca",
-      "cassava",
-      "raiz",
-      "raízes",
-    ],
+    palavras: ["mandioca", "cassava", "raiz", "raízes"],
   },
   {
     titulo: "Feijão",
-    descricao:
-      "Informação sobre produção de feijão, maneio da cultura e principais cuidados.",
+    descricao: "Informação sobre produção de feijão, maneio da cultura e principais cuidados.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "feijão",
-      "feijao",
-      "leguminosa",
-      "leguminosas",
-    ],
+    palavras: ["feijão", "feijao", "leguminosa", "leguminosas"],
   },
   {
     titulo: "Soja",
-    descricao:
-      "Informação sobre produção de soja, maneio, fertilidade e práticas agrícolas.",
+    descricao: "Informação sobre produção de soja, maneio, fertilidade e práticas agrícolas.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "soja",
-      "leguminosa",
-      "oleaginosa",
-    ],
+    palavras: ["soja", "leguminosa", "oleaginosa"],
   },
   {
     titulo: "Arroz",
-    descricao:
-      "Informação sobre produção de arroz, água, solo, maneio e colheita.",
+    descricao: "Informação sobre produção de arroz, água, solo, maneio e colheita.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "arroz",
-      "cereal",
-      "irrigação",
-    ],
+    palavras: ["arroz", "cereal", "irrigação"],
   },
   {
     titulo: "Trigo",
-    descricao:
-      "Informação sobre a cultura do trigo e os principais aspectos do seu maneio.",
+    descricao: "Informação sobre a cultura do trigo e os principais aspectos do seu maneio.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "trigo",
-      "cereal",
-    ],
+    palavras: ["trigo", "cereal"],
   },
   {
     titulo: "Batata",
-    descricao:
-      "Informação sobre produção de batata, implantação, maneio e colheita.",
+    descricao: "Informação sobre produção de batata, implantação, maneio e colheita.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "batata",
-      "tubérculo",
-      "tubérculos",
-    ],
+    palavras: ["batata", "tubérculo", "tubérculos"],
   },
   {
     titulo: "Batata-doce",
-    descricao:
-      "Informação sobre produção de batata-doce e práticas de maneio.",
+    descricao: "Informação sobre produção de batata-doce e práticas de maneio.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "batata-doce",
-      "batata doce",
-      "tubérculo",
-    ],
+    palavras: ["batata-doce", "batata doce", "tubérculo"],
   },
   {
     titulo: "Tomate",
-    descricao:
-      "Informação sobre produção de tomate, irrigação, nutrição e proteção da cultura.",
+    descricao: "Informação sobre produção de tomate, irrigação, nutrição e protecção da cultura.",
     href: "/agricultura",
     categoria: "Hortícola",
-    palavras: [
-      "tomate",
-      "hortaliça",
-      "hortaliças",
-    ],
+    palavras: ["tomate", "hortaliça", "hortaliças"],
   },
   {
     titulo: "Cebola",
-    descricao:
-      "Informação sobre produção de cebola, maneio, irrigação e conservação.",
+    descricao: "Informação sobre produção de cebola, maneio, irrigação e conservação.",
     href: "/agricultura",
     categoria: "Hortícola",
-    palavras: [
-      "cebola",
-      "hortaliça",
-    ],
+    palavras: ["cebola", "hortaliça"],
   },
   {
     titulo: "Alface",
-    descricao:
-      "Informação sobre produção de alface e práticas de maneio hortícola.",
+    descricao: "Informação sobre produção de alface e práticas de maneio hortícola.",
     href: "/agricultura",
     categoria: "Hortícola",
-    palavras: [
-      "alface",
-      "hortaliça",
-    ],
+    palavras: ["alface", "hortaliça"],
   },
   {
     titulo: "Café",
-    descricao:
-      "Informação sobre produção de café, implantação, maneio e conservação.",
+    descricao: "Informação sobre produção de café, implantação, maneio e conservação.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "café",
-      "cafe",
-      "cafeeiro",
-    ],
+    palavras: ["café", "cafe", "cafeeiro"],
   },
   {
     titulo: "Algodão",
-    descricao:
-      "Informação sobre produção de algodão e principais práticas de maneio.",
+    descricao: "Informação sobre produção de algodão e principais práticas de maneio.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "algodão",
-      "algodao",
-      "fibra",
-    ],
+    palavras: ["algodão", "algodao", "fibra"],
   },
   {
     titulo: "Amendoim",
-    descricao:
-      "Informação sobre produção de amendoim e maneio da cultura.",
+    descricao: "Informação sobre produção de amendoim e maneio da cultura.",
     href: "/agricultura",
     categoria: "Cultura",
-    palavras: [
-      "amendoim",
-      "oleaginosa",
-    ],
+    palavras: ["amendoim", "oleaginosa"],
   },
   {
     titulo: "Banana",
-    descricao:
-      "Informação sobre produção de banana, implantação, nutrição e maneio.",
+    descricao: "Informação sobre produção de banana, implantação, nutrição e maneio.",
     href: "/agricultura",
     categoria: "Fruticultura",
-    palavras: [
-      "banana",
-      "bananeira",
-      "fruta",
-      "fruticultura",
-    ],
+    palavras: ["banana", "bananeira", "fruta", "fruticultura"],
   },
   {
     titulo: "Manga",
-    descricao:
-      "Informação sobre produção de manga e práticas de maneio de pomares.",
+    descricao: "Informação sobre produção de manga e práticas de maneio de pomares.",
     href: "/agricultura",
     categoria: "Fruticultura",
-    palavras: [
-      "manga",
-      "mangueira",
-      "fruta",
-      "fruticultura",
-    ],
+    palavras: ["manga", "mangueira", "fruta", "fruticultura"],
   },
   {
     titulo: "Abacaxi",
-    descricao:
-      "Informação sobre produção de abacaxi e maneio da cultura.",
+    descricao: "Informação sobre produção de abacaxi e maneio da cultura.",
     href: "/agricultura",
     categoria: "Fruticultura",
-    palavras: [
-      "abacaxi",
-      "fruta",
-      "fruticultura",
-    ],
+    palavras: ["abacaxi", "fruta", "fruticultura"],
   },
   {
     titulo: "Mamão",
-    descricao:
-      "Informação sobre produção de mamão e maneio de pomares.",
+    descricao: "Informação sobre produção de mamão e maneio de pomares.",
     href: "/agricultura",
     categoria: "Fruticultura",
-    palavras: [
-      "mamão",
-      "mamao",
-      "mamoeiro",
-      "fruta",
-    ],
+    palavras: ["mamão", "mamao", "mamoeiro", "fruta"],
   },
   {
     titulo: "Abacate",
-    descricao:
-      "Informação sobre produção de abacate e práticas de maneio.",
+    descricao: "Informação sobre produção de abacate e práticas de maneio.",
     href: "/agricultura",
     categoria: "Fruticultura",
-    palavras: [
-      "abacate",
-      "abacateiro",
-      "fruta",
-    ],
+    palavras: ["abacate", "abacateiro", "fruta"],
   },
 
-  /* PECUÁRIA */
+  // PECUÁRIA
   {
     titulo: "Bovinos",
-    descricao:
-      "Orientações sobre produção, alimentação, reprodução, instalações e sanidade de bovinos.",
+    descricao: "Orientações sobre produção, alimentação, reprodução, instalações e sanidade de bovinos.",
     href: "/pecuaria/bovinos/orientacoes",
     categoria: "Pecuária",
-    palavras: [
-      "bovino",
-      "bovinos",
-      "gado",
-      "vaca",
-      "vacas",
-      "boi",
-      "bois",
-      "novilho",
-    ],
+    palavras: ["bovino", "bovinos", "gado", "vaca", "vacas", "boi", "bois", "novilho"],
   },
   {
     titulo: "Caprinos",
-    descricao:
-      "Informação técnica sobre criação de caprinos, alimentação, instalações e sanidade.",
+    descricao: "Informação técnica sobre criação de caprinos, alimentação, instalações e sanidade.",
     href: "/pecuaria/caprinos/orientacoes/racas",
     categoria: "Pecuária",
-    palavras: [
-      "caprino",
-      "caprinos",
-      "cabra",
-      "cabras",
-      "cabrito",
-      "cabritos",
-    ],
+    palavras: ["caprino", "caprinos", "cabra", "cabras", "cabrito", "cabritos"],
   },
   {
     titulo: "Ovinos",
-    descricao:
-      "Informação técnica sobre criação de ovinos, abrigo, alimentação, reprodução e sanidade.",
+    descricao: "Informação técnica sobre criação de ovinos, abrigo, alimentação, reprodução e sanidade.",
     href: "/pecuaria/ovinos/orientacoes/abrigo",
     categoria: "Pecuária",
-    palavras: [
-      "ovino",
-      "ovinos",
-      "ovelha",
-      "ovelhas",
-      "cordeiro",
-      "cordeiros",
-    ],
+    palavras: ["ovino", "ovinos", "ovelha", "ovelhas", "cordeiro", "cordeiros"],
   },
   {
     titulo: "Suínos",
-    descricao:
-      "Informação sobre produção de suínos, alimentação, instalações, raças e sanidade.",
+    descricao: "Informação sobre produção de suínos, alimentação, instalações, raças e sanidade.",
     href: "/pecuaria/suinos/orientacoes/alimentacao",
     categoria: "Pecuária",
-    palavras: [
-      "suíno",
-      "suinos",
-      "suínos",
-      "porco",
-      "porcos",
-      "leitão",
-      "leitões",
-    ],
+    palavras: ["suíno", "suinos", "suínos", "porco", "porcos", "leitão", "leitões"],
   },
   {
     titulo: "Galinhas",
-    descricao:
-      "Orientações sobre criação de galinhas, corte, poedeiras, alimentação, instalações e biossegurança.",
+    descricao: "Orientações sobre criação de galinhas, corte, poedeiras, alimentação, instalações e biossegurança.",
     href: "/pecuaria/galinhas/orientacoes",
     categoria: "Avicultura",
-    palavras: [
-      "galinha",
-      "galinhas",
-      "frango",
-      "frangos",
-      "avicultura",
-      "poedeira",
-      "poedeiras",
-    ],
+    palavras: ["galinha", "galinhas", "frango", "frangos", "avicultura", "poedeira", "poedeiras"],
   },
   {
     titulo: "Patos",
-    descricao:
-      "Orientações sobre criação de patos, água, alimentação, instalações, reprodução e sanidade.",
+    descricao: "Orientações sobre criação de patos, água, alimentação, instalações, reprodução e sanidade.",
     href: "/pecuaria/patos/orientacoes/agua",
     categoria: "Avicultura",
-    palavras: [
-      "pato",
-      "patos",
-      "patos domésticos",
-      "avicultura",
-    ],
+    palavras: ["pato", "patos", "patos domésticos", "avicultura"],
   },
   {
     titulo: "Perus",
-    descricao:
-      "Informação sobre criação de perus, crescimento, instalações, reprodução e sanidade.",
+    descricao: "Informação sobre criação de perus, crescimento, instalações, reprodução e sanidade.",
     href: "/pecuaria/perus/orientacoes/alimentacao",
     categoria: "Avicultura",
-    palavras: [
-      "peru",
-      "perus",
-      "avicultura",
-    ],
+    palavras: ["peru", "perus", "avicultura"],
   },
 ];
 
@@ -609,9 +378,7 @@ export default function Home() {
   const resultadosFiltrados = useMemo(() => {
     const termo = pesquisa.trim().toLowerCase();
 
-    if (!termo) {
-      return [];
-    }
+    if (!termo) return [];
 
     const encontrados = resultados.filter((item) => {
       const textoPesquisa = [
@@ -642,27 +409,16 @@ export default function Home() {
     setPesquisaAberta(true);
 
     window.setTimeout(() => {
-      document
-        .getElementById("resultados-pesquisa")
-        ?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+      document.getElementById("resultados-pesquisa")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }, 50);
   }
 
   function escolherPesquisa(item: ResultadoPesquisa) {
     setPesquisa(item.titulo);
     setPesquisaAberta(true);
-
-    window.setTimeout(() => {
-      document
-        .getElementById("resultados-pesquisa")
-        ?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-    }, 50);
   }
 
   async function enviarMensagem(event: FormEvent<HTMLFormElement>) {
@@ -670,9 +426,7 @@ export default function Home() {
 
     const texto = mensagem.trim();
 
-    if (!texto || aResponder) {
-      return;
-    }
+    if (!texto || aResponder) return;
 
     const historico = [
       ...mensagens,
@@ -687,7 +441,6 @@ export default function Home() {
     setAResponder(true);
 
     try {
-
       const resposta = await fetch("/api/agroia", {
         method: "POST",
         headers: {
@@ -702,8 +455,7 @@ export default function Home() {
 
       if (!resposta.ok || !dados.sucesso) {
         throw new Error(
-          dados?.erro ||
-            "Não foi possível obter resposta da AGROIA."
+          dados?.erro || "Não foi possível obter resposta da AGROIA."
         );
       }
 
@@ -714,8 +466,6 @@ export default function Home() {
           content: dados.resposta,
         },
       ]);
-
-
     } catch (error) {
       setMensagens((estadoAtual) => [
         ...estadoAtual,
@@ -733,16 +483,15 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-white text-slate-900">
+    <main className="min-h-screen w-full overflow-x-clip bg-white text-slate-900">
       {/* NAVEGAÇÃO */}
       <header className="absolute left-0 right-0 top-0 z-50 border-b border-white/10 bg-slate-950/25 text-white backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-8">
           <Link href="/" className="shrink-0">
             <div className="leading-none">
               <div className="text-2xl font-black tracking-tight">
                 AGROINOVA
               </div>
-
               <div className="mt-1 text-[10px] font-semibold tracking-[0.35em] text-emerald-300">
                 ANGOLA
               </div>
@@ -765,16 +514,12 @@ export default function Home() {
             <button
               type="button"
               onClick={() => {
-                document
-                  .getElementById("pesquisa")
-                  ?.scrollIntoView({
-                    behavior: "smooth",
-                  });
+                document.getElementById("pesquisa")?.scrollIntoView({
+                  behavior: "smooth",
+                });
 
                 window.setTimeout(() => {
-                  document
-                    .getElementById("campo-pesquisa")
-                    ?.focus();
+                  document.getElementById("campo-pesquisa")?.focus();
                 }, 300);
               }}
               className="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
@@ -795,9 +540,7 @@ export default function Home() {
             type="button"
             aria-label="Abrir menu"
             aria-expanded={menuAberto}
-            onClick={() =>
-              setMenuAberto((estado) => !estado)
-            }
+            onClick={() => setMenuAberto((estado) => !estado)}
             className="rounded-lg border border-white/20 px-4 py-2 text-sm font-bold lg:hidden"
           >
             Menu
@@ -822,12 +565,9 @@ export default function Home() {
                 type="button"
                 onClick={() => {
                   setMenuAberto(false);
-
-                  document
-                    .getElementById("pesquisa")
-                    ?.scrollIntoView({
-                      behavior: "smooth",
-                    });
+                  document.getElementById("pesquisa")?.scrollIntoView({
+                    behavior: "smooth",
+                  });
                 }}
                 className="mt-2 rounded-lg bg-white px-4 py-3 text-left font-bold text-green-900"
               >
@@ -851,14 +591,12 @@ export default function Home() {
 
       {/* HERO */}
       <section className="relative min-h-[760px] overflow-hidden bg-slate-950 text-white">
-        {/* FOTOGRAFIA */}
         <img
           src="https://images.pexels.com/photos/325944/pexels-photo-325944.jpeg?auto=compress&cs=tinysrgb&w=2200"
           alt="Paisagem agrícola de Angola"
           className="absolute inset-0 h-full w-full object-cover"
         />
 
-        {/* BANDEIRA DE ANGOLA AO FUNDO */}
         <div
           className="absolute inset-0 bg-center bg-no-repeat"
           style={{
@@ -870,105 +608,92 @@ export default function Home() {
           aria-hidden="true"
         />
 
-        {/* SOBREPOSIÇÕES */}
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-green-950/78 to-green-950/35" />
-
         <div className="absolute inset-0 bg-gradient-to-t from-green-950/95 via-transparent to-slate-950/55" />
 
-        <div className="relative mx-auto flex min-h-[760px] max-w-7xl items-end px-5 pb-20 pt-36 lg:px-8 lg:pb-24">
-          <div className="grid w-full gap-12 lg:grid-cols-[1.15fr_0.65fr] lg:items-end">
-            <div>
+        <div className="relative mx-auto flex min-h-[760px] w-full max-w-7xl items-end px-4 pb-12 pt-32 sm:px-6 sm:pb-20 sm:pt-36 lg:px-8 lg:pb-24">
+          <div className="grid w-full min-w-0 grid-cols-1 gap-8 lg:grid-cols-[1.15fr_0.65fr] lg:items-end lg:gap-12">
+            <div className="min-w-0">
               <div className="flex items-center gap-4">
                 <div className="h-1 w-16 bg-red-600" />
                 <div className="h-1 w-16 bg-yellow-400" />
                 <div className="h-1 w-16 bg-black shadow-sm" />
               </div>
 
-              <p className="mt-6 text-sm font-bold uppercase tracking-[0.25em] text-emerald-300">
+              <p className="mt-6 max-w-2xl break-words text-xs font-bold uppercase leading-6 tracking-[0.12em] text-emerald-300 sm:text-sm sm:tracking-[0.2em]">
                 Plataforma Nacional de Investigação, Conhecimento e Inovação
                 Agropecuária de Angola
               </p>
 
-              <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[1.02] tracking-tight md:text-6xl lg:text-7xl">
+              <h1 className="mt-5 w-full max-w-4xl break-words text-3xl font-black leading-tight tracking-tight sm:text-4xl md:text-6xl lg:text-7xl">
                 Conhecimento, Tecnologia e Inovação ao Serviço do{" "}
-                <span className="text-emerald-400">
-                  Campo Angolano.
-                </span>
+                <span className="text-emerald-400">Campo Angolano.</span>
               </h1>
 
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-white/85 md:text-xl">
-                A  AGROINOVA-ANGOLA reúne conhecimento científico,
-                investigação, tecnologias, dados e informação para aproximar
-                produtores, técnicos, investigadores, estudantes, empresas e
-                instituições.
+              <p className="mt-6 w-full max-w-2xl break-words text-base leading-7 text-white/85 sm:text-lg sm:leading-8 md:text-xl">
+                A AGROINOVA-ANGOLA reúne conhecimento científico, investigação,
+                tecnologias, dados e informação para aproximar produtores,
+                técnicos, investigadores, estudantes, empresas e instituições.
               </p>
 
               {/* PESQUISA */}
               <form
                 id="pesquisa"
                 onSubmit={pesquisar}
-                className="relative mt-9 max-w-3xl"
+                className="relative mt-9 w-full max-w-3xl"
               >
-                <div className="flex overflow-hidden rounded-2xl border border-white/20 bg-white p-1.5 shadow-2xl">
+                <div className="flex w-full min-w-0 flex-col gap-2 rounded-2xl border border-white/20 bg-white p-2 shadow-2xl sm:flex-row sm:gap-0">
                   <input
                     id="campo-pesquisa"
                     value={pesquisa}
                     onChange={(event) => {
                       const valor = event.target.value;
-
                       setPesquisa(valor);
-                      setPesquisaAberta(
-                        valor.trim().length > 0,
-                      );
+                      setPesquisaAberta(valor.trim().length > 0);
                     }}
                     type="search"
                     autoComplete="off"
                     placeholder="Pesquisar culturas, espécies, estudos, tecnologias..."
-                    className="min-w-0 flex-1 bg-transparent px-5 py-4 text-slate-900 outline-none placeholder:text-slate-400"
+                    className="min-w-0 flex-1 rounded-xl bg-transparent px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 sm:px-5 sm:py-4 sm:text-base"
                   />
 
                   <button
                     type="submit"
-                    className="rounded-xl bg-green-700 px-7 py-3 font-bold text-white transition hover:bg-green-800"
+                    className="w-full shrink-0 rounded-xl bg-green-700 px-5 py-3 font-bold text-white transition hover:bg-green-800 sm:w-auto sm:px-7"
                   >
                     Pesquisar
                   </button>
                 </div>
 
-                {/* SUGESTÕES EM TEMPO REAL */}
-                {pesquisa.trim() &&
-                  resultadosFiltrados.length > 0 && (
-                    <div className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
-                      <div className="max-h-[420px] overflow-y-auto p-2">
-                        {resultadosFiltrados.map((resultado) => (
-                          <Link
-                            key={`${resultado.titulo}-${resultado.href}`}
-                            href={resultado.href}
-                            onClick={() =>
-                              escolherPesquisa(resultado)
-                            }
-                            className="block rounded-xl px-4 py-3 text-left transition hover:bg-green-50"
-                          >
-                            <div className="flex items-center justify-between gap-4">
-                              <div className="min-w-0">
-                                <p className="font-bold text-slate-900">
-                                  {resultado.titulo}
-                                </p>
-
-                                <p className="mt-1 line-clamp-2 text-sm leading-5 text-slate-500">
-                                  {resultado.descricao}
-                                </p>
-                              </div>
-
-                              <span className="shrink-0 rounded-full bg-green-50 px-3 py-1 text-xs font-bold text-green-700">
-                                {resultado.categoria}
-                              </span>
+                {pesquisa.trim() && resultadosFiltrados.length > 0 && (
+                  <div className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                    <div className="max-h-[420px] overflow-y-auto p-2">
+                      {resultadosFiltrados.map((resultado) => (
+                        <Link
+                          key={`${resultado.titulo}-${resultado.href}`}
+                          href={resultado.href}
+                          onClick={() => escolherPesquisa(resultado)}
+                          className="block rounded-xl px-4 py-3 text-left transition hover:bg-green-50"
+                        >
+                          <div className="flex items-center justify-between gap-4">
+                            <div className="min-w-0">
+                              <p className="font-bold text-slate-900">
+                                {resultado.titulo}
+                              </p>
+                              <p className="mt-1 line-clamp-2 text-sm leading-5 text-slate-500">
+                                {resultado.descricao}
+                              </p>
                             </div>
-                          </Link>
-                        ))}
-                      </div>
+
+                            <span className="shrink-0 rounded-full bg-green-50 px-3 py-1 text-xs font-bold text-green-700">
+                              {resultado.categoria}
+                            </span>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
-                  )}
+                  </div>
+                )}
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   {[
@@ -990,16 +715,14 @@ export default function Home() {
 
                         window.setTimeout(() => {
                           document
-                            .getElementById(
-                              "resultados-pesquisa",
-                            )
+                            .getElementById("resultados-pesquisa")
                             ?.scrollIntoView({
                               behavior: "smooth",
                               block: "start",
                             });
                         }, 50);
                       }}
-                      className="rounded-full border border-white/30 bg-black/10 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:border-emerald-300 hover:bg-emerald-500/20"
+                      className="rounded-full border border-white/30 bg-black/10 px-3 py-2 text-xs font-medium text-white backdrop-blur transition hover:border-emerald-300 hover:bg-emerald-500/20 sm:px-4 sm:text-sm"
                     >
                       {termo}
                     </button>
@@ -1009,12 +732,12 @@ export default function Home() {
             </div>
 
             {/* AGROIA */}
-            <div className="rounded-3xl border border-white/15 bg-slate-950/60 p-7 shadow-2xl backdrop-blur-xl">
+            <div className="w-full min-w-0 rounded-3xl border border-white/15 bg-slate-950/60 p-5 shadow-2xl backdrop-blur-xl sm:p-7">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-300">
                 AGROIA
               </p>
 
-              <h2 className="mt-4 text-3xl font-bold leading-tight">
+              <h2 className="mt-4 text-2xl font-bold leading-tight sm:text-3xl">
                 Um assistente inteligente para o campo angolano.
               </h2>
 
@@ -1027,7 +750,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setChatAberto(true)}
-                className="mt-7 rounded-xl bg-emerald-500 px-6 py-3 font-bold text-white transition hover:bg-emerald-400"
+                className="mt-7 w-full rounded-xl bg-emerald-500 px-6 py-3 font-bold text-white transition hover:bg-emerald-400 sm:w-auto"
               >
                 Conversar com o AGROIA
               </button>
@@ -1040,16 +763,16 @@ export default function Home() {
       {pesquisaAberta && (
         <section
           id="resultados-pesquisa"
-          className="border-b bg-slate-50 py-14"
+          className="scroll-mt-6 border-b bg-slate-50 py-14"
         >
-          <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-green-700">
                   Pesquisa AGROINOVA
                 </p>
 
-                <h2 className="mt-2 text-3xl font-black">
+                <h2 className="mt-2 break-words text-2xl font-black sm:text-3xl">
                   Resultados para &ldquo;{pesquisa}&rdquo;
                 </h2>
               </div>
@@ -1060,7 +783,7 @@ export default function Home() {
                   setPesquisa("");
                   setPesquisaAberta(false);
                 }}
-                className="font-semibold text-green-700 hover:text-green-900"
+                className="text-left font-semibold text-green-700 hover:text-green-900"
               >
                 Limpar pesquisa
               </button>
@@ -1077,15 +800,12 @@ export default function Home() {
                     <p className="text-xs font-bold uppercase tracking-wider text-green-700">
                       {resultado.categoria}
                     </p>
-
                     <h3 className="mt-2 text-xl font-bold">
                       {resultado.titulo}
                     </h3>
-
                     <p className="mt-3 leading-7 text-slate-600">
                       {resultado.descricao}
                     </p>
-
                     <span className="mt-5 inline-block font-bold text-green-700">
                       Explorar área
                     </span>
@@ -1097,12 +817,10 @@ export default function Home() {
                 <h3 className="text-xl font-bold">
                   Não encontramos uma correspondência.
                 </h3>
-
                 <p className="mt-2 text-slate-600">
                   Experimente escrever o nome de uma cultura, espécie,
                   tecnologia, área de conhecimento ou outro termo agrícola.
                 </p>
-
                 <button
                   type="button"
                   onClick={() => setChatAberto(true)}
@@ -1117,19 +835,17 @@ export default function Home() {
       )}
 
       {/* ÁREAS PRINCIPAIS */}
-      <section className="py-20 lg:py-24">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+      <section className="py-16 sm:py-20 lg:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div className="max-w-3xl">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-green-700">
                 Áreas principais
               </p>
-
-              <h2 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">
+              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
                 Explore o conhecimento agropecuário de Angola
               </h2>
-
-              <p className="mt-5 text-lg leading-8 text-slate-600">
+              <p className="mt-5 text-base leading-8 text-slate-600 sm:text-lg">
                 Encontre conteúdos especializados e informação organizada
                 para compreender, produzir, investigar e inovar.
               </p>
@@ -1143,12 +859,12 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {areas.map((area) => (
               <Link
                 key={area.href}
                 href={area.href}
-                className="group relative min-h-[390px] overflow-hidden rounded-3xl bg-slate-950 shadow-sm"
+                className="group relative min-h-[350px] overflow-hidden rounded-3xl bg-slate-950 shadow-sm sm:min-h-[390px]"
               >
                 <img
                   src={area.imagem}
@@ -1158,15 +874,11 @@ export default function Home() {
 
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
 
-                <div className="relative flex h-full flex-col justify-end p-7 text-white">
-                  <h3 className="text-3xl font-black">
-                    {area.nome}
-                  </h3>
-
+                <div className="relative flex h-full flex-col justify-end p-6 text-white sm:p-7">
+                  <h3 className="text-3xl font-black">{area.nome}</h3>
                   <p className="mt-3 leading-7 text-white/80">
                     {area.descricao}
                   </p>
-
                   <span className="mt-6 inline-flex w-fit rounded-full bg-white px-5 py-2.5 font-bold text-slate-900 transition group-hover:bg-emerald-400">
                     Explorar
                   </span>
@@ -1178,31 +890,26 @@ export default function Home() {
       </section>
 
       {/* CENTRO DE CONHECIMENTO */}
-      <section className="bg-slate-50 py-20 lg:py-24">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:items-center">
+      <section className="bg-slate-50 py-16 sm:py-20 lg:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-center lg:gap-12">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-green-700">
                 Centro de conhecimento
               </p>
-
-              <h2 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">
+              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
                 Uma plataforma para todo o sector
               </h2>
-
-              <p className="mt-6 text-lg leading-8 text-slate-600">
+              <p className="mt-6 text-base leading-8 text-slate-600 sm:text-lg">
                 Agricultura, pecuária, pesca e floresta integradas com
                 investigação, tecnologia, dados, clima e conhecimento.
               </p>
-
               <button
                 type="button"
                 onClick={() => {
                   document
                     .getElementById("areas-conhecimento")
-                    ?.scrollIntoView({
-                      behavior: "smooth",
-                    });
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
                 className="mt-7 rounded-xl bg-green-700 px-6 py-3 font-bold text-white transition hover:bg-green-800"
               >
@@ -1212,43 +919,37 @@ export default function Home() {
 
             <div
               id="areas-conhecimento"
-              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+              className="grid scroll-mt-6 gap-4 sm:grid-cols-2 lg:grid-cols-3"
             >
               {[
                 {
                   titulo: "Conhecimento",
-                  texto:
-                    "Artigos, estudos, guias e boas práticas.",
+                  texto: "Artigos, estudos, guias e boas práticas.",
                   href: "/biblioteca",
                 },
                 {
                   titulo: "Investigação",
-                  texto:
-                    "Projectos, pesquisas e resultados científicos.",
+                  texto: "Projectos, pesquisas e resultados científicos.",
                   href: "/investigacao",
                 },
                 {
                   titulo: "Tecnologia",
-                  texto:
-                    "Inovação, equipamentos e soluções digitais.",
+                  texto: "Inovação, equipamentos e soluções digitais.",
                   href: "/tecnologias",
                 },
                 {
                   titulo: "Dados",
-                  texto:
-                    "Estatísticas, indicadores e informação territorial.",
+                  texto: "Estatísticas, indicadores e informação territorial.",
                   href: "/dados",
                 },
                 {
                   titulo: "Clima",
-                  texto:
-                    "Informação climática para produção e território.",
+                  texto: "Informação climática para produção e território.",
                   href: "/clima",
                 },
                 {
                   titulo: "AGROIA",
-                  texto:
-                    "Assistente de inteligência artificial para o sector.",
+                  texto: "Assistente de inteligência artificial para o sector.",
                   href: "#agroia",
                 },
               ].map((item) =>
@@ -1259,10 +960,7 @@ export default function Home() {
                     onClick={() => setChatAberto(true)}
                     className="rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-green-200 hover:shadow-lg"
                   >
-                    <h3 className="text-lg font-bold">
-                      {item.titulo}
-                    </h3>
-
+                    <h3 className="text-lg font-bold">{item.titulo}</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
                       {item.texto}
                     </p>
@@ -1273,15 +971,12 @@ export default function Home() {
                     href={item.href}
                     className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-green-200 hover:shadow-lg"
                   >
-                    <h3 className="text-lg font-bold">
-                      {item.titulo}
-                    </h3>
-
+                    <h3 className="text-lg font-bold">{item.titulo}</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
                       {item.texto}
                     </p>
                   </Link>
-                ),
+                )
               )}
             </div>
           </div>
@@ -1289,7 +984,7 @@ export default function Home() {
       </section>
 
       {/* VISÃO NACIONAL */}
-      <section className="relative overflow-hidden bg-green-950 py-20 text-white lg:py-24">
+      <section className="relative overflow-hidden bg-green-950 py-16 text-white sm:py-20 lg:py-24">
         <img
           src="https://images.pexels.com/photos/1595104/pexels-photo-1595104.jpeg?auto=compress&cs=tinysrgb&w=2200"
           alt="Paisagem natural"
@@ -1298,32 +993,27 @@ export default function Home() {
 
         <div className="absolute inset-0 bg-green-950/80" />
 
-        <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-300">
               Visão nacional
             </p>
-
-            <h2 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">
+            <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
               Um espaço digital pensado para Angola
             </h2>
-
-            <p className="mt-6 text-lg leading-8 text-white/75">
+            <p className="mt-6 text-base leading-8 text-white/75 sm:text-lg">
               Agricultura, pecuária, pesca e floresta fazem parte de um mesmo
               sistema de recursos, territórios, pessoas, conhecimento e
               inovação.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Link
               href="/mapa"
               className="rounded-2xl border border-white/15 bg-white/10 p-7 backdrop-blur transition hover:bg-white/15"
             >
-              <h3 className="text-xl font-bold">
-                Território
-              </h3>
-
+              <h3 className="text-xl font-bold">Território</h3>
               <p className="mt-3 leading-7 text-white/70">
                 Mapas e informação territorial para compreender Angola.
               </p>
@@ -1333,10 +1023,7 @@ export default function Home() {
               href="/clima"
               className="rounded-2xl border border-white/15 bg-white/10 p-7 backdrop-blur transition hover:bg-white/15"
             >
-              <h3 className="text-xl font-bold">
-                Clima
-              </h3>
-
+              <h3 className="text-xl font-bold">Clima</h3>
               <p className="mt-3 leading-7 text-white/70">
                 Informação climática relacionada com produção e território.
               </p>
@@ -1346,10 +1033,7 @@ export default function Home() {
               href="/solos"
               className="rounded-2xl border border-white/15 bg-white/10 p-7 backdrop-blur transition hover:bg-white/15"
             >
-              <h3 className="text-xl font-bold">
-                Solos
-              </h3>
-
+              <h3 className="text-xl font-bold">Solos</h3>
               <p className="mt-3 leading-7 text-white/70">
                 Conhecimento sobre solos, culturas e conservação.
               </p>
@@ -1360,10 +1044,7 @@ export default function Home() {
               onClick={() => setChatAberto(true)}
               className="rounded-2xl border border-emerald-300/30 bg-emerald-500/15 p-7 text-left backdrop-blur transition hover:bg-emerald-500/25"
             >
-              <h3 className="text-xl font-bold">
-                AGROIA
-              </h3>
-
+              <h3 className="text-xl font-bold">AGROIA</h3>
               <p className="mt-3 leading-7 text-white/70">
                 Apoio inteligente para explorar o conhecimento da plataforma.
               </p>
@@ -1373,7 +1054,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="relative overflow-hidden bg-slate-950 py-20 text-white">
+      <section className="relative overflow-hidden bg-slate-950 py-16 text-white sm:py-20">
         <img
           src="https://images.pexels.com/photos/1595104/pexels-photo-1595104.jpeg?auto=compress&cs=tinysrgb&w=2200"
           alt=""
@@ -1382,71 +1063,72 @@ export default function Home() {
 
         <div className="absolute inset-0 bg-slate-950/75" />
 
-        <div className="relative mx-auto flex max-w-7xl flex-col justify-between gap-10 px-5 lg:flex-row lg:items-center lg:px-8">
+        <div className="relative mx-auto flex max-w-7xl flex-col justify-between gap-10 px-4 sm:px-6 lg:flex-row lg:items-center lg:px-8">
           <div className="max-w-2xl">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-300">
               Juntos pelo futuro
             </p>
-
-            <h2 className="mt-3 text-4xl font-black md:text-5xl">
+            <h2 className="mt-3 text-3xl font-black sm:text-4xl md:text-5xl">
               Conhecimento para transformar o campo angolano.
             </h2>
-
-            <p className="mt-5 text-lg leading-8 text-white/70">
+            <p className="mt-5 text-base leading-8 text-white/70 sm:text-lg">
               Explore investigação, consulte conhecimento, descubra
               tecnologias e utilize os dados disponíveis na plataforma.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link
               href="/biblioteca"
-              className="rounded-full bg-white px-6 py-3 font-bold text-slate-900 transition hover:bg-emerald-300"
+              className="rounded-full bg-white px-6 py-3 text-center font-bold text-slate-900 transition hover:bg-emerald-300"
             >
               Explorar Biblioteca
             </Link>
-
             <Link
               href="/tecnologias"
-              className="rounded-full border border-white/40 px-6 py-3 font-bold text-white transition hover:bg-white hover:text-slate-900"
+              className="rounded-full border border-white/40 px-6 py-3 text-center font-bold text-white transition hover:bg-white hover:text-slate-900"
             >
               Conhecer Tecnologias
             </Link>
-
             <Link
               href="/dados"
-              className="rounded-full border border-white/40 px-6 py-3 font-bold text-white transition hover:bg-white hover:text-slate-900"
+              className="rounded-full border border-white/40 px-6 py-3 text-center font-bold text-white transition hover:bg-white hover:text-slate-900"
             >
               Consultar Dados
             </Link>
           </div>
         </div>
       </section>
+
       {/* BOTÃO AGROIA */}
       <button
         id="agroia"
         type="button"
         onClick={() => setChatAberto(true)}
-        className="fixed bottom-6 right-6 z-40 rounded-full bg-green-700 px-6 py-4 font-bold text-white shadow-2xl transition hover:bg-green-800"
+        className="fixed bottom-4 right-4 z-40 rounded-full bg-green-700 px-5 py-3 font-bold text-white shadow-2xl transition hover:bg-green-800 sm:bottom-6 sm:right-6 sm:px-6 sm:py-4"
       >
         AGROIA
       </button>
 
       {/* CHAT AGROIA */}
       {chatAberto && (
-        <div className="fixed inset-0 z-[100] bg-slate-950/50 p-4 backdrop-blur-sm">
-          <div className="absolute bottom-4 right-4 flex h-[min(720px,calc(100vh-2rem))] w-[min(460px,calc(100vw-2rem))] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
-            <div className="bg-green-900 p-6 text-white">
+        <div
+          className="fixed inset-0 z-[100] bg-slate-950/50 p-2 backdrop-blur-sm sm:p-4"
+          onClick={() => setChatAberto(false)}
+        >
+          <div
+            className="absolute bottom-2 right-2 flex h-[min(720px,calc(100dvh-1rem))] w-[calc(100%-1rem)] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl sm:bottom-4 sm:right-4 sm:h-[min(720px,calc(100vh-2rem))] sm:w-[min(460px,calc(100vw-2rem))]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="bg-green-900 p-4 text-white sm:p-6">
               <div className="flex items-start justify-between gap-4">
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
                     AGROIA
                   </p>
-
-                  <h2 className="mt-2 text-2xl font-black">
+                  <h2 className="mt-2 text-xl font-black sm:text-2xl">
                     Assistente AGROINOVA
                   </h2>
-
                   <p className="mt-1 text-sm text-white/70">
                     Alimentado por inteligência artificial local
                   </p>
@@ -1455,14 +1137,14 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setChatAberto(false)}
-                  className="rounded-lg border border-white/20 px-3 py-2 text-sm font-bold hover:bg-white/10"
+                  className="shrink-0 rounded-lg border border-white/20 px-3 py-2 text-sm font-bold hover:bg-white/10"
                 >
                   Fechar
                 </button>
               </div>
             </div>
 
-            <div className="flex-1 space-y-4 overflow-y-auto bg-slate-50 p-5">
+            <div className="flex-1 space-y-4 overflow-y-auto bg-slate-50 p-4 sm:p-5">
               {mensagens.map((item, index) => (
                 <div
                   key={`${item.role}-${index}`}
@@ -1472,7 +1154,7 @@ export default function Home() {
                       : "mr-auto max-w-[90%] rounded-2xl rounded-bl-md border border-slate-200 bg-white p-4 text-slate-700"
                   }
                 >
-                  <p className="whitespace-pre-wrap text-sm leading-6">
+                  <p className="whitespace-pre-wrap break-words text-sm leading-6">
                     {item.content}
                   </p>
                 </div>
@@ -1487,34 +1169,27 @@ export default function Home() {
 
             <form
               onSubmit={enviarMensagem}
-              className="border-t bg-white p-4"
+              className="border-t bg-white p-3 sm:p-4"
             >
               <div className="flex gap-2">
                 <textarea
                   value={mensagem}
-                  onChange={(event) =>
-                    setMensagem(event.target.value)
-                  }
+                  onChange={(event) => setMensagem(event.target.value)}
                   onKeyDown={(event) => {
-                    if (
-                      event.key === "Enter" &&
-                      !event.shiftKey
-                    ) {
+                    if (event.key === "Enter" && !event.shiftKey) {
                       event.preventDefault();
                       event.currentTarget.form?.requestSubmit();
                     }
                   }}
                   rows={2}
                   placeholder="Pergunte sobre agricultura, pecuária, pesca, floresta..."
-                  className="min-w-0 flex-1 resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-green-600"
+                  className="min-w-0 flex-1 resize-none rounded-xl border border-slate-200 px-3 py-3 text-sm outline-none focus:border-green-600 sm:px-4"
                 />
 
                 <button
                   type="submit"
-                  disabled={
-                    aResponder || !mensagem.trim()
-                  }
-                  className="rounded-xl bg-green-700 px-5 font-bold text-white transition hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={aResponder || !mensagem.trim()}
+                  className="shrink-0 rounded-xl bg-green-700 px-3 font-bold text-white transition hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-50 sm:px-5"
                 >
                   Enviar
                 </button>
@@ -1532,4 +1207,3 @@ export default function Home() {
     </main>
   );
 }
-
