@@ -823,22 +823,6 @@ export default function MercadoPage() {
           </div>
         </div>
       </section>
-
-      <footer className="border-t border-green-100 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-7 text-sm text-gray-500 sm:px-8 md:flex-row md:items-center md:justify-between">
-          <p>
-            <strong className="text-green-800">AGROINOVA-ANGOLA</strong>
-            {" "}— Conhecimento, Tecnologia e Inovação ao Serviço do Campo
-            Angolano.
-          </p>
-          <Link
-            href="/"
-            className="font-semibold text-green-800 hover:text-green-950"
-          >
-            Voltar à página inicial
-          </Link>
-        </div>
-      </footer>
     </main>
   );
 }

@@ -19,27 +19,7 @@ type Capitulo = {
   imagens: ImagemAula[];
 };
 
-const imagens = {
-  floresta:
-    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1400&q=85",
-  mudas:
-    "https://images.openai.com/static-rsc-4/qHcUqkcFy-WdVC-9XbjZtb1QHPrYOyi2mBhqSmmsrwueFmqffCPDU3w3QOjhRRf2FrmdRXr6uYunkWDKIpOnY5X7yUojU8cjh1zAvxE5RMhLLDwdWDx_8sMuYqkyz58g9LqBOe1RKkd9LW1MnkIWyLpbcjm9iFi38d-f1nlAXZ-Ez7JSps64sL_19VDk-YHa?purpose=fullsize",
-  viveiro:
-    "https://images.openai.com/static-rsc-4/COH1J16EiLI_qpdC4UalA_SKhscOa2Bvit69_IRM7qM1UcN-2aHyy8rZR44D_P4R77mNNs7KwfHTTPDD59v7qJnJe8ulcsxH4PL0AkY4PUISrG_gVxHMFviJUb3lKIk6XxqlXd50xQu8xjeKVHcSfMdU2_RtKdEkNk4rCvLNJliQkehfuQX1nCcH2pqMCvhW?purpose=fullsize",
-  plantacao:
-    "https://images.openai.com/static-rsc-4/Bj5WToJobANml7YoGnLgnuo4uorkSId07Sl9608WXctxbuDTpeY2NTedmbiGZtOYhJE5sxfhducu-MNWcyG4lCYgl8vRWPHbnLy-H-g2DLaRrA7aXJytQB1yf1-pzFNqsbkaLBEQ7aT8PnbEiRC_QtLcR_SIVCXsYYWUAuz3tA4?purpose=inline",
-  arvores:
-    "https://images.openai.com/static-rsc-4/U1ctYLI6fF6B9I8Y3a0NSOOTLRrv6bCZGAsYx0H7-LDgvIlCuKg5T8j28QG2cgTvJLmVC3C06SfVfSS6JKcAvw3iW-jaU8P-lPhQWJ3pleIHs8vd-qb1dX2ID3A3HtcD-Wtsci6YIclUfU72IuahxWJU-1vDHQEXXkbMkv-XWLdw4-jAlZ35iLksl1PAoh95?purpose=fullsize",
-  campo:
-    "https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1400&q=85",
-  equipamento:
-    "https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=1400&q=85",
-  madeira:
-    "https://images.unsplash.com/photo-1513467655676-561b7d489a88?auto=format&fit=crop&w=1400&q=85",
-  solo:
-    "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1400&q=85",
-};
-
+// Substitui cada valor SUBSTITUIR_PELO_LINK_... pelo URL directo da fotografia correspondente.
 const capitulos: Capitulo[] = [
   {
     id: "ecossistemas",
@@ -65,19 +45,19 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: "/imagens/agroacademia/floresta%20do%20maiombe.png",
+        src: "https://images.openai.com/static-rsc-4/KSK_NMjMerzxG_1q6Gjo2eaoFkWKS0IDKDKqVT2XP-7MCebF9XHvvb1UL8vcVsuyxP9qX1Ba2l6FZAx4412nukC_229jlhQeNiSW05Q867d53_EYfaC0tCDZqz04DT_lbWKYzNwMjIwwMoGwzBzWxaZTJrvrqw3_EdFiVm1bCaUHPAU2eRSWPKIDQTRxVxQz?purpose=fullsize",
         alt: "Floresta do Maiombe",
         legenda:
           "Maiombe: exemplo de floresta tropical húmida, com elevada diversidade de espécies.",
       },
       {
-        src: "/imagens/agroacademia/floresta-miombo.jpg",
+        src: "https://images.openai.com/static-rsc-4/6MCTb4VZqbl8rd9IH-dNwp-GlAgHmooB5jwEmmWgeX8MEevlotc0dDF66iQsOzcZt6YXG2JrgztOGhWLT4fbGkvo0ZecEo3O_Rrcq9Gl3CF9I1jSSYpJJxmKy6kaAwpNsJVyKVpKvIk7XaamK3dn7rJdcT2qQUlDhlc9fBhinu28c2hHS-GjkvrC8f6N_Cg9?purpose=fullsize",
         alt: "Floresta de Miombo",
         legenda:
           "Miombo: formação florestal característica de grandes áreas de Angola.",
       },
       {
-        src: imagens.floresta,
+        src: "https://images.openai.com/static-rsc-4/YqH5CxueG91-tdL4Kaow9vNHBSB1W8h5wRz0nA8Rr5TQ8F5rp34wg2CMVroIb2UCKyHHKcjZx2DSWHu8W2ZPFHxTmG4qnlt87SSCA490EqfWTmGxZnXXZQTpdZv3K5gNB3LIf8orJooybPKUCmQnvx9CGQnyeKz4gaPdYnIz7kcmG55mvkYVQBOh8RMOMSOB?purpose=fullsize",
         alt: "Interior de uma floresta",
         legenda:
           "A estrutura florestal inclui árvores de diferentes dimensões, vegetação inferior e organismos associados.",
@@ -110,16 +90,21 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.mudas,
+        src: "https://images.openai.com/static-rsc-4/zkan046f8jBeCEKrKe1EHYBQBXZASCd_8TFXIoFfXIbzp4VM5xuRjM5XmNHuHAU8hjXlFj8AA4MHtvg2f_ruUu0TfKUrP7NLOqze5TVNd9bqAVg9jA2v_4t-Eldm--1LLJM_-Pju0CwafQYJdgGJIFcO6vdVqJuuInzqKjn2lRNc8Uwh_l4fV3AKo8Jhc_Fc?purpose=fullsize",
         alt: "Plântulas em desenvolvimento",
         legenda:
           "O desenvolvimento das futuras árvores começa com a seleção de sementes e material vegetal de qualidade.",
       },
       {
-        src: imagens.campo,
+        src: "https://images.openai.com/static-rsc-4/CTMUrh5IxoHFng-Bhu7uCZp_LafCmvRxmFao8ayrAQrRF4wQx5LXe8eepMztuNNZ6sRgTak3eqnwEcw2CmcoOq1eoeAA3BuZniPtB50agwOTYreq_E5JI8Uco9FV_c6421TamhQYA4wr-kJrIWENJDgiMw_3Y9zucwfJgPlIAZrsq7aFBX3C3kBldIAeB4Ik?purpose=fullsize",
         alt: "Árvores em ambiente natural",
         legenda:
           "A seleção de árvores-mãe deve considerar a espécie, a adaptação e o estado sanitário.",
+      },
+      {
+        src: "https://images.openai.com/static-rsc-4/dDgY4TsyTRnFlxvB0ZCK3NjR0iTaGaG-t2_Wu5fvxl2ssyELFVllBn1ZpKmE50un8lQI8IoJ-0VJOKD9oZvsXYYderioN8rS4v2TCnQwJ9XvOFlNiWETP0PqM2wl1rWszEftt015sqonMx5qfzK-6Yq-1Lw6AjEpbuZJon2jVPq1bqt1WF8WQ_rabarzfzsq?purpose=fullsize",
+        alt: "Teste de germinação",
+        legenda: "Avaliação da viabilidade e capacidade de germinação das sementes.",
       },
     ],
   },
@@ -150,19 +135,19 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.viveiro,
+        src: "https://images.openai.com/static-rsc-4/aMsCUprfLyk2GfE6pAuJMwWioUsU-76sB4YYKH6spX8Mi8mc8d1eGHpPZLS1YTTCcy5UtCEy_6ljSjONdncEIyuhgo6b79699q8XDm6H8vtG3jcvylGtYvXTlubs1FpDtQjEZsKtpaRI7an7qkR5d6l5rnMfks1cG9oEqDY7DdaZIrB0I85_OFI1rFZaxHWH?purpose=fullsize",
         alt: "Trabalho de viveiro e plantas",
         legenda:
           "Um viveiro organizado facilita as operações de produção, rega, seleção e acompanhamento das mudas.",
       },
       {
-        src: imagens.mudas,
+        src: "https://images.openai.com/static-rsc-4/R3NwFX03XDR3hsQfiE3Wp3FAx1LfYOxkGSY88a47_F3BtYxAnkaP6SwiJXOBpjiMcnm0WJoQCi6t3r7KYryjbxdJoUzLjpUkpF3W6O5oFd0OrwpMJoF5ab-nrnUpLbksXz-qId-QoiFFjFw4Y-nb4ZSK50nv-grQhEZWtnnwCNtV2_lNYtSJrMBqYaaylWCm?purpose=fullsize",
         alt: "Mudas jovens",
         legenda:
           "As mudas devem ser avaliadas pela qualidade do caule, das raízes e pelo estado sanitário, não apenas pela altura.",
       },
       {
-        src: imagens.plantacao,
+        src: "https://images.openai.com/static-rsc-4/ZqgtLDYjcK6amPZroGGHYWCYsSZkzmdojog7LFL2b7BDve0Th--oRcSI-t1ntBZyt4UAfJ793-vonosZwekOV5nNkhIsyaQ6Cm04_cpWw6AbDOtjPVVizttPkr8NBuFxtCSMUHxzVzDC2l2JC2RJLkd1D88p2uEPY4Ad6VzOmAtC4FW1LMU7rmejjsDLZ_a2?purpose=fullsize",
         alt: "Área de produção vegetal",
         legenda:
           "A preparação das mudas deve considerar o local onde serão posteriormente instaladas.",
@@ -193,19 +178,19 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.plantacao,
+        src: "https://images.openai.com/static-rsc-4/HgirMmHgj9ES1YVs6eoE07I4_SOdrlovtgMREExAGMhJv3deliVcTSe92Drj8UuC6eZ4c4fYxGT-eMCXnXV3RIYFrk3flvdvSxsy6xKaOQmsdyBudsNl7FIjpVMOsKhEvn60yGqfK1rKtexDoRRBm06lgx9cYQvx2KGVefIUcEZTmPVYHlj4p74PGCCK5cYd?purpose=fullsize",
         alt: "Área de terreno agrícola e florestal",
         legenda:
           "A análise do terreno antecede a escolha da espécie e o desenho do povoamento.",
       },
       {
-        src: imagens.mudas,
+        src: "https://images.openai.com/static-rsc-4/gu6rf2aDCq6eSMCGllpAzetcDuJaHe-kLLVzggkyN9phnTPmZEo_GMJxghyn-8lH71HLQs_28BV7pFoo1E8xlzDvA3b4uJxLcMXDkDHQEq-Tr8fG_WFud4o-NY0_2fUVH3AcyjhQIZ-IpERLJiNmEMII46GZeQEXsLADd2jJfbiQiOjaaqHaydYLcSePs9VV?purpose=fullsize",
         alt: "Plantas jovens",
         legenda:
           "A qualidade das mudas e o manuseamento correto das raízes influenciam o estabelecimento.",
       },
       {
-        src: imagens.arvores,
+        src: "https://images.openai.com/static-rsc-4/_h8WO6EqP0VehfEX2tSWG_mhE15kpQlx6FVX3dENj7RKfIoOj42pw4e85n6NYAN0ITkC_D6Xw_4VuiZSx7hJUs1-TLKj5L_ViG_YFtuGAERd-ymFB2F61HLn80ylvziwfXF0muXVOwMh-ttBbyIoMwOfdFApTB7Led63s01w4iTJPj2bwpCS_FaSn-eT42sE?purpose=fullsize",
         alt: "Povoamento de árvores",
         legenda:
           "O espaçamento deve ser definido em função da espécie, do solo e do objetivo de produção.",
@@ -235,16 +220,21 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.arvores,
+        src: "https://images.openai.com/static-rsc-4/hR6G09mERmw254DUO5manbJ3dF3wAmjL5plL-y-hILAeu3qkcMg9PFle-IXBvkfbREq1tl3ps1ftkSrieG06bVYDo8XZn8911udyjtvLX6qMEQX-0TC2RBS_pqQ9b8e8mYuAomrfPxyHIaAUODkHjSinR8mFcv5fMt6p8NUu0DUhvRrNubvokvtbLTNdm7DZ?purpose=fullsize",
         alt: "Povoamento florestal",
         legenda:
           "A condução de povoamentos exige acompanhamento da densidade, competição e qualidade das árvores.",
       },
       {
-        src: imagens.floresta,
+        src: "https://images.openai.com/static-rsc-4/O1KY0N-QvJn0nJaU69ihfpzYCOawWDAEYc5bcoMqRujxtT-nCxZL2RWLIP8BAzQp65nYyNuQWDCb7y5UUWByHOzJClrffFtitaYIrSbE8GPWwNXbBBu3rvFlPy73M0oJS9xe-4FPH5AScMi4zC410-7beLGeS9dSVDovRHBbz2yworhj0Bx_lmFqzUCVIDyL?purpose=fullsize",
         alt: "Estrutura de uma floresta",
         legenda:
           "A gestão deve considerar a estrutura vertical e horizontal da vegetação.",
+      },
+      {
+        src: "https://images.openai.com/static-rsc-4/M_WSroIEkZ4rc6yX3i-U9PXmi97_5bZbq6UV3lc1IwMip29A90BO7u2Fffm7T2cu8MRgdq35_v3_WXOTBRZMySQi-U0K2fE4QjvINoeAmDQEoFNrbwJv1bu6agqi5hU2n4647a8pDdMhgTBjGeioHPUt0KNCxvoTCJ6QgztcFrisT8Ha2u8pfmgi8tDfZgoE?purpose=fullsize",
+        alt: "Condução do povoamento",
+        legenda: "Acompanhamento do desenvolvimento e da estrutura do povoamento.",
       },
     ],
   },
@@ -277,19 +267,19 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.arvores,
+        src: "https://images.openai.com/static-rsc-4/YBGlZaynB7g8-Vv9xsCne-fcXW0kW8YE3if2MnVw2hdsA-hW4G2teqhPwD_2rO2M0eb-T3M3aWahHyDNvU6nAw12YKlzYL6yujRkDEA925gqpJ374_MFdwhzlu73BpQA2L0Fdlmac-OJNfytyuH8IgE0FV2eTb7c8pAsiniKfD_-ybXX_3MKVzsYWNKXksdr?purpose=fullsize",
         alt: "Árvores com diferentes estruturas de copa",
         legenda:
           "A observação da arquitetura da árvore é o primeiro passo para decidir se a poda é necessária.",
       },
       {
-        src: imagens.viveiro,
+        src: "https://images.openai.com/static-rsc-4/UJ8Ox6ElWMxpDXxRiEorC0MhcB1kcOFE8lbieDsmgTBOaboAWPbxK7ZC0CQcXZ7PFtzZdp8J3PtRRAUSVAMdXR7hsprvOCYntPGTdDCz59EJYvWAHdYcIrEKtKOzgYFabIIaNB0M-EybM7FWzfw_i9bYGKfw800YgBisHTWFe1ebFRbjRqaToSs1p_IGO2K9?purpose=fullsize",
         alt: "Plantas em crescimento",
         legenda:
           "A formação começa cedo: a condução de árvores jovens deve respeitar o hábito natural de crescimento.",
       },
       {
-        src: imagens.floresta,
+        src: "https://images.openai.com/static-rsc-4/vYVboR8zZl-w_WZRYmHvjkSm98rU2YaZ6SnUVKzm00sX6zB6Kl0UDMnvoYW0xv2ivbU38Ddaa0DoO5KF7nsxYzN8aZuKFfJXfb3b0AucPSoihTHheg3JR2aXCJb0Bb5W7JCTgE3umgiUShuxDSu4Olm-x2l_nEAbmlcyzBr2uO9WkWg4OaWHXq8DpJsmgiTK?purpose=fullsize",
         alt: "Árvores numa formação florestal",
         legenda:
           "Em florestas naturais, a poda não deve ser aplicada de forma indiscriminada.",
@@ -319,16 +309,21 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.arvores,
+        src: "https://images.openai.com/static-rsc-4/xpnn2aBalnyb5qwYqV7u_mSlLXrRYrXT3IZxEBXZJ_Rc-AQkAP8YxYYBQXT8cvxgDHCPbF7ot3rzMf5-jSBzV0mu195jLEb6kFDEy_XUX7oq8D-3snY5xp_NIFArLqSmkqtyjvjwBYeK0sOCaSfBA7Be0djc2-iea9fhZviGTPwkeOmB4S8tp7c1jfZe9eWw?purpose=fullsize",
         alt: "Árvores para inventário",
         legenda:
           "A estrutura e a composição do povoamento são avaliadas através de observações e medições de campo.",
       },
       {
-        src: imagens.floresta,
+        src: "https://images.openai.com/static-rsc-4/xtFclALF01acmlygM4D0jliVlzitp7tsHs4GTTZTILM_go-iwHEaBG2gb_DeWgDAJxVcCy1tNpRuvbc918WqqZXA30Z-rduOeEx-4ym_CXsIIqq14vOMe-RR-U9oqKe93Xvoewski4iXVkjKlIOcKqcKpE6qjPuZl_lIkHxvSh9cZBAWREod4gNBv7mnrbdd?purpose=fullsize",
         alt: "Cobertura florestal",
         legenda:
           "O inventário pode ser complementado por cartografia e imagens de deteção remota.",
+      },
+      {
+        src: "https://images.openai.com/static-rsc-4/krscppqXgitMBmeV2d7wqnfBQRn42NVyf0zdIL0vTg9A9rDhjCMbGzalWNL_uEduFeBu51aaN_ZcIamocpjkgGPVAH7WeohMhr-zD0q3lO5HSDeSACjhxy6Zx_mmlEzh5k5LXwbdszTPuxl5LwY74-G-Z8Cb9Jeret28jFLtVS2WUBLJd-cpu07gb_e_YFjF?purpose=fullsize",
+        alt: "Equipamentos de inventário",
+        legenda: "GPS, fita diamétrica e instrumentos de medição florestal.",
       },
     ],
   },
@@ -355,16 +350,21 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.floresta,
+        src: "https://images.openai.com/static-rsc-4/IyXKq24NjZQS2DJ7drkOWAUj4fUv_g4eLLVOh9AQI6KtLb130U4zPiTXwwt6b8SITcALnSVsKXbZiDA412qcB_Zo74F6ql8OSW4126cO0CO_23d98o-Cf1n2LZSaupAR5ENcckq8CgJcEOzLIj8dxHqfiHlS2fE1AknhT4-Ulm3TLkSYT4fpBLB1xa8oOu_Y?purpose=fullsize",
         alt: "Interior de uma floresta",
         legenda:
           "A vigilância regular permite identificar alterações na vegetação e sinais de degradação.",
       },
       {
-        src: imagens.campo,
+        src: "https://images.openai.com/static-rsc-4/9ee4ICrVBq5Q9ig8eCbXcSsXk07ZdKewb5XjWimDYlfnN-j7LaCFCEXwYVT65pitWl8xtIbRLx2BunD0lNCnXJfF9cxLYT16tVEDchwIjXGNAUagTXBOAs1B9VGMt9S7RzqRhuDoVd91tvB22rJPY-QpErCZ4LKAN30iGHuOWEOZ9yFx0D0pad9bUdVp4m6x?purpose=fullsize",
         alt: "Paisagem natural",
         legenda:
           "A prevenção deve considerar a paisagem, os acessos, a vegetação e a participação das comunidades.",
+      },
+      {
+        src: "https://images.openai.com/static-rsc-4/j26HWA3g3m_mA1X9-__FTHLZS4WEVgxROVzjCqfSaBhu04F5CWCwD5ijoeLs7Dla6ux_3GlDS2gaDiUM9uc8pHAJLJ9_zLJGxrCZ5M8uy7KqckEb_QE33CR2W9mDFpyYNM3BFP121pWgaxkVbdsIYtFOviNCvLAz-9np-wrhnAQ?purpose=inline",
+        alt: "Monitorização fitossanitária",
+        legenda: "Inspeção e acompanhamento do estado sanitário da floresta.",
       },
     ],
   },
@@ -393,16 +393,21 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.equipamento,
+        src: "https://images.openai.com/static-rsc-4/SzojtufZhKfUZ77dvmTJG7UkBFXoejbv4a_-itPecOaHRmCkhITTFueiBGz7MHn98MSMJ1ET8i6BQjheavXaAbr3p7L_rPbfB2spdnBMd7jNj61z_G7qPgs-KgKBKKZwzVm3qFxWi62ooCA26V3FnevB0-JotUKemX4VP2JKPyqbTr9onz57Phhw79GUwMqH?purpose=fullsize",
         alt: "Equipamento de trabalho",
         legenda:
           "A escolha do equipamento deve considerar a operação, o terreno, a segurança e os impactos.",
       },
       {
-        src: imagens.madeira,
+        src: "https://images.openai.com/static-rsc-4/qdoQxsl6nDXYhssFWq9xQW3sz-cK6MrMp-epluRqr1M7KTAKno7C4zbhVDZLxePc8Q-LAeCtlax42Z0ixpqjy0SS_1I8zsxH3H9RSu_h9nyA4wT4kvQg9gMqafiu_157g0d0e3URq_apD0sw9f8k8BdfZYJJJC8OxYhcZ-wK7bJZ9rb55x7BjGlQorF2uCoS?purpose=fullsize",
         alt: "Material lenhoso",
         legenda:
           "A madeira deve ser identificada, classificada e documentada de acordo com as regras aplicáveis.",
+      },
+      {
+        src: "https://images.openai.com/static-rsc-4/LszVZ5j2Yy2IVrv6rj8QCQVuxWM4sxSgiaQQJIvgvNn6QjYbKVIEOuLA14VwW8Wk0EbpiW_NDOPFcmK2Rozwg6v_cHS8T47YxJbSLed8AyfyrHJnL6O3GvLpw5u2hY-La5ZWO2aHGtv74YHMr38WmzydPJe_7sImyiKzcomKgtPc1k-OYtAfS5wdgPURDZqu?purpose=fullsize",
+        alt: "Extração de madeira",
+        legenda: "Extração e movimentação de toros com controlo de impactos.",
       },
     ],
   },
@@ -429,16 +434,21 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.madeira,
+        src: "https://images.openai.com/static-rsc-4/TSyDWTWi8T0yTIzsxzhsUeVt5GtxDForqZhJLCsPoMkOsq6wISvnTgc3XAZe6Qy9QWce_9jrSMT901788iQLx9UiaoIFDGM252gkt8lIpYx9mLtfHndHf_uz5fgPhc7shZw79b72U9TU6KzGXcYo3V5LK8eDSAAyWss99i_EuaCHOa2ILVu0rChJJNGL_mPu?purpose=fullsize",
         alt: "Madeira e produtos lenhosos",
         legenda:
           "A transformação acrescenta valor à matéria-prima e pode criar oportunidades industriais.",
       },
       {
-        src: imagens.equipamento,
+        src: "https://images.openai.com/static-rsc-4/FLUZURumpX4l0rADG0xUV64QOP986wsK4C6taIunGe0ebSmo18iwqoOkjlKdr7WXcRjkWff6aJeYe26d5MoC1KzA1QBP-nbOWRFQ9Qazg9NVUu0IhYx5n9xlmdB6vxpjegPuP0YUdIdKhjy6fC_KIgHNcJDRRKHTAYfByDQN24WQbSphwHr78zUgTSCoZFyn?purpose=fullsize",
         alt: "Equipamentos industriais",
         legenda:
           "A mecanização deve ser selecionada de acordo com a escala e o produto pretendido.",
+      },
+      {
+        src: "https://images.openai.com/static-rsc-4/gdafDrfXt4Kgr3IFZR7N1z3K4qZ4w-cUwhry--zI_yOPBo35_RzwSUTpBbeVTOwcOxqb7_PJj8eJ2KkCTwaqB320Z80MnbnaMbG6fGwZXW9MCg7Cc2Q4uqgvJMNQGIdBYsn1yjf9rZ5FwD6iJ6BkLGZHMkb_ttKijTEaClqvxfYLpinZdbiAUHQxM0FYfx-U?purpose=fullsize",
+        alt: "Secagem de madeira",
+        legenda: "Secagem controlada para melhorar a estabilidade da madeira.",
       },
     ],
   },
@@ -465,16 +475,21 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.mudas,
+        src: "https://images.openai.com/static-rsc-4/ybUVJLwtKQt7VLFQPAnUm4i5XENMV7DXZhy-EhGFCUypl3nqQKF9bFKVB8SWyXXHPHGVM8Yd9FlJl_HyFVDIybTv0m9y2NpFfNdyNLKocIFaJyPzGv50PWebv5qvk_dNbrQH8OMNeP23QxUZw6wmCkEjkAqDBc3ScONhf6W0UQdS_oLZ6_JhBsKe1Dx7Z33p?purpose=fullsize",
         alt: "Plantas jovens",
         legenda:
           "A produção de espécies adequadas é uma das ferramentas possíveis na recuperação de áreas degradadas.",
       },
       {
-        src: imagens.floresta,
+        src: "https://images.openai.com/static-rsc-4/6C714OJ4T36CBfVm8911UwUt91e3sAr-7vPY-Mq5dF9wgDmZPV4wRSgIJt_ksZbPLHOQUBUMJwA_FTzGYDn4F0D6dul_6Ri80G13KsbnjUbZdHsCYKWjih_DWog_kPEw_pNZmTABIth1N28-Tcfh-K65d8d3Z7denyxO-9zpWXE?purpose=inline",
         alt: "Floresta",
         legenda:
           "A restauração deve procurar recuperar funções ecológicas, e não apenas aumentar o número de árvores.",
+      },
+      {
+        src: "https://images.openai.com/static-rsc-4/lRKuXnNmG8muqHjDl4aEuprFM9u1kFl3uffsjl0M91n-3XHyvPRbO6rNLo2DOB-Oah7m9ouSWegHw81eZ5vWErfTYekN2kwSd3eDXvYO4TqQGl_G4o_7FsIKhea09DfLY7Kf4PLBlAGLdLH8yfWoO07t72rbVqY2i8TXQaPHUNVdV74M-IjTtJjjnoHPIFYe?purpose=fullsize",
+        alt: "Regeneração natural",
+        legenda: "Regeneração de vegetação nativa numa área em recuperação.",
       },
     ],
   },
@@ -503,16 +518,21 @@ const capitulos: Capitulo[] = [
     ],
     imagens: [
       {
-        src: imagens.equipamento,
+        src: "https://images.openai.com/static-rsc-4/6OtfgNk_8Fe3Pk9ar1YnQ1KKen4vJhOkGuUNwEmheLIyL5Xbc_P4tye22Jtkr7ir7jiLsASc996IJOhuI01oxe20iYlOfQiik7f8bVQkDEEsrrToFl_s8a3me7-_NcmHaez33ndd0vNsbIIXXbSYYNbk1LXkK5Eej4FLD_MWDCAtKW2XUzNYtAgn-9_P-F8O?purpose=fullsize",
         alt: "Equipamento tecnológico",
         legenda:
           "A mecanização deve ser escolhida em função da operação e das condições do terreno.",
       },
       {
-        src: imagens.floresta,
+        src: "https://images.openai.com/static-rsc-4/BxYpA_cnNn6KvE2LgX3S4oKmlXUDHSsF3ROt5mCPA6Us-bPMKlrDJ35LxsEGGscwngOwIH3soGaDfz5-JBXXFnKw26trAqwioc74kzczPq5NAJsf81gKvkGr9zlxqLE_nw4Up34LYkUB2Gou73bSbsr2TdMlsltArH2QSHLRIvQhgX04FYpx35jW3MI7w4Ac?purpose=fullsize",
         alt: "Cobertura florestal",
         legenda:
           "A observação remota pode complementar o trabalho de campo e o inventário florestal.",
+      },
+      {
+        src: "https://images.openai.com/static-rsc-4/iUHOx7k5M306jO50qkdjDdtFGN27YF63ABsthZTi7kcGx0FFroyVY39K4s1Mq2FyoGHMGA6lDbI4gBdjdO6oAR0BUN32LkFrBRIacidrPQFJZ1OE77Ua_0P4qSa7oFZpsEv0NWwjESY2SKzzt46KDd8mWLlTHDGgw85J8IqzJBKKuMtn_-P17cXWS1CTMDyi?purpose=fullsize",
+        alt: "Maquinaria florestal",
+        legenda: "Máquinas especializadas para corte e extração mecanizada.",
       },
     ],
   },
@@ -1405,13 +1425,6 @@ export default function FlorestasPage() {
           </div>
         </div>
       )}
-
-      <footer className="bg-[#0b2114] px-5 py-8 text-center text-sm text-green-100">
-        <p className="font-semibold">AGROINOVA-ANGOLA · Academia Florestal</p>
-        <p className="mt-2">
-          Conhecimento, Tecnologia e Inovação ao Serviço do Campo Angolano.
-        </p>
-      </footer>
     </main>
   );
 }
