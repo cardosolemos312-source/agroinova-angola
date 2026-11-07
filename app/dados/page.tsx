@@ -1,7 +1,32 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+} from "recharts";
+
+const MapaDados = dynamic(() => import("./MapaDados"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex min-h-[420px] items-center justify-center rounded-2xl bg-slate-50 text-sm font-semibold text-slate-500">
+      A carregar mapa de Angola...
+    </div>
+  ),
+});
 type Categoria =
   | "Todos"
   | "Agricultura"
@@ -21,7 +46,14 @@ type Aba =
   | "2025/26"
   | "Projecções";
 
-type Classificacao = "Oficial" | "Cálculo" | "Projecção";
+type Classificacao =
+  | "Oficial"
+  | "Investigação"
+  | "Observação de campo"
+  | "Estimativa"
+  | "Administrativa"
+  | "Cálculo"
+  | "Projecção";
 
 type Indicador = {
   id: string;
@@ -45,6 +77,48 @@ type Indicador = {
   url: string;
   imagem: string;
   classificacao: Classificacao;
+
+  // Identificação e dados completos provenientes da base de dados.
+  indicadorId?: string;
+  codigo?: string | null;
+  subcategoria?: string | null;
+  formula?: string | null;
+  periodicidade?: string | null;
+  natureza?: string | null;
+  estado?: string | null;
+  datasetId?: string | null;
+
+  // Informação da observação associada ao cartão.
+  provincia?: string | null;
+  municipio?: string | null;
+  comuna?: string | null;
+  localidade?: string | null;
+  entidade?: string | null;
+  tamanhoAmostra?: number | null;
+  margemErro?: number | null;
+  nivelConfianca?: number | null;
+  observacoesRegisto?: string | null;
+  dataReferencia?: string | null;
+
+  // Imagens associadas exclusivamente ao indicador.
+  imagens?: {
+    id?: string;
+    url?: string;
+    legenda?: string | null;
+    descricao?: string | null;
+    provincia?: string | null;
+    municipio?: string | null;
+    ordem?: number | null;
+  }[];
+
+  // Fontes bibliográficas associadas.
+  fontesDetalhadas?: {
+    titulo: string;
+    entidade: string | null;
+    ano: number | null;
+    url: string | null;
+    citacao: string | null;
+  }[];
 };
 
 const FONTES = {
@@ -127,1396 +201,6 @@ const IMAGENS = {
    INDICADORES HISTÓRICOS E ACTUAIS
 ========================================================= */
 
-const indicadores: Indicador[] = [
-  {
-    id: "area-semeada-2324",
-    titulo: "Área semeada",
-    valor: "6 178 135",
-    unidade: "hectares",
-    variacao: "+1,6%",
-    descricao:
-      "Na campanha agrícola 2023/2024 foram semeados 6 178 135 hectares nas principais fileiras de produção vegetal.",
-    oQueMede:
-      "Mede a extensão de terra efectivamente utilizada para a instalação das principais culturas agrícolas durante a campanha.",
-    significado:
-      "O indicador mostra a dimensão física da actividade agrícola, mas não mede sozinho a produtividade. Uma área maior pode gerar mais produção ou simplesmente representar expansão territorial sem aumento proporcional do rendimento por hectare.",
-    analise:
-      "A agricultura angolana possui uma forte componente familiar. Por isso, a evolução da área semeada deve ser analisada juntamente com acesso a sementes melhoradas, fertilizantes, mecanização, assistência técnica, crédito, água, estradas e mercados.",
-    comparacao:
-      "A área semeada cresceu aproximadamente 1,6% relativamente à campanha anterior. O crescimento foi positivo, mas inferior ao que seria necessário para explicar sozinho as mudanças observadas em todas as fileiras.",
-    contexto:
-      "A área agrícola encontra-se distribuída por diferentes regiões agroecológicas, com diferenças importantes de clima, solos, disponibilidade de água e especialização produtiva.",
-    importancia:
-      "É uma variável fundamental para planeamento agrícola, previsão de necessidades de sementes e fertilizantes e avaliação da expansão da actividade produtiva.",
-    implicacoes:
-      "O aumento da área deve ser acompanhado por ganhos de produtividade e melhor aproveitamento das parcelas, evitando que o crescimento dependa exclusivamente da expansão territorial.",
-    metodologia:
-      "O valor é baseado nas estatísticas agrícolas divulgadas pelo INE/MINAGRIF para a campanha 2023/2024.",
-    limitacoes:
-      "Área semeada não significa necessariamente área colhida. Também não permite, isoladamente, avaliar produtividade ou rentabilidade.",
-    categoria: "Agricultura",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF — Anuário Estatístico da Agricultura 2024",
-    url: FONTES.anuario,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "area-colhida-2324",
-    titulo: "Área colhida",
-    valor: "5 516 167",
-    unidade: "hectares",
-    variacao: "+1,1%",
-    descricao:
-      "Área efectivamente colhida na campanha agrícola 2023/2024.",
-    oQueMede:
-      "Mede a parte da área que chegou efectivamente à fase de colheita.",
-    significado:
-      "Permite comparar a área instalada com a área efectivamente aproveitada para a obtenção da produção.",
-    analise:
-      "A diferença entre área semeada e área colhida é uma variável importante para compreender o desempenho efectivo da campanha. Uma área semeada que não chega à colheita pode resultar de condições climáticas, pragas, doenças, dificuldades de acesso, abandono ou outros factores.",
-    comparacao:
-      "A área colhida cresceu cerca de 1,1%, enquanto a área semeada cresceu aproximadamente 1,6%.",
-    contexto:
-      "O indicador deve ser acompanhado por província e por cultura para perceber onde estão concentradas as maiores diferenças.",
-    importancia:
-      "É essencial para medir o aproveitamento real da área agrícola.",
-    implicacoes:
-      "Reduzir a diferença entre área semeada e área colhida pode aumentar a produção sem necessidade de expandir a área agrícola.",
-    metodologia:
-      "Indicador baseado na estatística agrícola oficial da campanha 2023/2024.",
-    limitacoes:
-      "A área colhida não informa, por si só, se a produtividade da parcela foi elevada ou baixa.",
-    categoria: "Agricultura",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "area-nao-colhida",
-    titulo: "Área semeada não colhida",
-    valor: "661 968",
-    unidade: "hectares",
-    descricao:
-      "Diferença calculada entre a área semeada e a área colhida na campanha 2023/2024.",
-    oQueMede:
-      "Mede a diferença entre a superfície instalada com culturas e a superfície que chegou à colheita.",
-    significado:
-      "Não deve ser interpretada automaticamente como perda física de produção. É um indicador de diferença entre duas fases da actividade agrícola.",
-    analise:
-      "A existência de aproximadamente 661 968 hectares nesta diferença merece acompanhamento. Para compreender a causa são necessários dados complementares sobre clima, pragas, doenças, acesso, mão-de-obra, financiamento e abandono.",
-    comparacao:
-      "Representa aproximadamente 10,7% da área semeada.",
-    contexto:
-      "O valor agregado nacional pode esconder diferenças importantes entre províncias e culturas.",
-    importancia:
-      "Pode ajudar a identificar oportunidades para aumentar a produção através de melhor aproveitamento das áreas já instaladas.",
-    implicacoes:
-      "Programas de assistência técnica, irrigação, controlo fitossanitário, estradas rurais e acesso a insumos podem contribuir para reduzir a diferença quando estes forem os factores limitantes.",
-    metodologia:
-      "Cálculo AGROINOVA: 6 178 135 hectares semeados menos 5 516 167 hectares colhidos.",
-    limitacoes:
-      "É um cálculo derivado e não uma estatística independente publicada como tal.",
-    categoria: "Agricultura",
-    periodo: "2023/2024",
-    fonte: "Cálculo AGROINOVA com base no INE/MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.milho,
-    classificacao: "Cálculo",
-  },
-
-  {
-    id: "cereais-2324",
-    titulo: "Produção de cereais",
-    valor: "3,52 milhões",
-    unidade: "toneladas",
-    variacao: "+4,9%",
-    descricao:
-      "Produção nacional de cereais registada na campanha 2023/2024.",
-    oQueMede:
-      "Mede o volume físico de cereais produzido no período agrícola.",
-    significado:
-      "Os cereais são uma das principais bases da produção agrícola e da segurança alimentar.",
-    analise:
-      "O crescimento de 4,9% demonstra uma evolução positiva. Para determinar se houve ganho de produtividade é necessário comparar o crescimento da produção com a evolução da área cultivada.",
-    comparacao:
-      "A produção de cereais aumentou aproximadamente 4,9% face à campanha anterior.",
-    contexto:
-      "A fileira inclui culturas de elevada importância alimentar e económica, com diferentes níveis de produtividade entre regiões.",
-    importancia:
-      "É um dos principais indicadores para acompanhar a disponibilidade de produtos agrícolas básicos.",
-    implicacoes:
-      "O crescimento sustentável exige melhoria de produtividade, armazenamento, transformação, logística e acesso ao mercado.",
-    metodologia:
-      "Estimativa estatística oficial do INE/MINAGRIF.",
-    limitacoes:
-      "O volume total não permite conhecer a distribuição por produtor, município ou exploração sem consultar os quadros detalhados.",
-    categoria: "Agricultura",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.milho,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "frutas-2324",
-    titulo: "Produção de frutas",
-    valor: "6,90 milhões",
-    unidade: "toneladas",
-    descricao:
-      "Produção nacional de frutas estimada para a campanha 2023/2024.",
-    oQueMede:
-      "Mede o volume físico de frutas produzido no período.",
-    significado:
-      "As frutas representam uma componente muito importante da produção vegetal nacional em termos de volume.",
-    analise:
-      "A produção de frutas supera o volume de cereais em toneladas. Esta comparação deve ser feita com cuidado, porque produtos diferentes possuem preços, custos e valores nutricionais diferentes.",
-    comparacao:
-      "O volume de frutas atingiu aproximadamente 6,90 milhões de toneladas.",
-    contexto:
-      "A banana e outras culturas frutícolas possuem peso significativo na produção nacional.",
-    importancia:
-      "A cadeia frutícola possui potencial para abastecimento interno, transformação, conservação e exportação.",
-    implicacoes:
-      "Investimentos em armazenamento, cadeia de frio, processamento e logística podem reduzir perdas pós-colheita.",
-    metodologia:
-      "Dados de produção vegetal divulgados pelo INE/MINAGRIF.",
-    limitacoes:
-      "Volume físico não equivale directamente a valor económico.",
-    categoria: "Agricultura",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "horticolas-2324",
-    titulo: "Produção de hortícolas",
-    valor: "2,36 milhões",
-    unidade: "toneladas",
-    variacao: "-28,7%",
-    descricao:
-      "Produção nacional de hortícolas na campanha 2023/2024.",
-    oQueMede:
-      "Mede o volume de produtos hortícolas produzido durante a campanha.",
-    significado:
-      "Hortícolas possuem ciclos relativamente curtos e respondem rapidamente à disponibilidade de água, sementes, fertilizantes, clima e condições de mercado.",
-    analise:
-      "A redução de 28,7% merece atenção porque é significativamente maior do que a variação da área agrícola total.",
-    comparacao:
-      "A produção caiu aproximadamente 28,7% relativamente à campanha anterior.",
-    contexto:
-      "A horticultura é particularmente importante para o abastecimento urbano e para a geração de rendimento de pequenos produtores.",
-    importancia:
-      "É uma cadeia importante para segurança alimentar, nutrição e rendimento rural.",
-    implicacoes:
-      "Irrigação, sementes, fertilização, assistência técnica, armazenamento e acesso a mercados podem ter impacto directo na cadeia.",
-    metodologia:
-      "Estatística agrícola oficial do INE/MINAGRIF.",
-    limitacoes:
-      "A variação agregada não explica as causas específicas da queda.",
-    categoria: "Agricultura",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "carnes-2324",
-    titulo: "Produção total de carnes",
-    valor: "333 238",
-    unidade: "toneladas",
-    variacao: "-2,5%",
-    descricao:
-      "Produção total de carne bovina, caprina, ovina, suína e de aves.",
-    oQueMede:
-      "Mede a produção agregada das principais categorias de carne.",
-    significado:
-      "Permite obter uma visão geral da oferta pecuária, mas pode esconder comportamentos muito diferentes entre espécies.",
-    analise:
-      "A queda agregada de 2,5% não significa que toda a pecuária tenha recuado. Carne bovina e aves cresceram, enquanto a carne caprina apresentou uma redução expressiva.",
-    comparacao:
-      "A produção total caiu 2,5%, mas a carne bovina cresceu 3,9% e a carne de aves 8,1%.",
-    contexto:
-      "A estrutura pecuária angolana é diversificada e apresenta diferentes sistemas de produção.",
-    importancia:
-      "É um indicador importante para segurança alimentar, abastecimento e políticas de produção animal.",
-    implicacoes:
-      "As políticas devem considerar cada cadeia individualmente, em vez de tratar toda a pecuária como um bloco homogéneo.",
-    metodologia:
-      "Agregação das principais categorias de carne reportadas pelo INE/MINAGRIF.",
-    limitacoes:
-      "Não inclui necessariamente todas as categorias pecuárias existentes.",
-    categoria: "Pecuária",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.bovinos,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "caprina-2324",
-    titulo: "Carne caprina",
-    valor: "153 136",
-    unidade: "toneladas",
-    variacao: "-10,0%",
-    descricao:
-      "Produção nacional de carne caprina.",
-    oQueMede:
-      "Mede o volume de carne proveniente da caprinicultura.",
-    significado:
-      "A caprinicultura possui forte importância económica e alimentar em várias regiões do país.",
-    analise:
-      "A carne caprina representa aproximadamente 46% do total das carnes consideradas. A queda de 10% teve influência significativa no resultado agregado da pecuária.",
-    comparacao:
-      "A produção passou de aproximadamente 170 mil toneladas para 153 136 toneladas.",
-    contexto:
-      "A produção caprina está associada a sistemas familiares e diferentes condições agroecológicas.",
-    importancia:
-      "É uma cadeia relevante para rendimento rural e disponibilidade de proteína animal.",
-    implicacoes:
-      "Sanidade animal, alimentação, genética e acesso a mercados são áreas importantes para acompanhamento.",
-    metodologia:
-      "Dados oficiais de produção pecuária.",
-    limitacoes:
-      "O indicador não explica sozinho as causas da redução.",
-    categoria: "Pecuária",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.bovinos,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "bovina-2324",
-    titulo: "Carne bovina",
-    valor: "110 104",
-    unidade: "toneladas",
-    variacao: "+3,9%",
-    descricao:
-      "Produção nacional de carne bovina.",
-    oQueMede:
-      "Mede o volume de carne proveniente da produção bovina.",
-    significado:
-      "A cadeia bovina é uma das principais componentes da pecuária nacional.",
-    analise:
-      "O crescimento de 3,9% ocorreu num contexto em que a produção total de carnes diminuiu. Isto demonstra que as diferentes cadeias tiveram desempenhos distintos.",
-    comparacao:
-      "A produção bovina cresceu aproximadamente 3,9% face à campanha anterior.",
-    contexto:
-      "A produção bovina possui forte presença em províncias com tradição pecuária.",
-    importancia:
-      "É relevante para abastecimento interno, rendimento rural e desenvolvimento da cadeia de carne.",
-    implicacoes:
-      "Melhoria genética, sanidade, pastagens, alimentação e infra-estruturas de comercialização podem elevar a produtividade.",
-    metodologia:
-      "Estatística oficial INE/MINAGRIF.",
-    limitacoes:
-      "Não permite inferir rentabilidade dos produtores.",
-    categoria: "Pecuária",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.bovinos,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "aves-2324",
-    titulo: "Carne de aves",
-    valor: "57 631",
-    unidade: "toneladas",
-    variacao: "+8,1%",
-    descricao:
-      "Produção nacional de carne de aves.",
-    oQueMede:
-      "Mede o volume produzido pela cadeia avícola de carne.",
-    significado:
-      "A avicultura possui ciclos produtivos relativamente curtos e pode responder rapidamente a investimentos e condições de mercado.",
-    analise:
-      "O crescimento de 8,1% coloca a carne de aves entre as cadeias pecuárias de evolução mais positiva.",
-    comparacao:
-      "A produção de aves cresceu 8,1%, acima da evolução da carne bovina.",
-    contexto:
-      "A cadeia avícola depende fortemente de alimentação, energia, sanidade, pintos, logística e capacidade de processamento.",
-    importancia:
-      "É estratégica para aumentar a disponibilidade de proteína animal e reduzir dependência de importações.",
-    implicacoes:
-      "A disponibilidade e o preço dos alimentos para aves são factores críticos para o crescimento da cadeia.",
-    metodologia:
-      "Dados oficiais da produção pecuária.",
-    limitacoes:
-      "A produção física não mostra custos ou margens comerciais.",
-    categoria: "Pecuária",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.aves,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "ovos-2324",
-    titulo: "Produção de ovos",
-    valor: "2,42 mil milhões",
-    unidade: "unidades",
-    variacao: "-12,3%",
-    descricao:
-      "Produção nacional de ovos na campanha 2023/2024.",
-    oQueMede:
-      "Mede o número de ovos produzidos pela actividade avícola.",
-    significado:
-      "É um indicador importante da oferta de proteína animal e da actividade da avicultura de postura.",
-    analise:
-      "A redução de 12,3% merece acompanhamento porque os custos de alimentação, energia, sanidade e logística podem afectar fortemente a produção.",
-    comparacao:
-      "A produção caiu 12,3% relativamente à campanha anterior.",
-    contexto:
-      "A cadeia pode reagir rapidamente às condições de mercado e aos custos dos factores de produção.",
-    importancia:
-      "Os ovos são uma fonte importante de proteína e têm grande circulação no mercado interno.",
-    implicacoes:
-      "A recuperação da cadeia depende da competitividade das explorações e da estabilidade dos factores de produção.",
-    metodologia:
-      "Estatística oficial INE/MINAGRIF.",
-    limitacoes:
-      "Não inclui análise de preços ao consumidor neste indicador.",
-    categoria: "Pecuária",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.aves,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "leite-2324",
-    titulo: "Produção de leite",
-    valor: "5,51 milhões",
-    unidade: "litros",
-    variacao: "-12,6%",
-    descricao:
-      "Produção nacional de leite registada na campanha 2023/2024.",
-    oQueMede:
-      "Mede o volume de leite produzido.",
-    significado:
-      "A cadeia leiteira é sensível à alimentação animal, água, sanidade, genética e capacidade de conservação.",
-    analise:
-      "A queda de 12,6% deve ser analisada em conjunto com os sistemas de produção, disponibilidade de alimentação e condições de comercialização.",
-    comparacao:
-      "A produção caiu aproximadamente 12,6% face à campanha anterior.",
-    contexto:
-      "A produção leiteira apresenta desafios diferentes dos sistemas de produção de carne.",
-    importancia:
-      "O leite possui importância nutricional e potencial de transformação industrial.",
-    implicacoes:
-      "Refrigeração, recolha, alimentação e genética são pontos fundamentais para o desenvolvimento da cadeia.",
-    metodologia:
-      "Estatística pecuária oficial.",
-    limitacoes:
-      "Não mede o volume processado industrialmente.",
-    categoria: "Pecuária",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.leite,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "cafe-2324",
-    titulo: "Café comercial",
-    valor: "7 584",
-    unidade: "toneladas",
-    variacao: "+21,7%",
-    descricao:
-      "Produção comercial de café na campanha 2023/2024.",
-    oQueMede:
-      "Mede a produção comercial de café reportada para a campanha.",
-    significado:
-      "O café é uma cadeia com potencial de geração de rendimento rural, transformação, exportação e valorização da produção nacional.",
-    analise:
-      "O crescimento de 21,7% destaca-se entre os indicadores analisados. A recuperação da produção comercial pode abrir espaço para maior processamento e exportação.",
-    comparacao:
-      "A produção passou de 6 229 toneladas para 7 584 toneladas.",
-    contexto:
-      "A cadeia cafeeira possui importância histórica e pode beneficiar de renovação de plantações, assistência técnica e melhoria da comercialização.",
-    importancia:
-      "É uma das culturas comerciais estratégicas de Angola.",
-    implicacoes:
-      "A continuidade do crescimento dependerá de produtividade, qualidade, processamento e acesso a mercados.",
-    metodologia:
-      "Dados oficiais de produção comercial de café.",
-    limitacoes:
-      "Uma campanha positiva não garante crescimento automático na campanha seguinte.",
-    categoria: "Café",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.cafe,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "mel-2324",
-    titulo: "Produção nacional de mel",
-    valor: "6 084",
-    unidade: "toneladas",
-    variacao: "+16%",
-    descricao:
-      "Produção nacional de mel registada na campanha 2023/2024.",
-    oQueMede:
-      "Mede a quantidade de mel produzida pela actividade apícola.",
-    significado:
-      "O mel representa o principal produto comercial da apicultura, mas a actividade também gera cera e presta serviços ecológicos através da polinização.",
-    analise:
-      "A apicultura apresenta importância económica e ambiental. O crescimento de 16% indica uma evolução positiva da produção reportada, mas a cadeia ainda merece maior detalhe estatístico por província e por sistema produtivo.",
-    comparacao:
-      "A produção aumentou aproximadamente 16% face ao período anterior.",
-    contexto:
-      "A apicultura pode ser desenvolvida em diferentes regiões rurais e pode complementar outras actividades agrícolas.",
-    importancia:
-      "Além do rendimento directo, as abelhas contribuem para a polinização de culturas, tornando a actividade relevante para a agricultura como um todo.",
-    implicacoes:
-      "Melhor organização dos produtores, qualidade, embalagem, certificação, processamento e acesso a mercados podem aumentar o valor capturado pelos apicultores.",
-    metodologia:
-      "Estatística de produção apícola divulgada pelo INE/MINAGRIF.",
-    limitacoes:
-      "Os dados nacionais não permitem, nesta página, identificar todas as diferenças provinciais nem a produtividade por colmeia.",
-    categoria: "Apicultura",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.mel,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "cera-2324",
-    titulo: "Produção de cera",
-    valor: "379",
-    unidade: "toneladas",
-    variacao: "+14%",
-    descricao:
-      "Produção nacional de cera de abelha.",
-    oQueMede:
-      "Mede a quantidade de cera obtida da actividade apícola.",
-    significado:
-      "A cera constitui um produto secundário importante e demonstra que a apicultura não depende exclusivamente da venda de mel.",
-    analise:
-      "A produção de cera cresceu aproximadamente 14%, acompanhando a tendência positiva observada no mel.",
-    comparacao:
-      "O crescimento foi ligeiramente inferior ao registado para o mel.",
-    contexto:
-      "A cera pode ser utilizada em diferentes actividades económicas e industriais.",
-    importancia:
-      "Diversificar a comercialização dos produtos apícolas pode melhorar o rendimento dos produtores.",
-    implicacoes:
-      "A organização da cadeia pode criar novos produtos e mercados.",
-    metodologia:
-      "Estatística oficial da produção apícola.",
-    limitacoes:
-      "Não apresenta nesta página o valor económico da cera comercializada.",
-    categoria: "Apicultura",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.mel,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "madeira-toro-2324",
-    titulo: "Madeira em toro",
-    valor: "238 690",
-    unidade: "m³",
-    descricao:
-      "Produção nacional de madeira em toro.",
-    oQueMede:
-      "Mede o volume de madeira em toro produzido.",
-    significado:
-      "Representa uma fase inicial da cadeia florestal, antes das etapas de transformação.",
-    analise:
-      "A comparação com madeira serrada permite avaliar, de forma simplificada, a escala das etapas de transformação existentes.",
-    comparacao:
-      "O volume de madeira em toro foi superior ao volume de madeira serrada.",
-    contexto:
-      "O sector florestal combina exploração, transformação, transporte e comércio.",
-    importancia:
-      "A cadeia pode gerar emprego e valor acrescentado, desde que seja acompanhada por gestão sustentável.",
-    implicacoes:
-      "A transformação local pode aumentar o valor económico retido no país.",
-    metodologia:
-      "Dados de produção florestal divulgados pelo INE/MINAGRIF.",
-    limitacoes:
-      "Volume de madeira não é equivalente a valor económico nem mede sustentabilidade florestal.",
-    categoria: "Florestas",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.floresta,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "madeira-serrada-2324",
-    titulo: "Madeira serrada",
-    valor: "179 670",
-    unidade: "m³",
-    descricao:
-      "Produção nacional de madeira serrada.",
-    oQueMede:
-      "Mede o volume de madeira que passou por uma etapa de transformação em madeira serrada.",
-    significado:
-      "É um indicador de transformação da matéria-prima florestal.",
-    analise:
-      "A capacidade de serragem e transformação local é importante para aumentar o valor acrescentado da cadeia florestal.",
-    comparacao:
-      "Foram registados aproximadamente 179,67 mil m³ de madeira serrada.",
-    contexto:
-      "A indústria florestal enfrenta desafios relacionados com infra-estruturas, transporte, equipamentos e sustentabilidade.",
-    importancia:
-      "Quanto maior a transformação local, maior pode ser o valor económico gerado antes da comercialização.",
-    implicacoes:
-      "Investimentos industriais podem aumentar a capacidade de processamento.",
-    metodologia:
-      "Estatística oficial da produção florestal.",
-    limitacoes:
-      "O indicador não mede eficiência industrial nem rentabilidade.",
-    categoria: "Florestas",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.madeira,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "madeira-exportada-2324",
-    titulo: "Madeira serrada exportada",
-    valor: "78 100",
-    unidade: "m³",
-    descricao:
-      "Volume de madeira serrada exportada.",
-    oQueMede:
-      "Mede o volume de madeira serrada que saiu do país através do comércio externo.",
-    significado:
-      "Demonstra a ligação da cadeia florestal nacional com mercados internacionais.",
-    analise:
-      "O comércio externo mostra que existe procura internacional. O desafio económico consiste em equilibrar exportação, transformação local e sustentabilidade.",
-    comparacao:
-      "O volume exportado representa uma parcela significativa da madeira serrada produzida.",
-    contexto:
-      "A cadeia florestal possui relações comerciais com vários mercados externos.",
-    importancia:
-      "As exportações podem gerar divisas e estimular investimentos.",
-    implicacoes:
-      "A transformação local antes da exportação pode aumentar o valor acrescentado nacional.",
-    metodologia:
-      "Dados estatísticos de comércio e produção florestal.",
-    limitacoes:
-      "Volume exportado não informa o valor financeiro das exportações.",
-    categoria: "Florestas",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.madeira,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "huambo-carnes",
-    titulo: "Carnes produzidas no Huambo",
-    valor: "23 639",
-    unidade: "toneladas",
-    variacao: "7,1% do total nacional",
-    descricao:
-      "Produção total de carnes registada na província do Huambo.",
-    oQueMede:
-      "Mede a contribuição provincial do Huambo para a produção nacional de carnes.",
-    significado:
-      "Mostra a importância da província dentro da estrutura pecuária nacional.",
-    analise:
-      "O Huambo aparece entre as províncias com maior produção de carnes, com 23 639 toneladas.",
-    comparacao:
-      "Nos valores provinciais individualizados, o Huambo ficou atrás de Luanda, Huíla e Cuanza Sul e à frente de Malanje e Uíge.",
-    contexto:
-      "A actividade pecuária do Huambo está ligada à agricultura, disponibilidade de pastagens e tradição de produção animal.",
-    importancia:
-      "A posição provincial pode favorecer o desenvolvimento de cadeias de abate, transformação, comercialização e distribuição.",
-    implicacoes:
-      "A melhoria das infra-estruturas pecuárias pode aumentar o valor acrescentado gerado localmente.",
-    metodologia:
-      "Dados provinciais do Anuário Estatístico da Agricultura.",
-    limitacoes:
-      "O indicador não apresenta aqui a distribuição por município.",
-    categoria: "Huambo",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.huambo,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "huambo-bovina",
-    titulo: "Carne bovina no Huambo",
-    valor: "7 514",
-    unidade: "toneladas",
-    variacao: "6,8% do total nacional",
-    descricao:
-      "Produção de carne bovina registada na província do Huambo.",
-    oQueMede:
-      "Mede a contribuição do Huambo para a produção nacional de carne bovina.",
-    significado:
-      "Permite avaliar a posição da província numa das principais cadeias pecuárias.",
-    analise:
-      "O Huambo contribuiu com aproximadamente 6,8% da produção nacional de carne bovina.",
-    comparacao:
-      "A produção provincial ficou abaixo de Luanda, Huíla e Cuanza Sul nos valores destacados.",
-    contexto:
-      "A integração entre agricultura e pecuária constitui uma oportunidade para produção de alimentação animal e aproveitamento de subprodutos.",
-    importancia:
-      "A cadeia bovina pode gerar oportunidades em criação, engorda, abate, transformação e comércio.",
-    implicacoes:
-      "Melhorias em sanidade, alimentação, genética, água e comercialização podem elevar a produtividade.",
-    metodologia:
-      "Estatística provincial oficial.",
-    limitacoes:
-      "Não mede o número de animais abatidos nem a produtividade média por animal.",
-    categoria: "Huambo",
-    periodo: "2023/2024",
-    fonte: "INE / MINAGRIF",
-    url: FONTES.anuario,
-    imagem: IMAGENS.bovinos,
-    classificacao: "Oficial",
-  },
-
-  /* ===================== 2024/25 ===================== */
-
-  {
-    id: "agricultura-total-2425",
-    titulo: "Produção agrícola total",
-    valor: ">30,4 milhões",
-    unidade: "toneladas",
-    variacao: "+8,5%",
-    descricao:
-      "Produção agrícola total reportada para a campanha 2024/2025.",
-    oQueMede:
-      "Representa o volume agregado de produção agrícola reportado para a campanha.",
-    significado:
-      "É um dos principais indicadores para acompanhar a dimensão física da produção agrícola nacional.",
-    analise:
-      "O resultado mostra uma aceleração importante relativamente à campanha anterior. O crescimento deve ser interpretado conjuntamente com a evolução das áreas, produtividade e estrutura das fileiras.",
-    comparacao:
-      "O MINAGRIF reportou crescimento de 8,5% em relação ao período anterior.",
-    contexto:
-      "O crescimento ocorre num contexto de reforço de cadeias prioritárias e de políticas de aumento da produção nacional.",
-    importancia:
-      "É um indicador central para segurança alimentar e substituição de importações.",
-    implicacoes:
-      "O desafio passa por transformar crescimento de volume em rendimento, processamento, emprego e maior oferta nacional.",
-    metodologia:
-      "Valor reportado pelo MINAGRIF para a campanha 2024/2025.",
-    limitacoes:
-      "O valor é apresentado como agregado; a decomposição completa por cultura deve ser consultada nas publicações oficiais.",
-    categoria: "Agricultura",
-    periodo: "2024/2025",
-    fonte: "MINAGRIF — resultados da campanha 2024/2025",
-    url: FONTES.minagrifEconomia,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "cereais-2425",
-    titulo: "Cereais — campanha 2024/25",
-    valor: "≈3,7 milhões",
-    unidade: "toneladas",
-    variacao: "+6,5%",
-    descricao:
-      "Produção de cereais reportada para a campanha 2024/2025.",
-    oQueMede:
-      "Mede a produção agregada das principais culturas cerealíferas.",
-    significado:
-      "Os cereais continuam a ocupar uma posição central na produção alimentar nacional.",
-    analise:
-      "O crescimento de 6,5% indica uma evolução positiva. O aumento absoluto da produção deve ser acompanhado pela produtividade por hectare.",
-    comparacao:
-      "A produção aproximou-se de 3,7 milhões de toneladas, com crescimento de 6,5%.",
-    contexto:
-      "Milho, arroz e outras culturas cerealíferas estão entre as fileiras estratégicas.",
-    importancia:
-      "A produção cerealífera é directamente relevante para segurança alimentar.",
-    implicacoes:
-      "Melhoria de sementes, fertilização, mecanização, armazenamento e comercialização é fundamental.",
-    metodologia:
-      "Resultados oficiais reportados pelo MINAGRIF.",
-    limitacoes:
-      "O valor arredondado não substitui os quadros detalhados do ICAPP.",
-    categoria: "Agricultura",
-    periodo: "2024/2025",
-    fonte: "MINAGRIF / INE",
-    url: FONTES.minagrifResultados,
-    imagem: IMAGENS.milho,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "crescimento-raizes-2425",
-    titulo: "Raízes e tubérculos",
-    valor: "Crescimento",
-    unidade: "variação anual",
-    variacao: "+10,6%",
-    descricao:
-      "Crescimento reportado da produção de raízes e tubérculos na campanha 2024/2025.",
-    oQueMede:
-      "Mede a evolução percentual da produção da fileira.",
-    significado:
-      "Raízes e tubérculos possuem forte importância na alimentação e no rendimento rural.",
-    analise:
-      "O crescimento de 10,6% foi uma das maiores taxas entre os grandes grupos de produção agrícola destacados pelo MINAGRIF.",
-    comparacao:
-      "A evolução foi superior à dos cereais, que cresceram 6,5%.",
-    contexto:
-      "A fileira possui grande importância na agricultura familiar.",
-    importancia:
-      "É estratégica para segurança alimentar e diversificação produtiva.",
-    implicacoes:
-      "A melhoria de conservação e processamento pode reduzir perdas e criar valor.",
-    metodologia:
-      "Taxa de crescimento reportada pelo MINAGRIF.",
-    limitacoes:
-      "Sem o volume absoluto nesta ficha, a taxa não permite saber quantas toneladas foram acrescentadas.",
-    categoria: "Agricultura",
-    periodo: "2024/2025",
-    fonte: "MINAGRIF — resultados da campanha 2024/2025",
-    url: FONTES.minagrifResultados,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "leguminosas-2425",
-    titulo: "Leguminosas e oleaginosas",
-    valor: "Crescimento",
-    unidade: "variação anual",
-    variacao: "+5,9%",
-    descricao:
-      "Crescimento reportado da produção de leguminosas e oleaginosas.",
-    oQueMede:
-      "Mede a variação anual da produção agregada destas culturas.",
-    significado:
-      "São importantes para alimentação, proteína vegetal e fornecimento de matérias-primas.",
-    analise:
-      "O crescimento de 5,9% indica evolução positiva, embora inferior à taxa das raízes e tubérculos.",
-    comparacao:
-      "A taxa foi inferior aos 10,6% registados nas raízes e tubérculos.",
-    contexto:
-      "A soja e outras oleaginosas fazem parte das cadeias prioritárias de desenvolvimento.",
-    importancia:
-      "A expansão destas cadeias pode reduzir importações de matérias-primas.",
-    implicacoes:
-      "É necessário acompanhar processamento, armazenamento e ligação com a indústria.",
-    metodologia:
-      "Taxa de crescimento oficial.",
-    limitacoes:
-      "A taxa não apresenta nesta ficha o volume absoluto.",
-    categoria: "Agricultura",
-    periodo: "2024/2025",
-    fonte: "MINAGRIF",
-    url: FONTES.minagrifResultados,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "horticultura-2425",
-    titulo: "Horticultura",
-    valor: "Crescimento",
-    unidade: "variação anual",
-    variacao: "+8,2%",
-    descricao:
-      "Crescimento reportado da horticultura na campanha 2024/2025.",
-    oQueMede:
-      "Mede a evolução percentual da produção hortícola.",
-    significado:
-      "Representa uma recuperação importante quando comparada com a queda observada em 2023/2024.",
-    analise:
-      "A taxa de 8,2% mostra uma evolução positiva da cadeia na campanha seguinte.",
-    comparacao:
-      "A evolução contrasta com a queda de 28,7% registada nas hortícolas em 2023/2024.",
-    contexto:
-      "A horticultura possui elevada importância para mercados urbanos.",
-    importancia:
-      "Pode contribuir para abastecimento regular e rendimento de pequenos produtores.",
-    implicacoes:
-      "Irrigação e logística continuam a ser pontos críticos.",
-    metodologia:
-      "Taxa reportada pelo MINAGRIF.",
-    limitacoes:
-      "É uma taxa de crescimento e não um volume absoluto.",
-    categoria: "Agricultura",
-    periodo: "2024/2025",
-    fonte: "MINAGRIF",
-    url: FONTES.minagrifResultados,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "frutas-2425",
-    titulo: "Frutas — campanha 2024/25",
-    valor: "Crescimento",
-    unidade: "variação anual",
-    variacao: "+5,5%",
-    descricao:
-      "Crescimento reportado da produção de frutas.",
-    oQueMede:
-      "Mede a evolução anual da produção de frutas.",
-    significado:
-      "Indica continuidade de crescimento de uma das maiores fileiras físicas da produção vegetal.",
-    analise:
-      "A taxa de 5,5% demonstra crescimento positivo, embora moderado.",
-    comparacao:
-      "O crescimento foi inferior aos 8,2% da horticultura e aos 10,6% das raízes e tubérculos.",
-    contexto:
-      "A cadeia frutícola enfrenta desafios de conservação, transporte e transformação.",
-    importancia:
-      "Redução de perdas pós-colheita pode aumentar a disponibilidade efectiva.",
-    implicacoes:
-      "Cadeias de frio, processamento e armazenamento podem ampliar o valor económico.",
-    metodologia:
-      "Taxa oficial do MINAGRIF.",
-    limitacoes:
-      "Não apresenta nesta ficha o volume absoluto.",
-    categoria: "Agricultura",
-    periodo: "2024/2025",
-    fonte: "MINAGRIF",
-    url: FONTES.minagrifResultados,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "carne-2425",
-    titulo: "Produção de carne — 2024/25",
-    valor: "Crescimento",
-    unidade: "variação anual",
-    variacao: "+7,3%",
-    descricao:
-      "Crescimento da produção de carne reportado para a campanha 2024/2025.",
-    oQueMede:
-      "Mede a evolução anual da produção pecuária de carne.",
-    significado:
-      "Indica recuperação da produção de proteína animal.",
-    analise:
-      "O crescimento de 7,3% representa uma melhoria importante face à queda agregada observada em 2023/2024.",
-    comparacao:
-      "A taxa de crescimento de 2024/25 contrasta com a redução de 2,5% observada na produção total de carnes em 2023/24.",
-    contexto:
-      "A evolução ocorre num período de reforço das cadeias pecuárias.",
-    importancia:
-      "Aumentar a produção de carne é relevante para reduzir dependência de oferta externa.",
-    implicacoes:
-      "Sanidade, alimentação animal, genética, abate e cadeia de frio são fundamentais.",
-    metodologia:
-      "Taxa reportada pelo MINAGRIF.",
-    limitacoes:
-      "A taxa agregada não permite observar cada espécie individualmente.",
-    categoria: "Pecuária",
-    periodo: "2024/2025",
-    fonte: "MINAGRIF",
-    url: FONTES.minagrifResultados,
-    imagem: IMAGENS.bovinos,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "ovos-2425",
-    titulo: "Produção de ovos — 2024/25",
-    valor: "Crescimento",
-    unidade: "variação anual",
-    variacao: "+5%",
-    descricao:
-      "Crescimento da produção de ovos reportado para 2024/2025.",
-    oQueMede:
-      "Mede a evolução da produção de ovos.",
-    significado:
-      "Representa recuperação da cadeia de postura.",
-    analise:
-      "O crescimento de 5% contrasta com a queda de 12,3% observada em 2023/2024.",
-    comparacao:
-      "A cadeia passou de uma evolução negativa para uma evolução positiva.",
-    contexto:
-      "A produção depende de custos de ração, energia, sanidade e eficiência das explorações.",
-    importancia:
-      "Os ovos constituem uma fonte importante de proteína e têm elevada procura interna.",
-    implicacoes:
-      "A estabilidade dos custos de produção é importante para manter o crescimento.",
-    metodologia:
-      "Taxa reportada pelo MINAGRIF.",
-    limitacoes:
-      "Não é apresentado nesta ficha o volume absoluto.",
-    categoria: "Pecuária",
-    periodo: "2024/2025",
-    fonte: "MINAGRIF",
-    url: FONTES.minagrifResultados,
-    imagem: IMAGENS.aves,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "cafe-2425",
-    titulo: "Café comercial — 2024/25",
-    valor: "Crescimento",
-    unidade: "variação anual",
-    variacao: "+40%",
-    descricao:
-      "Crescimento reportado da produção comercial de café na campanha 2024/2025.",
-    oQueMede:
-      "Mede a evolução percentual da produção comercial de café.",
-    significado:
-      "É uma das maiores taxas de crescimento entre as cadeias destacadas pelo MINAGRIF.",
-    analise:
-      "O crescimento de 40% representa forte aceleração relativamente aos 21,7% registados em 2023/2024.",
-    comparacao:
-      "A cadeia cafeeira apresenta dois períodos consecutivos de crescimento expressivo.",
-    contexto:
-      "O café está entre as cadeias consideradas prioritárias para a diversificação económica.",
-    importancia:
-      "Pode gerar rendimento rural, emprego, exportações e oportunidades de processamento.",
-    implicacoes:
-      "É importante consolidar produtividade, qualidade, processamento e acesso a mercados.",
-    metodologia:
-      "Taxa oficial reportada pelo MINAGRIF.",
-    limitacoes:
-      "A taxa de crescimento não fornece nesta ficha a tonelagem absoluta de 2024/25.",
-    categoria: "Café",
-    periodo: "2024/2025",
-    fonte: "MINAGRIF",
-    url: FONTES.minagrifResultados,
-    imagem: IMAGENS.cafe,
-    classificacao: "Oficial",
-  },
-
-  /* ===================== 2025 ===================== */
-
-  {
-    id: "peso-agro-pib-2025",
-    titulo: "Peso do sector agropecuário no PIB",
-    valor: "25,43%",
-    unidade: "do PIB",
-    descricao:
-      "Peso do sector agropecuário na estrutura económica de Angola em 2025, conforme dados reportados pelo MINAGRIF.",
-    oQueMede:
-      "Mede a participação do sector agropecuário no Produto Interno Bruto.",
-    significado:
-      "Mostra a relevância económica do sector para além da simples quantidade de alimentos produzidos.",
-    analise:
-      "Segundo o MINAGRIF, o peso do sector passou de 13,66% em 2015 para 25,43% em 2025.",
-    comparacao:
-      "A participação praticamente duplicou em dez anos, de acordo com os valores apresentados pelo Ministério.",
-    contexto:
-      "O crescimento reflecte o aumento da produção e a transformação da estrutura produtiva.",
-    importancia:
-      "É um indicador macroeconómico fundamental para avaliar a diversificação da economia.",
-    implicacoes:
-      "Maior peso económico aumenta a necessidade de investimento em produtividade, transformação e infra-estruturas.",
-    metodologia:
-      "Valores reportados pelo MINAGRIF em comunicação oficial sobre o desempenho económico do sector.",
-    limitacoes:
-      "O indicador não significa que agricultura seja responsável isoladamente por toda a actividade agroindustrial.",
-    categoria: "Agricultura",
-    periodo: "2025",
-    fonte: "MINAGRIF — desempenho económico do sector",
-    url: FONTES.minagrifEconomia,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "producao-202425",
-    titulo: "Produção agrícola 2024/25",
-    valor: ">30,4 milhões",
-    unidade: "toneladas",
-    variacao: "+8,5%",
-    descricao:
-      "Volume total de produção agrícola reportado para a campanha 2024/2025.",
-    oQueMede:
-      "Mede o volume agregado de produção agrícola.",
-    significado:
-      "É uma medida física da escala produtiva da agricultura.",
-    analise:
-      "O resultado demonstra uma aceleração significativa da produção nacional.",
-    comparacao:
-      "O crescimento foi de aproximadamente 8,5% em relação ao período anterior.",
-    contexto:
-      "O desempenho está associado ao crescimento de várias fileiras agrícolas.",
-    importancia:
-      "O aumento da oferta nacional pode contribuir para segurança alimentar e redução da dependência externa.",
-    implicacoes:
-      "O próximo desafio é garantir armazenamento, processamento e mercados capazes de absorver a produção.",
-    metodologia:
-      "Valor oficial comunicado pelo MINAGRIF.",
-    limitacoes:
-      "O valor arredondado deve ser complementado pelas tabelas estatísticas detalhadas.",
-    categoria: "Agricultura",
-    periodo: "2024/2025",
-    fonte: "MINAGRIF",
-    url: FONTES.minagrifEconomia,
-    imagem: IMAGENS.agricultura,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "sementes-2025",
-    titulo: "Disponibilidade de sementes certificadas",
-    valor: "6 930",
-    unidade: "toneladas",
-    variacao: "+143,2%",
-    descricao:
-      "Disponibilidade de sementes certificadas reportada para 2025.",
-    oQueMede:
-      "Mede a quantidade de sementes certificadas disponibilizada ao sistema produtivo.",
-    significado:
-      "A disponibilidade de sementes certificadas é um dos factores fundamentais para melhorar a produtividade e qualidade das culturas.",
-    analise:
-      "O valor passou de 2 850 toneladas em 2023 para 6 930 toneladas em 2025.",
-    comparacao:
-      "O crescimento reportado foi de 143,2% no período.",
-    contexto:
-      "A expansão da oferta de sementes é relevante para a modernização da agricultura.",
-    importancia:
-      "Sementes de qualidade são um dos principais factores tecnológicos da produtividade.",
-    implicacoes:
-      "É necessário garantir também distribuição, preço acessível, assistência técnica e adaptação das variedades.",
-    metodologia:
-      "Dados apresentados na comunicação oficial do Estado da Nação.",
-    limitacoes:
-      "Disponibilidade não significa necessariamente que todo o volume tenha sido efectivamente utilizado pelos produtores.",
-    categoria: "Agricultura",
-    periodo: "2025",
-    fonte: "Governo de Angola — Estado da Nação",
-    url: FONTES.governo2026,
-    imagem: IMAGENS.sementes,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "mel-2023-25",
-    titulo: "Produção de mel — período 2023/2025",
-    valor: "684",
-    unidade: "toneladas",
-    variacao: "+49,5%",
-    descricao:
-      "Produção de mel reportada pelo Governo para o período 2023–2025.",
-    oQueMede:
-      "Representa a produção de mel reportada para o período indicado na comunicação oficial.",
-    significado:
-      "Mostra a evolução recente da apicultura no quadro dos resultados agropecuários nacionais.",
-    analise:
-      "O Governo reportou 684 toneladas de mel e crescimento de 49,5% no período analisado.",
-    comparacao:
-      "O valor não deve ser comparado directamente com o indicador de 6 084 toneladas de 2023/2024 sem verificar as diferenças metodológicas e temporais entre as fontes.",
-    contexto:
-      "A apicultura é simultaneamente uma actividade produtiva e um componente importante da polinização.",
-    importancia:
-      "Pode gerar rendimento rural com relativamente baixa exigência de área agrícola directa.",
-    implicacoes:
-      "A profissionalização da cadeia pode aumentar qualidade, embalagem, certificação e acesso ao mercado.",
-    metodologia:
-      "Indicador apresentado na comunicação oficial do Governo sobre o período 2023–2025.",
-    limitacoes:
-      "Período e metodologia não são directamente equivalentes ao indicador anual do Anuário 2024.",
-    categoria: "Apicultura",
-    periodo: "2023–2025",
-    fonte: "Governo de Angola — Estado da Nação",
-    url: FONTES.governo2026,
-    imagem: IMAGENS.mel,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "cera-2023-25",
-    titulo: "Produção de cera — período 2023/2025",
-    valor: "33",
-    unidade: "toneladas",
-    variacao: "+100%",
-    descricao:
-      "Produção de cera reportada pelo Governo para o período 2023–2025.",
-    oQueMede:
-      "Representa a produção de cera indicada na comunicação oficial para o período analisado.",
-    significado:
-      "Demonstra que a cadeia apícola possui produtos além do mel.",
-    analise:
-      "O Governo reportou 33 toneladas de cera e crescimento de 100% no período indicado.",
-    comparacao:
-      "A comparação directa com o valor anual de 379 toneladas de 2023/2024 exige cautela devido às diferenças de período e metodologia.",
-    contexto:
-      "A cera pode ser valorizada em diferentes cadeias económicas.",
-    importancia:
-      "A diversificação de produtos pode aumentar o rendimento dos apicultores.",
-    implicacoes:
-      "Processamento e comercialização especializada podem criar novos mercados.",
-    metodologia:
-      "Valor reportado pelo Governo na comunicação do Estado da Nação.",
-    limitacoes:
-      "Não é apresentado como uma série anual equivalente ao Anuário 2024.",
-    categoria: "Apicultura",
-    periodo: "2023–2025",
-    fonte: "Governo de Angola — Estado da Nação",
-    url: FONTES.governo2026,
-    imagem: IMAGENS.mel,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "madeira-2023-25",
-    titulo: "Madeira em toro — período 2023/2025",
-    valor: "483 267",
-    unidade: "m³",
-    variacao: "+44,9%",
-    descricao:
-      "Volume de madeira em toro reportado para o período 2023–2025.",
-    oQueMede:
-      "Mede o volume de madeira em toro reportado no período.",
-    significado:
-      "É um indicador da actividade de exploração e fornecimento de matéria-prima florestal.",
-    analise:
-      "O Governo reportou crescimento de 44,9%, sinalizando expansão significativa do volume produzido no período.",
-    comparacao:
-      "O valor deve ser tratado como indicador do período 2023–2025 e não como produção exclusivamente de 2025.",
-    contexto:
-      "O crescimento ocorre juntamente com esforços para reforçar transformação florestal.",
-    importancia:
-      "A expansão deve ser acompanhada por sustentabilidade e capacidade de transformação.",
-    implicacoes:
-      "Maior produção sem aumento da transformação pode limitar o valor acrescentado interno.",
-    metodologia:
-      "Valor reportado pelo Governo de Angola.",
-    limitacoes:
-      "Não representa uma série anual isolada.",
-    categoria: "Florestas",
-    periodo: "2023–2025",
-    fonte: "Governo de Angola — Estado da Nação",
-    url: FONTES.governo2026,
-    imagem: IMAGENS.floresta,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "madeira-serrada-2023-25",
-    titulo: "Madeira serrada — período 2023/2025",
-    valor: "326 270",
-    unidade: "m³",
-    descricao:
-      "Volume de madeira serrada reportado para o período 2023–2025.",
-    oQueMede:
-      "Mede o volume de madeira transformada em madeira serrada no período indicado.",
-    significado:
-      "É uma medida de transformação da matéria-prima florestal.",
-    analise:
-      "O crescimento da transformação é importante para aumentar o valor acrescentado interno.",
-    comparacao:
-      "O indicador deve ser lido como valor relativo ao período 2023–2025.",
-    contexto:
-      "O Governo também anunciou projectos de parques de transformação de madeira, incluindo Cachiungo, no Huambo.",
-    importancia:
-      "A transformação local pode gerar emprego e maior valor económico.",
-    implicacoes:
-      "A expansão industrial deve ser acompanhada por sustentabilidade e rastreabilidade.",
-    metodologia:
-      "Dados reportados na comunicação oficial do Governo.",
-    limitacoes:
-      "Não é uma produção anual exclusivamente de 2025.",
-    categoria: "Florestas",
-    periodo: "2023–2025",
-    fonte: "Governo de Angola — Estado da Nação",
-    url: FONTES.governo2026,
-    imagem: IMAGENS.madeira,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "carne-2023-25",
-    titulo: "Produção de carne — período 2023/2025",
-    valor: "1 032 849",
-    unidade: "toneladas",
-    variacao: "+4,6%",
-    descricao:
-      "Volume de carne reportado pelo Governo para o período 2023–2025.",
-    oQueMede:
-      "Mede o volume de produção de carne no período indicado.",
-    significado:
-      "Permite observar a evolução recente da produção animal numa janela temporal mais ampla.",
-    analise:
-      "O crescimento de 4,6% mostra evolução positiva no período, complementando os resultados específicos da campanha 2024/2025.",
-    comparacao:
-      "Não deve ser confundido com produção anual de 2025.",
-    contexto:
-      "O Governo destacou particularmente as cadeias de carne caprina e bovina.",
-    importancia:
-      "A expansão da produção animal é relevante para segurança alimentar e substituição de importações.",
-    implicacoes:
-      "A cadeia precisa de melhorias em sanidade, alimentação, abate, transformação e distribuição.",
-    metodologia:
-      "Valor comunicado pelo Governo no balanço do período 2023–2025.",
-    limitacoes:
-      "É um indicador agregado de período e não uma série anual.",
-    categoria: "Pecuária",
-    periodo: "2023–2025",
-    fonte: "Governo de Angola — Estado da Nação",
-    url: FONTES.governo2026,
-    imagem: IMAGENS.bovinos,
-    classificacao: "Oficial",
-  },
-
-  /* ===================== 2025/26 ===================== */
-
-  {
-    id: "trigo-familias-2526",
-    titulo: "Famílias apoiadas na produção de trigo",
-    valor: "6 228",
-    unidade: "famílias",
-    descricao:
-      "Famílias apoiadas pelo Instituto de Desenvolvimento Agrário na campanha 2025/2026 para produção de trigo.",
-    oQueMede:
-      "Mede o número de famílias abrangidas pelo programa de apoio à produção de trigo.",
-    significado:
-      "Indica a dimensão social e produtiva do programa de expansão da cultura do trigo.",
-    analise:
-      "O programa combina apoio a sementes, preparação de terras, assistência técnica e correcção de solos.",
-    comparacao:
-      "É um indicador de execução de política agrícola e não uma estimativa da produção nacional total.",
-    contexto:
-      "A produção de trigo é considerada estratégica devido à elevada dependência externa deste cereal.",
-    importancia:
-      "A expansão nacional pode contribuir para reduzir a dependência de importações.",
-    implicacoes:
-      "Será necessário acompanhar produtividade, custos, qualidade e capacidade de processamento.",
-    metodologia:
-      "Dados de execução do programa 2025/2026 comunicados pelo MINAGRIF.",
-    limitacoes:
-      "O apoio às famílias não significa que toda a produção tenha sido realizada ou colhida.",
-    categoria: "Agricultura",
-    periodo: "2025/2026",
-    fonte: "MINAGRIF — apoio à produção de trigo",
-    url: FONTES.trigo2526,
-    imagem: IMAGENS.trigo,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "trigo-semente-2526",
-    titulo: "Semente de trigo disponibilizada",
-    valor: "260",
-    unidade: "toneladas",
-    descricao:
-      "Quantidade de semente disponibilizada no âmbito do programa de produção de trigo 2025/2026.",
-    oQueMede:
-      "Mede a quantidade de semente disponibilizada aos produtores apoiados.",
-    significado:
-      "A disponibilidade de semente é um dos primeiros requisitos para expansão da área cultivada.",
-    analise:
-      "O programa reportou 260 toneladas de semente para apoiar a campanha.",
-    comparacao:
-      "Este valor está associado ao programa específico de trigo e não deve ser confundido com a disponibilidade nacional total de sementes.",
-    contexto:
-      "O programa inclui famílias em diferentes regiões produtoras.",
-    importancia:
-      "A disponibilidade de semente adequada é essencial para estabelecer novas áreas.",
-    implicacoes:
-      "É necessário garantir distribuição atempada, qualidade e acompanhamento técnico.",
-    metodologia:
-      "Dados de execução divulgados pelo MINAGRIF.",
-    limitacoes:
-      "A quantidade de semente não permite calcular produção final sem informação sobre área, produtividade e perdas.",
-    categoria: "Agricultura",
-    periodo: "2025/2026",
-    fonte: "MINAGRIF",
-    url: FONTES.trigo2526,
-    imagem: IMAGENS.trigo,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "trigo-area-2526",
-    titulo: "Área preparada para trigo",
-    valor: "1 557",
-    unidade: "hectares",
-    descricao:
-      "Área preparada no âmbito do programa de produção de trigo 2025/2026.",
-    oQueMede:
-      "Mede a superfície preparada para instalação da cultura no programa apoiado.",
-    significado:
-      "É um indicador de execução física da campanha.",
-    analise:
-      "A área preparada demonstra a dimensão inicial do programa, mas não equivale necessariamente à área colhida.",
-    comparacao:
-      "O indicador deve ser acompanhado posteriormente com área semeada, área colhida e produtividade.",
-    contexto:
-      "A campanha 2025/2026 ainda deve ser tratada como processo em execução.",
-    importancia:
-      "Permite acompanhar o avanço da implementação do programa.",
-    implicacoes:
-      "A conclusão da campanha permitirá avaliar a produtividade efectiva.",
-    metodologia:
-      "Informação de execução comunicada pelo MINAGRIF.",
-    limitacoes:
-      "Não é produção nacional nem área nacional total de trigo.",
-    categoria: "Agricultura",
-    periodo: "2025/2026",
-    fonte: "MINAGRIF",
-    url: FONTES.trigo2526,
-    imagem: IMAGENS.trigo,
-    classificacao: "Oficial",
-  },
-
-  {
-    id: "trigo-sili-2526",
-    titulo: "Previsão local de trigo em Sili",
-    valor: "≈30",
-    unidade: "toneladas esperadas",
-    descricao:
-      "Produção esperada num projecto mecanizado de 24 hectares em Sili, Bié, com 61 famílias.",
-    oQueMede:
-      "É uma expectativa de produção de uma área específica, não uma estatística nacional.",
-    significado:
-      "Serve como exemplo de execução local de uma iniciativa de expansão do trigo.",
-    analise:
-      "A expectativa de aproximadamente 30 toneladas em 24 hectares corresponde a uma produtividade indicativa de cerca de 1,25 t/ha, caso a previsão se concretize.",
-    comparacao:
-      "O valor não deve ser extrapolado directamente para todo o país.",
-    contexto:
-      "O projecto envolve mecanização e apoio a famílias produtoras.",
-    importancia:
-      "Experiências locais podem fornecer informação para futuros programas de expansão.",
-    implicacoes:
-      "Os resultados reais permitirão avaliar a viabilidade técnica e económica do modelo.",
-    metodologia:
-      "Cálculo de produtividade indicativa feito a partir da previsão de 30 toneladas e área de 24 hectares.",
-    limitacoes:
-      "É uma previsão local e não um resultado final.",
-    categoria: "Agricultura",
-    periodo: "2025/2026",
-    fonte: "MINAGRIF — programa de trigo",
-    url: FONTES.trigo2526,
-    imagem: IMAGENS.trigo,
-    classificacao: "Cálculo",
-  },
-];
 
 /* =========================================================
    DADOS AUXILIARES
@@ -1688,9 +372,17 @@ function BadgeClassificacao({
   const classes =
     tipo === "Oficial"
       ? "bg-blue-50 text-blue-700 border-blue-100"
-      : tipo === "Cálculo"
+      : tipo === "Investigação"
+      ? "bg-purple-50 text-purple-700 border-purple-100"
+      : tipo === "Observação de campo"
+      ? "bg-green-50 text-green-700 border-green-100"
+      : tipo === "Estimativa"
       ? "bg-amber-50 text-amber-700 border-amber-100"
-      : "bg-purple-50 text-purple-700 border-purple-100";
+      : tipo === "Administrativa"
+      ? "bg-slate-100 text-slate-700 border-slate-200"
+      : tipo === "Cálculo"
+      ? "bg-orange-50 text-orange-700 border-orange-100"
+      : "bg-indigo-50 text-indigo-700 border-indigo-100";
 
   return (
     <span
@@ -1721,13 +413,220 @@ export default function DadosPage() {
 
   const [cenario, setCenario] =
     useState<"Conservador" | "Base" | "Acelerado">("Base");
+      const [indicadoresPublicados, setIndicadoresPublicados] =
+    useState<Indicador[]>([]);
+
+  useEffect(() => {
+    async function carregarIndicadores() {
+      try {
+        const resposta = await fetch(
+          "/api/dados-agropecuarios/indicadores",
+          { cache: "no-store" }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+          throw new Error("Não foi possível carregar os indicadores.");
+        }
+
+        type FontePublicada = {
+          titulo: string;
+          entidade: string | null;
+          ano: number | null;
+          url: string | null;
+        };
+
+        type RelacaoFonte = {
+          citacao: string | null;
+          fonte: FontePublicada | FontePublicada[] | null;
+        };
+
+        const novosIndicadores: Indicador[] =
+          dados.indicadores.flatMap(
+            (item: any) => {
+              const normalizarTexto = (texto: string) =>
+                texto
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")
+                  .toLowerCase();
+
+              const categoriaTexto = normalizarTexto(
+                item.categoria ?? ""
+              );
+
+              const categoriaItem: Categoria =
+                categoriaTexto.includes("pecuaria") ? "Pecuária" :
+                categoriaTexto.includes("floresta") ? "Florestas" :
+                categoriaTexto.includes("apicultura") ? "Apicultura" :
+                categoriaTexto.includes("cafe") ? "Café" :
+                "Agricultura";
+
+              const observacoes = item.observacoes?.length
+                ? item.observacoes
+                : [null];
+
+              return observacoes.map((observacao: any, index: number) => {
+                const inicioPeriodo = observacao?.periodo_inicio;
+                const fimPeriodo = observacao?.periodo_fim;
+                const referencia = observacao?.data_referencia;
+
+                const periodoItem =
+                  inicioPeriodo && fimPeriodo
+                    ? `${inicioPeriodo.slice(0, 4)}/${fimPeriodo.slice(0, 4)}`
+                    : inicioPeriodo
+                    ? inicioPeriodo.slice(0, 4)
+                    : referencia
+                    ? referencia.slice(0, 4)
+                    : "Sem período";
+
+                const natureza =
+                  observacao?.natureza ?? item.natureza;
+
+                const classificacao: Classificacao =
+                  natureza === "estatistica_oficial"
+                    ? "Oficial"
+                    : natureza === "investigacao"
+                    ? "Investigação"
+                    : natureza === "observacao_campo"
+                    ? "Observação de campo"
+                    : natureza === "estimativa"
+                    ? "Estimativa"
+                    : natureza === "administrativa"
+                    ? "Administrativa"
+                    : "Cálculo";
+
+                const relacoesFonte =
+                  observacao?.fontes?.length
+                    ? observacao.fontes
+                    : item.fontes ?? [];
+
+                const fontes = relacoesFonte.flatMap((relacao: any) => {
+                  const lista = Array.isArray(relacao.fonte)
+                    ? relacao.fonte
+                    : relacao.fonte
+                    ? [relacao.fonte]
+                    : [];
+
+                  return lista.map((fonte: any) => ({
+                    titulo: fonte.titulo,
+                    entidade: fonte.entidade,
+                    ano: fonte.ano,
+                    url: fonte.url,
+                    citacao: relacao.citacao,
+                  }));
+                });
+
+                const fontePrincipal = fontes[0];
+
+                const textoFontes = fontes
+                  .map((fonte: any) =>
+                    [
+                      fonte.entidade,
+                      fonte.titulo,
+                      fonte.ano ? String(fonte.ano) : null,
+                      fonte.citacao,
+                    ]
+                      .filter(Boolean)
+                      .join(" — ")
+                  )
+                  .filter(Boolean)
+                  .join("; ");
+
+                const localizacao = [
+                  observacao?.localidade,
+                  observacao?.comuna,
+                  observacao?.municipio,
+                  observacao?.provincia,
+                ]
+                  .filter(Boolean)
+                  .join(", ");
+
+                return {
+                  id: `supabase-${item.id}-${observacao?.id ?? index}`,
+                  indicadorId: item.id,
+                  codigo: item.codigo ?? null,
+                  datasetId: item.dataset_id ?? null,
+                  titulo: item.nome,
+                  valor:
+                    observacao && Number.isFinite(Number(observacao.valor))
+                      ? new Intl.NumberFormat("pt-PT").format(
+                          Number(observacao.valor)
+                        )
+                      : "Sem observação",
+                  unidade: observacao?.unidade ?? item.unidade ?? "",
+                  descricao: item.descricao ?? "",
+                  oQueMede: item.nome ?? "",
+                  significado: item.descricao ?? "",
+                  analise: observacao?.observacoes ?? "",
+                  comparacao: "",
+                  contexto: localizacao,
+                  importancia: "",
+                  implicacoes: "",
+                  metodologia: observacao?.metodologia ?? "",
+                  limitacoes: "",
+                  categoria: categoriaItem,
+                  subcategoria: item.subcategoria ?? null,
+                  formula: item.formula ?? null,
+                  periodicidade: item.periodicidade ?? null,
+                  natureza: natureza ?? null,
+                  estado: item.estado ?? null,
+                  periodo: periodoItem,
+                  fonte: textoFontes,
+                  url: fontePrincipal?.url ?? "",
+                  imagem: item.imagens?.find(
+                    (imagem: any) => imagem?.url
+                  )?.url ?? "",
+                  classificacao,
+
+                  provincia: observacao?.provincia ?? null,
+                  municipio: observacao?.municipio ?? null,
+                  comuna: observacao?.comuna ?? null,
+                  localidade: observacao?.localidade ?? null,
+                  entidade: observacao?.entidade ?? null,
+
+                  tamanhoAmostra:
+                    observacao?.tamanho_amostra != null &&
+                    Number.isFinite(Number(observacao.tamanho_amostra))
+                      ? Number(observacao.tamanho_amostra)
+                      : null,
+
+                  margemErro:
+                    observacao?.margem_erro != null &&
+                    Number.isFinite(Number(observacao.margem_erro))
+                      ? Number(observacao.margem_erro)
+                      : null,
+
+                  nivelConfianca:
+                    observacao?.nivel_confianca != null &&
+                    Number.isFinite(Number(observacao.nivel_confianca))
+                      ? Number(observacao.nivel_confianca)
+                      : null,
+
+                  observacoesRegisto: observacao?.observacoes ?? null,
+                  dataReferencia: observacao?.data_referencia ?? null,
+
+                  imagens: item.imagens ?? [],
+                  fontesDetalhadas: fontes,
+                };
+              });
+            }
+          );
+        setIndicadoresPublicados(novosIndicadores);
+      } catch (erro) {
+        console.error("Erro ao carregar dados publicados:", erro);
+      }
+    }
+
+    carregarIndicadores();
+  }, []);
 
   const resultados = useMemo(() => {
     const termo = pesquisa
       .trim()
       .toLocaleLowerCase("pt-PT");
 
-    return indicadores.filter((item) => {
+    return indicadoresPublicados.filter((item) => {
       const pertenceCategoria =
         categoria === "Todos" ||
         item.categoria === categoria;
@@ -1774,13 +673,53 @@ export default function DadosPage() {
         correspondePesquisa
       );
     });
-  }, [
-    categoria,
-    pesquisa,
-    periodo,
-    aba,
-  ]);
+}, [
+  categoria,
+  pesquisa,
+  periodo,
+  aba,
+  indicadoresPublicados,
+]);
+  // Distribuição experimental dos registos publicados.
+// Os valores representam quantidades de registos, não produção.
+  const dadosGraficos = useMemo(() => {
+    const contar = (valores: (string | null | undefined)[]) => {
+      const contagem = new Map<string, number>();
 
+      valores.forEach((valor) => {
+        const nome = valor?.trim() || "Sem classificação";
+        contagem.set(nome, (contagem.get(nome) ?? 0) + 1);
+      });
+
+      return Array.from(contagem, ([nome, total]) => ({
+        nome,
+        total,
+      })).sort((a, b) => b.total - a.total);
+    };
+
+    const categorias = contar(
+      indicadoresPublicados.map((item) => item.categoria)
+    );
+
+    const provincias = contar(
+      indicadoresPublicados.map((item) => item.provincia)
+    ).filter((item) => item.nome !== "Sem classificação");
+
+    const periodos = contar(
+      indicadoresPublicados.map((item) => item.periodo)
+    ).sort((a, b) => {
+      const anoA = Number(a.nome.match(/\d{4}/)?.[0] ?? "9999");
+      const anoB = Number(b.nome.match(/\d{4}/)?.[0] ?? "9999");
+
+      return anoA - anoB || a.nome.localeCompare(b.nome, "pt");
+    });
+
+    return {
+      categorias,
+      provincias,
+      periodos,
+    };
+  }, [indicadoresPublicados]);
   const taxasCenario = {
     Conservador: 0.02,
     Base: 0.05,
@@ -2467,8 +1406,228 @@ export default function DadosPage() {
         </>
 
       )}
+      {/* ANÁLISE EXPERIMENTAL DOS REGISTOS DA BASE DE DADOS */}
+      <section className="mt-12 space-y-8 rounded-3xl border border-emerald-100 bg-white p-5 shadow-sm md:p-8">
 
-      {/* =====================================================
+        <div>
+          <p className="text-xs font-black uppercase tracking-widest text-emerald-700">
+            Dados da plataforma
+          </p>
+
+          <h2 className="mt-2 text-2xl font-black text-slate-900 md:text-3xl">
+            Análise dos registos agropecuários
+          </h2>
+
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+            Distribuição territorial, sectorial e temporal dos indicadores
+            publicados na base de dados da AGROINOVA ANGOLA.
+          </p>
+
+          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+            <strong>Dados experimentais:</strong> os registos actualmente
+            disponíveis são dados de teste. Não representam estatísticas
+            oficiais nem resultados reais de produção. Todos os gráficos
+            apresentam quantidades de registos, não volumes de produção.
+          </div>
+        </div>
+
+        {indicadoresPublicados.length === 0 ? (
+          <div className="rounded-2xl bg-slate-50 p-10 text-center">
+            <p className="font-bold text-slate-700">
+              Ainda não existem registos publicados para apresentar.
+            </p>
+            <p className="mt-2 text-sm text-slate-500">
+              Os gráficos e o mapa serão actualizados automaticamente
+              quando existirem registos disponíveis.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* EVOLUÇÃO TEMPORAL */}
+            <div className="rounded-2xl border border-slate-200 p-4 md:p-6">
+              <div className="mb-5">
+                <h3 className="text-lg font-black text-slate-900">
+                  Evolução dos registos por período
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Quantidade de observações registadas em cada período.
+                </p>
+              </div>
+
+              {dadosGraficos.periodos.length === 0 ? (
+                <p className="py-10 text-center text-sm text-slate-500">
+                  Sem períodos disponíveis.
+                </p>
+              ) : (
+                <div className="h-[300px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={dadosGraficos.periodos}
+                      margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis
+                        dataKey="nome"
+                        tick={{ fontSize: 12 }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <YAxis
+                        allowDecimals={false}
+                        tick={{ fontSize: 12 }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <Tooltip />
+                      <Legend />
+                      <Line
+                        type="monotone"
+                        dataKey="total"
+                        name="Registos"
+                        stroke="#15803d"
+                        strokeWidth={3}
+                        activeDot={{ r: 7 }}
+                        dot={{ r: 4 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+
+              {/* DISTRIBUIÇÃO POR CATEGORIA */}
+              <div className="rounded-2xl border border-slate-200 p-4 md:p-6">
+                <h3 className="text-lg font-black text-slate-900">
+                  Registos por categoria
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Distribuição percentual dos registos publicados.
+                </p>
+
+                {dadosGraficos.categorias.length === 0 ? (
+                  <p className="py-10 text-center text-sm text-slate-500">
+                    Sem categorias disponíveis.
+                  </p>
+                ) : (
+                  <div className="h-[310px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={dadosGraficos.categorias}
+                          dataKey="total"
+                          nameKey="nome"
+                          cx="50%"
+                          cy="48%"
+                          outerRadius={105}
+                          innerRadius={55}
+                          paddingAngle={3}
+                          label={({ percent }) =>
+                            `${((percent ?? 0) * 100).toFixed(0)}%`
+                          }
+                        >
+                          {dadosGraficos.categorias.map((item, index) => (
+                            <Cell
+                              key={item.nome}
+                              fill={[
+                                "#166534",
+                                "#16a34a",
+                                "#65a30d",
+                                "#0f766e",
+                                "#0891b2",
+                                "#84cc16",
+                                "#64748b",
+                              ][index % 7]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+              </div>
+
+              {/* DISTRIBUIÇÃO POR PROVÍNCIA */}
+              <div className="rounded-2xl border border-slate-200 p-4 md:p-6">
+                <h3 className="text-lg font-black text-slate-900">
+                  Registos por província
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Comparação da quantidade de registos por localização.
+                </p>
+
+                {dadosGraficos.provincias.length === 0 ? (
+                  <p className="py-10 text-center text-sm text-slate-500">
+                    Não existem registos associados a províncias.
+                  </p>
+                ) : (
+                  <div
+                    className="mt-4 w-full overflow-y-auto"
+                    style={{ maxHeight: "360px" }}
+                  >
+                    <div
+                      style={{
+                        height: Math.max(
+                          300,
+                          dadosGraficos.provincias.length * 42
+                        ),
+                      }}
+                    >
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={dadosGraficos.provincias}
+                          layout="vertical"
+                          margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                          <XAxis
+                            type="number"
+                            allowDecimals={false}
+                            tick={{ fontSize: 11 }}
+                          />
+                          <YAxis
+                            type="category"
+                            dataKey="nome"
+                            width={105}
+                            tick={{ fontSize: 11 }}
+                          />
+                          <Tooltip />
+                          <Bar
+                            dataKey="total"
+                            name="Registos"
+                            fill="#15803d"
+                            radius={[0, 6, 6, 0]}
+                            barSize={20}
+                          />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* MAPA COROPLÉTICO */}
+            <div className="rounded-2xl border border-slate-200 p-4 md:p-6">
+              <div className="mb-5">
+                <h3 className="text-lg font-black text-slate-900">
+                  Distribuição territorial dos registos
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Mapa de Angola com a distribuição dos registos por província.
+                  Seleccione uma província para consultar os seus dados.
+                </p>
+              </div>
+
+              <MapaDados dados={dadosGraficos.provincias} />
+            </div>
+          </>
+        )}
+      </section>
+{/* =====================================================
           AGRICULTURA
       ===================================================== */}
 
@@ -3905,11 +3064,19 @@ export default function DadosPage() {
 
             {[
               "Todos",
-              "2023/2024",
-              "2024/2025",
-              "2025",
-              "2025/2026",
-              "2023–2025",
+              ...Array.from(
+                new Set(
+                  indicadoresPublicados
+                    .map((indicador) => indicador.periodo)
+                    .filter(
+                      (periodo) =>
+                        periodo &&
+                        periodo !== "Sem período"
+                    )
+                )
+              ).sort((a, b) =>
+                b.localeCompare(a, "pt-PT", { numeric: true })
+              ),
             ].map((item) => (
 
               <button
@@ -3964,16 +3131,21 @@ export default function DadosPage() {
 
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-slate-200">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200">
 
-            <div className="hidden grid-cols-[1.3fr_0.7fr_0.65fr_0.65fr_0.5fr_auto] gap-4 bg-slate-50 px-5 py-4 text-xs font-black uppercase tracking-wide text-slate-500 md:grid">
+            <div className="grid min-w-[1650px] grid-cols-[250px_120px_130px_130px_100px_120px_120px_120px_120px_140px_200px] gap-4 bg-slate-50 px-5 py-4 text-xs font-black uppercase tracking-wide text-slate-500">
 
               <span>Indicador</span>
               <span>Valor</span>
               <span>Categoria</span>
+              <span>Subcategoria</span>
+              <span>Unidade</span>
               <span>Período</span>
-              <span>Tipo</span>
-              <span />
+              <span>Periodicidade</span>
+              <span>Província</span>
+              <span>Município</span>
+              <span>Natureza</span>
+              <span>Fonte</span>
 
             </div>
 
@@ -3984,49 +3156,57 @@ export default function DadosPage() {
                 <button
                   key={item.id}
                   onClick={() => setModal(item)}
-                  className="grid w-full gap-4 px-5 py-5 text-left transition hover:bg-emerald-50 md:grid-cols-[1.3fr_0.7fr_0.65fr_0.65fr_0.5fr_auto] md:items-center"
+                  className="grid min-w-[1650px] w-full grid-cols-[250px_120px_130px_130px_100px_120px_120px_120px_120px_140px_200px] gap-4 px-5 py-5 text-left transition hover:bg-emerald-50 items-center"
                 >
 
-                  <div>
-
-                    <p className="font-black">
-                      {item.titulo}
-                    </p>
-
+                  <div className="min-w-0">
+                    <p className="font-black">{item.titulo}</p>
                     <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
-                      {item.descricao}
+                      {item.descricao || "Não informado"}
                     </p>
-
                   </div>
 
-                  <div>
-
-                    <p className="font-black text-[#0d4a30]">
-                      {item.valor}
-                    </p>
-
-                    <p className="text-xs text-slate-500">
-                      {item.unidade}
-                    </p>
-
-                  </div>
+                  <span className="font-black text-[#0d4a30]">
+                    {item.valor || "Não informado"}
+                  </span>
 
                   <span className="text-sm font-bold text-slate-600">
-                    {item.categoria}
+                    {item.categoria || "Não informado"}
                   </span>
 
                   <span className="text-sm text-slate-600">
-                    {item.periodo}
+                    {item.subcategoria || "Não informado"}
+                  </span>
+
+                  <span className="text-sm text-slate-600">
+                    {item.unidade || "Não informado"}
+                  </span>
+
+                  <span className="text-sm text-slate-600">
+                    {item.periodo || "Não informado"}
+                  </span>
+
+                  <span className="text-sm text-slate-600">
+                    {item.periodicidade || "Não informado"}
+                  </span>
+
+                  <span className="text-sm text-slate-600">
+                    {item.provincia || "Não informado"}
+                  </span>
+
+                  <span className="text-sm text-slate-600">
+                    {item.municipio || "Não informado"}
                   </span>
 
                   <div>
-                    <BadgeClassificacao
-                      tipo={item.classificacao}
-                    />
+                    <BadgeClassificacao tipo={item.classificacao} />
                   </div>
 
-                  <span className="font-black text-emerald-700">
-                    →
+                  <span
+                    title={item.fonte || "Não informado"}
+                    className="line-clamp-2 text-xs leading-5 text-slate-600"
+                  >
+                    {item.fonte || "Não informado"}
                   </span>
 
                 </button>
@@ -4201,13 +3381,13 @@ export default function DadosPage() {
             {/* IMAGEM */}
 
             <div className="relative h-64 md:h-80">
-
-              <img
-                src={modal.imagem}
-                alt={modal.titulo}
-                className="h-full w-full object-cover"
-              />
-
+              {modal.imagem && (
+  <img
+    src={modal.imagem}
+    alt={modal.titulo}
+    className="h-full w-full object-cover"
+  />
+)}
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
               <button
@@ -4309,6 +3489,250 @@ export default function DadosPage() {
 
               </div>
 
+              {/* DADOS COMPLETOS DO INDICADOR */}
+              {(modal.codigo ||
+                modal.subcategoria ||
+                modal.formula ||
+                modal.periodicidade ||
+                modal.natureza ||
+                modal.indicadorId ||
+                modal.datasetId) && (
+                <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6">
+                  <h3 className="text-xs font-black uppercase tracking-widest text-emerald-700">
+                    Identificação do indicador
+                  </h3>
+
+                  <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                    {modal.codigo && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Código</p>
+                        <p className="mt-1 font-semibold text-slate-800">{modal.codigo}</p>
+                      </div>
+                    )}
+                    {modal.subcategoria && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Subcategoria</p>
+                        <p className="mt-1 font-semibold text-slate-800">{modal.subcategoria}</p>
+                      </div>
+                    )}
+                    {modal.natureza && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Natureza</p>
+                        <p className="mt-1 font-semibold text-slate-800">{modal.natureza}</p>
+                      </div>
+                    )}
+                    {modal.periodicidade && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Periodicidade</p>
+                        <p className="mt-1 font-semibold text-slate-800">{modal.periodicidade}</p>
+                      </div>
+                    )}
+                    {modal.formula && (
+                      <div className="sm:col-span-2">
+                        <p className="text-xs font-bold text-slate-500">Fórmula de cálculo</p>
+                        <p className="mt-1 whitespace-pre-wrap text-slate-800">{modal.formula}</p>
+                      </div>
+                    )}
+                    {modal.indicadorId && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Identificador</p>
+                        <p className="mt-1 break-all text-sm text-slate-700">{modal.indicadorId}</p>
+                      </div>
+                    )}
+                    {modal.datasetId && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Conjunto de dados</p>
+                        <p className="mt-1 break-all text-sm text-slate-700">{modal.datasetId}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* LOCALIZAÇÃO E REFERÊNCIA */}
+              {(modal.provincia ||
+                modal.municipio ||
+                modal.comuna ||
+                modal.localidade ||
+                modal.entidade ||
+                modal.dataReferencia) && (
+                <div className="mt-8 rounded-3xl border border-emerald-100 bg-emerald-50/60 p-6">
+                  <h3 className="text-xs font-black uppercase tracking-widest text-emerald-800">
+                    Localização e referência territorial
+                  </h3>
+
+                  <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                    {modal.provincia && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Província</p>
+                        <p className="mt-1 font-semibold text-slate-800">{modal.provincia}</p>
+                      </div>
+                    )}
+                    {modal.municipio && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Município</p>
+                        <p className="mt-1 font-semibold text-slate-800">{modal.municipio}</p>
+                      </div>
+                    )}
+                    {modal.comuna && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Comuna</p>
+                        <p className="mt-1 font-semibold text-slate-800">{modal.comuna}</p>
+                      </div>
+                    )}
+                    {modal.localidade && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Localidade</p>
+                        <p className="mt-1 font-semibold text-slate-800">{modal.localidade}</p>
+                      </div>
+                    )}
+                    {modal.entidade && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Entidade responsável</p>
+                        <p className="mt-1 font-semibold text-slate-800">{modal.entidade}</p>
+                      </div>
+                    )}
+                    {modal.dataReferencia && (
+                      <div>
+                        <p className="text-xs font-bold text-slate-500">Data de referência</p>
+                        <p className="mt-1 font-semibold text-slate-800">{modal.dataReferencia}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* QUALIDADE E DIMENSÃO DA OBSERVAÇÃO */}
+              {(modal.tamanhoAmostra != null ||
+                modal.margemErro != null ||
+                modal.nivelConfianca != null) && (
+                <div className="mt-8 rounded-3xl border border-slate-200 p-6">
+                  <h3 className="text-xs font-black uppercase tracking-widest text-slate-600">
+                    Qualidade e dimensão estatística
+                  </h3>
+
+                  <div className="mt-5 grid gap-4 sm:grid-cols-3">
+                    {modal.tamanhoAmostra != null && (
+                      <div className="rounded-2xl bg-slate-50 p-4">
+                        <p className="text-xs font-bold text-slate-500">Tamanho da amostra</p>
+                        <p className="mt-2 text-xl font-black text-slate-800">
+                          {new Intl.NumberFormat("pt-PT").format(modal.tamanhoAmostra)}
+                        </p>
+                      </div>
+                    )}
+                    {modal.margemErro != null && (
+                      <div className="rounded-2xl bg-slate-50 p-4">
+                        <p className="text-xs font-bold text-slate-500">Margem de erro</p>
+                        <p className="mt-2 text-xl font-black text-slate-800">
+                          {modal.margemErro}%
+                        </p>
+                      </div>
+                    )}
+                    {modal.nivelConfianca != null && (
+                      <div className="rounded-2xl bg-slate-50 p-4">
+                        <p className="text-xs font-bold text-slate-500">Nível de confiança</p>
+                        <p className="mt-2 text-xl font-black text-slate-800">
+                          {modal.nivelConfianca}%
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* OBSERVAÇÕES DO REGISTO */}
+              {modal.observacoesRegisto && (
+                <div className="mt-8 rounded-3xl border border-amber-200 bg-amber-50 p-6">
+                  <h3 className="text-xs font-black uppercase tracking-widest text-amber-800">
+                    Observações do registo
+                  </h3>
+                  <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-amber-950">
+                    {modal.observacoesRegisto}
+                  </p>
+                </div>
+              )}
+
+              {/* IMAGENS ASSOCIADAS AO INDICADOR */}
+              {modal.imagens?.length ? (
+                <div className="mt-8">
+                  <h3 className="text-xs font-black uppercase tracking-widest text-emerald-700">
+                    Imagens e documentação visual
+                  </h3>
+
+                  <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                    {modal.imagens.map((imagem, indice) => (
+                      imagem.url ? (
+                        <figure
+                          key={imagem.id ?? `${modal.indicadorId}-imagem-${indice}`}
+                          className="overflow-hidden rounded-2xl border border-slate-200 bg-white"
+                        >
+                          <img
+                            src={imagem.url}
+                            alt={imagem.legenda || imagem.descricao || `Imagem ${indice + 1} do indicador`}
+                            className="h-56 w-full object-cover"
+                            loading="lazy"
+                          />
+                          {(imagem.legenda || imagem.descricao || imagem.provincia || imagem.municipio) && (
+                            <figcaption className="space-y-1 p-4">
+                              {imagem.legenda && (
+                                <p className="font-bold text-slate-800">{imagem.legenda}</p>
+                              )}
+                              {imagem.descricao && (
+                                <p className="text-sm leading-6 text-slate-600">{imagem.descricao}</p>
+                              )}
+                              {(imagem.provincia || imagem.municipio) && (
+                                <p className="text-xs text-slate-500">
+                                  {[imagem.municipio, imagem.provincia].filter(Boolean).join(" — ")}
+                                </p>
+                              )}
+                            </figcaption>
+                          )}
+                        </figure>
+                      ) : null
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              {/* FONTES BIBLIOGRÁFICAS DETALHADAS */}
+              {modal.fontesDetalhadas?.length ? (
+                <div className="mt-8 rounded-3xl border border-slate-200 p-6">
+                  <h3 className="text-xs font-black uppercase tracking-widest text-emerald-700">
+                    Fontes bibliográficas e documentais
+                  </h3>
+
+                  <div className="mt-5 space-y-4">
+                    {modal.fontesDetalhadas.map((fonte, indice) => (
+                      <div
+                        key={`${modal.indicadorId}-fonte-${indice}`}
+                        className="rounded-2xl bg-slate-50 p-4"
+                      >
+                        <p className="font-bold text-slate-800">{fonte.titulo}</p>
+                        {(fonte.entidade || fonte.ano != null) && (
+                          <p className="mt-1 text-sm text-slate-500">
+                            {[fonte.entidade, fonte.ano].filter(Boolean).join(" — ")}
+                          </p>
+                        )}
+                        {fonte.citacao && (
+                          <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                            {fonte.citacao}
+                          </p>
+                        )}
+                        {fonte.url && (
+                          <a
+                            href={fonte.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="mt-3 inline-flex text-sm font-bold text-emerald-700 underline"
+                          >
+                            Consultar fonte original
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
               {/* O QUE MEDE */}
 
               <div className="mt-9">

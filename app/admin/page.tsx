@@ -1159,6 +1159,15 @@ export default function AdminPage() {
   <span>▣</span> AgroAcademia
 </button>
 
+<a
+  href="/admin/dados-agropecuarios"
+  className="agro-admin-menu"
+  style={estilos.menuBotao}
+>
+  <span>▤</span> Dados Agropecuários
+  <span style={{ marginLeft: "auto", fontSize: 10 }}>↗</span>
+</a>
+
 
               <button
                 type="button"
