@@ -59,6 +59,7 @@ type Indicador = {
   id: string;
   titulo: string;
   valor: string;
+  valorNumerico?: number | null;
   unidade: string;
   variacao?: string;
   descricao: string;
@@ -242,49 +243,6 @@ const abas: { id: Aba; label: string }[] = [
   { id: "Projecções", label: "Projecções" },
 ];
 
-const crescimento202425 = [
-  {
-    nome: "Cereais",
-    valor: "+6,5%",
-    descricao: "Evolução positiva da produção cerealífera.",
-  },
-  {
-    nome: "Raízes e tubérculos",
-    valor: "+10,6%",
-    descricao: "Uma das maiores taxas entre os grandes grupos.",
-  },
-  {
-    nome: "Leguminosas e oleaginosas",
-    valor: "+5,9%",
-    descricao: "Crescimento moderado da fileira.",
-  },
-  {
-    nome: "Horticultura",
-    valor: "+8,2%",
-    descricao: "Recuperação importante da produção.",
-  },
-  {
-    nome: "Frutas",
-    valor: "+5,5%",
-    descricao: "Crescimento positivo.",
-  },
-  {
-    nome: "Carnes",
-    valor: "+7,3%",
-    descricao: "Recuperação da produção pecuária.",
-  },
-  {
-    nome: "Ovos",
-    valor: "+5%",
-    descricao: "Recuperação da produção de ovos.",
-  },
-  {
-    nome: "Café comercial",
-    valor: "+40%",
-    descricao: "Uma das maiores taxas de crescimento reportadas.",
-  },
-];
-
 const carnes = [
   {
     nome: "Caprina",
@@ -426,8 +384,6 @@ export default function DadosPage() {
   const [aba, setAba] =
     useState<Aba>("Visão geral");
 
-  const [cenario, setCenario] =
-    useState<"Conservador" | "Base" | "Acelerado">("Base");
       const [indicadoresPublicados, setIndicadoresPublicados] =
     useState<Indicador[]>([]);
   const [filtroCampanhaLevantamento, setFiltroCampanhaLevantamento] = useState("Todos");
@@ -653,6 +609,10 @@ const variacao =
                   periodoInicio: observacao?.periodo_inicio ?? observacao?.levantamento?.periodo_inicio ?? null,
                   periodoFim: observacao?.periodo_fim ?? observacao?.levantamento?.periodo_fim ?? null,
                   titulo: item.nome,
+                  valorNumerico:
+                    observacao && Number.isFinite(Number(observacao.valor))
+                      ? Number(observacao.valor)
+                      : null,
                   valor:
                     observacao && Number.isFinite(Number(observacao.valor))
                       ? new Intl.NumberFormat("pt-PT").format(
@@ -853,34 +813,205 @@ url: fontePrincipal?.url ?? "",
   const totalLevantamentosProvinciais = new Set(
     registosLevantamentos.map((item) => item.levantamentoId).filter(Boolean)
   ).size;
-  const taxasCenario = {
-    Conservador: 0.02,
-    Base: 0.05,
-    Acelerado: 0.08,
-  };
+  const indicadoresPrincipais = useMemo(() => {
+    const maisRecentes = new Map<string, Indicador>();
 
-  const taxa =
-    taxasCenario[cenario];
+    const dataRegisto = (item: Indicador) =>
+      item.periodoFim ?? item.dataReferencia ?? item.periodoInicio ?? "";
 
-  const baseProjecao = 30.4;
+    const ordenarRecentes = (a: Indicador, b: Indicador) =>
+      dataRegisto(b).localeCompare(dataRegisto(a));
 
-  const projecoes = Array.from(
-    { length: 5 },
-    (_, index) => {
-      const ano = 2025 + index;
+    indicadoresPublicados
+      .filter((item) =>
+        item.estado === "publicado" &&
+        item.valorNumerico !== null &&
+        item.valorNumerico !== undefined &&
+        Number.isFinite(item.valorNumerico)
+      )
+      .sort(ordenarRecentes)
+      .forEach((item) => {
+        const chave = item.indicadorId ?? item.codigo ?? item.titulo;
+        if (!maisRecentes.has(chave)) {
+          maisRecentes.set(chave, item);
+        }
+      });
 
-      const valor =
-        baseProjecao *
-        Math.pow(1 + taxa, index + 1);
+    return Array.from(maisRecentes.values()).slice(0, 4);
+  }, [indicadoresPublicados]);
 
-      return {
-        ano: `${ano}/${String(ano + 1).slice(-2)}`,
-        valor,
-      };
-    }
+  const indicadoresComValor = indicadoresPublicados.filter(
+    (item) =>
+      item.valorNumerico !== null &&
+      item.valorNumerico !== undefined &&
+      Number.isFinite(item.valorNumerico)
   );
 
-  return (
+  const totalSeriesHistoricas = new Set(
+    indicadoresComValor.map(
+      (item) => item.indicadorId ?? item.codigo ?? item.titulo
+    )
+  ).size;
+  const variacoesHistoricas = useMemo(() => {
+    const grupos = new Map<string, Indicador[]>();
+
+    const registosValidos = indicadoresPublicados.filter(
+      (item) =>
+        item.estado === "publicado" &&
+        item.valorNumerico !== null &&
+        item.valorNumerico !== undefined &&
+        Number.isFinite(item.valorNumerico)
+    );
+
+    registosValidos.forEach((item) => {
+      const chave = JSON.stringify([
+        item.indicadorId ?? item.codigo ?? item.titulo,
+        item.unidade,
+        item.categoria,
+        item.culturaId ?? item.culturaNome ?? "",
+        item.provinciaId ?? "",
+        item.municipioId ?? "",
+        item.comunaId ?? "",
+        item.localidade ?? "",
+        item.escala ?? "",
+      ]);
+
+      const grupo = grupos.get(chave) ?? [];
+      grupo.push(item);
+      grupos.set(chave, grupo);
+    });
+
+    const obterPeriodo = (item: Indicador) =>
+      item.periodoFim ||
+      item.dataReferencia ||
+      item.periodoInicio ||
+      item.periodo;
+
+    const ordenarPeriodo = (item: Indicador) => {
+      const periodo = obterPeriodo(item);
+      const data = new Date(periodo).getTime();
+
+      if (Number.isFinite(data)) return data;
+
+      const ano = periodo.match(/\d{4}/)?.[0];
+      return ano ? Number(ano) * 1000 : 0;
+    };
+
+    const resultados = Array.from(grupos.values()).flatMap((grupo) => {
+      const porPeriodo = new Map<string, Indicador>();
+
+      grupo.forEach((item) => {
+        const periodo = obterPeriodo(item);
+        if (!periodo) return;
+
+        const anterior = porPeriodo.get(periodo);
+
+        if (
+          !anterior ||
+          ordenarPeriodo(item) > ordenarPeriodo(anterior)
+        ) {
+          porPeriodo.set(periodo, item);
+        }
+      });
+
+      const serie = Array.from(porPeriodo.values())
+        .sort((a, b) => ordenarPeriodo(a) - ordenarPeriodo(b));
+
+      if (serie.length < 2) return [];
+
+      const anterior = serie[serie.length - 2];
+      const atual = serie[serie.length - 1];
+
+      if (
+        anterior.valorNumerico === null ||
+        anterior.valorNumerico === undefined ||
+        atual.valorNumerico === null ||
+        atual.valorNumerico === undefined ||
+        anterior.valorNumerico === 0
+      ) {
+        return [];
+      }
+
+      const variacao =
+        ((atual.valorNumerico - anterior.valorNumerico) /
+          Math.abs(anterior.valorNumerico)) * 100;
+
+      return [{
+        nome: atual.culturaNome || atual.subcategoria || atual.titulo,
+        valor: `${variacao > 0 ? "+" : ""}${variacao.toLocaleString("pt-PT", {
+          maximumFractionDigits: 1,
+          minimumFractionDigits: 1,
+        })}%`,
+        descricao: `${anterior.periodo} ? ${atual.periodo} � ${atual.unidade}`,
+        ordem: ordenarPeriodo(atual),
+      }];
+    });
+
+    return resultados.sort((a, b) => b.ordem - a.ordem);
+  }, [indicadoresPublicados]);
+  const linhaTempo = useMemo(() => {
+    const grupos = new Map<string, Indicador[]>();
+
+    indicadoresPublicados
+      .filter((item) => item.estado === "publicado")
+      .forEach((item) => {
+        const periodo =
+          item.periodoFim ||
+          item.dataReferencia ||
+          item.periodoInicio ||
+          item.periodo;
+
+        if (!periodo) return;
+
+        const chave = item.campanhaId
+          ? `campanha:${item.campanhaId}`
+          : `periodo:${periodo}`;
+
+        const grupo = grupos.get(chave) ?? [];
+        grupo.push(item);
+        grupos.set(chave, grupo);
+      });
+
+    return Array.from(grupos.entries())
+      .map(([chave, registos]) => {
+        const primeiro = registos[0];
+
+        const periodos = Array.from(
+          new Set(
+            registos
+              .map((item) =>
+                item.periodoFim ||
+                item.dataReferencia ||
+                item.periodoInicio ||
+                item.periodo
+              )
+              .filter((periodo): periodo is string => Boolean(periodo))
+          )
+        ).sort((a, b) => a.localeCompare(b));
+
+        const culturas = new Set(
+          registos.map((item) => item.culturaNome).filter(Boolean)
+        );
+
+        const provincias = new Set(
+          registos.map((item) => item.provinciaNome).filter(Boolean)
+        );
+
+        const periodoTexto = periodos.join(" — ");
+
+        return {
+          chave,
+          ano: primeiro.campanhaNome || periodoTexto,
+          titulo:
+            primeiro.campanhaNome ||
+            primeiro.campanhaCodigo ||
+            "Registos do período",
+          texto: `${registos.length.toLocaleString("pt-PT")} registos publicados, ${culturas.size.toLocaleString("pt-PT")} culturas e ${provincias.size.toLocaleString("pt-PT")} províncias identificadas.`,
+          ordem: periodos[0] || "",
+        };
+      })
+      .sort((a, b) => a.ordem.localeCompare(b.ordem));
+  }, [indicadoresPublicados]);  return (
     <main className="min-h-screen bg-[#f4f7f4] text-slate-900">
 
       {/* =====================================================
@@ -930,67 +1061,51 @@ url: fontePrincipal?.url ?? "",
             <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
 
               <div className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur">
-
                 <p className="text-xs font-bold uppercase tracking-wide text-emerald-200">
                   Histórico
                 </p>
-
                 <p className="mt-2 text-xl font-black">
-                  2023/24
+                  Por período
                 </p>
-
                 <p className="mt-1 text-xs text-emerald-100/60">
-                  Série detalhada
+                  Organização dos dados por campanha e ano agrícola
                 </p>
-
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur">
-
                 <p className="text-xs font-bold uppercase tracking-wide text-emerald-200">
-                  Campanha
+                  Campanhas
                 </p>
-
                 <p className="mt-2 text-xl font-black">
-                  2024/25
+                  Base agrícola
                 </p>
-
                 <p className="mt-1 text-xs text-emerald-100/60">
-                  Resultados mais recentes
+                  Registos associados a cada campanha publicada
                 </p>
-
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur">
-
                 <p className="text-xs font-bold uppercase tracking-wide text-emerald-200">
-                  Execução
+                  Território
                 </p>
-
                 <p className="mt-2 text-xl font-black">
-                  2025/26
+                  Escala provincial
                 </p>
-
                 <p className="mt-1 text-xs text-emerald-100/60">
-                  Campanha em desenvolvimento
+                  Informação organizada por localização geográfica
                 </p>
-
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur">
-
                 <p className="text-xs font-bold uppercase tracking-wide text-emerald-200">
-                  Cenários
+                  Análise
                 </p>
-
                 <p className="mt-2 text-xl font-black">
-                  2026+
+                  Conhecimento agropecuário
                 </p>
-
                 <p className="mt-1 text-xs text-emerald-100/60">
-                  Projecções AGROINOVA
+                  Indicadores, comparações e cenários devidamente identificados
                 </p>
-
               </div>
 
             </div>
@@ -1138,78 +1253,47 @@ url: fontePrincipal?.url ?? "",
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
-          {[
-            {
-              titulo: "Produção agrícola 2024/25",
-              valor: ">30,4 M",
-              unidade: "toneladas",
-              detalhe: "+8,5%",
-              positivo: true,
-            },
-            {
-              titulo: "Peso agropecuário no PIB",
-              valor: "25,43%",
-              unidade: "em 2025",
-              detalhe: "13,66% em 2015",
-              positivo: true,
-            },
-            {
-              titulo: "Café comercial",
-              valor: "+40%",
-              unidade: "crescimento 2024/25",
-              detalhe: "cadeia prioritária",
-              positivo: true,
-            },
-            {
-              titulo: "Sementes certificadas",
-              valor: "6 930",
-              unidade: "toneladas em 2025",
-              detalhe: "+143,2% vs 2023",
-              positivo: true,
-            },
-          ].map((item) => (
+          {indicadoresPrincipais.length > 0 ? (
+            indicadoresPrincipais.map((item) => (
+              <article
+                key={`${item.indicadorId ?? item.codigo ?? item.titulo}-${item.id}`}
+                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+              >
+                <p className="text-sm font-bold text-slate-500">
+                  {item.titulo}
+                </p>
+                <p className="mt-3 text-3xl font-black text-[#0b4b30]">
+                  {item.valor}
+                </p>
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs text-slate-500">
+                    {[item.unidade, item.periodo].filter(Boolean).join(" � ")}
+                  </span>
+                  <span className="text-xs font-semibold text-slate-500">
+                    {item.provincia ?? "�mbito n�o especificado"}
+                  </span>
+                </div>
+                {item.classificacao && (
+                  <p className="mt-2 text-xs text-slate-400">
+                    Classificação: {item.classificacao}
+                  </p>
+                )}
+              </article>
+            ))
+          ) : (
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-500 sm:col-span-2 lg:col-span-4">
+              Ainda não existem indicadores numéricos publicados para apresentar.
+            </div>
+          )}
 
-            <article
-              key={item.titulo}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-            >
 
-              <p className="text-sm font-bold text-slate-500">
-                {item.titulo}
-              </p>
-
-              <p className="mt-3 text-3xl font-black text-[#0b4b30]">
-                {item.valor}
-              </p>
-
-              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-
-                <span className="text-xs text-slate-500">
-                  {item.unidade}
-                </span>
-
-                <span
-                  className={`rounded-full px-2.5 py-1 text-xs font-black ${
-                    item.positivo
-                      ? "bg-emerald-50 text-emerald-700"
-                      : "bg-red-50 text-red-700"
-                  }`}
-                >
-                  {item.detalhe}
-                </span>
-
-              </div>
-
-            </article>
-
-          ))}
 
         </div>
 
       </section>
 
       {/* =====================================================
-          NAVEGAÇÃO
+          NAVEGA��O
       ===================================================== */}
 
       <section className="sticky top-0 z-40 border-y border-slate-200 bg-white/95 backdrop-blur">
@@ -1241,7 +1325,7 @@ url: fontePrincipal?.url ?? "",
       </section>
 
       {/* =====================================================
-          VISÃO GERAL
+          VIS�O GERAL
       ===================================================== */}
 
       {aba === "Visão geral" && (
@@ -1261,84 +1345,48 @@ url: fontePrincipal?.url ?? "",
               </h2>
 
               <p className="mt-3 max-w-5xl leading-8 text-slate-600">
-
-                Os dados mais recentes mostram uma trajectória global positiva
-                da produção agropecuária, mas com diferenças importantes entre
-                cadeias. A produção agrícola 2024/25 ultrapassou 30,4 milhões
-                de toneladas, enquanto várias fileiras registaram taxas de
-                crescimento distintas. O café apresentou uma evolução
-                particularmente forte.
-
-              </p>
+  Esta leitura nacional é construída a partir dos indicadores publicados
+  no AgroDados. A informação disponível depende dos registos, dos períodos,
+  das culturas e dos territórios efectivamente documentados na plataforma.
+  Os resultados apresentados não substituem estatísticas oficiais
+  nem representam estimativas de produção quando existem apenas registos
+  de observação.
+</p>
 
             </div>
 
             <div className="grid gap-5 md:grid-cols-3">
+  {dadosGraficos.categorias.slice(0, 3).map((item) => (
+    <article
+      key={item.nome}
+      className="rounded-3xl border border-slate-200 bg-white p-6"
+    >
+      <p className="text-sm font-semibold text-slate-500">
+        Categoria com registos
+      </p>
 
-              <article className="rounded-3xl border border-slate-200 bg-white p-6">
+      <h3 className="mt-4 text-xl font-black">
+        {item.nome}
+      </h3>
 
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-2xl">
-                  🌱
-                </div>
+      <p className="mt-3 text-3xl font-black text-[#0b4b30]">
+        {item.total.toLocaleString("pt-PT")}
+      </p>
 
-                <h3 className="mt-5 text-xl font-black">
-                  Crescimento agrícola
-                </h3>
+      <p className="mt-2 text-sm leading-7 text-slate-600">
+        Registos publicados nesta categoria. Este número representa
+        observações disponíveis, não volume de produção.
+      </p>
+    </article>
+  ))}
 
-                <p className="mt-3 text-sm leading-7 text-slate-600">
-
-                  A produção agrícola 2024/25 cresceu 8,5%, ultrapassando
-                  30,4 milhões de toneladas. O desafio é transformar esse
-                  crescimento físico em maior produtividade, rendimento e
-                  capacidade de processamento.
-
-                </p>
-
-              </article>
-
-              <article className="rounded-3xl border border-slate-200 bg-white p-6">
-
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-2xl">
-                  🐄
-                </div>
-
-                <h3 className="mt-5 text-xl font-black">
-                  Recuperação pecuária
-                </h3>
-
-                <p className="mt-3 text-sm leading-7 text-slate-600">
-
-                  A produção de carne cresceu 7,3% em 2024/25 e a produção
-                  de ovos cresceu 5%, depois de indicadores negativos
-                  observados em 2023/24.
-
-                </p>
-
-              </article>
-
-              <article className="rounded-3xl border border-slate-200 bg-white p-6">
-
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-2xl">
-                  ☕
-                </div>
-
-                <h3 className="mt-5 text-xl font-black">
-                  Cadeias comerciais
-                </h3>
-
-                <p className="mt-3 text-sm leading-7 text-slate-600">
-
-                  O café comercial cresceu 40% em 2024/25, reforçando a
-                  importância das culturas comerciais na diversificação
-                  económica.
-
-                </p>
-
-              </article>
-
-            </div>
-
-          </section>
+  {dadosGraficos.categorias.length === 0 && (
+    <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-500 md:col-span-3">
+      Ainda não existem registos publicados suficientes para construir
+      a leitura nacional.
+    </div>
+  )}
+</div></section>
 
           {/* LINHA DO TEMPO */}
 
@@ -1353,45 +1401,21 @@ url: fontePrincipal?.url ?? "",
                 </p>
 
                 <h2 className="mt-2 text-3xl font-black">
-                  2023/24 → 2024/25 → 2025 → 2025/26
+                  {linhaTempo.length > 0
+                    ? linhaTempo.map((item) => item.ano).join(" → ")
+                    : "Sem períodos publicados"}
                 </h2>
 
                 <p className="mt-3 max-w-4xl leading-7 text-slate-600">
-                  A página separa campanhas agrícolas, resultados económicos
-                  e programas em execução para evitar misturar períodos
-                  estatísticos diferentes.
+                  Linha temporal construída a partir das campanhas e dos períodos
+                  associados aos indicadores publicados no AgroDados. Os períodos
+                  são apresentados conforme os registos disponíveis na plataforma.
                 </p>
-
               </div>
 
               <div className="grid gap-5 md:grid-cols-4">
 
-                {[
-                  {
-                    ano: "2023/24",
-                    titulo: "Base histórica",
-                    texto:
-                      "Produção detalhada de agricultura, pecuária, café, mel, cera e florestas.",
-                  },
-                  {
-                    ano: "2024/25",
-                    titulo: "Nova campanha",
-                    texto:
-                      "Produção agrícola superior a 30,4 milhões de toneladas e crescimento das principais cadeias.",
-                  },
-                  {
-                    ano: "2025",
-                    titulo: "Peso económico",
-                    texto:
-                      "Sector agropecuário reportado com 25,43% do PIB e aumento da disponibilidade de sementes certificadas.",
-                  },
-                  {
-                    ano: "2025/26",
-                    titulo: "Execução",
-                    texto:
-                      "Programas como trigo encontram-se em execução e ainda devem gerar resultados finais.",
-                  },
-                ].map((item, index) => (
+                {linhaTempo.map((item, index) => (
 
                   <article
                     key={item.ano}
@@ -1431,7 +1455,7 @@ url: fontePrincipal?.url ?? "",
             <div className="mb-8">
 
               <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">
-                Campanha 2024/25
+                Comparações históricas
               </p>
 
               <h2 className="mt-2 text-3xl font-black">
@@ -1442,7 +1466,7 @@ url: fontePrincipal?.url ?? "",
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
-              {crescimento202425.map((item) => (
+              {variacoesHistoricas.map((item) => (
 
                 <article
                   key={item.nome}
@@ -1480,54 +1504,35 @@ url: fontePrincipal?.url ?? "",
               <div className="grid gap-8 lg:grid-cols-3">
 
                 <div>
-
-                  <p className="text-xs font-black uppercase tracking-widest text-emerald-300">
-                    01
-                  </p>
-
+                  <p className="text-xs font-black uppercase tracking-widest text-emerald-300">01</p>
                   <h3 className="mt-3 text-2xl font-black">
-                    Mais produção
+                    Evolução dos indicadores
                   </h3>
-
                   <p className="mt-3 text-sm leading-7 text-emerald-50/70">
-                    O crescimento de 2024/25 mostra aumento da oferta
-                    agrícola nacional.
+                    {variacoesHistoricas.length > 0
+                      ? `${variacoesHistoricas.length.toLocaleString("pt-PT")} comparações históricas calculadas a partir de observações publicadas.`
+                      : "Ainda não existem observações publicadas suficientes para calcular a evolução dos indicadores."}
                   </p>
-
                 </div>
-
                 <div>
-
-                  <p className="text-xs font-black uppercase tracking-widest text-emerald-300">
-                    02
-                  </p>
-
+                  <p className="text-xs font-black uppercase tracking-widest text-emerald-300">02</p>
                   <h3 className="mt-3 text-2xl font-black">
-                    Mais transformação
+                    Transformação agropecuária
                   </h3>
-
                   <p className="mt-3 text-sm leading-7 text-emerald-50/70">
-                    A próxima etapa é transformar maior produção em produtos
-                    processados, emprego e valor acrescentado.
+                    A análise da transformação exige dados sobre processamento, armazenamento, comercialização e valor acrescentado. Estes resultados só serão apresentados quando existirem registos correspondentes.
                   </p>
-
                 </div>
-
                 <div>
-
-                  <p className="text-xs font-black uppercase tracking-widest text-emerald-300">
-                    03
-                  </p>
-
+                  <p className="text-xs font-black uppercase tracking-widest text-emerald-300">03</p>
                   <h3 className="mt-3 text-2xl font-black">
-                    Mais informação
+                    Cobertura territorial
                   </h3>
-
                   <p className="mt-3 text-sm leading-7 text-emerald-50/70">
-                    Quanto melhor a informação provincial e municipal, melhor
-                    será a capacidade de planear investimentos.
+                    {dadosGraficos.provincias.length > 0
+                      ? `${dadosGraficos.provincias.length.toLocaleString("pt-PT")} províncias identificadas nos registos publicados.`
+                      : "A cobertura provincial será apresentada à medida que forem publicados registos territoriais."}
                   </p>
-
                 </div>
 
               </div>
@@ -1574,657 +1579,21 @@ url: fontePrincipal?.url ?? "",
             <label className="mb-2 block text-sm font-bold text-slate-700">Campanha agrícola</label>
             <select value={filtroCampanhaLevantamento} onChange={(e) => setFiltroCampanhaLevantamento(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
               <option value="Todos">Todas as campanhas</option>
-              {[...new Set(registosLevantamentos.map((item) => item.campanhaId).filter((id): id is string => Boolean(id)))].map((id) => {
-                const item = registosLevantamentos.find((registo) => registo.campanhaId === id);
-                return <option key={id} value={id}>{item?.campanhaNome || item?.campanhaCodigo || id}</option>;
-              })}
-            </select>
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-bold text-slate-700">Província</label>
-            <select value={filtroProvinciaLevantamento} onChange={(e) => setFiltroProvinciaLevantamento(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
-              <option value="Todos">Todas as províncias</option>
-              {[...new Set(registosLevantamentos.map((item) => item.provinciaId).filter((id): id is string => Boolean(id)))].map((id) => {
-                const item = registosLevantamentos.find((registo) => registo.provinciaId === id);
-                return <option key={id} value={id}>{item?.provinciaNome || item?.provincia || id}</option>;
-              })}
-            </select>
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-bold text-slate-700">Cultura agrícola</label>
-            <select value={filtroCulturaLevantamento} onChange={(e) => setFiltroCulturaLevantamento(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
-              <option value="Todos">Todas as culturas</option>
-              {[...new Set(registosLevantamentos.map((item) => item.culturaId).filter((id): id is string => Boolean(id)))].map((id) => {
-                const item = registosLevantamentos.find((registo) => registo.culturaId === id);
-                return <option key={id} value={id}>{item?.culturaNome || id}</option>;
-              })}
-            </select>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
-          <p className="text-sm text-slate-600">Registos encontrados</p>
-          <p className="text-lg font-black text-emerald-800">{registosLevantamentosFiltrados.length}</p>
-        </div>
-
-        {registosLevantamentosFiltrados.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-300 p-10 text-center">
-            <p className="font-bold text-slate-700">Não existem registos publicados para os filtros seleccionados.</p>
-            <p className="mt-2 text-sm text-slate-500">Os levantamentos serão apresentados quando existirem observações publicadas associadas.</p>
-          </div>
-        ) : (
-          <div className="grid gap-4 lg:grid-cols-2">
-            {registosLevantamentosFiltrados.map((item) => (
-              <article key={item.id} className="rounded-2xl border border-slate-200 p-5">
-                <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
-                  {item.campanhaNome || item.campanhaCodigo || "Campanha não identificada"}
-                </p>
-                <h3 className="mt-2 text-lg font-black text-slate-900">{item.titulo}</h3>
-                <div className="mt-4">
-                  <p className="text-xs font-semibold uppercase text-slate-500">Valor observado</p>
-                  <p className="mt-1 text-2xl font-black text-emerald-800">
-                    {item.valor} <span className="text-sm font-semibold text-slate-600">{item.unidade}</span>
-                  </p>
-                </div>
-                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  <div>
-                    <p className="text-xs text-slate-500">Província</p>
-                    <p className="mt-1 font-bold">{item.provinciaNome || item.provincia || "Não identificada"}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500">Cultura</p>
-                    <p className="mt-1 font-bold">{item.culturaNome || "Não identificada"}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500">Município</p>
-                    <p className="mt-1 font-bold">{item.municipio || "Não especificado"}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500">Escala territorial</p>
-                    <p className="mt-1 font-bold">{item.escala || "Não especificada"}</p>
-                  </div>
-                </div>
-                <div className="mt-4 border-t border-slate-100 pt-3 text-xs leading-5 text-slate-500">
-                  <p>Estado: {item.levantamentoEstado || "Não indicado"}</p>
-                  <p>Período: {item.periodoInicio || "Não indicado"} — {item.periodoFim || "Não indicado"}</p>
-                  {item.levantamentoDescricao && <p className="mt-1">{item.levantamentoDescricao}</p>}
-                </div>
-              </article>
+              {Array.from(
+              new Map<string, string>(
+                registosLevantamentos
+                  .filter((item) => item.campanhaId)
+                  .map((item) => [
+                    item.campanhaId as string,
+                    item.campanhaNome || item.campanhaCodigo || item.periodo || "Campanha",
+                  ] as [string, string])
+              ).entries()
+            ).map(([id, nome]) => (
+              <option key={id} value={id}>
+                {nome}
+              </option>
             ))}
-          </div>
-        )}
-
-        <p className="text-xs leading-5 text-slate-500">
-          Os valores são apresentados individualmente. Não são calculados totais nacionais sem validação da compatibilidade das unidades, escalas, períodos e cobertura territorial.
-        </p>
-      </section>
-      {/* ANÁLISE EXPERIMENTAL DOS REGISTOS DA BASE DE DADOS */}
-      <section className="mt-12 space-y-8 rounded-3xl border border-emerald-100 bg-white p-5 shadow-sm md:p-8">
-
-        <div>
-          <p className="text-xs font-black uppercase tracking-widest text-emerald-700">
-            Dados da plataforma
-          </p>
-
-          <h2 className="mt-2 text-2xl font-black text-slate-900 md:text-3xl">
-            Análise dos registos agropecuários
-          </h2>
-
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-            Distribuição territorial, sectorial e temporal dos indicadores
-            publicados na base de dados da AGROINOVA ANGOLA.
-          </p>
-
-          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
-            <strong>Dados experimentais:</strong> os registos actualmente
-            disponíveis são dados de teste. Não representam estatísticas
-            oficiais nem resultados reais de produção. Todos os gráficos
-            apresentam quantidades de registos, não volumes de produção.
-          </div>
-        </div>
-
-        {indicadoresPublicados.length === 0 ? (
-          <div className="rounded-2xl bg-slate-50 p-10 text-center">
-            <p className="font-bold text-slate-700">
-              Ainda não existem registos publicados para apresentar.
-            </p>
-            <p className="mt-2 text-sm text-slate-500">
-              Os gráficos e o mapa serão actualizados automaticamente
-              quando existirem registos disponíveis.
-            </p>
-          </div>
-        ) : (
-          <>
-            {/* EVOLUÇÃO TEMPORAL */}
-            <div className="rounded-2xl border border-slate-200 p-4 md:p-6">
-              <div className="mb-5">
-                <h3 className="text-lg font-black text-slate-900">
-                  Evolução dos registos por período
-                </h3>
-                <p className="mt-1 text-sm text-slate-500">
-                  Quantidade de observações registadas em cada período.
-                </p>
-              </div>
-
-              {dadosGraficos.periodos.length === 0 ? (
-                <p className="py-10 text-center text-sm text-slate-500">
-                  Sem períodos disponíveis.
-                </p>
-              ) : (
-                <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      data={dadosGraficos.periodos}
-                      margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis
-                        dataKey="nome"
-                        tick={{ fontSize: 12 }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <YAxis
-                        allowDecimals={false}
-                        tick={{ fontSize: 12 }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <Tooltip />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="total"
-                        name="Registos"
-                        stroke="#15803d"
-                        strokeWidth={3}
-                        activeDot={{ r: 7 }}
-                        dot={{ r: 4 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-            </div>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-
-              {/* DISTRIBUIÇÃO POR CATEGORIA */}
-              <div className="rounded-2xl border border-slate-200 p-4 md:p-6">
-                <h3 className="text-lg font-black text-slate-900">
-                  Registos por categoria
-                </h3>
-                <p className="mt-1 text-sm text-slate-500">
-                  Distribuição percentual dos registos publicados.
-                </p>
-
-                {dadosGraficos.categorias.length === 0 ? (
-                  <p className="py-10 text-center text-sm text-slate-500">
-                    Sem categorias disponíveis.
-                  </p>
-                ) : (
-                  <div className="h-[310px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={dadosGraficos.categorias}
-                          dataKey="total"
-                          nameKey="nome"
-                          cx="50%"
-                          cy="48%"
-                          outerRadius={105}
-                          innerRadius={55}
-                          paddingAngle={3}
-                          label={({ percent }) =>
-                            `${((percent ?? 0) * 100).toFixed(0)}%`
-                          }
-                        >
-                          {dadosGraficos.categorias.map((item, index) => (
-                            <Cell
-                              key={item.nome}
-                              fill={[
-                                "#166534",
-                                "#16a34a",
-                                "#65a30d",
-                                "#0f766e",
-                                "#0891b2",
-                                "#84cc16",
-                                "#64748b",
-                              ][index % 7]}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                )}
-              </div>
-
-              {/* DISTRIBUIÇÃO POR PROVÍNCIA */}
-              <div className="rounded-2xl border border-slate-200 p-4 md:p-6">
-                <h3 className="text-lg font-black text-slate-900">
-                  Registos por província
-                </h3>
-                <p className="mt-1 text-sm text-slate-500">
-                  Comparação da quantidade de registos por localização.
-                </p>
-
-                {dadosGraficos.provincias.length === 0 ? (
-                  <p className="py-10 text-center text-sm text-slate-500">
-                    Não existem registos associados a províncias.
-                  </p>
-                ) : (
-                  <div
-                    className="mt-4 w-full overflow-y-auto"
-                    style={{ maxHeight: "360px" }}
-                  >
-                    <div
-                      style={{
-                        height: Math.max(
-                          300,
-                          dadosGraficos.provincias.length * 42
-                        ),
-                      }}
-                    >
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={dadosGraficos.provincias}
-                          layout="vertical"
-                          margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                          <XAxis
-                            type="number"
-                            allowDecimals={false}
-                            tick={{ fontSize: 11 }}
-                          />
-                          <YAxis
-                            type="category"
-                            dataKey="nome"
-                            width={105}
-                            tick={{ fontSize: 11 }}
-                          />
-                          <Tooltip />
-                          <Bar
-                            dataKey="total"
-                            name="Registos"
-                            fill="#15803d"
-                            radius={[0, 6, 6, 0]}
-                            barSize={20}
-                          />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* MAPA COROPLÉTICO */}
-            <div className="rounded-2xl border border-slate-200 p-4 md:p-6">
-              <div className="mb-5">
-                <h3 className="text-lg font-black text-slate-900">
-                  Distribuição territorial dos registos
-                </h3>
-                <p className="mt-1 text-sm text-slate-500">
-                  Mapa de Angola com a distribuição dos registos por província.
-                  Seleccione uma província para consultar os seus dados.
-                </p>
-              </div>
-
-              <MapaDados dados={dadosGraficos.provincias} />
-            </div>
-          </>
-        )}
-      </section>
-{/* =====================================================
-          AGRICULTURA
-      ===================================================== */}
-
-      {aba === "Agricultura" && (
-
-        <section className="mx-auto max-w-7xl px-5 py-12 md:px-8">
-
-          <div className="mb-10">
-
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">
-              Dossiê sectorial
-            </p>
-
-            <h2 className="mt-2 text-4xl font-black">
-              Agricultura
-            </h2>
-
-            <p className="mt-4 max-w-5xl leading-8 text-slate-600">
-
-              A agricultura deve ser analisada através de uma cadeia de
-              indicadores: área semeada, área colhida, produção, produtividade,
-              disponibilidade de insumos, transformação e comercialização.
-              Uma única variável não explica o desempenho do sector.
-
-            </p>
-
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-
-            <article className="overflow-hidden rounded-3xl bg-white shadow-sm">
-
-              <img
-                src={IMAGENS.agricultura}
-                alt="Imagem ilustrativa de agricultura"
-                className="h-52 w-full object-cover"
-              />
-
-              <div className="p-6">
-
-                <p className="text-xs font-black uppercase text-emerald-700">
-                  2023/24
-                </p>
-
-                <h3 className="mt-2 text-3xl font-black">
-                  6,18 M ha
-                </h3>
-
-                <p className="mt-3 text-sm leading-6 text-slate-600">
-                  Área semeada.
-                </p>
-
-              </div>
-
-            </article>
-
-            <article className="rounded-3xl bg-white p-6 shadow-sm">
-
-              <p className="text-xs font-black uppercase text-emerald-700">
-                2023/24
-              </p>
-
-              <h3 className="mt-3 text-3xl font-black">
-                5,52 M ha
-              </h3>
-
-              <p className="mt-3 text-sm leading-7 text-slate-600">
-                Área colhida na campanha.
-              </p>
-
-              <div className="mt-6 h-4 overflow-hidden rounded-full bg-slate-100">
-
-                <div
-                  className="h-full rounded-full bg-[#0d4a30]"
-                  style={{ width: "89.3%" }}
-                />
-
-              </div>
-
-              <p className="mt-2 text-xs text-slate-500">
-                Aproveitamento aproximado: 89,3%
-              </p>
-
-            </article>
-
-            <article className="rounded-3xl bg-[#0d4a30] p-6 text-white">
-
-              <p className="text-xs font-black uppercase text-emerald-200">
-                2024/25
-              </p>
-
-              <h3 className="mt-3 text-3xl font-black">
-                &gt;30,4 M t
-              </h3>
-
-              <p className="mt-3 text-sm leading-7 text-emerald-50/80">
-                Produção agrícola total reportada, com crescimento de 8,5%.
-              </p>
-
-            </article>
-
-          </div>
-
-          <div className="mt-10 rounded-3xl bg-white p-6 shadow-sm md:p-8">
-
-            <h3 className="text-2xl font-black">
-              A principal mudança entre 2023/24 e 2024/25
-            </h3>
-
-            <p className="mt-3 max-w-4xl leading-8 text-slate-600">
-
-              Em 2023/24, a análise detalhada mostra uma combinação de
-              crescimento da área e comportamentos diferentes entre fileiras.
-              Em 2024/25, o resultado agregado mostra uma produção agrícola
-              superior a 30,4 milhões de toneladas, com crescimento de 8,5%.
-              Isto sugere uma evolução positiva do sector, mas não elimina a
-              necessidade de analisar produtividade e eficiência.
-
-            </p>
-
-          </div>
-
-          <div className="mt-8 overflow-hidden rounded-3xl bg-white shadow-sm">
-
-            <div className="border-b border-slate-200 p-6 md:p-8">
-
-              <h3 className="text-2xl font-black">
-                Crescimento por grupo — 2024/25
-              </h3>
-
-              <p className="mt-2 text-sm leading-7 text-slate-600">
-                Taxas comunicadas pelo MINAGRIF.
-              </p>
-
-            </div>
-
-            <div className="divide-y divide-slate-100">
-
-              {crescimento202425
-                .filter((item) =>
-                  [
-                    "Cereais",
-                    "Raízes e tubérculos",
-                    "Leguminosas e oleaginosas",
-                    "Horticultura",
-                    "Frutas",
-                  ].includes(item.nome)
-                )
-                .map((item) => (
-
-                  <div
-                    key={item.nome}
-                    className="grid gap-4 p-5 md:grid-cols-[1fr_auto] md:items-center md:p-7"
-                  >
-
-                    <div>
-
-                      <p className="font-black">
-                        {item.nome}
-                      </p>
-
-                      <p className="mt-1 text-sm text-slate-500">
-                        {item.descricao}
-                      </p>
-
-                    </div>
-
-                    <BadgeVariacao valor={item.valor} />
-
-                  </div>
-
-                ))}
-
-            </div>
-
-          </div>
-
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-
-            <article className="rounded-3xl border border-slate-200 bg-white p-6">
-
-              <p className="text-xs font-black uppercase text-emerald-700">
-                Prioridade
-              </p>
-
-              <h3 className="mt-3 text-xl font-black">
-                Produtividade
-              </h3>
-
-              <p className="mt-3 text-sm leading-7 text-slate-600">
-                Produzir mais sem depender exclusivamente da expansão da área
-                deve ser um dos principais objectivos.
-              </p>
-
-            </article>
-
-            <article className="rounded-3xl border border-slate-200 bg-white p-6">
-
-              <p className="text-xs font-black uppercase text-emerald-700">
-                Prioridade
-              </p>
-
-              <h3 className="mt-3 text-xl font-black">
-                Armazenamento
-              </h3>
-
-              <p className="mt-3 text-sm leading-7 text-slate-600">
-                Maior produção precisa de estruturas capazes de reduzir
-                perdas pós-colheita.
-              </p>
-
-            </article>
-
-            <article className="rounded-3xl border border-slate-200 bg-white p-6">
-
-              <p className="text-xs font-black uppercase text-emerald-700">
-                Prioridade
-              </p>
-
-              <h3 className="mt-3 text-xl font-black">
-                Transformação
-              </h3>
-
-              <p className="mt-3 text-sm leading-7 text-slate-600">
-                Processar localmente pode aumentar o valor económico da
-                produção.
-              </p>
-
-            </article>
-
-          </div>
-
-        </section>
-
-      )}
-
-      {/* =====================================================
-          PECUÁRIA
-      ===================================================== */}
-
-      {aba === "Pecuária" && (
-
-        <section className="mx-auto max-w-7xl px-5 py-12 md:px-8">
-
-          <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
-
-            <div>
-
-              <img
-                src={IMAGENS.bovinos}
-                alt="Gado em Angola"
-                className="h-[430px] w-full rounded-3xl object-cover"
-              />
-
-              <div className="mt-4 rounded-3xl bg-[#0d4a30] p-6 text-white">
-
-                <p className="text-xs font-black uppercase text-emerald-200">
-                  2023/24
-                </p>
-
-                <p className="mt-3 text-4xl font-black">
-                  333 238 t
-                </p>
-
-                <p className="mt-2 text-sm text-emerald-100/70">
-                  produção total de carnes
-                </p>
-
-                <div className="mt-5">
-                  <BadgeVariacao valor="-2,5%" />
-                </div>
-
-              </div>
-
-            </div>
-
-            <div>
-
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">
-                Estrutura pecuária
-              </p>
-
-              <h2 className="mt-2 text-4xl font-black">
-                A queda de 2023/24 não conta toda a história
-              </h2>
-
-              <p className="mt-4 max-w-4xl leading-8 text-slate-600">
-
-                A produção agregada de carnes caiu 2,5% em 2023/24, mas
-                algumas espécies cresceram. Em 2024/25, o MINAGRIF reportou
-                crescimento agregado de 7,3% na produção de carne.
-
-              </p>
-
-              <div className="mt-8 grid gap-4 sm:grid-cols-2">
-
-                {carnes.map((carne) => (
-
-                  <article
-                    key={carne.nome}
-                    className="rounded-2xl border border-slate-200 bg-white p-5"
-                  >
-
-                    <p className="text-sm font-bold text-slate-500">
-                      Carne {carne.nome}
-                    </p>
-
-                    <p className="mt-2 text-2xl font-black text-[#0d4a30]">
-                      {formatarNumero(carne.atual)} t
-                    </p>
-
-                    <div className="mt-3">
-                      <BadgeVariacao valor={carne.variacao} />
-                    </div>
-
-                    <p className="mt-4 text-xs leading-5 text-slate-500">
-                      Campanha anterior:{" "}
-                      {formatarNumero(carne.anterior)} toneladas.
-                    </p>
-
-                  </article>
-
-                ))}
-
-              </div>
-
-              <div className="mt-8 rounded-3xl border border-emerald-100 bg-emerald-50 p-6">
-
-                <h3 className="text-xl font-black text-[#0d4a30]">
-                  Leitura principal
-                </h3>
-
-                <p className="mt-3 text-sm leading-7 text-slate-700">
-
-                  A carne caprina continua a representar a maior parcela
-                  entre as espécies apresentadas, mas foi precisamente esta
-                  cadeia que sofreu uma das maiores quedas. A carne bovina e
-                  a carne de aves cresceram. Em 2024/25, o resultado agregado
-                  passou a ser positivo.
-
-                </p>
-
-              </div>
+            </select>
 
             </div>
 
@@ -2232,243 +1601,6 @@ url: fontePrincipal?.url ?? "",
 
         </section>
 
-      )}
-
-      {/* =====================================================
-          CAFÉ + APICULTURA
-      ===================================================== */}
-
-      {aba === "Café & Apicultura" && (
-
-        <section className="mx-auto max-w-7xl px-5 py-12 md:px-8">
-
-          <div className="mb-10">
-
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">
-              Cadeias de alto potencial
-            </p>
-
-            <h2 className="mt-2 text-4xl font-black">
-              Café e apicultura
-            </h2>
-
-            <p className="mt-4 max-w-5xl leading-8 text-slate-600">
-
-              Estas cadeias possuem características diferentes, mas partilham
-              uma oportunidade: transformar produção primária em maior valor
-              através de qualidade, processamento, certificação, embalagem,
-              comercialização e exportação.
-
-            </p>
-
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-2">
-
-            <article className="overflow-hidden rounded-3xl bg-white shadow-sm">
-
-              <img
-                src={IMAGENS.cafe}
-                alt="Imagem ilustrativa de café"
-                className="h-64 w-full object-cover"
-              />
-
-              <div className="p-7">
-
-                <div className="flex items-center justify-between gap-4">
-
-                  <div>
-
-                    <p className="text-xs font-black uppercase tracking-widest text-emerald-700">
-                      Café
-                    </p>
-
-                    <h3 className="mt-2 text-4xl font-black">
-                      7 584 t
-                    </h3>
-
-                  </div>
-
-                  <BadgeVariacao valor="+21,7%" />
-
-                </div>
-
-                <p className="mt-5 text-sm leading-7 text-slate-600">
-
-                  Em 2023/24, a produção comercial de café cresceu 21,7%.
-                  Para 2024/25, o MINAGRIF reportou crescimento de 40%.
-
-                </p>
-
-                <div className="mt-6 grid grid-cols-2 gap-3">
-
-                  <div className="rounded-2xl bg-emerald-50 p-4">
-
-                    <p className="text-xs text-slate-500">
-                      2023/24
-                    </p>
-
-                    <p className="mt-1 text-xl font-black text-[#0d4a30]">
-                      +21,7%
-                    </p>
-
-                  </div>
-
-                  <div className="rounded-2xl bg-emerald-50 p-4">
-
-                    <p className="text-xs text-slate-500">
-                      2024/25
-                    </p>
-
-                    <p className="mt-1 text-xl font-black text-[#0d4a30]">
-                      +40%
-                    </p>
-
-                  </div>
-
-                </div>
-
-                <div className="mt-6 border-t border-slate-200 pt-5">
-
-                  <p className="text-sm leading-7 text-slate-600">
-
-                    A prioridade deve ser consolidar produtividade, qualidade,
-                    processamento e ligação aos mercados.
-
-                  </p>
-
-                </div>
-
-              </div>
-
-            </article>
-
-            <article className="overflow-hidden rounded-3xl bg-white shadow-sm">
-
-              <img
-                src={IMAGENS.mel}
-                alt="Produção de mel"
-                className="h-64 w-full object-cover"
-              />
-
-              <div className="p-7">
-
-                <div className="flex items-center justify-between gap-4">
-
-                  <div>
-
-                    <p className="text-xs font-black uppercase tracking-widest text-amber-700">
-                      Apicultura
-                    </p>
-
-                    <h3 className="mt-2 text-4xl font-black">
-                      6 084 t
-                    </h3>
-
-                  </div>
-
-                  <BadgeVariacao valor="+16%" />
-
-                </div>
-
-                <p className="mt-5 text-sm leading-7 text-slate-600">
-
-                  Em 2023/24, a produção nacional de mel registou crescimento
-                  de aproximadamente 16%. O Governo também apresentou dados
-                  recentes para o período 2023–2025, que devem ser tratados
-                  separadamente por terem período e enquadramento diferentes.
-
-                </p>
-
-                <div className="mt-6 grid grid-cols-2 gap-3">
-
-                  <div className="rounded-2xl bg-amber-50 p-4">
-
-                    <p className="text-xs text-slate-500">
-                      Mel 2023/24
-                    </p>
-
-                    <p className="mt-1 text-xl font-black text-amber-800">
-                      6 084 t
-                    </p>
-
-                  </div>
-
-                  <div className="rounded-2xl bg-amber-50 p-4">
-
-                    <p className="text-xs text-slate-500">
-                      Cera 2023/24
-                    </p>
-
-                    <p className="mt-1 text-xl font-black text-amber-800">
-                      379 t
-                    </p>
-
-                  </div>
-
-                </div>
-
-                <div className="mt-6 border-t border-slate-200 pt-5">
-
-                  <p className="text-sm leading-7 text-slate-600">
-
-                    A cadeia apícola deve ser acompanhada não apenas pelo
-                    volume de mel, mas também por produtividade por colmeia,
-                    qualidade, cera, comercialização e serviços de polinização.
-
-                  </p>
-
-                </div>
-
-              </div>
-
-            </article>
-
-          </div>
-
-          <div className="mt-8 rounded-3xl bg-[#073522] p-7 text-white md:p-10">
-
-            <p className="text-xs font-black uppercase tracking-widest text-emerald-300">
-              Estratégia de valor
-            </p>
-
-            <h3 className="mt-3 text-3xl font-black">
-              Produzir é apenas a primeira etapa
-            </h3>
-
-            <div className="mt-7 grid gap-4 md:grid-cols-4">
-
-              {[
-                "Produção",
-                "Qualidade",
-                "Transformação",
-                "Mercado",
-              ].map((item, index) => (
-
-                <div
-                  key={item}
-                  className="rounded-2xl border border-white/10 bg-white/5 p-5"
-                >
-
-                  <span className="text-sm font-black text-emerald-300">
-                    0{index + 1}
-                  </span>
-
-                  <p className="mt-3 font-black">
-                    {item}
-                  </p>
-
-                </div>
-
-              ))}
-
-            </div>
-
-          </div>
-
-        </section>
-
-      )}
 
       {/* =====================================================
           FLORESTAS
@@ -2585,7 +1717,7 @@ url: fontePrincipal?.url ?? "",
                 </p>
 
                 <p className="mt-4 text-2xl font-black">
-                  Matéria-prima → transformação → produto
+                  Matéria-prima �? � transformação �? � produto
                 </p>
 
                 <p className="mt-4 text-sm leading-7 text-emerald-50/75">
@@ -2851,7 +1983,7 @@ url: fontePrincipal?.url ?? "",
           <div className="mb-10">
 
             <div className="inline-flex rounded-full border border-purple-100 bg-purple-50 px-4 py-2 text-xs font-black text-purple-700">
-              CAMPANHA EM EXECUÇÃO
+              CAMPANHA EM EXECU��O
             </div>
 
             <h2 className="mt-4 text-4xl font-black">
@@ -2863,7 +1995,7 @@ url: fontePrincipal?.url ?? "",
               Os indicadores desta secção não devem ser tratados como
               resultados finais da campanha. São dados de execução de
               programas e iniciativas que ainda precisam de ser acompanhados
-              até à conclusão.
+              até �?  conclusão.
 
             </p>
 
@@ -2924,7 +2056,7 @@ url: fontePrincipal?.url ?? "",
               </p>
 
               <p className="mt-3 text-sm leading-7 text-emerald-50/75">
-                Área preparada no âmbito do programa de trigo.
+                �rea preparada no �mbito do programa de trigo.
               </p>
 
             </article>
@@ -3033,250 +2165,57 @@ url: fontePrincipal?.url ?? "",
       ===================================================== */}
 
       {aba === "Projecções" && (
-
         <section className="mx-auto max-w-7xl px-5 py-12 md:px-8">
-
-          <div className="mb-10">
-
-            <div className="inline-flex rounded-full border border-purple-100 bg-purple-50 px-4 py-2 text-xs font-black text-purple-700">
+          <div className="mb-8">
+            <span className="inline-flex rounded-full border border-purple-100 bg-purple-50 px-4 py-2 text-xs font-black text-purple-700">
               MODELO AGROINOVA
-            </div>
-
-            <h2 className="mt-4 text-4xl font-black">
-              Projecção da produção agrícola
+            </span>
+            <h2 className="mt-4 text-3xl font-black text-slate-900">
+              Análise de tendências e projecções
             </h2>
-
-            <p className="mt-4 max-w-5xl leading-8 text-slate-600">
-
-              Esta projecção é um exercício matemático de cenário. Não é uma
-              previsão oficial do Governo de Angola, do INE ou do MINAGRIF.
-              Utiliza como base aproximadamente 30,4 milhões de toneladas,
-              reportadas para 2024/25, e aplica uma taxa constante seleccionada
-              pelo utilizador.
-
+            <p className="mt-4 max-w-4xl leading-7 text-slate-600">
+              As projecções serão calculadas exclusivamente a partir de séries
+              históricas publicadas no AgroDados. Os registos devem corresponder
+              ao mesmo indicador, unidade e ?mbito territorial, com períodos
+              comparáveis.
             </p>
-
           </div>
 
-          <div className="grid gap-5 md:grid-cols-3">
-
-            {[
-              {
-                nome: "Conservador",
-                taxa: "2% ao ano",
-                descricao:
-                  "Cenário de crescimento baixo, com limitações de produtividade e investimento.",
-              },
-              {
-                nome: "Base",
-                taxa: "5% ao ano",
-                descricao:
-                  "Cenário intermédio para análise estratégica.",
-              },
-              {
-                nome: "Acelerado",
-                taxa: "8% ao ano",
-                descricao:
-                  "Cenário de expansão mais forte, associado a maior produtividade e investimento.",
-              },
-            ].map((item) => (
-
-              <button
-                key={item.nome}
-                onClick={() =>
-                  setCenario(
-                    item.nome as
-                      | "Conservador"
-                      | "Base"
-                      | "Acelerado"
-                  )
-                }
-                className={`rounded-3xl border p-6 text-left transition ${
-                  cenario === item.nome
-                    ? "border-[#0d4a30] bg-emerald-50 ring-2 ring-emerald-100"
-                    : "border-slate-200 bg-white hover:border-emerald-300"
-                }`}
-              >
-
-                <div className="flex items-center justify-between gap-3">
-
-                  <h3 className="text-xl font-black">
-                    {item.nome}
-                  </h3>
-
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black">
-                    {item.taxa}
-                  </span>
-
-                </div>
-
-                <p className="mt-4 text-sm leading-7 text-slate-600">
-                  {item.descricao}
-                </p>
-
-              </button>
-
-            ))}
-
-          </div>
-
-          <div className="mt-8 overflow-hidden rounded-3xl bg-[#061f15] text-white">
-
-            <div className="p-7 md:p-9">
-
-              <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-
-                <div>
-
-                  <p className="text-xs font-black uppercase tracking-widest text-emerald-300">
-                    Cenário seleccionado
-                  </p>
-
-                  <h3 className="mt-2 text-3xl font-black">
-                    {cenario}
-                  </h3>
-
-                  <p className="mt-2 text-sm text-emerald-50/65">
-                    Crescimento matemático de{" "}
-                    {(taxa * 100).toFixed(0)}% ao ano.
-                  </p>
-
-                </div>
-
-                <div className="rounded-2xl bg-white/10 px-5 py-4">
-
-                  <p className="text-xs uppercase text-emerald-200">
-                    Base
-                  </p>
-
-                  <p className="mt-1 text-2xl font-black">
-                    30,4 M t
-                  </p>
-
-                  <p className="text-xs text-emerald-100/50">
-                    2024/25
-                  </p>
-
-                </div>
-
-              </div>
-
-              <div className="mt-9 grid gap-4 md:grid-cols-5">
-
-                {projecoes.map((item, index) => (
-
-                  <div
-                    key={item.ano}
-                    className="rounded-2xl border border-white/10 bg-white/5 p-5"
-                  >
-
-                    <p className="text-xs font-black text-emerald-300">
-                      {item.ano}
-                    </p>
-
-                    <p className="mt-3 text-2xl font-black">
-                      {item.valor.toLocaleString(
-                        "pt-PT",
-                        {
-                          maximumFractionDigits: 2,
-                        }
-                      )}{" "}
-                      M
-                    </p>
-
-                    <p className="mt-1 text-xs text-emerald-50/45">
-                      toneladas
-                    </p>
-
-                    <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/10">
-
-                      <div
-                        className="h-full rounded-full bg-emerald-400"
-                        style={{
-                          width: `${Math.min(
-                            (item.valor / 50) * 100,
-                            100
-                          )}%`,
-                        }}
-                      />
-
-                    </div>
-
-                    <p className="mt-2 text-[11px] text-emerald-50/45">
-                      Ano {index + 1} do cenário
-                    </p>
-
-                  </div>
-
-                ))}
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-
-            <article className="rounded-3xl border border-purple-100 bg-purple-50 p-6">
-
-              <p className="text-xs font-black uppercase text-purple-700">
-                Atenção
+          <div className="grid gap-5 sm:grid-cols-2">
+            <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <p className="text-sm font-semibold text-slate-500">
+                Registos numéricos publicados
               </p>
-
-              <h3 className="mt-3 text-xl font-black text-purple-900">
-                Não é previsão oficial
-              </h3>
-
-              <p className="mt-3 text-sm leading-7 text-purple-800/75">
-                O resultado real dependerá de clima, produtividade,
-                investimento, preços, políticas públicas, infra-estruturas e
-                condições de mercado.
+              <p className="mt-3 text-3xl font-black text-[#0b4b30]">
+                {indicadoresComValor.length.toLocaleString("pt-PT")}
               </p>
-
             </article>
 
-            <article className="rounded-3xl border border-slate-200 bg-white p-6">
-
-              <p className="text-xs font-black uppercase text-slate-500">
-                Hipótese
+            <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <p className="text-sm font-semibold text-slate-500">
+                Séries de indicadores disponíveis
               </p>
-
-              <h3 className="mt-3 text-xl font-black">
-                Crescimento constante
-              </h3>
-
-              <p className="mt-3 text-sm leading-7 text-slate-600">
-                O modelo assume a mesma taxa todos os anos apenas para criar
-                um cenário comparável.
+              <p className="mt-3 text-3xl font-black text-[#0b4b30]">
+                {totalSeriesHistoricas.toLocaleString("pt-PT")}
               </p>
-
             </article>
-
-            <article className="rounded-3xl border border-emerald-100 bg-emerald-50 p-6">
-
-              <p className="text-xs font-black uppercase text-emerald-700">
-                Actualização
-              </p>
-
-              <h3 className="mt-3 text-xl font-black text-[#0d4a30]">
-                Substituir por dados reais
-              </h3>
-
-              <p className="mt-3 text-sm leading-7 text-slate-700">
-                Quando forem publicados novos resultados oficiais, a
-                projecção deve ser comparada com o valor observado.
-              </p>
-
-            </article>
-
           </div>
 
+          <div className="mt-6 rounded-2xl border border-dashed border-amber-300 bg-amber-50 p-6">
+            <h3 className="text-lg font-black text-amber-900">
+              Projecções ainda não disponíveis
+            </h3>
+            <p className="mt-2 text-sm leading-7 text-amber-900/80">
+              Não será apresentada uma taxa de crescimento presumida nem um
+              volume de produção estimado sem uma série histórica comparável.
+              Quando existirem pelo menos dois períodos válidos para o mesmo
+              indicador e ?mbito, será possível calcular a variação observada
+              e avaliar a construção de cenários.
+            </p>
+          </div>
         </section>
 
-      )}
-
-      {/* =====================================================
+      )}      {/* =====================================================
           BASE DE DADOS
       ===================================================== */}
 
@@ -3803,7 +2742,7 @@ url: fontePrincipal?.url ?? "",
                 </div>
               )}
 
-              {/* LOCALIZAÇÃO E REFERÊNCIA */}
+              {/* LOCALIZA��O E REFER??�NCIA */}
               {(modal.provincia ||
                 modal.municipio ||
                 modal.comuna ||
@@ -3856,7 +2795,7 @@ url: fontePrincipal?.url ?? "",
                 </div>
               )}
 
-              {/* QUALIDADE E DIMENSÃO DA OBSERVAÇÃO */}
+              {/* QUALIDADE E DIMENS�O DA OBSERVA��O */}
               {(modal.tamanhoAmostra != null ||
                 modal.margemErro != null ||
                 modal.nivelConfianca != null) && (
@@ -4137,7 +3076,7 @@ url: fontePrincipal?.url ?? "",
                     rel="noreferrer"
                     className="inline-flex rounded-xl bg-[#0d4a30] px-5 py-3 font-black text-white transition hover:bg-[#0a3b26]"
                   >
-                    Consultar publicação original →
+                    Consultar publicação original �? �
                   </a>
 
                   <button
