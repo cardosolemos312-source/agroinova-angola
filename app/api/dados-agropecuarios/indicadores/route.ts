@@ -1,3 +1,4 @@
+
 import { NextResponse } from "next/server";
 import { obterSupabaseAdmin } from "@/lib/supabase/admin";
 
@@ -8,7 +9,7 @@ export async function GET() {
   try {
     const supabase = obterSupabaseAdmin();
 
-    // Indicadores publicados: preservar todos os campos da administração.
+    // 1. Indicadores publicados.
     const { data: indicadores, error: erroIndicadores } = await supabase
       .from("agro_indicadores")
       .select("*")
@@ -16,10 +17,7 @@ export async function GET() {
       .order("nome", { ascending: true });
 
     if (erroIndicadores) {
-      console.error(
-        "Erro ao carregar indicadores públicos:",
-        erroIndicadores.message
-      );
+      console.error("Erro ao carregar indicadores:", erroIndicadores.message);
 
       return NextResponse.json(
         {
@@ -39,7 +37,7 @@ export async function GET() {
 
     const ids = indicadores.map((indicador) => indicador.id);
 
-    // Observações publicadas: preservar todos os campos registados.
+    // 2. Observações publicadas.
     const { data: observacoes, error: erroObservacoes } = await supabase
       .from("agro_observacoes")
       .select("*")
@@ -50,10 +48,7 @@ export async function GET() {
       .order("periodo_inicio", { ascending: false, nullsFirst: false });
 
     if (erroObservacoes) {
-      console.error(
-        "Erro ao carregar observações públicas:",
-        erroObservacoes.message
-      );
+      console.error("Erro ao carregar observações:", erroObservacoes.message);
 
       return NextResponse.json(
         {
@@ -64,7 +59,45 @@ export async function GET() {
       );
     }
 
-    // Imagens associadas exclusivamente aos indicadores publicados.
+    // 3. Levantamentos provinciais associados às observações publicadas.
+    const levantamentoIds = Array.from(
+      new Set(
+        (observacoes ?? [])
+          .map((observacao) => observacao.levantamento_id)
+          .filter((id): id is string => typeof id === "string" && id.length > 0)
+      )
+    );
+
+    const levantamentosPorId = new Map();
+
+    if (levantamentoIds.length > 0) {
+      const { data: levantamentos, error: erroLevantamentos } = await supabase
+        .from("agro_levantamentos_provinciais")
+        .select(`
+          id,
+          campanha_id,
+          provincia_id,
+          cultura_id,
+          periodo_inicio,
+          periodo_fim,
+          estado,
+          descricao,
+          campanha:agro_campanhas(id,codigo,nome),
+          provincia:agro_provincias(id,nome),
+          cultura:agro_culturas(id,nome)
+        `)
+        .in("id", levantamentoIds);
+
+      if (erroLevantamentos) {
+        console.error("Erro ao carregar levantamentos provinciais:", erroLevantamentos.message);
+      } else {
+        for (const levantamento of levantamentos ?? []) {
+          levantamentosPorId.set(levantamento.id, levantamento);
+        }
+      }
+    }
+
+    // 4. Imagens dos indicadores.
     const { data: imagens, error: erroImagens } = await supabase
       .from("agro_indicadores_imagens")
       .select("*")
@@ -73,12 +106,10 @@ export async function GET() {
       .order("criado_em", { ascending: false });
 
     if (erroImagens) {
-      console.error(
-        "Erro ao carregar imagens dos indicadores:",
-        erroImagens.message
-      );
+      console.error("Erro ao carregar imagens:", erroImagens.message);
     }
 
+    // 5. Identificar todos os conjuntos de dados associados.
     const datasetIds = Array.from(
       new Set(
         [
@@ -90,6 +121,28 @@ export async function GET() {
       )
     );
 
+    // 6. Carregar os metadados dos conjuntos de dados.
+    const datasetsPorId = new Map();
+
+    if (datasetIds.length > 0) {
+      const { data: datasets, error: erroDatasets } = await supabase
+        .from("agro_datasets")
+        .select("id, titulo, descricao, categoria, subcategoria, periodo_inicio, periodo_fim, escala, natureza, estado")
+        .in("id", datasetIds);
+
+      if (erroDatasets) {
+        console.error(
+          "Erro ao carregar conjuntos de dados:",
+          erroDatasets.message
+        );
+      } else {
+        for (const dataset of datasets ?? []) {
+          datasetsPorId.set(dataset.id, dataset);
+        }
+      }
+    }
+
+    // 7. Carregar as fontes bibliográficas associadas.
     let fontesAssociadas: {
       dataset_id: string;
       citacao: string | null;
@@ -124,7 +177,7 @@ export async function GET() {
 
       if (erroFontes) {
         console.error(
-          "Erro ao carregar fontes dos conjuntos de dados:",
+          "Erro ao carregar fontes bibliográficas:",
           erroFontes.message
         );
       } else {
@@ -132,7 +185,12 @@ export async function GET() {
       }
     }
 
+    // 8. Organizar os dados de cada indicador.
     const resultado = indicadores.map((indicador) => {
+      const datasetIndicador = indicador.dataset_id
+        ? datasetsPorId.get(indicador.dataset_id) ?? null
+        : null;
+
       const observacoesIndicador = (observacoes ?? []).filter(
         (observacao) => observacao.indicador_id === indicador.id
       );
@@ -146,14 +204,19 @@ export async function GET() {
           fonte: relacao.fonte,
         }));
 
+      // 8. Associar fontes e conjuntos de dados às observações.
       const observacoesComFontes = observacoesIndicador.map(
         (observacao) => {
-          const datasetObservacao =
+          const datasetObservacaoId =
             observacao.dataset_id ?? indicador.dataset_id;
+
+          const datasetObservacao = datasetObservacaoId
+            ? datasetsPorId.get(datasetObservacaoId) ?? null
+            : null;
 
           const fontesObservacao = fontesAssociadas
             .filter(
-              (relacao) => relacao.dataset_id === datasetObservacao
+              (relacao) => relacao.dataset_id === datasetObservacaoId
             )
             .map((relacao) => ({
               citacao: relacao.citacao,
@@ -162,17 +225,23 @@ export async function GET() {
 
           return {
             ...observacao,
+            levantamento: observacao.levantamento_id
+              ? levantamentosPorId.get(observacao.levantamento_id) ?? null
+              : null,
+            dataset: datasetObservacao,
             fontes: fontesObservacao,
           };
         }
       );
 
+      // 9. Imagens associadas ao indicador.
       const imagensIndicador = (imagens ?? []).filter(
         (imagem) => imagem.indicador_id === indicador.id
       );
 
       return {
         ...indicador,
+        dataset: datasetIndicador,
         fontes: fontesIndicador,
         observacoes: observacoesComFontes,
         imagens: imagensIndicador,

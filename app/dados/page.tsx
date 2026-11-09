@@ -87,6 +87,21 @@ type Indicador = {
   natureza?: string | null;
   estado?: string | null;
   datasetId?: string | null;
+  levantamentoId?: string | null;
+  levantamentoEstado?: string | null;
+  levantamentoDescricao?: string | null;
+  campanhaId?: string | null;
+  campanhaCodigo?: string | null;
+  campanhaNome?: string | null;
+  culturaId?: string | null;
+  culturaNome?: string | null;
+  provinciaId?: string | null;
+  provinciaNome?: string | null;
+  municipioId?: string | null;
+  comunaId?: string | null;
+  escala?: string | null;
+  periodoInicio?: string | null;
+  periodoFim?: string | null;
 
   // Informação da observação associada ao cartão.
   provincia?: string | null;
@@ -415,6 +430,9 @@ export default function DadosPage() {
     useState<"Conservador" | "Base" | "Acelerado">("Base");
       const [indicadoresPublicados, setIndicadoresPublicados] =
     useState<Indicador[]>([]);
+  const [filtroCampanhaLevantamento, setFiltroCampanhaLevantamento] = useState("Todos");
+  const [filtroProvinciaLevantamento, setFiltroProvinciaLevantamento] = useState("Todos");
+  const [filtroCulturaLevantamento, setFiltroCulturaLevantamento] = useState("Todos");
 
   useEffect(() => {
     async function carregarIndicadores() {
@@ -467,18 +485,90 @@ export default function DadosPage() {
                 : [null];
 
               return observacoes.map((observacao: any, index: number) => {
-                const inicioPeriodo = observacao?.periodo_inicio;
-                const fimPeriodo = observacao?.periodo_fim;
-                const referencia = observacao?.data_referencia;
+              const inicioDataset = observacao?.dataset?.periodo_inicio
+  ?? item.dataset?.periodo_inicio;
 
-                const periodoItem =
-                  inicioPeriodo && fimPeriodo
-                    ? `${inicioPeriodo.slice(0, 4)}/${fimPeriodo.slice(0, 4)}`
-                    : inicioPeriodo
-                    ? inicioPeriodo.slice(0, 4)
-                    : referencia
-                    ? referencia.slice(0, 4)
-                    : "Sem período";
+const fimDataset = observacao?.dataset?.periodo_fim
+  ?? item.dataset?.periodo_fim;
+
+const inicioPeriodo = observacao?.periodo_inicio;
+const fimPeriodo = observacao?.periodo_fim;
+const referencia = observacao?.data_referencia;
+
+const inicioReferencia = inicioDataset ?? inicioPeriodo;
+const fimReferencia = fimDataset ?? fimPeriodo;
+
+const periodoItem =
+  inicioReferencia && fimReferencia
+    ? `${inicioReferencia.slice(0, 4)}/${fimReferencia.slice(0, 4)}`
+    : inicioReferencia
+    ? inicioReferencia.slice(0, 4)
+    : referencia
+    ? referencia.slice(0, 4)
+    : "Sem período";
+
+    const normalizarComparacao = (valor: unknown) =>
+  String(valor ?? "").trim().toLocaleLowerCase("pt-PT");
+
+const dataActual = fimPeriodo ?? referencia ?? inicioPeriodo;
+
+const observacaoAnterior = dataActual
+  ? (item.observacoes ?? [])
+      .filter((anterior: any) => {
+        if (!observacao || anterior.id === observacao.id) {
+          return false;
+        }
+
+        const dataAnterior =
+          anterior.periodo_fim ??
+          anterior.data_referencia ??
+          anterior.periodo_inicio;
+
+        return (
+          dataAnterior &&
+          dataAnterior < dataActual &&
+          normalizarComparacao(anterior.unidade ?? item.unidade) ===
+            normalizarComparacao(observacao.unidade ?? item.unidade) &&
+          normalizarComparacao(anterior.provincia) ===
+            normalizarComparacao(observacao.provincia) &&
+          normalizarComparacao(anterior.municipio) ===
+            normalizarComparacao(observacao.municipio) &&
+          normalizarComparacao(anterior.comuna) ===
+            normalizarComparacao(observacao.comuna) &&
+          normalizarComparacao(anterior.localidade) ===
+            normalizarComparacao(observacao.localidade)
+        );
+      })
+      .sort((a: any, b: any) => {
+        const dataA =
+          a.periodo_fim ?? a.data_referencia ?? a.periodo_inicio ?? "";
+
+        const dataB =
+          b.periodo_fim ?? b.data_referencia ?? b.periodo_inicio ?? "";
+
+        return dataB.localeCompare(dataA);
+      })[0]
+  : null;
+
+const valorActual = Number(observacao?.valor);
+const valorAnterior = Number(observacaoAnterior?.valor);
+
+const variacao =
+  observacao &&
+  observacaoAnterior &&
+  Number.isFinite(valorActual) &&
+  Number.isFinite(valorAnterior) &&
+  valorAnterior !== 0
+    ? `${valorActual - valorAnterior > 0 ? "+" : ""}${new Intl.NumberFormat(
+        "pt-PT",
+        {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1,
+        }
+      ).format(
+        ((valorActual - valorAnterior) / Math.abs(valorAnterior)) * 100
+      )}%`
+    : undefined;
 
                 const natureza =
                   observacao?.natureza ?? item.natureza;
@@ -547,6 +637,21 @@ export default function DadosPage() {
                   indicadorId: item.id,
                   codigo: item.codigo ?? null,
                   datasetId: item.dataset_id ?? null,
+                  levantamentoId: observacao?.levantamento_id ?? null,
+                  levantamentoEstado: observacao?.levantamento?.estado ?? null,
+                  levantamentoDescricao: observacao?.levantamento?.descricao ?? null,
+                  campanhaId: observacao?.campanha_id ?? null,
+                  campanhaCodigo: observacao?.levantamento?.campanha?.codigo ?? null,
+                  campanhaNome: observacao?.levantamento?.campanha?.nome ?? null,
+                  culturaId: observacao?.cultura_id ?? null,
+                  culturaNome: observacao?.levantamento?.cultura?.nome ?? null,
+                  provinciaId: observacao?.provincia_id ?? null,
+                  provinciaNome: observacao?.levantamento?.provincia?.nome ?? observacao?.provincia ?? null,
+                  municipioId: observacao?.municipio_id ?? null,
+                  comunaId: observacao?.comuna_id ?? null,
+                  escala: observacao?.escala ?? null,
+                  periodoInicio: observacao?.periodo_inicio ?? observacao?.levantamento?.periodo_inicio ?? null,
+                  periodoFim: observacao?.periodo_fim ?? observacao?.levantamento?.periodo_fim ?? null,
                   titulo: item.nome,
                   valor:
                     observacao && Number.isFinite(Number(observacao.valor))
@@ -554,7 +659,7 @@ export default function DadosPage() {
                           Number(observacao.valor)
                         )
                       : "Sem observação",
-                  unidade: observacao?.unidade ?? item.unidade ?? "",
+                      unidade: observacao?.unidade?.trim() || item.unidade?.trim() || "",
                   descricao: item.descricao ?? "",
                   oQueMede: item.nome ?? "",
                   significado: item.descricao ?? "",
@@ -572,8 +677,9 @@ export default function DadosPage() {
                   natureza: natureza ?? null,
                   estado: item.estado ?? null,
                   periodo: periodoItem,
-                  fonte: textoFontes,
-                  url: fontePrincipal?.url ?? "",
+variacao,
+fonte: textoFontes,
+url: fontePrincipal?.url ?? "",
                   imagem: item.imagens?.find(
                     (imagem: any) => imagem?.url
                   )?.url ?? "",
@@ -720,6 +826,33 @@ export default function DadosPage() {
       periodos,
     };
   }, [indicadoresPublicados]);
+  const registosLevantamentos = useMemo(
+    () => indicadoresPublicados.filter((item) => Boolean(item.levantamentoId)),
+    [indicadoresPublicados]
+  );
+
+  const registosLevantamentosFiltrados = useMemo(
+    () =>
+      registosLevantamentos.filter((item) =>
+        (filtroCampanhaLevantamento === "Todos" || item.campanhaId === filtroCampanhaLevantamento) &&
+        (filtroProvinciaLevantamento === "Todos" || item.provinciaId === filtroProvinciaLevantamento) &&
+        (filtroCulturaLevantamento === "Todos" || item.culturaId === filtroCulturaLevantamento)
+      ),
+    [
+      registosLevantamentos,
+      filtroCampanhaLevantamento,
+      filtroProvinciaLevantamento,
+      filtroCulturaLevantamento,
+    ]
+  );
+
+  const totalCampanhasLevantamentos = new Set(
+    registosLevantamentos.map((item) => item.campanhaId).filter(Boolean)
+  ).size;
+
+  const totalLevantamentosProvinciais = new Set(
+    registosLevantamentos.map((item) => item.levantamentoId).filter(Boolean)
+  ).size;
   const taxasCenario = {
     Conservador: 0.02,
     Base: 0.05,
@@ -1406,6 +1539,127 @@ export default function DadosPage() {
         </>
 
       )}
+      {/* CAMPANHAS NACIONAIS E LEVANTAMENTOS PROVINCIAIS */}
+      <section className="mt-12 space-y-7 rounded-3xl border border-emerald-100 bg-white p-5 shadow-sm md:p-8">
+        <div>
+          <p className="text-xs font-black uppercase tracking-widest text-emerald-700">
+            Sistema nacional de informação agropecuária
+          </p>
+          <h2 className="mt-2 text-2xl font-black text-slate-900 md:text-3xl">
+            Campanhas e levantamentos provinciais
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+            Consulte os registos publicados por campanha agrícola, província e cultura,
+            respeitando os períodos próprios de cada levantamento.
+          </p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
+            <p className="text-sm font-semibold text-emerald-800">Campanhas identificadas</p>
+            <p className="mt-2 text-3xl font-black text-emerald-950">{totalCampanhasLevantamentos}</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <p className="text-sm font-semibold text-slate-600">Levantamentos provinciais</p>
+            <p className="mt-2 text-3xl font-black text-slate-900">{totalLevantamentosProvinciais}</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <p className="text-sm font-semibold text-slate-600">Registos associados</p>
+            <p className="mt-2 text-3xl font-black text-slate-900">{registosLevantamentos.length}</p>
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <div>
+            <label className="mb-2 block text-sm font-bold text-slate-700">Campanha agrícola</label>
+            <select value={filtroCampanhaLevantamento} onChange={(e) => setFiltroCampanhaLevantamento(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
+              <option value="Todos">Todas as campanhas</option>
+              {[...new Set(registosLevantamentos.map((item) => item.campanhaId).filter((id): id is string => Boolean(id)))].map((id) => {
+                const item = registosLevantamentos.find((registo) => registo.campanhaId === id);
+                return <option key={id} value={id}>{item?.campanhaNome || item?.campanhaCodigo || id}</option>;
+              })}
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-bold text-slate-700">Província</label>
+            <select value={filtroProvinciaLevantamento} onChange={(e) => setFiltroProvinciaLevantamento(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
+              <option value="Todos">Todas as províncias</option>
+              {[...new Set(registosLevantamentos.map((item) => item.provinciaId).filter((id): id is string => Boolean(id)))].map((id) => {
+                const item = registosLevantamentos.find((registo) => registo.provinciaId === id);
+                return <option key={id} value={id}>{item?.provinciaNome || item?.provincia || id}</option>;
+              })}
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-bold text-slate-700">Cultura agrícola</label>
+            <select value={filtroCulturaLevantamento} onChange={(e) => setFiltroCulturaLevantamento(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
+              <option value="Todos">Todas as culturas</option>
+              {[...new Set(registosLevantamentos.map((item) => item.culturaId).filter((id): id is string => Boolean(id)))].map((id) => {
+                const item = registosLevantamentos.find((registo) => registo.culturaId === id);
+                return <option key={id} value={id}>{item?.culturaNome || id}</option>;
+              })}
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
+          <p className="text-sm text-slate-600">Registos encontrados</p>
+          <p className="text-lg font-black text-emerald-800">{registosLevantamentosFiltrados.length}</p>
+        </div>
+
+        {registosLevantamentosFiltrados.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-slate-300 p-10 text-center">
+            <p className="font-bold text-slate-700">Não existem registos publicados para os filtros seleccionados.</p>
+            <p className="mt-2 text-sm text-slate-500">Os levantamentos serão apresentados quando existirem observações publicadas associadas.</p>
+          </div>
+        ) : (
+          <div className="grid gap-4 lg:grid-cols-2">
+            {registosLevantamentosFiltrados.map((item) => (
+              <article key={item.id} className="rounded-2xl border border-slate-200 p-5">
+                <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
+                  {item.campanhaNome || item.campanhaCodigo || "Campanha não identificada"}
+                </p>
+                <h3 className="mt-2 text-lg font-black text-slate-900">{item.titulo}</h3>
+                <div className="mt-4">
+                  <p className="text-xs font-semibold uppercase text-slate-500">Valor observado</p>
+                  <p className="mt-1 text-2xl font-black text-emerald-800">
+                    {item.valor} <span className="text-sm font-semibold text-slate-600">{item.unidade}</span>
+                  </p>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <p className="text-xs text-slate-500">Província</p>
+                    <p className="mt-1 font-bold">{item.provinciaNome || item.provincia || "Não identificada"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Cultura</p>
+                    <p className="mt-1 font-bold">{item.culturaNome || "Não identificada"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Município</p>
+                    <p className="mt-1 font-bold">{item.municipio || "Não especificado"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Escala territorial</p>
+                    <p className="mt-1 font-bold">{item.escala || "Não especificada"}</p>
+                  </div>
+                </div>
+                <div className="mt-4 border-t border-slate-100 pt-3 text-xs leading-5 text-slate-500">
+                  <p>Estado: {item.levantamentoEstado || "Não indicado"}</p>
+                  <p>Período: {item.periodoInicio || "Não indicado"} — {item.periodoFim || "Não indicado"}</p>
+                  {item.levantamentoDescricao && <p className="mt-1">{item.levantamentoDescricao}</p>}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        <p className="text-xs leading-5 text-slate-500">
+          Os valores são apresentados individualmente. Não são calculados totais nacionais sem validação da compatibilidade das unidades, escalas, períodos e cobertura territorial.
+        </p>
+      </section>
       {/* ANÁLISE EXPERIMENTAL DOS REGISTOS DA BASE DE DADOS */}
       <section className="mt-12 space-y-8 rounded-3xl border border-emerald-100 bg-white p-5 shadow-sm md:p-8">
 

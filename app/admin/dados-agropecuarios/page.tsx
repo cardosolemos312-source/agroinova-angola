@@ -45,6 +45,13 @@ const FORMULARIO_VAZIO: FormularioIndicador = {
 
 const MODULOS: Modulo[] = [
   {
+    id: "campanhas",
+    titulo: "Campanhas agrícolas",
+    descricao: "Gestão das campanhas agrícolas nacionais.",
+    endpoint: "/api/admin/dados-agropecuarios/referencias",
+    chave: "campanhas",
+  },
+  {
     id: "datasets",
     titulo: "Conjuntos de dados",
     descricao: "Criação e gestão de conjuntos de dados agropecuários.",
@@ -110,11 +117,17 @@ const CORES = {
   secundario: "#64748b",
   borda: "#e2e8f0",
 };
-
 type FormularioObservacao = {
   id: string;
   indicador_id: string;
   dataset_id: string;
+  escala: string;
+  campanha_id: string;
+  levantamento_id: string;
+  cultura_id: string;
+  provincia_id: string;
+  municipio_id: string;
+  comuna_id: string;
   provincia: string;
   municipio: string;
   comuna: string;
@@ -139,6 +152,13 @@ const FORMULARIO_OBSERVACAO_VAZIO: FormularioObservacao = {
   id: "",
   indicador_id: "",
   dataset_id: "",
+  escala: "nacional",
+  campanha_id: "",
+  levantamento_id: "",
+  cultura_id: "",
+  provincia_id: "",
+  municipio_id: "",
+  comuna_id: "",
   provincia: "",
   municipio: "",
   comuna: "",
@@ -158,7 +178,6 @@ const FORMULARIO_OBSERVACAO_VAZIO: FormularioObservacao = {
   estado: "rascunho",
   observacoes: "",
 };
-
 type FormularioEstudo = {
   id: string;
   titulo: string;
@@ -324,6 +343,15 @@ export default function DadosAgropecuariosAdmin() {
     natureza: "estatistica_oficial",
     estado: "rascunho",
   });
+  const [formularioCampanha, setFormularioCampanha] = useState({
+    id: "",
+    codigo: "",
+    nome: "",
+    periodo_inicio: "",
+    periodo_fim: "",
+    estado: "activa",
+    descricao: "",
+  });
   const [formularioObservacao, setFormularioObservacao] = useState<FormularioObservacao>(FORMULARIO_OBSERVACAO_VAZIO);
   const [formularioEstudo, setFormularioEstudo] = useState<FormularioEstudo>(ESTUDO_VAZIO);
   const [formularioImagem, setFormularioImagem] = useState<FormularioImagem>(IMAGEM_VAZIA);
@@ -333,6 +361,12 @@ export default function DadosAgropecuariosAdmin() {
   const [carregandoImagensIndicador, setCarregandoImagensIndicador] = useState(false);
   const [guardandoImagemIndicador, setGuardandoImagemIndicador] = useState(false);
   const [datasetsDisponiveis, setDatasetsDisponiveis] = useState<Registo[]>([]);
+  const [campanhasDisponiveis, setCampanhasDisponiveis] = useState<Registo[]>([]);
+  const [levantamentosDisponiveis, setLevantamentosDisponiveis] = useState<Registo[]>([]);
+const [culturasDisponiveis, setCulturasDisponiveis] = useState<Registo[]>([]);
+const [provinciasDisponiveis, setProvinciasDisponiveis] = useState<Registo[]>([]);
+const [municipiosDisponiveis, setMunicipiosDisponiveis] = useState<Registo[]>([]);
+const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
   const [fontesDisponiveis, setFontesDisponiveis] = useState<Registo[]>([]);
     const [formularioDatasetFonte, setFormularioDatasetFonte] = useState({
     dataset_id: "",
@@ -363,6 +397,9 @@ export default function DadosAgropecuariosAdmin() {
 
   const modulo =
     MODULOS.find((item) => item.id === moduloId) ?? MODULOS[0];
+    const MODULOS_PRINCIPAIS = MODULOS.filter((item) =>
+  ["datasets", "campanhas", "fontes", "indicadores", "observacoes", "estudos"].includes(item.id)
+);
 
   const carregar = useCallback(async () => {
     setCarregando(true);
@@ -463,6 +500,32 @@ export default function DadosAgropecuariosAdmin() {
     void carregarDatasets();
   }, []);
 
+  useEffect(() => {
+    async function carregarReferencias() {
+      try {
+        const resposta = await fetch(
+          "/api/admin/dados-agropecuarios/referencias",
+          { cache: "no-store" }
+        );
+        const dados = await resposta.json();
+
+        if (!resposta.ok || dados.sucesso === false) {
+          throw new Error(dados.erro || "NÃ£o foi possÃ­vel carregar as referÃªncias.");
+        }
+
+        setCampanhasDisponiveis(dados.campanhas ?? []);
+        setLevantamentosDisponiveis(dados.levantamentos ?? []);
+        setCulturasDisponiveis(dados.culturas ?? []);
+        setProvinciasDisponiveis(dados.provincias ?? []);
+        setMunicipiosDisponiveis(dados.municipios ?? []);
+        setComunasDisponiveis(dados.comunas ?? []);
+      } catch (erro) {
+        console.error("Erro ao carregar referÃªncias agropecuÃ¡rias:", erro);
+      }
+    }
+
+    void carregarReferencias();
+  }, []);
   useEffect(() => {
     async function carregarIndicadores() {
       try {
@@ -575,7 +638,17 @@ export default function DadosAgropecuariosAdmin() {
         natureza: String(registo.natureza ?? "estatistica_oficial"),
         estado: String(registo.estado ?? "rascunho"),
       });
-          } else if (moduloId === "fontes") {
+          } else if (moduloId === "campanhas") {
+      setFormularioCampanha({
+        id: String(registo.id ?? ""),
+        codigo: String(registo.codigo ?? ""),
+        nome: String(registo.nome ?? ""),
+        periodo_inicio: String(registo.periodo_inicio ?? "").slice(0, 10),
+        periodo_fim: String(registo.periodo_fim ?? "").slice(0, 10),
+        estado: String(registo.estado ?? "activa"),
+        descricao: String(registo.descricao ?? ""),
+      });
+    } else if (moduloId === "fontes") {
       setFormularioFonte({
         titulo: String(registo.titulo ?? ""),
         entidade: String(registo.entidade ?? ""),
@@ -603,6 +676,13 @@ export default function DadosAgropecuariosAdmin() {
         id: String(registo.id ?? ""),
         indicador_id: String(registo.indicador_id ?? ""),
         dataset_id: String(registo.dataset_id ?? ""),
+        escala: String(registo.escala ?? "nacional"),
+        campanha_id: String(registo.campanha_id ?? ""),
+        levantamento_id: String(registo.levantamento_id ?? ""),
+        cultura_id: String(registo.cultura_id ?? ""),
+        provincia_id: String(registo.provincia_id ?? ""),
+        municipio_id: String(registo.municipio_id ?? ""),
+        comuna_id: String(registo.comuna_id ?? ""),
         provincia: String(registo.provincia ?? ""),
         municipio: String(registo.municipio ?? ""),
         comuna: String(registo.comuna ?? ""),
@@ -670,10 +750,71 @@ export default function DadosAgropecuariosAdmin() {
       setJson(JSON.stringify(registo, null, 2));
     }
   }
+  async function eliminarCampanha(id: string) {
+    if (!window.confirm("Tem a certeza de que pretende eliminar esta campanha?")) return;
+
+    setErro("");
+    setMensagem("");
+
+    try {
+      const resposta = await fetch("/api/admin/dados-agropecuarios/referencias", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      const resultado = await resposta.json();
+
+      if (!resposta.ok || resultado.sucesso === false) {
+        throw new Error(resultado.erro || "Não foi possível eliminar a campanha.");
+      }
+
+      setMensagem("Campanha eliminada com sucesso.");
+      await carregar();
+    } catch (erroDesconhecido) {
+      setErro(erroDesconhecido instanceof Error ? erroDesconhecido.message : "Erro ao eliminar a campanha.");
+    }
+  }
+  async function eliminarRegistoAgro(id: string) {
+    const tipo = moduloId === "indicadores" ? "indicador" : "observação";
+    const endpoint = moduloId === "indicadores"
+      ? "/api/admin/dados-agropecuarios/indicadores"
+      : "/api/admin/dados-agropecuarios/observacoes";
+
+    if (!window.confirm(`Tem a certeza de que pretende eliminar este ${tipo}? Esta operação é permanente.`)) return;
+
+    setErro("");
+    setMensagem("");
+
+    try {
+      const resposta = await fetch(endpoint, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      const resultado = await resposta.json();
+
+      if (!resposta.ok || resultado.sucesso === false) {
+        throw new Error(resultado.erro || `Não foi possível eliminar o ${tipo}.`);
+      }
+
+      setSeleccionado(null);
+      setMensagem(resultado.mensagem || `${tipo} eliminado com sucesso.`);
+      await carregar();
+    } catch (erroDesconhecido) {
+      setErro(
+        erroDesconhecido instanceof Error
+          ? erroDesconhecido.message
+          : `Erro ao eliminar ${tipo}.`
+      );
+    }
+  }
   function novoRegisto() {
     setFormularioObservacao(FORMULARIO_OBSERVACAO_VAZIO);
     setFormularioEstudo(ESTUDO_VAZIO);
     setFormularioImagem(IMAGEM_VAZIA);
+    setFormularioCampanha({ id: "", codigo: "", nome: "", periodo_inicio: "", periodo_fim: "", estado: "activa", descricao: "" });
         setFormularioFonte({
       titulo: "",
       entidade: "",
@@ -757,7 +898,28 @@ export default function DadosAgropecuariosAdmin() {
         if (seleccionado !== null) {
           dados.id = formularioDataset.id;
         }
-              } else if (moduloId === "fontes") {
+              } else if (moduloId === "campanhas") {
+        if (!formularioCampanha.codigo.trim()) {
+          throw new Error("Indique o código da campanha.");
+        }
+
+        if (!formularioCampanha.nome.trim()) {
+          throw new Error("Indique o nome da campanha.");
+        }
+
+        dados = {
+          codigo: formularioCampanha.codigo.trim(),
+          nome: formularioCampanha.nome.trim(),
+          periodo_inicio: formularioCampanha.periodo_inicio || null,
+          periodo_fim: formularioCampanha.periodo_fim || null,
+          estado: formularioCampanha.estado,
+          descricao: formularioCampanha.descricao.trim() || null,
+        };
+
+        if (seleccionado !== null) {
+          dados.id = formularioCampanha.id;
+        }
+      } else if (moduloId === "fontes") {
         if (!formularioFonte.titulo.trim()) {
           throw new Error("Indique o título da fonte bibliográfica.");
         }
@@ -847,6 +1009,13 @@ export default function DadosAgropecuariosAdmin() {
         dados = {
           indicador_id: formularioObservacao.indicador_id,
           dataset_id: formularioObservacao.dataset_id || null,
+          campanha_id: formularioObservacao.campanha_id || null,
+          levantamento_id: formularioObservacao.levantamento_id || null,
+          cultura_id: formularioObservacao.cultura_id || null,
+          escala: formularioObservacao.escala,
+          provincia_id: formularioObservacao.provincia_id || null,
+          municipio_id: formularioObservacao.municipio_id || null,
+          comuna_id: formularioObservacao.comuna_id || null,
           provincia: formularioObservacao.provincia.trim() || null,
           municipio: formularioObservacao.municipio.trim() || null,
           comuna: formularioObservacao.comuna.trim() || null,
@@ -1070,6 +1239,7 @@ export default function DadosAgropecuariosAdmin() {
       }
 
       setFormularioImagem(IMAGEM_VAZIA);
+    setFormularioCampanha({ id: "", codigo: "", nome: "", periodo_inicio: "", periodo_fim: "", estado: "activa", descricao: "" });
       setMensagem(formularioImagem.id
         ? "Imagem actualizada com sucesso."
         : "Imagem adicionada com sucesso.");
@@ -1120,6 +1290,7 @@ export default function DadosAgropecuariosAdmin() {
 
       if (formularioImagem.id === id) {
         setFormularioImagem(IMAGEM_VAZIA);
+    setFormularioCampanha({ id: "", codigo: "", nome: "", periodo_inicio: "", periodo_fim: "", estado: "activa", descricao: "" });
       }
 
       setMensagem("Imagem eliminada com sucesso.");
@@ -1184,7 +1355,7 @@ export default function DadosAgropecuariosAdmin() {
         </header>
 
         <section style={grelhaModulos}>
-          {MODULOS.map((item) => (
+            {MODULOS_PRINCIPAIS.map((item) => (
             <button
               key={item.id}
               type="button"
@@ -1232,7 +1403,72 @@ export default function DadosAgropecuariosAdmin() {
               <span style={contador}>
                 {registos.length} registos
               </span>
-            </div>
+                        </div>
+
+            {(moduloId === "datasets" ||
+              moduloId === "datasets-fontes" ||
+              moduloId === "estudos" ||
+              moduloId === "estudos-fontes" ||
+              moduloId === "imagens") && (
+              <div style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 10,
+                marginBottom: 18,
+              }}>
+                {(moduloId === "datasets" ||
+                  moduloId === "datasets-fontes") && (
+                  <>
+                    {moduloId === "datasets-fontes" && (
+                      <button
+                        type="button"
+                        onClick={() => setModuloId("datasets")}
+                        style={botaoSecundario}
+                      >
+                        Voltar aos conjuntos de dados
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setModuloId("datasets-fontes")}
+                      style={botaoSecundario}
+                    >
+                      Fontes associadas aos datasets
+                    </button>
+                  </>
+                )}
+
+                {(moduloId === "estudos" ||
+                  moduloId === "estudos-fontes" ||
+                  moduloId === "imagens") && (
+                  <>
+                    {moduloId !== "estudos" && (
+                      <button
+                        type="button"
+                        onClick={() => setModuloId("estudos")}
+                        style={botaoSecundario}
+                      >
+                        Voltar aos estudos
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setModuloId("estudos-fontes")}
+                      style={botaoSecundario}
+                    >
+                      Fontes dos estudos
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setModuloId("imagens")}
+                      style={botaoSecundario}
+                    >
+                      Imagens dos estudos
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
 
             {erro && (
               <div style={mensagemErro} role="alert">
@@ -1279,30 +1515,63 @@ export default function DadosAgropecuariosAdmin() {
                     registo.id ?? registo.estudo_id ?? "";
 
                   return (
-                    <button
+                    <div
                       key={`${String(id)}-${indice}`}
-                      type="button"
-                      onClick={() => prepararEdicao(registo, indice)}
-                      style={{
-                        ...itemRegisto,
-                        borderColor:
-                          seleccionado === indice
-                            ? CORES.verde
-                            : CORES.borda,
-                        background:
-                          seleccionado === indice
-                            ? "#f0fdf4"
-                            : "#ffffff",
-                      }}
+                      style={{ display: "flex", gap: 8, alignItems: "stretch" }}
                     >
-                      <strong style={tituloRegisto}>
-                        {String(titulo)}
-                      </strong>
-                      <span style={subtituloRegisto}>
-                        {String(registo.estado ?? "Registo")}
-                        {id ? ` · ${String(id)}` : ""}
-                      </span>
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => prepararEdicao(registo, indice)}
+                        style={{
+                          ...itemRegisto,
+                          flex: 1,
+                          minWidth: 0,
+                          borderColor: seleccionado === indice ? CORES.verde : CORES.borda,
+                          background: seleccionado === indice ? "#f0fdf4" : "#ffffff",
+                        }}
+                      >
+                        <strong style={tituloRegisto}>{String(titulo)}</strong>
+                        <span style={subtituloRegisto}>
+                          {String(registo.estado ?? "Registo")}
+                          {id ? ` · ${String(id)}` : ""}
+                        </span>
+                      </button>
+
+                      {(moduloId === "indicadores" || moduloId === "observacoes") && (
+                        <button
+                          type="button"
+                          onClick={() => void eliminarRegistoAgro(String(registo.id))}
+                          style={{
+                            border: "1px solid #fecaca",
+                            background: "#fff7f7",
+                            color: "#b91c1c",
+                            borderRadius: 9,
+                            padding: "0 13px",
+                            cursor: "pointer",
+                            fontWeight: 700,
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                      )}
+                      {moduloId === "campanhas" && (
+                        <button
+                          type="button"
+                          onClick={() => void eliminarCampanha(String(registo.id))}
+                          style={{
+                            border: "1px solid #fecaca",
+                            background: "#fff7f7",
+                            color: "#b91c1c",
+                            borderRadius: 9,
+                            padding: "0 13px",
+                            cursor: "pointer",
+                            fontWeight: 700,
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                      )}
+                    </div>
                   );
                 })}
               </div>
@@ -1708,6 +1977,65 @@ export default function DadosAgropecuariosAdmin() {
                     )}
                   </section>
                 </>
+              ) : moduloId === "campanhas" ? (
+                <div style={{ display: "grid", gap: 15 }}>
+                  <div style={grelhaCampos}>
+                    <Campo
+                      label="Código da campanha"
+                      value={formularioCampanha.codigo}
+                      onChange={(v) => setFormularioCampanha((a) => ({ ...a, codigo: v }))}
+                      placeholder="Ex.: CAM-2026-2027"
+                      required
+                      maxLength={80}
+                    />
+                    <Campo
+                      label="Nome da campanha"
+                      value={formularioCampanha.nome}
+                      onChange={(v) => setFormularioCampanha((a) => ({ ...a, nome: v }))}
+                      placeholder="Ex.: Campanha Agrícola 2026/2027"
+                      required
+                      maxLength={200}
+                    />
+                  </div>
+
+                  <div style={grelhaCampos}>
+                    <Campo
+                      label="Data de início"
+                      type="date"
+                      value={formularioCampanha.periodo_inicio}
+                      onChange={(v) => setFormularioCampanha((a) => ({ ...a, periodo_inicio: v }))}
+                    />
+                    <Campo
+                      label="Data de fim"
+                      type="date"
+                      value={formularioCampanha.periodo_fim}
+                      onChange={(v) => setFormularioCampanha((a) => ({ ...a, periodo_fim: v }))}
+                    />
+                  </div>
+
+                  <label style={estiloCampo}>
+                    <span style={estiloLabel}>Estado da campanha</span>
+                    <select
+                      value={formularioCampanha.estado}
+                      onChange={(e) => setFormularioCampanha((a) => ({ ...a, estado: e.target.value }))}
+                      style={estiloInput}
+                    >
+                      <option value="activa">Activa</option>
+                      <option value="encerrada">Encerrada</option>
+                    </select>
+                  </label>
+
+                  <label style={estiloCampo}>
+                    <span style={estiloLabel}>Descrição</span>
+                    <textarea
+                      value={formularioCampanha.descricao}
+                      onChange={(e) => setFormularioCampanha((a) => ({ ...a, descricao: e.target.value }))}
+                      rows={4}
+                      style={estiloTextarea}
+                      placeholder="Descrição e enquadramento da campanha agrícola."
+                    />
+                  </label>
+                </div>
               ) : moduloId === "datasets" ? (
                 <div style={{ display: "grid", gap: 15 }}>
                   <Campo
@@ -2150,12 +2478,32 @@ export default function DadosAgropecuariosAdmin() {
                     <span style={estiloLabel}>Objectivo</span>
                     <textarea value={formularioEstudo.objectivo} onChange={(e) => setFormularioEstudo((a) => ({ ...a, objectivo: e.target.value }))} rows={3} style={estiloTextarea} />
                   </label>
+
                   <div style={grelhaCampos}>
-                    <Campo label="Província" value={formularioEstudo.provincia} onChange={(v) => setFormularioEstudo((a) => ({ ...a, provincia: v }))} />
-                    <Campo label="Município" value={formularioEstudo.municipio} onChange={(v) => setFormularioEstudo((a) => ({ ...a, municipio: v }))} />
-                    <Campo label="Comuna" value={formularioEstudo.comuna} onChange={(v) => setFormularioEstudo((a) => ({ ...a, comuna: v }))} />
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Província</span>
+                      <select value={formularioEstudo.provincia} onChange={(e) => setFormularioEstudo((a) => ({ ...a, provincia: e.target.value, municipio: "", comuna: "" }))} style={estiloInput}>
+                        <option value="">Seleccione a província</option>
+                        {provinciasDisponiveis.map((item) => <option key={String(item.id)} value={String(item.nome)}>{String(item.nome)}</option>)}
+                      </select>
+                    </label>
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Município</span>
+                      <select value={formularioEstudo.municipio} onChange={(e) => setFormularioEstudo((a) => ({ ...a, municipio: e.target.value, comuna: "" }))} disabled={!formularioEstudo.provincia} style={estiloInput}>
+                        <option value="">Seleccione o município</option>
+                        {municipiosDisponiveis.filter((item) => String(item.provincia_id) === String(provinciasDisponiveis.find((p) => String(p.nome) === formularioEstudo.provincia)?.id)).map((item) => <option key={String(item.id)} value={String(item.nome)}>{String(item.nome)}</option>)}
+                      </select>
+                    </label>
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Comuna</span>
+                      <select value={formularioEstudo.comuna} onChange={(e) => setFormularioEstudo((a) => ({ ...a, comuna: e.target.value }))} disabled={!formularioEstudo.municipio} style={estiloInput}>
+                        <option value="">Seleccione a comuna</option>
+                        {comunasDisponiveis.filter((item) => String(item.municipio_id) === String(municipiosDisponiveis.find((m) => String(m.nome) === formularioEstudo.municipio && String(m.provincia_id) === String(provinciasDisponiveis.find((p) => String(p.nome) === formularioEstudo.provincia)?.id))?.id)).map((item) => <option key={String(item.id)} value={String(item.nome)}>{String(item.nome)}</option>)}
+                      </select>
+                    </label>
                     <Campo label="Localidade" value={formularioEstudo.localidade} onChange={(v) => setFormularioEstudo((a) => ({ ...a, localidade: v }))} />
                   </div>
+
                   <div style={grelhaCampos}>
                     <Campo label="Data de início" type="date" value={formularioEstudo.data_inicio} onChange={(v) => setFormularioEstudo((a) => ({ ...a, data_inicio: v }))} />
                     <Campo label="Data de fim" type="date" value={formularioEstudo.data_fim} onChange={(v) => setFormularioEstudo((a) => ({ ...a, data_fim: v }))} />
@@ -2222,8 +2570,10 @@ export default function DadosAgropecuariosAdmin() {
                     <span style={estiloLabel}>Estudo associado *</span>
                     <select required value={formularioImagem.estudo_id} onChange={(e) => setFormularioImagem((a) => ({ ...a, estudo_id: e.target.value }))} style={estiloInput}>
                       <option value="">Seleccione um estudo</option>
-                      {estudosDisponiveis.map((estudo) => (
-                        <option key={String(estudo.id)} value={String(estudo.id)}>{String(estudo.titulo ?? "Estudo sem título")}</option>
+                      {estudosDisponiveis.map((item) => (
+                        <option key={String(item.id)} value={String(item.id)}>
+                          {String(item.titulo ?? "Estudo sem título")}
+                        </option>
                       ))}
                     </select>
                   </label>
@@ -2234,16 +2584,27 @@ export default function DadosAgropecuariosAdmin() {
                     <textarea value={formularioImagem.descricao} onChange={(e) => setFormularioImagem((a) => ({ ...a, descricao: e.target.value }))} rows={3} style={estiloTextarea} />
                   </label>
                   <div style={grelhaCampos}>
-                    <Campo label="Província" value={formularioImagem.provincia} onChange={(v) => setFormularioImagem((a) => ({ ...a, provincia: v }))} />
-                    <Campo label="Município" value={formularioImagem.municipio} onChange={(v) => setFormularioImagem((a) => ({ ...a, municipio: v }))} />
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Província</span>
+                      <select value={formularioImagem.provincia} onChange={(e) => setFormularioImagem((a) => ({ ...a, provincia: e.target.value, municipio: "" }))} style={estiloInput}>
+                        <option value="">Seleccione a província</option>
+                        {provinciasDisponiveis.map((item) => <option key={String(item.id)} value={String(item.nome)}>{String(item.nome)}</option>)}
+                      </select>
+                    </label>
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Município</span>
+                      <select value={formularioImagem.municipio} onChange={(e) => setFormularioImagem((a) => ({ ...a, municipio: e.target.value }))} disabled={!formularioImagem.provincia} style={estiloInput}>
+                        <option value="">Seleccione o município</option>
+                        {municipiosDisponiveis.filter((item) => String(item.provincia_id) === String(provinciasDisponiveis.find((p) => String(p.nome) === formularioImagem.provincia)?.id)).map((item) => <option key={String(item.id)} value={String(item.nome)}>{String(item.nome)}</option>)}
+                      </select>
+                    </label>
                     <Campo label="Data do registo" type="date" value={formularioImagem.data_registo} onChange={(v) => setFormularioImagem((a) => ({ ...a, data_registo: v }))} />
                     <Campo label="Ordem de apresentação" type="number" value={formularioImagem.ordem} onChange={(v) => setFormularioImagem((a) => ({ ...a, ordem: v }))} />
                   </div>
                   <p style={notaFormulario}>
                     Nesta etapa, a imagem é registada através de um URL. O carregamento directo de ficheiros será ligado ao armazenamento do Supabase numa etapa própria.
                   </p>
-                </div>
-              ) : moduloId === "observacoes" ? (
+                </div>) : moduloId === "observacoes" ? (
                 <div style={{ display: "grid", gap: 15 }}>
                   <label style={estiloCampo}>
                     <span style={estiloLabel}>Indicador associado *</span>
@@ -2294,45 +2655,195 @@ export default function DadosAgropecuariosAdmin() {
                   </label>
 
                   <div style={grelhaCampos}>
-                    <Campo
-                      label="Província"
-                      value={formularioObservacao.provincia}
-                      onChange={(v) =>
-                        setFormularioObservacao((a) => ({ ...a, provincia: v }))
-                      }
-                      placeholder="Ex.: Huambo"
-                      maxLength={120}
-                    />
-                    <Campo
-                      label="Município"
-                      value={formularioObservacao.municipio}
-                      onChange={(v) =>
-                        setFormularioObservacao((a) => ({ ...a, municipio: v }))
-                      }
-                      placeholder="Nome do município"
-                      maxLength={120}
-                    />
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Escala territorial</span>
+                      <select
+                        value={formularioObservacao.escala}
+                        onChange={(e) => setFormularioObservacao((a) => ({ ...a, escala: e.target.value }))}
+                        style={estiloInput}
+                      >
+                        <option value="nacional">Nacional</option>
+                        <option value="provincial">Provincial</option>
+                        <option value="municipal">Municipal</option>
+                        <option value="comunal">Comunal</option>
+                        <option value="local">Localidade</option>
+                      </select>
+                    </label>
+
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Campanha agrícola</span>
+                      <select
+                        value={formularioObservacao.campanha_id}
+                        onChange={(e) => setFormularioObservacao((a) => ({ ...a, campanha_id: e.target.value, levantamento_id: "" }))}
+                        style={estiloInput}
+                      >
+                        <option value="">Seleccione a campanha</option>
+                        {campanhasDisponiveis.map((item) => (
+                          <option key={String(item.id)} value={String(item.id)}>
+                            {String(item.nome ?? item.codigo ?? item.id)}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Cultura agrícola</span>
+                      <select
+                        value={formularioObservacao.cultura_id}
+                        onChange={(e) => setFormularioObservacao((a) => ({ ...a, cultura_id: e.target.value, levantamento_id: "" }))}
+                        style={estiloInput}
+                      >
+                        <option value="">Seleccione a cultura</option>
+                        {culturasDisponiveis.map((item) => (
+                          <option key={String(item.id)} value={String(item.id)}>
+                            {String(item.nome ?? item.designacao ?? item.codigo ?? item.id)}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+                  <div style={grelhaCampos}>
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Província</span>
+                      <select
+                        value={formularioObservacao.provincia_id}
+                        onChange={(e) => {
+                          const provincia = provinciasDisponiveis.find(
+                            (item) => String(item.id) === e.target.value
+                          );
+                          setFormularioObservacao((a) => ({
+                            ...a,
+                            provincia_id: e.target.value,
+                            provincia: String(provincia?.nome ?? ""),
+                            levantamento_id: "",
+                            municipio_id: "",
+                            municipio: "",
+                            comuna_id: "",
+                            comuna: "",
+                          }));
+                        }}
+                        style={estiloInput}
+                      >
+                        <option value="">Seleccione a província</option>
+                        {provinciasDisponiveis.map((item) => (
+                          <option key={String(item.id)} value={String(item.id)}>
+                            {String(item.nome)}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Levantamento provincial</span>
+                      <select
+                        value={formularioObservacao.levantamento_id}
+                        disabled={
+                          !formularioObservacao.campanha_id ||
+                          !formularioObservacao.provincia_id ||
+                          !formularioObservacao.cultura_id
+                        }
+                        onChange={(e) => {
+                          const levantamento = levantamentosDisponiveis.find(
+                            (item) => String(item.id) === e.target.value
+                          );
+
+                          setFormularioObservacao((a) => ({
+                            ...a,
+                            levantamento_id: e.target.value,
+                            ...(levantamento
+                              ? {
+                                  campanha_id: String(levantamento.campanha_id),
+                                  provincia_id: String(levantamento.provincia_id),
+                                  cultura_id: String(levantamento.cultura_id),
+                                }
+                              : {}),
+                          }));
+                        }}
+                        style={estiloInput}
+                      >
+                        <option value="">Seleccione o levantamento</option>
+                        {levantamentosDisponiveis
+                          .filter(
+                            (item) =>
+                              String(item.campanha_id) === formularioObservacao.campanha_id &&
+                              String(item.provincia_id) === formularioObservacao.provincia_id &&
+                              String(item.cultura_id) === formularioObservacao.cultura_id
+                          )
+                          .map((item) => (
+                            <option key={String(item.id)} value={String(item.id)}>
+                              {String(item.periodo_inicio ?? "Data não definida")} — {String(item.periodo_fim ?? "Data não definida")} ({String(item.estado ?? "sem estado")})
+                            </option>
+                          ))}
+                      </select>
+                    </label>
+
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Município</span>
+                      <select
+                        value={formularioObservacao.municipio_id}
+                        disabled={!formularioObservacao.provincia_id}
+                        onChange={(e) => {
+                          const municipio = municipiosDisponiveis.find(
+                            (item) => String(item.id) === e.target.value
+                          );
+                          setFormularioObservacao((a) => ({
+                            ...a,
+                            municipio_id: e.target.value,
+                            municipio: String(municipio?.nome ?? ""),
+                            comuna_id: "",
+                            comuna: "",
+                          }));
+                        }}
+                        style={estiloInput}
+                      >
+                        <option value="">Seleccione o município</option>
+                        {municipiosDisponiveis
+                          .filter((item) => String(item.provincia_id) === formularioObservacao.provincia_id)
+                          .map((item) => (
+                            <option key={String(item.id)} value={String(item.id)}>
+                              {String(item.nome)}
+                            </option>
+                          ))}
+                      </select>
+                    </label>
                   </div>
 
                   <div style={grelhaCampos}>
-                    <Campo
-                      label="Comuna"
-                      value={formularioObservacao.comuna}
-                      onChange={(v) =>
-                        setFormularioObservacao((a) => ({ ...a, comuna: v }))
-                      }
-                      maxLength={120}
-                    />
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Comuna</span>
+                      <select
+                        value={formularioObservacao.comuna_id}
+                        disabled={!formularioObservacao.municipio_id}
+                        onChange={(e) => {
+                          const comuna = comunasDisponiveis.find(
+                            (item) => String(item.id) === e.target.value
+                          );
+                          setFormularioObservacao((a) => ({
+                            ...a,
+                            comuna_id: e.target.value,
+                            comuna: String(comuna?.nome ?? ""),
+                          }));
+                        }}
+                        style={estiloInput}
+                      >
+                        <option value="">Seleccione a comuna</option>
+                        {comunasDisponiveis
+                          .filter((item) => String(item.municipio_id) === formularioObservacao.municipio_id)
+                          .map((item) => (
+                            <option key={String(item.id)} value={String(item.id)}>
+                              {String(item.nome)}
+                            </option>
+                          ))}
+                      </select>
+                    </label>
+
                     <Campo
                       label="Localidade"
                       value={formularioObservacao.localidade}
-                      onChange={(v) =>
-                        setFormularioObservacao((a) => ({ ...a, localidade: v }))
-                      }
+                      onChange={(v) => setFormularioObservacao((a) => ({ ...a, localidade: v }))}
                       maxLength={150}
                     />
                   </div>
-
                   <div style={grelhaCampos}>
                     <Campo
                       label="Entidade responsável"

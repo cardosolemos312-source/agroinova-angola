@@ -21,6 +21,8 @@ const ESTADOS = [
   "rejeitado",
 ] as const;
 
+const ESCALAS = ["nacional", "provincial", "municipal", "comunal", "local"] as const;
+
 type Natureza = (typeof NATUREZAS)[number];
 type Estado = (typeof ESTADOS)[number];
 
@@ -28,6 +30,13 @@ type DadosObservacao = {
   id?: string;
   indicador_id?: string;
   dataset_id?: string | null;
+  campanha_id?: string | null;
+  levantamento_id?: string | null;
+  cultura_id?: string | null;
+  provincia_id?: string | null;
+  municipio_id?: string | null;
+  comuna_id?: string | null;
+  escala?: string | null;
   provincia?: string | null;
   municipio?: string | null;
   comuna?: string | null;
@@ -100,6 +109,13 @@ function numeroOpcional(
 function validarDados(body: DadosObservacao) {
   const indicador_id = texto(body.indicador_id);
   const dataset_id = texto(body.dataset_id);
+  const campanha_id = texto(body.campanha_id);
+  const levantamento_id = texto(body.levantamento_id);
+  const cultura_id = texto(body.cultura_id);
+  const provincia_id = texto(body.provincia_id);
+  const municipio_id = texto(body.municipio_id);
+  const comuna_id = texto(body.comuna_id);
+  const escala = texto(body.escala) || "nacional";
   const unidade = texto(body.unidade);
   const natureza = body.natureza ?? "estatistica_oficial";
   const estado = body.estado ?? "rascunho";
@@ -130,6 +146,35 @@ function validarDados(body: DadosObservacao) {
       sucesso: false as const,
       erro: "O identificador do conjunto de dados é inválido.",
     };
+  }
+
+  const referencias = [
+    ["campanha", campanha_id],
+    ["levantamento", levantamento_id],
+    ["cultura", cultura_id],
+    ["província", provincia_id],
+    ["município", municipio_id],
+    ["comuna", comuna_id],
+  ] as const;
+
+  for (const [nome, id] of referencias) {
+    if (id && !uuidValido(id)) {
+      return { sucesso: false as const, erro: `O identificador da ${nome} é inválido.` };
+    }
+  }
+
+  if (
+    levantamento_id &&
+    (!campanha_id || !provincia_id || !cultura_id)
+  ) {
+    return {
+      sucesso: false as const,
+      erro: "Para associar um levantamento, selecciona também a campanha, a província e a cultura.",
+    };
+  }
+
+  if (!(ESCALAS as readonly string[]).includes(escala)) {
+    return { sucesso: false as const, erro: "A escala territorial é inválida." };
   }
 
   if (
@@ -278,6 +323,13 @@ function validarDados(body: DadosObservacao) {
     dados: {
       indicador_id,
       dataset_id: dataset_id || null,
+      campanha_id: campanha_id || null,
+      levantamento_id: levantamento_id || null,
+      cultura_id: cultura_id || null,
+      provincia_id: provincia_id || null,
+      municipio_id: municipio_id || null,
+      comuna_id: comuna_id || null,
+      escala,
       provincia: camposTexto.provincia || null,
       municipio: camposTexto.municipio || null,
       comuna: camposTexto.comuna || null,
@@ -367,7 +419,7 @@ export async function POST(request: Request) {
 
       if (error.code === "23503") {
         return erroJson(
-          "O indicador ou conjunto de dados seleccionado não existe.",
+          "Uma referência seleccionada (indicador, dataset, campanha, cultura ou território) não existe ou não corresponde à hierarquia territorial.",
           400
         );
       }
@@ -433,7 +485,7 @@ export async function PATCH(request: Request) {
 
       if (error.code === "23503") {
         return erroJson(
-          "O indicador ou conjunto de dados seleccionado não existe.",
+          "Uma referência seleccionada (indicador, dataset, campanha, cultura ou território) não existe ou não corresponde à hierarquia territorial.",
           400
         );
       }
@@ -448,5 +500,45 @@ export async function PATCH(request: Request) {
   } catch (error) {
     console.error("Erro ao actualizar observação:", error);
     return erroJson("Não foi possível processar a alteração.", 400);
+  }
+}
+
+
+export async function DELETE(request: Request) {
+  try {
+    if (!(await verificarAdministrador())) {
+      return erroJson("Sessão administrativa inválida.", 401);
+    }
+
+    const body = await request.json();
+    const id = texto(body?.id);
+
+    if (!uuidValido(id)) {
+      return erroJson("O identificador da observação é inválido.", 400);
+    }
+
+    const supabase = obterSupabaseAdmin();
+
+    const { data, error } = await supabase
+      .from("agro_observacoes")
+      .delete()
+      .eq("id", id)
+      .select("id")
+      .maybeSingle();
+
+    if (error) {
+      console.error("Erro ao eliminar observação:", error.message);
+      return erroJson("Não foi possível eliminar a observação.", 500);
+    }
+
+    if (!data) return erroJson("Observação não encontrada.", 404);
+
+    return NextResponse.json({
+      sucesso: true,
+      mensagem: "Observação eliminada com sucesso.",
+    });
+  } catch (error) {
+    console.error("Erro ao eliminar observação:", error);
+    return erroJson("Não foi possível processar a eliminação.", 500);
   }
 }

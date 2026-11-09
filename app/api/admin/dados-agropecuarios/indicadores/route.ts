@@ -348,3 +348,76 @@ export async function PATCH(request: Request) {
     );
   }
 }
+
+
+export async function DELETE(request: Request) {
+  try {
+    if (!(await verificarAdministrador())) {
+      return erroJson("Sessão administrativa inválida.", 401);
+    }
+
+    const entrada = await request.json();
+    const id = entrada && typeof entrada.id === "string" ? entrada.id : "";
+
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+      return erroJson("O identificador do indicador é inválido.", 400);
+    }
+
+    const supabase = obterSupabaseAdmin();
+
+    const { data: indicador, error: erroIndicador } = await supabase
+      .from(TABELA)
+      .select("id")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (erroIndicador) return tratarErroSupabase(erroIndicador);
+    if (!indicador) return erroJson("Indicador não encontrado.", 404);
+
+    const { data: observacoes, error: erroObservacoes } = await supabase
+      .from("agro_observacoes")
+      .select("id, levantamento_id")
+      .eq("indicador_id", id);
+
+    if (erroObservacoes) return tratarErroSupabase(erroObservacoes);
+
+    if ((observacoes ?? []).some((item) => item.levantamento_id)) {
+      return erroJson(
+        "Este indicador tem observações ligadas a levantamentos provinciais. Remova primeiro essa ligação para preservar os dados do levantamento.",
+        409
+      );
+    }
+
+    const { error: erroApagarObservacoes } = await supabase
+      .from("agro_observacoes")
+      .delete()
+      .eq("indicador_id", id);
+
+    if (erroApagarObservacoes) return tratarErroSupabase(erroApagarObservacoes);
+
+    const { error: erroApagarImagens } = await supabase
+      .from("agro_indicadores_imagens")
+      .delete()
+      .eq("indicador_id", id);
+
+    if (erroApagarImagens) return tratarErroSupabase(erroApagarImagens);
+
+    const { data, error } = await supabase
+      .from(TABELA)
+      .delete()
+      .eq("id", id)
+      .select("id")
+      .maybeSingle();
+
+    if (error) return tratarErroSupabase(error);
+    if (!data) return erroJson("Não foi possível encontrar o indicador para eliminar.", 404);
+
+    return NextResponse.json({
+      sucesso: true,
+      mensagem: "Indicador e respectivos registos dependentes eliminados.",
+    });
+  } catch (erro) {
+    console.error("Erro ao eliminar indicador:", erro);
+    return erroJson("Não foi possível eliminar o indicador.", 500);
+  }
+}
