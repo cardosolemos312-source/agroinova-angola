@@ -52,6 +52,13 @@ const MODULOS: Modulo[] = [
     chave: "campanhas",
   },
   {
+    id: "levantamentos",
+    titulo: "Levantamentos provinciais",
+    descricao: "Gestão dos levantamentos agrícolas por campanha, província e cultura.",
+    endpoint: "/api/admin/dados-agropecuarios/levantamentos",
+    chave: "levantamentos",
+  },
+  {
     id: "datasets",
     titulo: "Conjuntos de dados",
     descricao: "Criação e gestão de conjuntos de dados agropecuários.",
@@ -314,6 +321,7 @@ function Campo({
       </span>
       <input
         type={type}
+        step={type === "number" ? "any" : undefined}
         value={value}
         onChange={(evento) => onChange(evento.target.value)}
         placeholder={placeholder}
@@ -350,6 +358,17 @@ export default function DadosAgropecuariosAdmin() {
     periodo_inicio: "",
     periodo_fim: "",
     estado: "activa",
+    descricao: "",
+  });
+
+  const [formularioLevantamento, setFormularioLevantamento] = useState({
+    id: "",
+    campanha_id: "",
+    provincia_id: "",
+    cultura_id: "",
+    periodo_inicio: "",
+    periodo_fim: "",
+    estado: "planeado",
     descricao: "",
   });
   const [formularioObservacao, setFormularioObservacao] = useState<FormularioObservacao>(FORMULARIO_OBSERVACAO_VAZIO);
@@ -398,7 +417,7 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
   const modulo =
     MODULOS.find((item) => item.id === moduloId) ?? MODULOS[0];
     const MODULOS_PRINCIPAIS = MODULOS.filter((item) =>
-  ["datasets", "campanhas", "fontes", "indicadores", "observacoes", "estudos"].includes(item.id)
+  ["datasets", "campanhas", "levantamentos", "fontes", "indicadores", "observacoes", "estudos"].includes(item.id)
 );
 
   const carregar = useCallback(async () => {
@@ -638,6 +657,17 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
         natureza: String(registo.natureza ?? "estatistica_oficial"),
         estado: String(registo.estado ?? "rascunho"),
       });
+          } else if (moduloId === "levantamentos") {
+      setFormularioLevantamento({
+        id: String(registo.id ?? ""),
+        campanha_id: String(registo.campanha_id ?? ""),
+        provincia_id: String(registo.provincia_id ?? ""),
+        cultura_id: String(registo.cultura_id ?? ""),
+        periodo_inicio: String(registo.periodo_inicio ?? "").slice(0, 10),
+        periodo_fim: String(registo.periodo_fim ?? "").slice(0, 10),
+        estado: String(registo.estado ?? "planeado"),
+        descricao: String(registo.descricao ?? ""),
+      });
           } else if (moduloId === "campanhas") {
       setFormularioCampanha({
         id: String(registo.id ?? ""),
@@ -775,11 +805,114 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
       setErro(erroDesconhecido instanceof Error ? erroDesconhecido.message : "Erro ao eliminar a campanha.");
     }
   }
+  async function eliminarDataset(id: string) {
+    if (!window.confirm(
+      "Tem a certeza de que pretende eliminar este conjunto de dados? As associações às fontes serão removidas, mas as fontes bibliográficas serão preservadas."
+    )) return;
+
+    setErro("");
+    setMensagem("");
+
+    try {
+      const resposta = await fetch("/api/admin/dados-agropecuarios/datasets", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      const resultado = await resposta.json();
+
+      if (!resposta.ok || resultado.sucesso === false) {
+        throw new Error(
+          resultado.erro || "Não foi possível eliminar o conjunto de dados."
+        );
+      }
+
+      setSeleccionado(null);
+      setMensagem(resultado.mensagem || "Conjunto de dados eliminado com sucesso.");
+      await carregar();
+    } catch (erroDesconhecido) {
+      setErro(
+        erroDesconhecido instanceof Error
+          ? erroDesconhecido.message
+          : "Erro ao eliminar o conjunto de dados."
+      );
+    }
+  }
+  async function eliminarFonte(id: string) {
+    if (!window.confirm("Tem a certeza de que pretende eliminar esta fonte bibliográfica? A eliminação será impedida se ainda existirem relações associadas.")) return;
+
+    setErro("");
+    setMensagem("");
+
+    try {
+      const resposta = await fetch("/api/admin/dados-agropecuarios/fontes", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      const resultado = await resposta.json();
+
+      if (!resposta.ok) {
+        throw new Error(resultado.erro || "Não foi possível eliminar a fonte.");
+      }
+
+      setSeleccionado(null);
+      setMensagem(resultado.mensagem || "Fonte eliminada com sucesso.");
+      await carregar();
+    } catch (erroDesconhecido) {
+      setErro(
+        erroDesconhecido instanceof Error
+          ? erroDesconhecido.message
+          : "Erro ao eliminar a fonte."
+      );
+    }
+  }
+  async function eliminarEstudo(id: string) {
+    if (!window.confirm("Tem a certeza de que pretende eliminar este estudo ou investigação? Esta operação é permanente.")) return;
+
+    setErro("");
+    setMensagem("");
+
+    try {
+      const resposta = await fetch("/api/admin/dados-agropecuarios/estudos", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      const resultado = await resposta.json();
+
+      if (!resposta.ok) {
+        throw new Error(resultado.erro || "Não foi possível eliminar o estudo.");
+      }
+
+      setSeleccionado(null);
+      setMensagem(resultado.mensagem || "Estudo eliminado com sucesso.");
+      await carregar();
+    } catch (erroDesconhecido) {
+      setErro(
+        erroDesconhecido instanceof Error
+          ? erroDesconhecido.message
+          : "Erro ao eliminar o estudo."
+      );
+    }
+  }
   async function eliminarRegistoAgro(id: string) {
-    const tipo = moduloId === "indicadores" ? "indicador" : "observação";
-    const endpoint = moduloId === "indicadores"
-      ? "/api/admin/dados-agropecuarios/indicadores"
-      : "/api/admin/dados-agropecuarios/observacoes";
+    const tipo =
+      moduloId === "indicadores"
+        ? "indicador"
+        : moduloId === "levantamentos"
+          ? "levantamento"
+          : "observação";
+
+    const endpoint =
+      moduloId === "indicadores"
+        ? "/api/admin/dados-agropecuarios/indicadores"
+        : moduloId === "levantamentos"
+          ? "/api/admin/dados-agropecuarios/levantamentos"
+          : "/api/admin/dados-agropecuarios/observacoes";
 
     if (!window.confirm(`Tem a certeza de que pretende eliminar este ${tipo}? Esta operação é permanente.`)) return;
 
@@ -815,6 +948,16 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
     setFormularioEstudo(ESTUDO_VAZIO);
     setFormularioImagem(IMAGEM_VAZIA);
     setFormularioCampanha({ id: "", codigo: "", nome: "", periodo_inicio: "", periodo_fim: "", estado: "activa", descricao: "" });
+    setFormularioLevantamento({
+      id: "",
+      campanha_id: "",
+      provincia_id: "",
+      cultura_id: "",
+      periodo_inicio: "",
+      periodo_fim: "",
+      estado: "planeado",
+      descricao: "",
+    });
         setFormularioFonte({
       titulo: "",
       entidade: "",
@@ -898,7 +1041,41 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
         if (seleccionado !== null) {
           dados.id = formularioDataset.id;
         }
-              } else if (moduloId === "campanhas") {
+              } else if (moduloId === "levantamentos") {
+        if (!formularioLevantamento.campanha_id) {
+          throw new Error("Seleccione a campanha.");
+        }
+
+        if (!formularioLevantamento.provincia_id) {
+          throw new Error("Seleccione a província.");
+        }
+
+        if (!formularioLevantamento.cultura_id) {
+          throw new Error("Seleccione a cultura.");
+        }
+
+        if (
+          formularioLevantamento.periodo_inicio &&
+          formularioLevantamento.periodo_fim &&
+          formularioLevantamento.periodo_fim < formularioLevantamento.periodo_inicio
+        ) {
+          throw new Error("A data final não pode ser anterior à data inicial.");
+        }
+
+        dados = {
+          campanha_id: formularioLevantamento.campanha_id,
+          provincia_id: formularioLevantamento.provincia_id,
+          cultura_id: formularioLevantamento.cultura_id,
+          periodo_inicio: formularioLevantamento.periodo_inicio || null,
+          periodo_fim: formularioLevantamento.periodo_fim || null,
+          estado: formularioLevantamento.estado.trim() || "planeado",
+          descricao: formularioLevantamento.descricao.trim() || null,
+        };
+
+        if (seleccionado !== null) {
+          dados.id = formularioLevantamento.id;
+        }
+      } else if (moduloId === "campanhas") {
         if (!formularioCampanha.codigo.trim()) {
           throw new Error("Indique o código da campanha.");
         }
@@ -963,7 +1140,7 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
           fonte_id: formularioDatasetFonte.fonte_id,
           citacao: formularioDatasetFonte.citacao.trim() || null,
         };
-      } else if (moduloId === "estudos-fontes") {
+              } else if (moduloId === "estudos-fontes") {
         if (!formularioEstudoFonte.estudo_id) {
           throw new Error("Seleccione o estudo associado.");
         }
@@ -978,7 +1155,9 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
           citacao: formularioEstudoFonte.citacao.trim() || null,
         };
       } else if (moduloId === "observacoes") {
-        const valorNumerico = Number(formularioObservacao.valor);
+        const valorNumerico = Number(
+          formularioObservacao.valor.trim().replace(",", ".")
+        );
 
         if (!formularioObservacao.indicador_id) {
           throw new Error("Seleccione o indicador associado à observação.");
@@ -1486,6 +1665,26 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
               <div style={{ display: "grid", gap: 9 }}>
                 {registos.map((registo, indice) => {
                   const indicador = registo.indicador;
+                  const nomeCampanha = String(
+                    campanhasDisponiveis.find(
+                      (item) => String(item.id) === String(registo.campanha_id)
+                    )?.nome ?? "Campanha não identificada"
+                  );
+
+                  const nomeProvincia = String(
+                    provinciasDisponiveis.find(
+                      (item) => String(item.id) === String(registo.provincia_id)
+                    )?.nome ?? "Província não identificada"
+                  );
+
+                  const nomeCultura = String(
+                    culturasDisponiveis.find(
+                      (item) => String(item.id) === String(registo.cultura_id)
+                    )?.nome ?? "Cultura não identificada"
+                  );
+
+                  const tituloLevantamento =
+                    `Levantamento — ${nomeCampanha} — ${nomeProvincia} — ${nomeCultura}`;
 
                   const nomeIndicador =
                     indicador && typeof indicador === "object"
@@ -1503,6 +1702,7 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
                       ? registo.titulo
                       : typeof registo.nome === "string"
                         ? registo.nome
+                        : moduloId === "levantamentos" ? tituloLevantamento
                         : moduloId === "estudos-fontes"
                           ? `${String((registo.estudo as Record<string, unknown> | null)?.titulo ?? "Estudo sem título")} — ${String((registo.fonte as Record<string, unknown> | null)?.titulo ?? "Fonte sem título")}`
                         : moduloId === "observacoes"
@@ -1537,10 +1737,10 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
                         </span>
                       </button>
 
-                      {(moduloId === "indicadores" || moduloId === "observacoes") && (
+                      {(moduloId === "indicadores" || moduloId === "observacoes" || moduloId === "levantamentos" || moduloId === "datasets" || moduloId === "fontes" || moduloId === "estudos") && (
                         <button
                           type="button"
-                          onClick={() => void eliminarRegistoAgro(String(registo.id))}
+                          onClick={() => void (moduloId === "estudos" ? eliminarEstudo(String(registo.id)) : moduloId === "fontes" ? eliminarFonte(String(registo.id)) : moduloId === "datasets" ? eliminarDataset(String(registo.id)) : eliminarRegistoAgro(String(registo.id)))}
                           style={{
                             border: "1px solid #fecaca",
                             background: "#fff7f7",
@@ -1977,6 +2177,123 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
                     )}
                   </section>
                 </>
+              ) : moduloId === "levantamentos" ? (
+                <div style={{ display: "grid", gap: 15 }}>
+                  <div style={grelhaCampos}>
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Campanha agrícola *</span>
+                      <select
+                        value={formularioLevantamento.campanha_id}
+                        onChange={(e) => setFormularioLevantamento((a) => ({
+                          ...a,
+                          campanha_id: e.target.value,
+                        }))}
+                        required
+                        style={estiloInput}
+                      >
+                        <option value="">Seleccione a campanha</option>
+                        {campanhasDisponiveis.map((item) => (
+                          <option key={String(item.id)} value={String(item.id)}>
+                            {String(item.nome ?? item.codigo ?? item.id)}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label style={estiloCampo}>
+                      <span style={estiloLabel}>Província *</span>
+                      <select
+                        value={formularioLevantamento.provincia_id}
+                        onChange={(e) => setFormularioLevantamento((a) => ({
+                          ...a,
+                          provincia_id: e.target.value,
+                        }))}
+                        required
+                        style={estiloInput}
+                      >
+                        <option value="">Seleccione a província</option>
+                        {provinciasDisponiveis.map((item) => (
+                          <option key={String(item.id)} value={String(item.id)}>
+                            {String(item.nome ?? item.id)}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+
+                  <label style={estiloCampo}>
+                    <span style={estiloLabel}>Cultura agrícola *</span>
+                    <select
+                      value={formularioLevantamento.cultura_id}
+                      onChange={(e) => setFormularioLevantamento((a) => ({
+                        ...a,
+                        cultura_id: e.target.value,
+                      }))}
+                      required
+                      style={estiloInput}
+                    >
+                      <option value="">Seleccione a cultura</option>
+                      {culturasDisponiveis.map((item) => (
+                        <option key={String(item.id)} value={String(item.id)}>
+                          {String(item.nome ?? item.designacao ?? item.codigo ?? item.id)}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <div style={grelhaCampos}>
+                    <Campo
+                      label="Data de início do levantamento"
+                      type="date"
+                      value={formularioLevantamento.periodo_inicio}
+                      onChange={(v) => setFormularioLevantamento((a) => ({
+                        ...a,
+                        periodo_inicio: v,
+                      }))}
+                    />
+                    <Campo
+                      label="Data de fim do levantamento"
+                      type="date"
+                      value={formularioLevantamento.periodo_fim}
+                      onChange={(v) => setFormularioLevantamento((a) => ({
+                        ...a,
+                        periodo_fim: v,
+                      }))}
+                    />
+                  </div>
+
+                  <label style={estiloCampo}>
+                    <span style={estiloLabel}>Estado do levantamento</span>
+                    <select
+                      value={formularioLevantamento.estado}
+                      onChange={(e) => setFormularioLevantamento((a) => ({
+                        ...a,
+                        estado: e.target.value,
+                      }))}
+                      style={estiloInput}
+                    >
+                      <option value="planeado">Planeado</option>
+                      <option value="em_curso">Em curso</option>
+                      <option value="concluido">Concluído</option>
+                      <option value="suspenso">Suspenso</option>
+                    </select>
+                  </label>
+
+                  <label style={estiloCampo}>
+                    <span style={estiloLabel}>Descrição e enquadramento</span>
+                    <textarea
+                      value={formularioLevantamento.descricao}
+                      onChange={(e) => setFormularioLevantamento((a) => ({
+                        ...a,
+                        descricao: e.target.value,
+                      }))}
+                      rows={4}
+                      maxLength={3000}
+                      style={estiloTextarea}
+                      placeholder="Descreva os objectivos, a metodologia e o âmbito do levantamento provincial."
+                    />
+                  </label>
+                </div>
               ) : moduloId === "campanhas" ? (
                 <div style={{ display: "grid", gap: 15 }}>
                   <div style={grelhaCampos}>

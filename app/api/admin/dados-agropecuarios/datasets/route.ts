@@ -352,3 +352,60 @@ export async function PATCH(request: NextRequest) {
     return erroJson("Ocorreu um erro ao actualizar o conjunto de dados.", 500);
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    if (!(await administradorAutenticado())) {
+      return erroJson("Sessão administrativa inválida.", 401);
+    }
+
+    const corpo = await request.json();
+
+    if (!corpo || typeof corpo.id !== "string") {
+      return erroJson("Identificador do conjunto de dados inválido.");
+    }
+
+    const id = corpo.id.trim();
+
+    if (
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+    ) {
+      return erroJson("Identificador do conjunto de dados inválido.");
+    }
+
+    const supabase = obterSupabaseAdmin();
+
+    const { data: existente, error: erroExistente } = await supabase
+      .from("agro_datasets")
+      .select("id")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (erroExistente) {
+      console.error("Erro ao verificar dataset:", erroExistente.message);
+      return erroJson("Não foi possível verificar o conjunto de dados.", 500);
+    }
+
+    if (!existente) {
+      return erroJson("Conjunto de dados não encontrado.", 404);
+    }
+
+    const { error } = await supabase
+      .from("agro_datasets")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error("Erro ao eliminar dataset:", error.message);
+      return erroJson("Não foi possível eliminar o conjunto de dados.", 500);
+    }
+
+    return NextResponse.json({
+      sucesso: true,
+      mensagem: "Conjunto de dados eliminado com sucesso.",
+    });
+  } catch (error) {
+    console.error("Erro ao eliminar conjunto de dados:", error);
+    return erroJson("Ocorreu um erro ao eliminar o conjunto de dados.", 500);
+  }
+}

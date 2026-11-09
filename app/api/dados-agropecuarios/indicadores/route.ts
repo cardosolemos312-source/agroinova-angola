@@ -9,6 +9,40 @@ export async function GET() {
   try {
     const supabase = obterSupabaseAdmin();
 
+    // 0. Levantamentos provinciais registados, independentemente
+    // da existência de observações estatísticas publicadas.
+    const { data: levantamentosPublicos, error: erroLevantamentosPublicos } =
+      await supabase
+        .from("agro_levantamentos_provinciais")
+        .select(`
+          id,
+          campanha_id,
+          provincia_id,
+          cultura_id,
+          periodo_inicio,
+          periodo_fim,
+          estado,
+          descricao,
+          campanha:agro_campanhas(id,codigo,nome),
+          provincia:agro_provincias(id,nome),
+          cultura:agro_culturas(id,nome)
+        `)
+        .order("created_at", { ascending: false });
+
+    if (erroLevantamentosPublicos) {
+      console.error(
+        "Erro ao carregar levantamentos provinciais:",
+        erroLevantamentosPublicos.message
+      );
+
+      return NextResponse.json(
+        {
+          sucesso: false,
+          erro: "Não foi possível carregar os levantamentos provinciais.",
+        },
+        { status: 500 }
+      );
+    }
     // 1. Indicadores publicados.
     const { data: indicadores, error: erroIndicadores } = await supabase
       .from("agro_indicadores")
@@ -32,6 +66,7 @@ export async function GET() {
       return NextResponse.json({
         sucesso: true,
         indicadores: [],
+        levantamentos: levantamentosPublicos ?? [],
       });
     }
 
@@ -97,6 +132,55 @@ export async function GET() {
       }
     }
 
+       // 4. Campanhas e culturas associadas directamente às observações.
+    const campanhaIds = Array.from(
+      new Set(
+        (observacoes ?? [])
+          .map((observacao) => observacao.campanha_id)
+          .filter((id): id is string => typeof id === "string" && id.length > 0)
+      )
+    );
+
+    const culturaIds = Array.from(
+      new Set(
+        (observacoes ?? [])
+          .map((observacao) => observacao.cultura_id)
+          .filter((id): id is string => typeof id === "string" && id.length > 0)
+      )
+    );
+
+    const campanhasPorId = new Map();
+    const culturasPorId = new Map();
+
+    if (campanhaIds.length > 0) {
+      const { data: campanhas, error: erroCampanhas } = await supabase
+        .from("agro_campanhas")
+        .select("id, codigo, nome")
+        .in("id", campanhaIds);
+
+      if (erroCampanhas) {
+        console.error("Erro ao carregar campanhas:", erroCampanhas.message);
+      } else {
+        for (const campanha of campanhas ?? []) {
+          campanhasPorId.set(campanha.id, campanha);
+        }
+      }
+    }
+
+    if (culturaIds.length > 0) {
+      const { data: culturas, error: erroCulturas } = await supabase
+        .from("agro_culturas")
+        .select("id, nome")
+        .in("id", culturaIds);
+
+      if (erroCulturas) {
+        console.error("Erro ao carregar culturas:", erroCulturas.message);
+      } else {
+        for (const cultura of culturas ?? []) {
+          culturasPorId.set(cultura.id, cultura);
+        }
+      }
+    }
     // 4. Imagens dos indicadores.
     const { data: imagens, error: erroImagens } = await supabase
       .from("agro_indicadores_imagens")
@@ -223,11 +307,19 @@ export async function GET() {
               fonte: relacao.fonte,
             }));
 
+                    const levantamento = observacao.levantamento_id
+            ? levantamentosPorId.get(observacao.levantamento_id) ?? null
+            : null;
+
           return {
             ...observacao,
-            levantamento: observacao.levantamento_id
-              ? levantamentosPorId.get(observacao.levantamento_id) ?? null
-              : null,
+            levantamento,
+            campanha: observacao.campanha_id
+              ? campanhasPorId.get(observacao.campanha_id) ?? levantamento?.campanha ?? null
+              : levantamento?.campanha ?? null,
+            cultura: observacao.cultura_id
+              ? culturasPorId.get(observacao.cultura_id) ?? levantamento?.cultura ?? null
+              : levantamento?.cultura ?? null,
             dataset: datasetObservacao,
             fontes: fontesObservacao,
           };
@@ -251,6 +343,7 @@ export async function GET() {
     return NextResponse.json({
       sucesso: true,
       indicadores: resultado,
+      levantamentos: levantamentosPublicos ?? [],
     });
   } catch (error) {
     console.error(

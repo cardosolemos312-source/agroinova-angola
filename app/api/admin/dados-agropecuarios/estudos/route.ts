@@ -373,3 +373,66 @@ export async function PATCH(request: NextRequest) {
     return erroJson("Erro interno ao actualizar o estudo.", 500);
   }
 }
+// DELETE — eliminar estudo
+export async function DELETE(request: NextRequest) {
+  try {
+    if (!(await administradorAutenticado())) {
+      return erroJson("Acesso não autorizado.", 401);
+    }
+
+    const body = await request.json();
+
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return erroJson("Os dados enviados são inválidos.");
+    }
+
+    const id = (body as Record<string, unknown>).id;
+
+    if (typeof id !== "string" || !uuidValido(id)) {
+      return erroJson("O identificador do estudo é inválido.");
+    }
+
+    const supabase = obterSupabaseAdmin();
+
+    const { data: existente, error: erroBusca } = await supabase
+      .from("agro_estudos")
+      .select("id")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (erroBusca) {
+      console.error("Erro ao procurar estudo para eliminação:", erroBusca);
+      return erroJson("Não foi possível verificar o estudo.", 500);
+    }
+
+    if (!existente) {
+      return erroJson("Estudo não encontrado.", 404);
+    }
+
+    const { data, error } = await supabase
+      .from("agro_estudos")
+      .delete()
+      .eq("id", id)
+      .select("id")
+      .maybeSingle();
+
+    if (error) {
+      console.error("Erro ao eliminar estudo:", error);
+      return erroJson(
+        "Não foi possível eliminar o estudo. Verifique se existem relações que o utilizam.",
+        500
+      );
+    }
+
+    if (!data) {
+      return erroJson("Estudo não encontrado.", 404);
+    }
+
+    return NextResponse.json({
+      mensagem: "Estudo eliminado com sucesso.",
+    });
+  } catch (error) {
+    console.error("Erro inesperado ao eliminar estudo:", error);
+    return erroJson("Erro interno ao eliminar o estudo.", 500);
+  }
+}

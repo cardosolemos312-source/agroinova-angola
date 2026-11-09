@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
@@ -137,6 +137,19 @@ type Indicador = {
   }[];
 };
 
+type LevantamentoPublico = {
+  id: string;
+  campanha_id: string;
+  provincia_id: string;
+  cultura_id: string;
+  periodo_inicio: string | null;
+  periodo_fim: string | null;
+  estado: string;
+  descricao: string | null;
+  campanha: { id: string; codigo: string | null; nome: string } | { id: string; codigo: string | null; nome: string }[] | null;
+  provincia: { id: string; nome: string } | { id: string; nome: string }[] | null;
+  cultura: { id: string; nome: string } | { id: string; nome: string }[] | null;
+};
 const FONTES = {
   anuario:
     "https://www.ine.gov.ao/publicacoes/detalhes/NDY0MDE%3D",
@@ -386,6 +399,8 @@ export default function DadosPage() {
 
       const [indicadoresPublicados, setIndicadoresPublicados] =
     useState<Indicador[]>([]);
+  const [indicadorGraficoSelecionado, setIndicadorGraficoSelecionado] = useState("");
+  const [levantamentosPublicados, setLevantamentosPublicados] = useState<LevantamentoPublico[]>([]);
   const [filtroCampanhaLevantamento, setFiltroCampanhaLevantamento] = useState("Todos");
   const [filtroProvinciaLevantamento, setFiltroProvinciaLevantamento] = useState("Todos");
   const [filtroCulturaLevantamento, setFiltroCulturaLevantamento] = useState("Todos");
@@ -679,6 +694,9 @@ url: fontePrincipal?.url ?? "",
             }
           );
         setIndicadoresPublicados(novosIndicadores);
+        setLevantamentosPublicados(
+          Array.isArray(dados.levantamentos) ? dados.levantamentos : []
+        );
       } catch (erro) {
         console.error("Erro ao carregar dados publicados:", erro);
       }
@@ -786,20 +804,23 @@ url: fontePrincipal?.url ?? "",
       periodos,
     };
   }, [indicadoresPublicados]);
+
   const registosLevantamentos = useMemo(
-    () => indicadoresPublicados.filter((item) => Boolean(item.levantamentoId)),
+    () =>
+      indicadoresPublicados.filter(
+        (item) => Boolean(item.levantamentoId || item.campanhaId)
+      ),
     [indicadoresPublicados]
   );
-
   const registosLevantamentosFiltrados = useMemo(
     () =>
-      registosLevantamentos.filter((item) =>
-        (filtroCampanhaLevantamento === "Todos" || item.campanhaId === filtroCampanhaLevantamento) &&
-        (filtroProvinciaLevantamento === "Todos" || item.provinciaId === filtroProvinciaLevantamento) &&
-        (filtroCulturaLevantamento === "Todos" || item.culturaId === filtroCulturaLevantamento)
+      levantamentosPublicados.filter((item) =>
+        (filtroCampanhaLevantamento === "Todos" || item.campanha_id === filtroCampanhaLevantamento) &&
+        (filtroProvinciaLevantamento === "Todos" || item.provincia_id === filtroProvinciaLevantamento) &&
+        (filtroCulturaLevantamento === "Todos" || item.cultura_id === filtroCulturaLevantamento)
       ),
     [
-      registosLevantamentos,
+      levantamentosPublicados,
       filtroCampanhaLevantamento,
       filtroProvinciaLevantamento,
       filtroCulturaLevantamento,
@@ -807,12 +828,13 @@ url: fontePrincipal?.url ?? "",
   );
 
   const totalCampanhasLevantamentos = new Set(
-    registosLevantamentos.map((item) => item.campanhaId).filter(Boolean)
+    levantamentosPublicados
+      .map((item) => item.campanha_id)
+      .filter(Boolean)
   ).size;
 
-  const totalLevantamentosProvinciais = new Set(
-    registosLevantamentos.map((item) => item.levantamentoId).filter(Boolean)
-  ).size;
+  const totalLevantamentosProvinciais = levantamentosPublicados.length;
+
   const indicadoresPrincipais = useMemo(() => {
     const maisRecentes = new Map<string, Indicador>();
 
@@ -846,6 +868,82 @@ url: fontePrincipal?.url ?? "",
       item.valorNumerico !== undefined &&
       Number.isFinite(item.valorNumerico)
   );
+  const indicadoresGraficoDisponiveis = useMemo(() => {
+    const unicos = new Map<string, Indicador>();
+
+    indicadoresPublicados
+      .filter(
+        (item) =>
+          item.estado === "publicado" &&
+          item.valorNumerico !== null &&
+          item.valorNumerico !== undefined &&
+          Number.isFinite(item.valorNumerico)
+      )
+      .forEach((item) => {
+        const chave = item.indicadorId ?? item.codigo ?? item.titulo;
+        if (!unicos.has(chave)) unicos.set(chave, item);
+      });
+
+    return Array.from(unicos, ([id, item]) => ({
+      id,
+      titulo: item.titulo,
+      unidade: item.unidade,
+    }));
+  }, [indicadoresPublicados]);
+
+  const indicadorGraficoAtivo =
+    indicadoresGraficoDisponiveis.find(
+      (item) => item.id === indicadorGraficoSelecionado
+    ) ?? indicadoresGraficoDisponiveis[0] ?? null;
+
+  const dadosProvinciaisGrafico = useMemo(() => {
+    if (!indicadorGraficoAtivo) return [];
+
+    const porProvincia = new Map<string, Indicador>();
+
+    indicadoresPublicados
+      .filter((item) => {
+        const chave = item.indicadorId ?? item.codigo ?? item.titulo;
+        return (
+          item.estado === "publicado" &&
+          chave === indicadorGraficoAtivo.id &&
+          item.valorNumerico !== null &&
+          item.valorNumerico !== undefined &&
+          Number.isFinite(item.valorNumerico) &&
+          Boolean(item.provinciaNome || item.provincia) &&
+          item.unidade === indicadorGraficoAtivo.unidade
+        );
+      })
+      .forEach((item) => {
+        const nome = (item.provinciaNome || item.provincia || "").trim();
+        if (!nome) return;
+
+        const anterior = porProvincia.get(nome);
+        const dataAtual = item.periodoFim ?? item.dataReferencia ?? item.periodoInicio ?? "";
+        const dataAnterior = anterior
+          ? anterior.periodoFim ?? anterior.dataReferencia ?? anterior.periodoInicio ?? ""
+          : "";
+
+        if (!anterior || dataAtual > dataAnterior) porProvincia.set(nome, item);
+      });
+
+    const valores = Array.from(porProvincia, ([nome, item]) => ({
+      nome,
+      valor: item.valorNumerico as number,
+      unidade: item.unidade,
+      periodo: item.periodo,
+      data: item.periodoFim ?? item.dataReferencia ?? item.periodoInicio ?? "",
+    })).sort((a, b) => b.valor - a.valor);
+
+    const maximo = Math.max(0, ...valores.map((item) => item.valor));
+
+    return valores.map((item) => ({
+      ...item,
+      percentual: maximo > 0
+        ? Number(((item.valor / maximo) * 100).toFixed(1))
+        : null,
+    }));
+  }, [indicadoresPublicados, indicadorGraficoAtivo]);
 
   const totalSeriesHistoricas = new Set(
     indicadoresComValor.map(
@@ -1388,6 +1486,97 @@ url: fontePrincipal?.url ?? "",
   )}
 </div></section>
 
+          {/* COMPARAÇÃO PROVINCIAL */}
+          <section className="mx-auto max-w-7xl px-5 py-12 md:px-8">
+            <div className="mb-7">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">
+                Comparação territorial
+              </p>
+              <h2 className="mt-2 text-3xl font-black">Indicadores por província</h2>
+              <p className="mt-3 max-w-4xl leading-7 text-slate-600">
+                Compare os valores publicados por província. O índice percentual
+                corresponde ao valor provincial em relação ao maior valor disponível
+                para o indicador seleccionado.
+              </p>
+            </div>
+
+            <div className="mb-6 max-w-xl">
+              <label className="mb-2 block text-sm font-bold text-slate-700">
+                Indicador a analisar
+              </label>
+              <select
+                value={indicadorGraficoAtivo?.id ?? ""}
+                onChange={(event) => setIndicadorGraficoSelecionado(event.target.value)}
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800"
+              >
+                {indicadoresGraficoDisponiveis.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.titulo} ({item.unidade})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {dadosProvinciaisGrafico.length > 0 ? (
+              <div className="grid gap-6 lg:grid-cols-2">
+                <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <h3 className="mb-1 text-lg font-black text-slate-900">
+                    Comparação entre províncias
+                  </h3>
+                  <p className="mb-5 text-sm text-slate-500">
+                    Percentagem do valor máximo observado
+                  </p>
+                  <div className="h-[380px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={dadosProvinciaisGrafico} margin={{ top: 12, right: 12, left: 0, bottom: 65 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="nome" angle={-35} textAnchor="end" interval={0} height={85} tick={{ fontSize: 11 }} />
+                        <YAxis domain={[0, 100]} tickFormatter={(valor) => `${valor}%`} />
+                        <Tooltip formatter={(valor) => [`${Number(valor).toFixed(1)}%`, "Índice relativo"]} />
+                        <Bar dataKey="percentual" name="Índice relativo" fill="#166534" radius={[7, 7, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <p className="mt-2 text-xs text-slate-500">
+                    100% representa a província com o maior valor registado.
+                  </p>
+                </article>
+
+                <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <h3 className="mb-1 text-lg font-black text-slate-900">Valores por província</h3>
+                  <p className="mb-4 text-sm text-slate-500">Valor publicado e índice relativo</p>
+                  <div className="space-y-3">
+                    {dadosProvinciaisGrafico.map((item) => (
+                      <div key={item.nome} className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                        <span className="font-semibold text-slate-700">{item.nome}</span>
+                        <span className="text-right">
+                          <span className="block font-black text-[#0b4b30]">
+                            {item.valor.toLocaleString("pt-PT")} {item.unidade}
+                          </span>
+                          <span className="text-xs font-semibold text-slate-500">
+                            {item.percentual?.toLocaleString("pt-PT")}%
+                          </span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              <article className="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
+                <h3 className="mb-1 text-lg font-black text-slate-900">
+                  Distribuição provincial no mapa
+                </h3>
+                <p className="mb-5 text-sm text-slate-500">
+                  Consulte os valores e índices percentuais de cada província.
+                </p>
+                <MapaDados dados={dadosProvinciaisGrafico} />
+              </article>
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-500">
+                Ainda não existem valores numéricos publicados por província para este indicador.
+              </div>
+            )}
+          </section>
           {/* LINHA DO TEMPO */}
 
           <section className="bg-white">
@@ -1579,26 +1768,164 @@ url: fontePrincipal?.url ?? "",
             <label className="mb-2 block text-sm font-bold text-slate-700">Campanha agrícola</label>
             <select value={filtroCampanhaLevantamento} onChange={(e) => setFiltroCampanhaLevantamento(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
               <option value="Todos">Todas as campanhas</option>
-              {Array.from(
-              new Map<string, string>(
-                registosLevantamentos
-                  .filter((item) => item.campanhaId)
-                  .map((item) => [
-                    item.campanhaId as string,
-                    item.campanhaNome || item.campanhaCodigo || item.periodo || "Campanha",
-                  ] as [string, string])
-              ).entries()
-            ).map(([id, nome]) => (
-              <option key={id} value={id}>
-                {nome}
-              </option>
-            ))}
+              {Array.from(new Map(levantamentosPublicados.map((item) => {
+                const relacao = Array.isArray(item.campanha) ? item.campanha[0] : item.campanha;
+                return [item.campanha_id, relacao?.nome || relacao?.codigo || "Campanha"] as [string, string];
+              })).entries()).map(([id, nome]) => (
+                <option key={id} value={id}>{nome}</option>
+              ))}
             </select>
-
-            </div>
-
           </div>
 
+          <div>
+            <label className="mb-2 block text-sm font-bold text-slate-700">Província</label>
+            <select value={filtroProvinciaLevantamento} onChange={(e) => setFiltroProvinciaLevantamento(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
+              <option value="Todos">Todas as províncias</option>
+              {Array.from(new Map(levantamentosPublicados.map((item) => {
+                const relacao = Array.isArray(item.provincia) ? item.provincia[0] : item.provincia;
+                return [item.provincia_id, relacao?.nome || "Província"] as [string, string];
+              })).entries()).map(([id, nome]) => (
+                <option key={id} value={id}>{nome}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-bold text-slate-700">Cultura</label>
+            <select value={filtroCulturaLevantamento} onChange={(e) => setFiltroCulturaLevantamento(e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
+              <option value="Todos">Todas as culturas</option>
+              {Array.from(new Map(levantamentosPublicados.map((item) => {
+                const relacao = Array.isArray(item.cultura) ? item.cultura[0] : item.cultura;
+                return [item.cultura_id, relacao?.nome || "Cultura"] as [string, string];
+              })).entries()).map(([id, nome]) => (
+                <option key={id} value={id}>{nome}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2">
+          {registosLevantamentosFiltrados.length > 0 ? (
+            registosLevantamentosFiltrados.map((item) => {
+              const campanha = Array.isArray(item.campanha) ? item.campanha[0] : item.campanha;
+              const provincia = Array.isArray(item.provincia) ? item.provincia[0] : item.provincia;
+              const cultura = Array.isArray(item.cultura) ? item.cultura[0] : item.cultura;
+
+              const estados: Record<string, string> = {
+                planeado: "Planeado",
+                em_curso: "Em curso",
+                concluido: "Concluído",
+                suspenso: "Suspenso",
+              };
+
+              const dataInicio = item.periodo_inicio
+                ? new Date(`${item.periodo_inicio}T00:00:00`).toLocaleDateString("pt-AO")
+                : "Não definido";
+
+              const dataFim = item.periodo_fim
+                ? new Date(`${item.periodo_fim}T00:00:00`).toLocaleDateString("pt-AO")
+                : "Não definido";
+
+              const indicadoresDoLevantamento = indicadoresPublicados.filter(
+                (indicador) =>
+                  indicador.levantamentoId === item.id ||
+                  (
+                    indicador.campanhaId === item.campanha_id &&
+                    indicador.provinciaId === item.provincia_id &&
+                    indicador.culturaId === item.cultura_id
+                  )
+              );
+
+              return (
+                <article key={item.id} className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Levantamento provincial</span>
+                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">
+                      {estados[item.estado] || item.estado}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-4 text-xl font-black text-slate-900">
+                    {campanha?.nome || campanha?.codigo || "Campanha não identificada"}
+                  </h3>
+
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Província</p>
+                      <p className="font-bold text-slate-800">{provincia?.nome || "Não identificada"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Cultura</p>
+                      <p className="font-bold text-slate-800">{cultura?.nome || "Não identificada"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Início do período</p>
+                      <p className="font-semibold text-slate-800">{dataInicio}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500">Fim do período</p>
+                      <p className="font-semibold text-slate-800">{dataFim}</p>
+                    </div>
+                  </div>
+
+                  {item.descricao && (
+                    <p className="mt-4 border-t border-slate-100 pt-4 text-sm leading-6 text-slate-600">
+                      {item.descricao}
+                    </p>
+                  )}
+                  <div className="mt-6 border-t border-slate-100 pt-5">
+                    <h4 className="text-sm font-black uppercase tracking-wider text-emerald-800">
+                      Base estatística
+                    </h4>
+
+                    {indicadoresDoLevantamento.length > 0 ? (
+                      <div className="mt-4 space-y-3">
+                        {indicadoresDoLevantamento.map((indicador) => (
+                          <div key={indicador.id} className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+                            <p className="text-sm font-bold text-slate-800">{indicador.titulo}</p>
+                            <p className="mt-2 text-2xl font-black text-emerald-800">
+                              {indicador.valor}
+                              {indicador.unidade && (
+                                <span className="ml-2 text-sm font-semibold text-slate-500">{indicador.unidade}</span>
+                              )}
+                            </p>
+                            {(indicador.periodoInicio || indicador.periodoFim) && (
+                              <p className="mt-1 text-xs text-slate-500">
+                                Período: {indicador.periodoInicio || "Não definido"} — {indicador.periodoFim || "Não definido"}
+                              </p>
+                            )}
+                            {indicador.fontesDetalhadas?.length ? (
+                              <div className="mt-3 border-t border-slate-200 pt-3">
+                                <p className="text-xs font-bold text-slate-600">Fontes</p>
+                                {indicador.fontesDetalhadas.map((fonte, indice) => (
+                                  <div key={`${indicador.id}-fonte-${indice}`} className="mt-1 text-xs text-slate-500">
+                                    {fonte.url ? (
+                                      <a href={fonte.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-emerald-700 hover:underline">{fonte.titulo}</a>
+                                    ) : fonte.titulo}
+                                    {fonte.entidade ? ` — ${fonte.entidade}` : ""}
+                                    {fonte.ano ? ` (${fonte.ano})` : ""}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="mt-3 text-sm text-slate-500">
+                        Ainda não existem indicadores publicados associados a este levantamento.
+                      </p>
+                    )}
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <p className="col-span-full rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+              Não existem levantamentos para os filtros seleccionados.
+            </p>
+          )}
+        </div>
         </section>
 
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -31,7 +31,11 @@ type PropriedadesProvincia = {
 
 type DadosProvincia = {
   nome: string;
-  total: number;
+  valor: number;
+  unidade: string;
+  percentual: number | null;
+  periodo: string;
+  data: string;
 };
 
 type MapaDadosProps = {
@@ -71,16 +75,12 @@ function obterNomeProvincia(
   );
 }
 
-function obterCor(total: number, maximo: number) {
-  if (total <= 0) return "#e2e8f0";
-
-  const proporcao = total / Math.max(maximo, 1);
-
-  if (proporcao <= 0.2) return "#bbf7d0";
-  if (proporcao <= 0.4) return "#86efac";
-  if (proporcao <= 0.6) return "#4ade80";
-  if (proporcao <= 0.8) return "#16a34a";
-
+function obterCor(percentual: number | null) {
+  if (percentual === null) return "#e2e8f0";
+  if (percentual <= 20) return "#bbf7d0";
+  if (percentual <= 40) return "#86efac";
+  if (percentual <= 60) return "#4ade80";
+  if (percentual <= 80) return "#16a34a";
   return "#14532d";
 }
 
@@ -143,80 +143,55 @@ export default function MapaDados({
     };
   }, []);
 
-  const totaisPorProvincia = useMemo(() => {
-    const mapa = new Map<string, number>();
+  const dadosPorProvincia = useMemo(() => {
+    const mapa = new Map<string, DadosProvincia>();
 
     dados.forEach((item) => {
-      const chave = normalizarNome(item.nome);
-
-      mapa.set(
-        chave,
-        (mapa.get(chave) ?? 0) + item.total
-      );
+      mapa.set(normalizarNome(item.nome), item);
     });
 
     return mapa;
   }, [dados]);
 
-  const maximo = useMemo(
-    () =>
-      Math.max(
-        ...Array.from(totaisPorProvincia.values()),
-        1
-      ),
-    [totaisPorProvincia]
-  );
-
-  const totalSelecionado = useMemo(() => {
+  const dadoSelecionado = useMemo(() => {
     if (!selecionada) return null;
+    return dadosPorProvincia.get(normalizarNome(selecionada)) ?? null;
+  }, [selecionada, dadosPorProvincia]);
 
-    return (
-      totaisPorProvincia.get(
-        normalizarNome(selecionada)
-      ) ?? 0
-    );
-  }, [selecionada, totaisPorProvincia]);
-
-  function obterTotal(nome: string) {
-    return (
-      totaisPorProvincia.get(
-        normalizarNome(nome)
-      ) ?? 0
-    );
+  function obterDado(nome: string) {
+    return dadosPorProvincia.get(normalizarNome(nome)) ?? null;
   }
-
   function estiloProvincia(
     feature: Feature<Geometry, PropriedadesProvincia>
   ): PathOptions {
     const nome = obterNomeProvincia(feature);
-    const total = obterTotal(nome);
+    const dado = obterDado(nome);
     const ativa =
-      normalizarNome(selecionada ?? "") ===
-      normalizarNome(nome);
+      normalizarNome(selecionada ?? "") === normalizarNome(nome);
 
     return {
       color: ativa ? "#064e3b" : "#ffffff",
       weight: ativa ? 3 : 1.2,
       opacity: 1,
-      fillColor: obterCor(total, maximo),
+      fillColor: obterCor(dado?.percentual ?? null),
       fillOpacity: ativa ? 1 : 0.88,
     };
   }
-
   function configurarProvincia(
     feature: Feature<Geometry, PropriedadesProvincia>,
     layer: Path
   ) {
     const nome = obterNomeProvincia(feature);
-    const total = obterTotal(nome);
+    const dado = obterDado(nome);
 
-    layer.bindTooltip(
-      `<strong>${nome}</strong><br/>${total} registo(s)`,
-      {
-        sticky: true,
-        direction: "top",
-      }
-    );
+    const conteudo = dado
+      ? `<strong>${nome}</strong><br/>${dado.valor.toLocaleString("pt-PT")} ${dado.unidade}<br/>Índice relativo: ${dado.percentual?.toLocaleString("pt-PT") ?? "—"}%`
+      : `<strong>${nome}</strong><br/>Sem dados publicados`;
+
+    layer.bindTooltip(conteudo, {
+      sticky: true,
+      direction: "top",
+    });
 
     layer.on({
       mouseover: () => {
@@ -225,20 +200,16 @@ export default function MapaDados({
           color: "#064e3b",
           fillOpacity: 1,
         });
-
         layer.bringToFront();
       },
-
       mouseout: () => {
         layer.setStyle(estiloProvincia(feature));
       },
-
       click: () => {
         setSelecionada(nome);
       },
     });
   }
-
   if (carregando) {
     return (
       <div className="flex h-[420px] items-center justify-center rounded-2xl bg-slate-50 text-sm text-slate-500">
@@ -304,45 +275,51 @@ export default function MapaDados({
 
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-600">
         <span className="font-bold text-slate-700">
-          Número de registos:
+          Índice relativo ao maior valor:
         </span>
-
         {[
-          { cor: "#e2e8f0", texto: "Sem registos" },
-          { cor: "#bbf7d0", texto: "Baixo" },
-          { cor: "#4ade80", texto: "Médio" },
-          { cor: "#16a34a", texto: "Elevado" },
-          { cor: "#14532d", texto: "Muito elevado" },
+          { cor: "#e2e8f0", texto: "Sem dados" },
+          { cor: "#bbf7d0", texto: "Até 20%" },
+          { cor: "#86efac", texto: "21–40%" },
+          { cor: "#4ade80", texto: "41–60%" },
+          { cor: "#16a34a", texto: "61–80%" },
+          { cor: "#14532d", texto: "81–100%" },
         ].map((item) => (
-          <span
-            key={item.texto}
-            className="flex items-center gap-1.5"
-          >
-            <span
-              className="h-3 w-3 rounded-sm"
-              style={{ backgroundColor: item.cor }}
-            />
+          <span key={item.texto} className="flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded-sm" style={{ backgroundColor: item.cor }} />
             {item.texto}
           </span>
         ))}
       </div>
-
       {selecionada && (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">
               Província seleccionada
             </p>
-
             <h3 className="mt-1 text-xl font-black text-emerald-950">
               {selecionada}
             </h3>
-
-            <p className="mt-1 text-sm text-emerald-800">
-              {totalSelecionado ?? 0} registo(s) na base de dados
-            </p>
+            {dadoSelecionado ? (
+              <>
+                <p className="mt-1 text-sm font-bold text-emerald-900">
+                  {dadoSelecionado.valor.toLocaleString("pt-PT")} {dadoSelecionado.unidade}
+                </p>
+                <p className="mt-1 text-sm text-emerald-800">
+                  Índice relativo: {dadoSelecionado.percentual?.toLocaleString("pt-PT") ?? "—"}%
+                </p>
+                {dadoSelecionado.periodo && (
+                  <p className="mt-1 text-xs text-emerald-700">
+                    Período: {dadoSelecionado.periodo}
+                  </p>
+                )}
+              </>
+            ) : (
+              <p className="mt-1 text-sm text-emerald-800">
+                Ainda não existem dados publicados para esta província.
+              </p>
+            )}
           </div>
-
           <button
             type="button"
             onClick={() => setSelecionada(null)}
@@ -352,12 +329,11 @@ export default function MapaDados({
           </button>
         </div>
       )}
-
       <p className="text-xs leading-5 text-slate-500">
-        Seleccione uma província no mapa para consultar a quantidade
-        de registos existentes. As cores representam a contagem de
-        registos, não volumes de produção.
-      </p>
+        Seleccione uma província no mapa para consultar o valor publicado e
+        o respectivo índice percentual. As cores representam a relação com
+        o maior valor observado para o indicador seleccionado, não a
+        participação na produção nacional.      </p>
     </div>
   );
 }
