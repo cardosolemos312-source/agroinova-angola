@@ -97,7 +97,7 @@ const perguntasFrequentes = [
   },
   {
     pergunta: "A IA analisa fotografias?",
-    resposta: "Nesta versão, a fotografia pode ser selecionada e pré-visualizada no formulário, mas não é enviada nem analisada pelo modelo Ollama. A consulta textual funciona através da API local.",
+    resposta: "Nesta versão, a fotografia pode ser selecionada e pré-visualizada no formulário, mas não é enviada nem analisada pelo modelo Gemini. A consulta textual funciona através da API AGROIA.",
   },
 ];
 
@@ -120,12 +120,12 @@ export default function AgroIAPage() {
   const [conversa, setConversa] = useState<Mensagem[]>([
     {
       tipo: "assistente",
-      texto: "Olá! Sou a AgroIA, assistente informativo da AGROINOVA ANGOLA. Podes perguntar sobre culturas, solos, irrigação, pragas, doenças ou pecuária. As respostas são geradas pelo modelo de IA local e devem ser confirmadas por um técnico quando envolvam decisões de risco.",
+      texto: "Olá! Sou a AgroIA, assistente informativo da AGROINOVA ANGOLA. Podes perguntar sobre culturas, solos, irrigação, pragas, doenças ou pecuária. As respostas são geradas pelo Gemini e devem ser confirmadas por um técnico quando envolvam decisões de risco.",
     },
   ]);
   const [faqAberta, setFaqAberta] = useState<number | null>(0);
   const [estadoIA, setEstadoIA] = useState<"a verificar" | "disponivel" | "indisponivel">("a verificar");
-  const [modeloIA, setModeloIA] = useState("qwen2.5:0.5b");
+  const [modeloIA, setModeloIA] = useState("Gemini 3.1 Flash Lite");
   const [fabricanteDrone, setFabricanteDrone] = useState("DJI");
   const [provinciaDrone, setProvinciaDrone] = useState("");
   const [culturaDrone, setCulturaDrone] = useState("");
@@ -244,7 +244,7 @@ export default function AgroIAPage() {
 
     if (!resposta.ok || !resultado?.sucesso || !resultado?.resposta) {
       throw new Error(
-        resultado?.erro || "A IA não conseguiu responder. Verifica o Ollama e tenta novamente.",
+        resultado?.erro || "A IA não conseguiu responder. Verifica a configuração do serviço de inteligência artificial e tenta novamente.",
       );
     }
 
@@ -298,12 +298,12 @@ export default function AgroIAPage() {
       setConversa((anterior) => [...anterior, { tipo: "assistente", texto: resposta }]);
       setEstadoIA("disponivel");
     } catch (error) {
-      const erro = error instanceof Error ? error.message : "Não foi possível contactar a IA local.";
+      const erro = error instanceof Error ? error.message : "Não foi possível contactar a IA na nuvem.";
       setConversa((anterior) => [
         ...anterior,
         {
           tipo: "assistente",
-          texto: `Não consegui concluir esta consulta.\n\n${erro}\n\nConfirma se o Ollama está activo no computador onde corre o servidor Next.js.`,
+          texto: `Não consegui concluir esta consulta.\n\n${erro}\n\nVerifica a configuração do serviço de inteligência artificial e tenta novamente.`,
         },
       ]);
       setEstadoIA("indisponivel");
@@ -519,9 +519,9 @@ export default function AgroIAPage() {
           <div>AGROINOVA ANGOLA · TECNOLOGIA E CONHECIMENTO AGROPECUÁRIO</div>
           <div className="agroia-status">
             <span className="agroia-dot" />
-            {estadoIA === "a verificar" && "A verificar ligação à IA local..."}
-            {estadoIA === "disponivel" && `IA local disponível · ${modeloIA}`}
-            {estadoIA === "indisponivel" && "IA local sem ligação"}
+            {estadoIA === "a verificar" && "A verificar ligação à IA na nuvem..."}
+            {estadoIA === "disponivel" && `IA na nuvem disponível · ${modeloIA}`}
+            {estadoIA === "indisponivel" && "IA na nuvem sem ligação"}
           </div>
         </div>
       </div>
@@ -550,7 +550,7 @@ export default function AgroIAPage() {
         <div className="agroia-container agroia-metrics-grid">
           <div className="agroia-metric"><strong>06</strong><span>Áreas de conhecimento</span></div>
           <div className="agroia-metric"><strong>21</strong><span>Províncias selecionáveis</span></div>
-          <div className="agroia-metric"><strong>IA</strong><span>Modelo local via Ollama</span></div>
+          <div className="agroia-metric"><strong>IA</strong><span>Gemini na nuvem</span></div>
           <div className="agroia-metric"><strong>24/7</strong><span>Página acessível enquanto o servidor estiver activo</span></div>
         </div>
       </div>
@@ -560,7 +560,7 @@ export default function AgroIAPage() {
           <div className="agroia-heading">
             <span className="agroia-kicker" style={{ color: "#166534" }}>Centro de soluções agrícolas</span>
             <h2>Tecnologia ao serviço de quem trabalha no campo</h2>
-            <p>Explora as áreas de conhecimento, consulta os detalhes e utiliza a IA local para organizar dúvidas e observações.</p>
+            <p>Explora as áreas de conhecimento, consulta os detalhes e utiliza a IA na nuvem para organizar dúvidas e observações.</p>
           </div>
           <div className="agroia-toolbar">
             <label className="agroia-search">
@@ -671,7 +671,7 @@ export default function AgroIAPage() {
           <div className="agroia-feature-copy">
             <span className="agroia-kicker" style={{ color: "#166534" }}>Da observação à orientação</span>
             <h2>Compreender o problema é o primeiro passo.</h2>
-            <p>A AgroIA utiliza um modelo de linguagem executado através do Ollama no computador que aloja a aplicação. A resposta depende do modelo instalado e não substitui uma avaliação técnica local.</p>
+            <p>A AgroIA utiliza um modelo de linguagem disponibilizado através do serviço Gemini na nuvem. A resposta depende do serviço de inteligência artificial e não substitui uma avaliação técnica local.</p>
             <ul className="agroia-benefits">
               <li><span className="agroia-check">✓</span><span>Indica a província, o município e a cultura ou atividade.</span></li>
               <li><span className="agroia-check">✓</span><span>Descreve os sintomas, quando começaram e quantas plantas ou animais foram afetados.</span></li>
@@ -688,7 +688,7 @@ export default function AgroIAPage() {
           <div className="agroia-chat-copy">
             <span className="agroia-kicker" style={{ color: "#166534" }}>Assistente AgroIA</span>
             <h2>Uma dúvida no campo? Pergunta à IA.</h2>
-            <p>Escreve uma pergunta. A aplicação envia-a à API local, que consulta o Ollama e devolve a resposta real do modelo, em vez de selecionar uma resposta predefinida.</p>
+            <p>Escreve uma pergunta. A aplicação envia-a à API AGROIA, que consulta o Gemini e devolve a resposta real do modelo, em vez de selecionar uma resposta predefinida.</p>
             <div className="agroia-chat-tags">
               {["Milho", "Solos", "Pragas e doenças", "Irrigação", "Pecuária"].map((tema) => (
                 <button type="button" className="agroia-chat-tag" key={tema} onClick={() => perguntarSobre(tema)}>{tema}</button>
@@ -699,8 +699,8 @@ export default function AgroIAPage() {
             <div className="agroia-chat-header">
               <div className="agroia-avatar">A</div>
               <div className="agroia-chat-title">
-                <strong>AgroIA · Assistente local</strong>
-                <span>{modeloIA} · Ollama</span>
+                <strong>AgroIA · Assistente Gemini</strong>
+                <span>{modeloIA} · Gemini</span>
               </div>
               <span className="agroia-chat-status">
                 {estadoIA === "disponivel" ? "Ligado" : estadoIA === "indisponivel" ? "Sem ligação" : "A verificar"}
@@ -712,7 +712,7 @@ export default function AgroIAPage() {
                   {mensagem.texto}
                 </div>
               ))}
-              {carregandoChat && <div className="agroia-message assistente">A IA está a preparar a resposta. O modelo local pode demorar alguns segundos...</div>}
+              {carregandoChat && <div className="agroia-message assistente">A IA está a preparar a resposta. O modelo Gemini pode demorar alguns segundos...</div>}
             </div>
             <form className="agroia-chat-form" onSubmit={enviarPergunta}>
               <input id="agroia-chat-input" value={pergunta} onChange={(event) => setPergunta(event.target.value)} placeholder="Escreve a tua pergunta..." aria-label="Escrever pergunta" disabled={carregandoChat} />
@@ -751,7 +751,7 @@ export default function AgroIAPage() {
         <div className="agroia-container agroia-cta-inner">
           <div>
             <h2>Leva mais informação para a tua exploração.</h2>
-            <p>Descreve o desafio e recebe orientação inicial gerada pelo modelo de IA local.</p>
+            <p>Descreve o desafio e recebe orientação inicial gerada pelo Gemini.</p>
           </div>
           <button type="button" className="agroia-btn agroia-btn-primary" onClick={abrirDiagnostico}>Começar consulta →</button>
         </div>
@@ -760,7 +760,7 @@ export default function AgroIAPage() {
       <footer className="agroia-footer">
         <div className="agroia-container agroia-footer-inner">
           <div><strong>AGROINOVA ANGOLA</strong> · Conhecimento, tecnologia e inovação ao serviço do campo.</div>
-          <div>AgroIA · Modelo local: {modeloIA}</div>
+          <div>AgroIA · Modelo: {modeloIA}</div>
         </div>
       </footer>
 
@@ -831,7 +831,7 @@ export default function AgroIAPage() {
                 </div>
                 {mensagemFormulario && <div className="agroia-form-message" role="alert">{mensagemFormulario}</div>}
                 {respostaFormulario && <div className="agroia-form-result"><h3>Resposta da AgroIA</h3><p>{respostaFormulario}</p></div>}
-                <div className="agroia-form-note">A resposta é gerada pelo modelo local e pode conter imprecisões. Não a uses como única base para tratamentos ou decisões de risco.</div>
+                <div className="agroia-form-note">A resposta é gerada pelo modelo Gemini e pode conter imprecisões. Não a uses como única base para tratamentos ou decisões de risco.</div>
                 <div className="agroia-form-actions">
                   <button type="button" className="agroia-btn agroia-btn-outline" onClick={fecharDiagnostico} disabled={carregandoFormulario}>Fechar</button>
                   <button type="submit" className="agroia-btn agroia-btn-primary" disabled={carregandoFormulario}>
