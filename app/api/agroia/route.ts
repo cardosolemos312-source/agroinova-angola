@@ -3,8 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
-const OLLAMA_URL = "http://127.0.0.1:11434/api/generate";
-const OLLAMA_MODEL = "qwen2.5:0.5b";
+const GEMINI_MODEL = "gemini-3.1-flash-lite";
 const TIMEOUT_MS = 25_000;
 const MAX_DESCRICAO = 1000;
 
@@ -39,13 +38,30 @@ export async function POST(request: NextRequest) {
   let timeout: ReturnType<typeof setTimeout> | undefined;
 
   try {
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      console.error("AGROIA: GEMINI_API_KEY não configurada.");
+
+      return NextResponse.json(
+        {
+          sucesso: false,
+          erro: "O serviço de inteligência artificial ainda não está configurado.",
+        },
+        { status: 503 }
+      );
+    }
+
     let body: unknown;
 
     try {
       body = await request.json();
     } catch {
       return NextResponse.json(
-        { sucesso: false, erro: "Pedido inválido. Actualiza a página e tenta novamente." },
+        {
+          sucesso: false,
+          erro: "Pedido inválido. Actualiza a página e tenta novamente.",
+        },
         { status: 400 }
       );
     }
@@ -68,7 +84,10 @@ export async function POST(request: NextRequest) {
 
     if (!descricao && !imagem) {
       return NextResponse.json(
-        { sucesso: false, erro: "Descreve o problema para iniciar a análise." },
+        {
+          sucesso: false,
+          erro: "Descreve o problema para iniciar a análise.",
+        },
         { status: 400 }
       );
     }
@@ -85,15 +104,18 @@ export async function POST(request: NextRequest) {
 
     if (descricao.length > MAX_DESCRICAO) {
       return NextResponse.json(
-        { sucesso: false, erro: "Resume a descrição em até 1000 caracteres." },
+        {
+          sucesso: false,
+          erro: "Resume a descrição em até 1000 caracteres.",
+        },
         { status: 400 }
       );
     }
 
     const prompt = `
-És a AGROINOVA IA, assistente agrícola de Angola.
+És o AGROIA, assistente técnico da AGROINOVA ANGOLA.
 
-Responde em português de Angola. Sê breve, directo e prudente.
+Responde em português de Angola. Sê claro, breve, directo e prudente.
 
 Cultura: ${cultura}
 Província: ${provincia}
@@ -102,14 +124,15 @@ Actividade: ${atividade}
 Problema: ${descricao}
 
 REGRAS:
-- Responde apenas sobre o problema apresentado.
-- Usa no máximo 70 palavras.
-- Indica até 2 causas plausíveis, sem confirmar diagnósticos.
+- Responde sobre o assunto apresentado.
+- Usa no máximo 120 palavras.
+- Apresenta até 2 causas plausíveis, sem confirmar diagnósticos.
 - Recomenda até 2 medidas seguras e relevantes.
-- Nunca inventes doenças, dados ou tratamentos.
-- Não recomendes detergentes, produtos de limpeza ou materiais inadequados para plantas.
-- Se não conseguires determinar a causa, diz o que deve ser observado.
-- Não incluas introduções nem repitas a pergunta.
+- Não inventes doenças, dados, produtos ou tratamentos.
+- Não recomendes detergentes ou produtos de limpeza para plantas.
+- Considera as condições agrícolas de Angola quando forem relevantes.
+- Se faltarem informações, indica o que deve ser observado.
+- Não repitas a pergunta nem incluas introduções desnecessárias.
 
 FORMATO:
 **Possível causa:** hipótese ou incerteza.
@@ -119,55 +142,104 @@ FORMATO:
 **Para confirmar:** uma pergunta essencial, se necessária.
 `;
 
-    console.log("AGROIA: a iniciar consulta.");
-    console.log("AGROIA: modelo =", OLLAMA_MODEL);
+    console.log("AGROIA: a iniciar consulta ao Gemini.");
+    console.log("AGROIA: modelo =", GEMINI_MODEL);
 
     timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-    const response = await fetch(OLLAMA_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: OLLAMA_MODEL,
-        prompt,
-        stream: false,
-        keep_alive: "10m",
-        options: {
-          temperature: 0.1,
-          num_predict: 120,
-          num_ctx: 1024,
-          repeat_penalty: 1.15,
-          repeat_last_n: 32,
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
         },
-      }),
-      signal: controller.signal,
-      cache: "no-store",
-    });
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt }],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.2,
+            maxOutputTokens: 400,
+          },
+        }),
+        signal: controller.signal,
+        cache: "no-store",
+      }
+    );
+
+    const resultado: unknown = await response.json();
 
     if (!response.ok) {
-      const detalhe = await response.text();
-      console.error("AGROIA Ollama:", response.status, detalhe.slice(0, 500));
+      const erroGemini = resultado as {
+        error?: { message?: string };
+      };
+
+      console.error(
+        "AGROIA Gemini:",
+        response.status,
+        erroGemini.error?.message ?? "Erro sem detalhe"
+      );
+
+      if (response.status === 429) {
+        return NextResponse.json(
+          {
+            sucesso: false,
+            erro: "O serviço atingiu o limite de pedidos. Aguarda um pouco e tenta novamente.",
+          },
+          { status: 429 }
+        );
+      }
+
+      if (response.status === 401 || response.status === 403) {
+        return NextResponse.json(
+          {
+            sucesso: false,
+            erro: "Não foi possível autenticar o serviço de inteligência artificial. Verifica a configuração da API.",
+          },
+          { status: 502 }
+        );
+      }
 
       return NextResponse.json(
         {
           sucesso: false,
-          erro: "O Ollama não conseguiu responder. Confirma se está activo e se o modelo está instalado.",
+          erro: "O serviço de inteligência artificial não conseguiu responder. Tenta novamente.",
         },
         { status: 502 }
       );
     }
 
-    const resultado = await response.json();
-    const resposta = removerRepeticoes(textoSeguro(resultado.response));
+    const dadosGemini = resultado as {
+      candidates?: Array<{
+        content?: {
+          parts?: Array<{ text?: string }>;
+        };
+      }>;
+    };
+
+    const respostaBruta =
+      dadosGemini.candidates?.[0]?.content?.parts
+        ?.map((parte) => parte.text ?? "")
+        .join("\n") ?? "";
+
+    const resposta = removerRepeticoes(respostaBruta);
 
     if (!resposta) {
       return NextResponse.json(
-        { sucesso: false, erro: "A IA não devolveu uma resposta. Tenta novamente." },
+        {
+          sucesso: false,
+          erro: "A IA não devolveu uma resposta. Tenta novamente.",
+        },
         { status: 502 }
       );
     }
 
-    console.log("AGROIA: resposta recebida.");
+    console.log("AGROIA: resposta recebida do Gemini.");
 
     return NextResponse.json(
       { sucesso: true, resposta },
@@ -185,7 +257,7 @@ FORMATO:
         sucesso: false,
         erro: expirou
           ? "A análise demorou demasiado. Tenta uma pergunta mais curta."
-          : "Não foi possível contactar o Ollama. Confirma se está activo em http://127.0.0.1:11434.",
+          : "Não foi possível contactar o serviço de inteligência artificial. Tenta novamente.",
       },
       { status: expirou ? 504 : 503 }
     );
