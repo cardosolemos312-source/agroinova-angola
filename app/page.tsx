@@ -1130,7 +1130,7 @@ export default function Home() {
                     Assistente AGROINOVA
                   </h2>
                   <p className="mt-1 text-sm text-white/70">
-                    Alimentado por inteligência artificial local
+                    Alimentado por inteligência artificial Gemini
                   </p>
                 </div>
 
