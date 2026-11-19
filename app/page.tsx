@@ -26,39 +26,31 @@ type Mensagem = {
 
 const BANDEIRA_ANGOLA =
   "https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Angola.svg";
-
-const areas: Area[] = [
+  
+  const areas: Area[] = [
   {
     nome: "Agricultura",
-    descricao:
-      "Culturas, solos, irrigação, pragas, doenças, produção e boas práticas agrícolas.",
+    descricao: "Culturas, solos, irrigação, pragas, doenças, produção e boas práticas agrícolas.",
     href: "/agricultura",
-    imagem:
-      "https://images.pexels.com/photos/325944/pexels-photo-325944.jpeg?auto=compress&cs=tinysrgb&w=1400",
+    imagem: "/imagens/agricultura.png",
   },
   {
     nome: "Pecuária",
-    descricao:
-      "Bovinos, caprinos, ovinos, suínos, aves, instalações, alimentação, reprodução e sanidade.",
+    descricao: "Bovinos, caprinos, ovinos, suínos, aves, instalações, alimentação, reprodução e sanidade.",
     href: "/pecuaria",
-    imagem:
-      "https://images.pexels.com/photos/422218/pexels-photo-422218.jpeg?auto=compress&cs=tinysrgb&w=1400",
+    imagem: "/imagens/pecuaria.png",
   },
   {
     nome: "Pesca",
-    descricao:
-      "Espécies, pesca marítima e continental, aquacultura, técnicas, recursos e produção.",
+    descricao: "Espécies, pesca marítima e continental, aquacultura, técnicas, recursos e produção.",
     href: "/pesca",
-    imagem:
-      "https://images.pexels.com/photos/1125979/pexels-photo-1125979.jpeg?auto=compress&cs=tinysrgb&w=1400",
+    imagem: "/imagens/pesca.png",
   },
   {
-    nome: "Floresta",
-    descricao:
-      "Recursos florestais, biodiversidade, conservação, silvicultura e uso sustentável.",
+    nome: "Florestas",
+    descricao: "Recursos florestais, conservação, reflorestamento, biodiversidade e gestão sustentável.",
     href: "/florestas",
-    imagem:
-      "https://images.pexels.com/photos/167698/pexels-photo-167698.jpeg?auto=compress&cs=tinysrgb&w=1400",
+    imagem: "/imagens/florestas.png",
   },
 ];
 
@@ -592,7 +584,7 @@ export default function Home() {
       {/* HERO */}
       <section className="relative min-h-[760px] overflow-hidden bg-slate-950 text-white">
         <img
-          src="https://images.pexels.com/photos/325944/pexels-photo-325944.jpeg?auto=compress&cs=tinysrgb&w=2200"
+          src="/imagens/agroinova-hero.png"
           alt="Paisagem agrícola de Angola"
           className="absolute inset-0 h-full w-full object-cover"
         />

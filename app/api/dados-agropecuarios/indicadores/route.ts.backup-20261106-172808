@@ -1,0 +1,100 @@
+
+import { NextResponse } from "next/server";
+import { obterSupabaseAdmin } from "@/lib/supabase/admin";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  try {
+    const supabase = obterSupabaseAdmin();
+
+    const { data: indicadores, error: erroIndicadores } = await supabase
+      .from("agro_indicadores")
+      .select(`
+        id,
+        codigo,
+        nome,
+        descricao,
+        categoria,
+        subcategoria,
+        unidade,
+        periodicidade,
+        natureza
+      `)
+      .eq("estado", "publicado")
+      .order("nome", { ascending: true });
+
+    if (erroIndicadores) {
+      console.error("Erro ao carregar indicadores públicos:", erroIndicadores.message);
+      return NextResponse.json(
+        { sucesso: false, erro: "Não foi possível carregar os indicadores." },
+        { status: 500 }
+      );
+    }
+
+    if (!indicadores || indicadores.length === 0) {
+      return NextResponse.json({
+        sucesso: true,
+        indicadores: [],
+      });
+    }
+
+    const ids = indicadores.map((indicador) => indicador.id);
+
+    const { data: observacoes, error: erroObservacoes } = await supabase
+      .from("agro_observacoes")
+      .select(`
+        id,
+        indicador_id,
+        provincia,
+        municipio,
+        comuna,
+        localidade,
+        entidade,
+        periodo_inicio,
+        periodo_fim,
+        data_referencia,
+        valor,
+        unidade,
+        tamanho_amostra,
+        margem_erro,
+        nivel_confianca,
+        metodologia,
+        natureza,
+        observacoes
+      `)
+      .in("indicador_id", ids)
+      .eq("estado", "publicado")
+      .order("periodo_fim", { ascending: false, nullsFirst: false })
+.order("data_referencia", { ascending: false, nullsFirst: false })
+.order("periodo_inicio", { ascending: false, nullsFirst: false });
+
+    if (erroObservacoes) {
+      console.error("Erro ao carregar observações públicas:", erroObservacoes.message);
+      return NextResponse.json(
+        { sucesso: false, erro: "Não foi possível carregar os valores estatísticos." },
+        { status: 500 }
+      );
+    }
+
+    const resultado = indicadores.map((indicador) => ({
+      ...indicador,
+      observacoes: (observacoes ?? []).filter(
+        (observacao) => observacao.indicador_id === indicador.id
+      ),
+    }));
+
+    return NextResponse.json({
+      sucesso: true,
+      indicadores: resultado,
+    });
+  } catch (error) {
+    console.error("Erro na API pública de dados agropecuários:", error);
+
+    return NextResponse.json(
+      { sucesso: false, erro: "Ocorreu um erro ao consultar os dados." },
+      { status: 500 }
+    );
+  }
+}
