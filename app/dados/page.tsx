@@ -94,6 +94,7 @@ type Indicador = {
   campanhaId?: string | null;
   campanhaCodigo?: string | null;
   campanhaNome?: string | null;
+  imagensCampanha?: Array<{ id?: string; url: string; legenda?: string | null; ordem?: number }>;
   culturaId?: string | null;
   culturaNome?: string | null;
   provinciaId?: string | null;
@@ -393,6 +394,14 @@ export default function DadosPage() {
 
   const [modal, setModal] =
     useState<Indicador | null>(null);
+  const [imagemCampanhaAtiva, setImagemCampanhaAtiva] = useState(0);
+
+  useEffect(() => {
+    setImagemCampanhaAtiva(0);
+  }, [modal?.id]);
+
+  const imagensCampanhaModal =
+    modal?.imagensCampanha?.filter((imagem) => Boolean(imagem.url)) ?? [];
 
   const [aba, setAba] =
     useState<Aba>("Visão geral");
@@ -611,9 +620,10 @@ const variacao =
                   levantamentoId: observacao?.levantamento_id ?? null,
                   levantamentoEstado: observacao?.levantamento?.estado ?? null,
                   levantamentoDescricao: observacao?.levantamento?.descricao ?? null,
-                  campanhaId: observacao?.campanha_id ?? null,
-                  campanhaCodigo: observacao?.levantamento?.campanha?.codigo ?? null,
-                  campanhaNome: observacao?.levantamento?.campanha?.nome ?? null,
+                  campanhaId: observacao?.campanha_id ?? observacao?.levantamento?.campanha_id ?? null,
+                  campanhaCodigo: observacao?.campanha?.codigo ?? observacao?.levantamento?.campanha?.codigo ?? null,
+                  campanhaNome: observacao?.campanha?.nome ?? observacao?.levantamento?.campanha?.nome ?? null,
+                  imagensCampanha: observacao?.campanha?.imagens ?? [],
                   culturaId: observacao?.cultura_id ?? null,
                   culturaNome: observacao?.levantamento?.cultura?.nome ?? null,
                   provinciaId: observacao?.provincia_id ?? null,
@@ -2896,14 +2906,78 @@ url: fontePrincipal?.url ?? "",
             {/* IMAGEM */}
 
             <div className="relative h-64 md:h-80">
-              {modal.imagem && (
-  <img
-    src={modal.imagem}
-    alt={modal.titulo}
-    className="h-full w-full object-cover"
-  />
-)}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+              {imagensCampanhaModal.length > 0 ? (
+  <>
+    <img
+      key={imagensCampanhaModal[imagemCampanhaAtiva]?.id ?? imagemCampanhaAtiva}
+      src={imagensCampanhaModal[imagemCampanhaAtiva]?.url ?? imagensCampanhaModal[0].url}
+      alt={
+        imagensCampanhaModal[imagemCampanhaAtiva]?.legenda ||
+        ((modal.campanhaNome || modal.titulo) + " - imagem " + (imagemCampanhaAtiva + 1))
+      }
+      className="absolute inset-0 h-full w-full object-cover"
+    />
+
+    <div className="absolute left-5 top-5 z-20 rounded-full bg-black/70 px-4 py-2 text-sm font-black text-white">
+      {imagemCampanhaAtiva + 1} / {imagensCampanhaModal.length}
+    </div>
+
+    {imagensCampanhaModal.length > 1 && (
+      <>
+        <button
+          type="button"
+          aria-label="Fotografia anterior"
+          onClick={() =>
+            setImagemCampanhaAtiva((atual) =>
+              (atual - 1 + imagensCampanhaModal.length) % imagensCampanhaModal.length
+            )
+          }
+          className="absolute left-4 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/65 text-3xl font-bold text-white transition hover:bg-black"
+        >
+          ‹
+        </button>
+
+        <button
+          type="button"
+          aria-label="Fotografia seguinte"
+          onClick={() =>
+            setImagemCampanhaAtiva((atual) =>
+              (atual + 1) % imagensCampanhaModal.length
+            )
+          }
+          className="absolute right-4 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/65 text-3xl font-bold text-white transition hover:bg-black"
+        >
+          ›
+        </button>
+
+        <div className="absolute right-20 top-5 z-20 flex max-w-[65%] gap-2 overflow-x-auto">
+          {imagensCampanhaModal.map((imagem, index) => (
+            <button
+              key={imagem.id ?? index}
+              type="button"
+              aria-label={"Seleccionar fotografia " + (index + 1)}
+              onClick={() => setImagemCampanhaAtiva(index)}
+              className={`h-12 w-12 shrink-0 overflow-hidden rounded-lg border-2 transition ${
+                imagemCampanhaAtiva === index
+                  ? "border-emerald-400 opacity-100"
+                  : "border-white/50 opacity-60 hover:opacity-100"
+              }`}
+            >
+              <img
+                src={imagem.url}
+                alt=""
+                className="h-full w-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      </>
+    )}
+  </>
+) : modal.imagem ? (
+  <img src={modal.imagem} alt={modal.titulo} className="h-full w-full object-cover" />
+) : null}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
               <button
                 onClick={() => setModal(null)}

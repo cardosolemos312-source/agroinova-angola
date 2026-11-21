@@ -361,6 +361,7 @@ export default function DadosAgropecuariosAdmin() {
     descricao: "",
   });
 
+  const [ficheirosCampanha, setFicheirosCampanha] = useState<File[]>([]);
   const [formularioLevantamento, setFormularioLevantamento] = useState({
     id: "",
     campanha_id: "",
@@ -669,6 +670,7 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
         descricao: String(registo.descricao ?? ""),
       });
           } else if (moduloId === "campanhas") {
+      setFicheirosCampanha([]);
       setFormularioCampanha({
         id: String(registo.id ?? ""),
         codigo: String(registo.codigo ?? ""),
@@ -948,6 +950,7 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
     setFormularioEstudo(ESTUDO_VAZIO);
     setFormularioImagem(IMAGEM_VAZIA);
     setFormularioCampanha({ id: "", codigo: "", nome: "", periodo_inicio: "", periodo_fim: "", estado: "activa", descricao: "" });
+    setFicheirosCampanha([]);
     setFormularioLevantamento({
       id: "",
       campanha_id: "",
@@ -1294,6 +1297,20 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
         }
       }
 
+      if (moduloId === "campanhas") {
+        if (ficheirosCampanha.length > 10) {
+          throw new Error("Podes seleccionar no máximo 10 imagens.");
+        }
+
+        for (const ficheiro of ficheirosCampanha) {
+          if (!["image/jpeg", "image/png", "image/webp"].includes(ficheiro.type)) {
+            throw new Error("Usa apenas imagens JPG, PNG ou WebP.");
+          }
+          if (ficheiro.size <= 0 || ficheiro.size > 5 * 1024 * 1024) {
+            throw new Error("Cada imagem deve ter até 5 MB.");
+          }
+        }
+      }
       const resposta = await fetch(modulo.endpoint, {
         method: seleccionado === null ? "POST" : "PATCH",
         headers: {
@@ -1310,6 +1327,37 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
         );
       }
 
+      if (moduloId === "campanhas" && ficheirosCampanha.length > 0) {
+        const campanhaGuardadaId = String(
+          resultado.campanha?.id ?? formularioCampanha.id ?? ""
+        ).trim();
+
+        if (!campanhaGuardadaId) {
+          throw new Error("Campanha guardada, mas não foi possível obter o identificador para carregar as imagens.");
+        }
+
+        const dadosImagens = new FormData();
+        dadosImagens.append("campanha_id", campanhaGuardadaId);
+
+        for (const ficheiro of ficheirosCampanha) {
+          dadosImagens.append("imagens", ficheiro);
+        }
+
+        const respostaImagens = await fetch(
+          "/api/admin/dados-agropecuarios/campanhas/imagens",
+          { method: "POST", body: dadosImagens }
+        );
+
+        const resultadoImagens = await respostaImagens.json();
+
+        if (!respostaImagens.ok || resultadoImagens.sucesso === false) {
+          throw new Error(
+            resultadoImagens.erro || "A campanha foi guardada, mas o carregamento das imagens falhou."
+          );
+        }
+
+        setFicheirosCampanha([]);
+      }
       setMensagem(
         seleccionado === null
           ? "Registo criado com sucesso."
@@ -1418,7 +1466,6 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
       }
 
       setFormularioImagem(IMAGEM_VAZIA);
-    setFormularioCampanha({ id: "", codigo: "", nome: "", periodo_inicio: "", periodo_fim: "", estado: "activa", descricao: "" });
       setMensagem(formularioImagem.id
         ? "Imagem actualizada com sucesso."
         : "Imagem adicionada com sucesso.");
@@ -1469,7 +1516,6 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
 
       if (formularioImagem.id === id) {
         setFormularioImagem(IMAGEM_VAZIA);
-    setFormularioCampanha({ id: "", codigo: "", nome: "", periodo_inicio: "", periodo_fim: "", estado: "activa", descricao: "" });
       }
 
       setMensagem("Imagem eliminada com sucesso.");
@@ -2351,6 +2397,26 @@ const [comunasDisponiveis, setComunasDisponiveis] = useState<Registo[]>([]);
                       style={estiloTextarea}
                       placeholder="Descrição e enquadramento da campanha agrícola."
                     />
+                  </label>
+                  <label style={estiloCampo}>
+                    <span style={estiloLabel}>Imagens da campanha</span>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      multiple
+                      onChange={(evento) =>
+                        setFicheirosCampanha(Array.from(evento.target.files ?? []))
+                      }
+                      style={estiloInput}
+                    />
+                    <span style={{ fontSize: 12, color: "#64748b" }}>
+                      Até 10 imagens JPG, PNG ou WebP, com máximo de 5 MB por imagem.
+                    </span>
+                    {ficheirosCampanha.length > 0 && (
+                      <span style={{ fontSize: 13, color: "#166534" }}>
+                        {ficheirosCampanha.length} imagem(ns) seleccionada(s).
+                      </span>
+                    )}
                   </label>
                 </div>
               ) : moduloId === "datasets" ? (

@@ -135,9 +135,17 @@ export async function GET() {
        // 4. Campanhas e culturas associadas directamente às observações.
     const campanhaIds = Array.from(
       new Set(
-        (observacoes ?? [])
-          .map((observacao) => observacao.campanha_id)
-          .filter((id): id is string => typeof id === "string" && id.length > 0)
+        (observacoes ?? []).flatMap((observacao) => {
+          const campanhaId =
+            observacao.campanha_id ??
+            (typeof observacao.levantamento_id === "string"
+              ? levantamentosPorId.get(observacao.levantamento_id)?.campanha_id
+              : null);
+
+          return typeof campanhaId === "string" && campanhaId.length > 0
+            ? [campanhaId]
+            : [];
+        })
       )
     );
 
@@ -181,6 +189,36 @@ export async function GET() {
         }
       }
     }
+    // 4. Imagens associadas às campanhas.
+    const imagensCampanhaPorId = new Map<string, any[]>();
+
+    if (campanhaIds.length > 0) {
+      const {
+        data: imagensCampanha,
+        error: erroImagensCampanha,
+      } = await supabase
+        .from("agro_campanhas_imagens")
+        .select("id, campanha_id, url, legenda, ordem, criado_em")
+        .in("campanha_id", campanhaIds)
+        .order("ordem", { ascending: true })
+        .order("criado_em", { ascending: true });
+
+      if (erroImagensCampanha) {
+        console.error(
+          "Erro ao carregar imagens das campanhas:",
+          erroImagensCampanha.message
+        );
+      } else {
+        for (const imagem of imagensCampanha ?? []) {
+          const imagensExistentes =
+            imagensCampanhaPorId.get(imagem.campanha_id) ?? [];
+
+          imagensExistentes.push(imagem);
+          imagensCampanhaPorId.set(imagem.campanha_id, imagensExistentes);
+        }
+      }
+    }
+
     // 4. Imagens dos indicadores.
     const { data: imagens, error: erroImagens } = await supabase
       .from("agro_indicadores_imagens")
@@ -314,9 +352,22 @@ export async function GET() {
           return {
             ...observacao,
             levantamento,
-            campanha: observacao.campanha_id
-              ? campanhasPorId.get(observacao.campanha_id) ?? levantamento?.campanha ?? null
-              : levantamento?.campanha ?? null,
+            campanha: (() => {
+              const campanhaId =
+                observacao.campanha_id ?? levantamento?.campanha_id ?? null;
+
+              const campanha = campanhaId
+                ? campanhasPorId.get(campanhaId) ?? levantamento?.campanha ?? null
+                : levantamento?.campanha ?? null;
+
+              return campanha
+                ? {
+                    ...campanha,
+                    imagens:
+                      imagensCampanhaPorId.get(campanhaId ?? campanha.id) ?? [],
+                  }
+                : null;
+            })(),
             cultura: observacao.cultura_id
               ? culturasPorId.get(observacao.cultura_id) ?? levantamento?.cultura ?? null
               : levantamento?.cultura ?? null,
