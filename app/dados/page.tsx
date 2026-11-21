@@ -878,82 +878,107 @@ url: fontePrincipal?.url ?? "",
       item.valorNumerico !== undefined &&
       Number.isFinite(item.valorNumerico)
   );
-  const indicadoresGraficoDisponiveis = useMemo(() => {
-    const unicos = new Map<string, Indicador>();
+  const obterChaveGrupoGrafico = (item: Indicador) => {
+  const cultura =
+    item.culturaNome?.trim().toLocaleLowerCase("pt-PT") ||
+    item.culturaId ||
+    `indicador:${item.indicadorId ?? item.codigo ?? item.titulo}`;
 
-    indicadoresPublicados
-      .filter(
-        (item) =>
-          item.estado === "publicado" &&
-          item.valorNumerico !== null &&
-          item.valorNumerico !== undefined &&
-          Number.isFinite(item.valorNumerico)
-      )
-      .forEach((item) => {
-        const chave = item.indicadorId ?? item.codigo ?? item.titulo;
-        if (!unicos.has(chave)) unicos.set(chave, item);
-      });
+  const periodoInicio = item.periodoInicio || item.periodo || "";
+  const periodoFim = item.periodoFim || "";
+  const unidade = item.unidade.trim().toLocaleLowerCase("pt-PT");
 
-    return Array.from(unicos, ([id, item]) => ({
-      id,
-      titulo: item.titulo,
-      unidade: item.unidade,
-    }));
-  }, [indicadoresPublicados]);
+  return [cultura, periodoInicio, periodoFim, unidade].join("|");
+};
 
-  const indicadorGraficoAtivo =
-    indicadoresGraficoDisponiveis.find(
-      (item) => item.id === indicadorGraficoSelecionado
-    ) ?? indicadoresGraficoDisponiveis[0] ?? null;
+const indicadoresGraficoDisponiveis = useMemo(() => {
+  const unicos = new Map<string, Indicador>();
 
-  const dadosProvinciaisGrafico = useMemo(() => {
-    if (!indicadorGraficoAtivo) return [];
+  indicadoresPublicados
+    .filter(
+      (item) =>
+        item.estado === "publicado" &&
+        item.valorNumerico !== null &&
+        item.valorNumerico !== undefined &&
+        Number.isFinite(item.valorNumerico) &&
+        Boolean(item.provinciaNome || item.provincia)
+    )
+    .forEach((item) => {
+      const chave = obterChaveGrupoGrafico(item);
+      if (!unicos.has(chave)) unicos.set(chave, item);
+    });
 
-    const porProvincia = new Map<string, Indicador>();
+  return Array.from(unicos, ([id, item]) => ({
+    id,
+    titulo: item.culturaNome
+      ? `${item.culturaNome} — ${
+          item.periodo ||
+          [item.periodoInicio, item.periodoFim].filter(Boolean).join(" a ")
+        }`
+      : item.titulo,
+    unidade: item.unidade,
+  }));
+}, [indicadoresPublicados]);
 
-    indicadoresPublicados
-      .filter((item) => {
-        const chave = item.indicadorId ?? item.codigo ?? item.titulo;
-        return (
-          item.estado === "publicado" &&
-          chave === indicadorGraficoAtivo.id &&
-          item.valorNumerico !== null &&
-          item.valorNumerico !== undefined &&
-          Number.isFinite(item.valorNumerico) &&
-          Boolean(item.provinciaNome || item.provincia) &&
-          item.unidade === indicadorGraficoAtivo.unidade
-        );
-      })
-      .forEach((item) => {
-        const nome = (item.provinciaNome || item.provincia || "").trim();
-        if (!nome) return;
+const indicadorGraficoAtivo =
+  indicadoresGraficoDisponiveis.find(
+    (item) => item.id === indicadorGraficoSelecionado
+  ) ?? indicadoresGraficoDisponiveis[0] ?? null;
 
-        const anterior = porProvincia.get(nome);
-        const dataAtual = item.periodoFim ?? item.dataReferencia ?? item.periodoInicio ?? "";
-        const dataAnterior = anterior
-          ? anterior.periodoFim ?? anterior.dataReferencia ?? anterior.periodoInicio ?? ""
-          : "";
+const dadosProvinciaisGrafico = useMemo(() => {
+  if (!indicadorGraficoAtivo) return [];
 
-        if (!anterior || dataAtual > dataAnterior) porProvincia.set(nome, item);
-      });
+  const porProvincia = new Map<string, Indicador>();
 
-    const valores = Array.from(porProvincia, ([nome, item]) => ({
-      nome,
-      valor: item.valorNumerico as number,
-      unidade: item.unidade,
-      periodo: item.periodo,
-      data: item.periodoFim ?? item.dataReferencia ?? item.periodoInicio ?? "",
-    })).sort((a, b) => b.valor - a.valor);
+  indicadoresPublicados
+    .filter(
+      (item) =>
+        item.estado === "publicado" &&
+        obterChaveGrupoGrafico(item) === indicadorGraficoAtivo.id &&
+        item.valorNumerico !== null &&
+        item.valorNumerico !== undefined &&
+        Number.isFinite(item.valorNumerico) &&
+        Boolean(item.provinciaNome || item.provincia) &&
+        item.unidade.trim().toLocaleLowerCase("pt-PT") ===
+          indicadorGraficoAtivo.unidade.trim().toLocaleLowerCase("pt-PT")
+    )
+    .forEach((item) => {
+      const nome = (item.provinciaNome || item.provincia || "").trim();
+      if (!nome) return;
 
-    const maximo = Math.max(0, ...valores.map((item) => item.valor));
+      const anterior = porProvincia.get(nome);
+      const dataAtual =
+        item.periodoFim ?? item.dataReferencia ?? item.periodoInicio ?? "";
+      const dataAnterior = anterior
+        ? anterior.periodoFim ??
+          anterior.dataReferencia ??
+          anterior.periodoInicio ??
+          ""
+        : "";
 
-    return valores.map((item) => ({
-      ...item,
-      percentual: maximo > 0
+      if (!anterior || dataAtual > dataAnterior) {
+        porProvincia.set(nome, item);
+      }
+    });
+
+  const valores = Array.from(porProvincia, ([nome, item]) => ({
+    nome,
+    valor: item.valorNumerico as number,
+    unidade: item.unidade,
+    periodo: item.periodo,
+    data: item.periodoFim ?? item.dataReferencia ?? item.periodoInicio ?? "",
+  })).sort((a, b) => b.valor - a.valor);
+
+  const maximo = Math.max(0, ...valores.map((item) => item.valor));
+
+  return valores.map((item) => ({
+    ...item,
+    percentual:
+      maximo > 0
         ? Number(((item.valor / maximo) * 100).toFixed(1))
         : null,
-    }));
-  }, [indicadoresPublicados, indicadorGraficoAtivo]);
+  }));
+}, [indicadoresPublicados, indicadorGraficoAtivo]);
 
   const totalSeriesHistoricas = new Set(
     indicadoresComValor.map(
