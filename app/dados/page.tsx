@@ -987,23 +987,29 @@ const dadosProvinciaisGrafico = useMemo(() => {
     )
   ).size;
   const variacoesHistoricas = useMemo(() => {
-    const grupos = new Map<string, Indicador[]>();
+    const normalizarChave = (valor: unknown) =>
+      String(valor ?? "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
 
-    const registosValidos = indicadoresPublicados.filter(
-      (item) =>
-        item.estado === "publicado" &&
-        String(item.escala ?? '').trim().toLowerCase() === 'nacional' &&
-        !item.levantamentoId &&
-        item.valorNumerico !== null &&
-        item.valorNumerico !== undefined &&
-        Number.isFinite(item.valorNumerico)
+    const registosValidos = indicadoresPublicados.filter((item) =>
+      item.estado === "publicado" &&
+      normalizarChave(item.escala) === "nacional" &&
+      !item.levantamentoId &&
+      item.valorNumerico !== null &&
+      item.valorNumerico !== undefined &&
+      Number.isFinite(Number(item.valorNumerico))
     );
+
+    const grupos = new Map<string, Indicador[]>();
 
     registosValidos.forEach((item) => {
       const chave = JSON.stringify([
-        item.categoria,
-        item.subcategoria ?? "",
-        item.unidade,
+        normalizarChave(item.categoria),
+        normalizarChave(item.subcategoria),
+        normalizarChave(item.unidade),
       ]);
 
       const grupo = grupos.get(chave) ?? [];
@@ -1011,73 +1017,73 @@ const dadosProvinciaisGrafico = useMemo(() => {
       grupos.set(chave, grupo);
     });
 
-    const obterPeriodo = (item: Indicador) =>
+    const obterData = (item: Indicador) =>
       item.periodoFim ||
       item.dataReferencia ||
       item.periodoInicio ||
-      item.periodo;
+      "";
 
-    const ordenarPeriodo = (item: Indicador) => {
-      const periodo = obterPeriodo(item);
-      const data = new Date(periodo).getTime();
+    const ordenarData = (item: Indicador) => {
+      const data = obterData(item);
+      const timestamp = Date.parse(data);
 
-      if (Number.isFinite(data)) return data;
+      if (Number.isFinite(timestamp)) return timestamp;
 
-      const ano = periodo.match(/\d{4}/)?.[0];
+      const ano = data.match(/\d{4}/)?.[0];
       return ano ? Number(ano) * 1000 : 0;
     };
 
-    const resultados = Array.from(grupos.values()).flatMap((grupo) => {
-      const porPeriodo = new Map<string, Indicador>();
+    return Array.from(grupos.values())
+      .flatMap((grupo) => {
+        const porPeriodo = new Map<string, Indicador>();
 
-      grupo.forEach((item) => {
-        const periodo = obterPeriodo(item);
-        if (!periodo) return;
+        grupo.forEach((item) => {
+          const periodo = obterData(item);
+          if (!periodo) return;
 
-        const anterior = porPeriodo.get(periodo);
+          const existente = porPeriodo.get(periodo);
+
+          if (
+            !existente ||
+            ordenarData(item) > ordenarData(existente)
+          ) {
+            porPeriodo.set(periodo, item);
+          }
+        });
+
+        const serie = Array.from(porPeriodo.values())
+          .sort((a, b) => ordenarData(a) - ordenarData(b));
+
+        if (serie.length < 2) return [];
+
+        const anterior = serie[serie.length - 2];
+        const atual = serie[serie.length - 1];
+
+        const valorAnterior = Number(anterior.valorNumerico);
+        const valorAtual = Number(atual.valorNumerico);
 
         if (
-          !anterior ||
-          ordenarPeriodo(item) > ordenarPeriodo(anterior)
+          !Number.isFinite(valorAnterior) ||
+          !Number.isFinite(valorAtual) ||
+          valorAnterior === 0
         ) {
-          porPeriodo.set(periodo, item);
+          return [];
         }
-      });
 
-      const serie = Array.from(porPeriodo.values())
-        .sort((a, b) => ordenarPeriodo(a) - ordenarPeriodo(b));
+        const percentagem =
+          ((valorAtual - valorAnterior) / Math.abs(valorAnterior)) * 100;
 
-      if (serie.length < 2) return [];
-
-      const anterior = serie[serie.length - 2];
-      const atual = serie[serie.length - 1];
-
-      if (
-        anterior.valorNumerico === null ||
-        anterior.valorNumerico === undefined ||
-        atual.valorNumerico === null ||
-        atual.valorNumerico === undefined ||
-        anterior.valorNumerico === 0
-      ) {
-        return [];
-      }
-
-      const variacao =
-        ((atual.valorNumerico - anterior.valorNumerico) /
-          Math.abs(anterior.valorNumerico)) * 100;
-
-      return [{
-        nome: atual.culturaNome || atual.subcategoria || atual.titulo,
-        valor: `${variacao > 0 ? "+" : ""}${variacao.toLocaleString("pt-PT", {
-          maximumFractionDigits: 1,
-          minimumFractionDigits: 1,
-        })}%`,
-        descricao: `${anterior.periodo} ? ${atual.periodo} � ${atual.unidade}`,
-        ordem: ordenarPeriodo(atual),
-      }];
-    });
-
-    return resultados.sort((a, b) => b.ordem - a.ordem);
+        return [{
+          nome: atual.culturaNome || atual.subcategoria || atual.titulo,
+          valor: `${percentagem > 0 ? "+" : ""}${percentagem.toLocaleString("pt-PT", {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1,
+          })}%`,
+          descricao: `${anterior.periodo} → ${atual.periodo} — ${atual.unidade}`,
+          ordem: ordenarData(atual),
+        }];
+      })
+      .sort((a, b) => b.ordem - a.ordem);
   }, [indicadoresPublicados]);
   const linhaTempo = useMemo(() => {
     const grupos = new Map<string, Indicador[]>();
