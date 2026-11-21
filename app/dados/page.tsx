@@ -244,7 +244,6 @@ const categorias: Categoria[] = [
   "Florestas",
   "Apicultura",
   "Café",
-  "Huambo",
 ];
 
 const abas: { id: Aba; label: string }[] = [
@@ -255,74 +254,7 @@ const abas: { id: Aba; label: string }[] = [
   { id: "Pecuária", label: "Pecuária" },
   { id: "Café & Apicultura", label: "Café & Apicultura" },
   { id: "Florestas", label: "Florestas" },
-  { id: "Huambo", label: "Huambo" },
   { id: "Projecções", label: "Projecções" },
-];
-
-const carnes = [
-  {
-    nome: "Caprina",
-    atual: 153136,
-    anterior: 170151,
-    variacao: "-10,0%",
-  },
-  {
-    nome: "Bovina",
-    atual: 110104,
-    anterior: 105968,
-    variacao: "+3,9%",
-  },
-  {
-    nome: "Aves",
-    atual: 57631,
-    anterior: 53309,
-    variacao: "+8,1%",
-  },
-  {
-    nome: "Suína",
-    atual: 11781,
-    anterior: 11996,
-    variacao: "-1,8%",
-  },
-  {
-    nome: "Ovina",
-    atual: 586,
-    anterior: 608,
-    variacao: "-3,7%",
-  },
-];
-
-const provinciasCarnes = [
-  {
-    nome: "Luanda",
-    valor: 107936,
-    percentual: 32.4,
-  },
-  {
-    nome: "Huíla",
-    valor: 28418,
-    percentual: 8.5,
-  },
-  {
-    nome: "Cuanza Sul",
-    valor: 26258,
-    percentual: 7.9,
-  },
-  {
-    nome: "Huambo",
-    valor: 23639,
-    percentual: 7.1,
-  },
-  {
-    nome: "Malanje",
-    valor: 15206,
-    percentual: 4.6,
-  },
-  {
-    nome: "Uíge",
-    valor: 10215,
-    percentual: 3.1,
-  },
 ];
 
 function formatarNumero(valor: number) {
@@ -1409,10 +1341,10 @@ const dadosProvinciaisGrafico = useMemo(() => {
                 </p>
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                   <span className="text-xs text-slate-500">
-                    {[item.unidade, item.periodo].filter(Boolean).join(" � ")}
+                    {[item.unidade, item.periodo].filter(Boolean).join(" · ")}
                   </span>
                   <span className="text-xs font-semibold text-slate-500">
-                    {item.provincia ?? "�mbito n�o especificado"}
+                    {item.provinciaNome ?? item.provincia ?? "Âmbito não especificado"}
                   </span>
                 </div>
                 {item.classificacao && (
@@ -1621,65 +1553,6 @@ const dadosProvinciaisGrafico = useMemo(() => {
               </div>
             )}
           </section>
-          {/* LINHA DO TEMPO */}
-
-          <section className="bg-white">
-
-            <div className="mx-auto max-w-7xl px-5 py-12 md:px-8">
-
-              <div className="mb-9">
-
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">
-                  Linha temporal
-                </p>
-
-                <h2 className="mt-2 text-3xl font-black">
-                  {linhaTempo.length > 0
-                    ? linhaTempo.map((item) => item.ano).join(" → ")
-                    : "Sem períodos publicados"}
-                </h2>
-
-                <p className="mt-3 max-w-4xl leading-7 text-slate-600">
-                  Linha temporal construída a partir das campanhas e dos períodos
-                  associados aos indicadores publicados no AgroDados. Os períodos
-                  são apresentados conforme os registos disponíveis na plataforma.
-                </p>
-              </div>
-
-              <div className="grid gap-5 md:grid-cols-4">
-
-                {linhaTempo.map((item, index) => (
-
-                  <article
-                    key={item.ano}
-                    className="relative rounded-3xl border border-slate-200 bg-[#f8faf8] p-6"
-                  >
-
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0d4a30] text-sm font-black text-white">
-                      {index + 1}
-                    </span>
-
-                    <p className="mt-5 text-xs font-black uppercase tracking-widest text-emerald-700">
-                      {item.ano}
-                    </p>
-
-                    <h3 className="mt-2 text-xl font-black">
-                      {item.titulo}
-                    </h3>
-
-                    <p className="mt-3 text-sm leading-7 text-slate-600">
-                      {item.texto}
-                    </p>
-
-                  </article>
-
-                ))}
-
-              </div>
-
-            </div>
-
-          </section>
 
           {/* CRESCIMENTO 2024/25 */}
 
@@ -1728,56 +1601,12 @@ const dadosProvinciaisGrafico = useMemo(() => {
 
           </section>
 
-          {/* ANÁLISE */}
-
-          <section className="bg-[#073522] text-white">
-
-            <div className="mx-auto max-w-7xl px-5 py-14 md:px-8">
-
-              <div className="grid gap-8 lg:grid-cols-3">
-
-                <div>
-                  <p className="text-xs font-black uppercase tracking-widest text-emerald-300">01</p>
-                  <h3 className="mt-3 text-2xl font-black">
-                    Evolução dos indicadores
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-emerald-50/70">
-                    {variacoesHistoricas.length > 0
-                      ? `${variacoesHistoricas.length.toLocaleString("pt-PT")} comparações históricas calculadas a partir de observações publicadas.`
-                      : "Ainda não existem observações publicadas suficientes para calcular a evolução dos indicadores."}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-black uppercase tracking-widest text-emerald-300">02</p>
-                  <h3 className="mt-3 text-2xl font-black">
-                    Transformação agropecuária
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-emerald-50/70">
-                    A análise da transformação exige dados sobre processamento, armazenamento, comercialização e valor acrescentado. Estes resultados só serão apresentados quando existirem registos correspondentes.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-black uppercase tracking-widest text-emerald-300">03</p>
-                  <h3 className="mt-3 text-2xl font-black">
-                    Cobertura territorial
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-emerald-50/70">
-                    {dadosGraficos.provincias.length > 0
-                      ? `${dadosGraficos.provincias.length.toLocaleString("pt-PT")} províncias identificadas nos registos publicados.`
-                      : "A cobertura provincial será apresentada à medida que forem publicados registos territoriais."}
-                  </p>
-                </div>
-
-              </div>
-
-            </div>
-
-          </section>
 
         </>
 
       )}
       {/* CAMPANHAS NACIONAIS E LEVANTAMENTOS PROVINCIAIS */}
+      {aba === "Dados provinciais" && (
       <section className="mt-12 space-y-7 rounded-3xl border border-emerald-100 bg-white p-5 shadow-sm md:p-8">
         <div>
           <p className="text-xs font-black uppercase tracking-widest text-emerald-700">
@@ -1971,6 +1800,7 @@ const dadosProvinciaisGrafico = useMemo(() => {
           )}
         </div>
         </section>
+      )}
 
 
       {/* =====================================================
@@ -1978,371 +1808,22 @@ const dadosProvinciaisGrafico = useMemo(() => {
       ===================================================== */}
 
       {aba === "Florestas" && (
-
         <section className="mx-auto max-w-7xl px-5 py-12 md:px-8">
-
-          <div className="grid gap-8 lg:grid-cols-[1fr_0.75fr]">
-
-            <div>
-
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">
-                Recursos florestais
-              </p>
-
-              <h2 className="mt-2 text-4xl font-black">
-                Florestas, madeira e transformação
-              </h2>
-
-              <p className="mt-4 max-w-5xl leading-8 text-slate-600">
-
-                A análise florestal precisa de combinar produção de matéria
-                prima, transformação industrial, exportação e sustentabilidade.
-                O aumento da produção não deve ser analisado isoladamente.
-
-              </p>
-
-              <div className="mt-8 grid gap-5 md:grid-cols-3">
-
-                <article className="rounded-3xl bg-white p-6 shadow-sm">
-
-                  <p className="text-xs font-black uppercase text-emerald-700">
-                    2023/24
-                  </p>
-
-                  <p className="mt-3 text-3xl font-black">
-                    238,69 mil
-                  </p>
-
-                  <p className="mt-1 text-sm text-slate-500">
-                    m³ de madeira em toro
-                  </p>
-
-                </article>
-
-                <article className="rounded-3xl bg-white p-6 shadow-sm">
-
-                  <p className="text-xs font-black uppercase text-emerald-700">
-                    2023/24
-                  </p>
-
-                  <p className="mt-3 text-3xl font-black">
-                    179,67 mil
-                  </p>
-
-                  <p className="mt-1 text-sm text-slate-500">
-                    m³ de madeira serrada
-                  </p>
-
-                </article>
-
-                <article className="rounded-3xl bg-white p-6 shadow-sm">
-
-                  <p className="text-xs font-black uppercase text-emerald-700">
-                    2023/24
-                  </p>
-
-                  <p className="mt-3 text-3xl font-black">
-                    78,1 mil
-                  </p>
-
-                  <p className="mt-1 text-sm text-slate-500">
-                    m³ exportados
-                  </p>
-
-                </article>
-
-              </div>
-
-              <div className="mt-8 rounded-3xl bg-white p-7 shadow-sm">
-
-                <h3 className="text-2xl font-black">
-                  Evolução recente
-                </h3>
-
-                <p className="mt-3 leading-8 text-slate-600">
-
-                  Para o período 2023–2025, o Governo reportou 483 267 m³ de
-                  madeira em toro, com crescimento de 44,9%, e 326 270 m³ de
-                  madeira serrada. Estes valores devem ser lidos como
-                  indicadores do período reportado e não como produção anual
-                  exclusiva de 2025.
-
-                </p>
-
-              </div>
-
-            </div>
-
-            <div className="overflow-hidden rounded-3xl bg-[#0d4a30] text-white">
-
-              <img
-                src={IMAGENS.floresta}
-                alt="Floresta"
-                className="h-80 w-full object-cover"
-              />
-
-              <div className="p-7">
-
-                <p className="text-xs font-black uppercase tracking-widest text-emerald-300">
-                  Cadeia florestal
-                </p>
-
-                <p className="mt-4 text-2xl font-black">
-                  Matéria-prima �? � transformação �? � produto
-                </p>
-
-                <p className="mt-4 text-sm leading-7 text-emerald-50/75">
-
-                  O objectivo económico não deve ser apenas aumentar a
-                  extracção, mas também ampliar transformação local, emprego,
-                  rastreabilidade e sustentabilidade.
-
-                </p>
-
-                <div className="mt-7 border-t border-white/10 pt-6">
-
-                  <p className="text-sm font-bold text-emerald-200">
-                    Huambo
-                  </p>
-
-                  <p className="mt-2 text-sm leading-6 text-emerald-50/65">
-                    O Cachiungo foi identificado pelo MINAGRIF entre os locais
-                    de projectos de transformação industrial de madeira.
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </section>
-
-      )}
-
-      {/* =====================================================
-          HUAMBO
-      ===================================================== */}
-
-      {aba === "Huambo" && (
-
-        <section className="mx-auto max-w-7xl px-5 py-12 md:px-8">
-
-          <div className="overflow-hidden rounded-3xl bg-[#073522] text-white">
-
-            <div className="grid lg:grid-cols-[0.75fr_1.25fr]">
-
-              <div className="min-h-[470px]">
-
-                <img
-                  src={IMAGENS.huambo}
-                  alt="Imagem ilustrativa de actividade agrícola"
-                  className="h-full min-h-[470px] w-full object-cover"
-                />
-
-              </div>
-
-              <div className="p-7 md:p-10">
-
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-300">
-                  Foco provincial
-                </p>
-
-                <h2 className="mt-3 text-5xl font-black">
-                  Huambo
-                </h2>
-
-                <p className="mt-4 max-w-3xl leading-8 text-emerald-50/75">
-
-                  O Huambo possui uma posição relevante na produção pecuária
-                  nacional. Os dados disponíveis permitem observar a
-                  contribuição da província na produção de carnes e carne
-                  bovina.
-
-                </p>
-
-                <div className="mt-8 grid gap-4 sm:grid-cols-2">
-
-                  <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
-
-                    <p className="text-xs uppercase text-emerald-200">
-                      Carnes
-                    </p>
-
-                    <p className="mt-2 text-3xl font-black">
-                      23 639 t
-                    </p>
-
-                    <p className="mt-2 text-xs text-emerald-100/60">
-                      7,1% do total nacional
-                    </p>
-
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
-
-                    <p className="text-xs uppercase text-emerald-200">
-                      Carne bovina
-                    </p>
-
-                    <p className="mt-2 text-3xl font-black">
-                      7 514 t
-                    </p>
-
-                    <p className="mt-2 text-xs text-emerald-100/60">
-                      6,8% do total nacional
-                    </p>
-
-                  </div>
-
-                </div>
-
-                <div className="mt-9">
-
-                  <h3 className="text-xl font-black">
-                    Produção de carnes por província
-                  </h3>
-
-                  <div className="mt-5 space-y-4">
-
-                    {provinciasCarnes.map(
-                      (provincia, index) => (
-
-                        <div key={provincia.nome}>
-
-                          <div className="mb-2 flex items-center justify-between">
-
-                            <div className="flex items-center gap-3">
-
-                              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-400 text-xs font-black text-[#073522]">
-                                {index + 1}
-                              </span>
-
-                              <span className="font-bold">
-                                {provincia.nome}
-                              </span>
-
-                            </div>
-
-                            <span className="font-black text-emerald-300">
-                              {formatarNumero(
-                                provincia.valor
-                              )}{" "}
-                              t
-                            </span>
-
-                          </div>
-
-                          <div className="h-2 overflow-hidden rounded-full bg-white/10">
-
-                            <div
-                              className="h-full rounded-full bg-emerald-400"
-                              style={{
-                                width: `${Math.min(
-                                  provincia.percentual * 2.7,
-                                  100
-                                )}%`,
-                              }}
-                            />
-
-                          </div>
-
-                        </div>
-
-                      )
-                    )}
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-
-            <article className="rounded-3xl bg-white p-6 shadow-sm">
-
-              <p className="text-xs font-black uppercase text-emerald-700">
-                Posição
-              </p>
-
-              <p className="mt-3 text-3xl font-black">
-                4.º
-              </p>
-
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Entre as províncias individualizadas no quadro nacional
-                apresentado.
-              </p>
-
-            </article>
-
-            <article className="rounded-3xl bg-white p-6 shadow-sm">
-
-              <p className="text-xs font-black uppercase text-emerald-700">
-                Participação
-              </p>
-
-              <p className="mt-3 text-3xl font-black">
-                7,1%
-              </p>
-
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Participação do Huambo no total nacional de carnes.
-              </p>
-
-            </article>
-
-            <article className="rounded-3xl bg-white p-6 shadow-sm">
-
-              <p className="text-xs font-black uppercase text-emerald-700">
-                Oportunidade
-              </p>
-
-              <p className="mt-3 text-3xl font-black">
-                Cadeia integrada
-              </p>
-
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Agricultura + alimentação animal + pecuária + transformação.
-              </p>
-
-            </article>
-
-          </div>
-
-          <div className="mt-8 rounded-3xl border border-emerald-100 bg-emerald-50 p-7 md:p-9">
-
+          <div className="rounded-3xl border border-dashed border-emerald-200 bg-white p-8 text-center shadow-sm md:p-12">
             <p className="text-xs font-black uppercase tracking-widest text-emerald-700">
-              Leitura territorial
+              Dados florestais
             </p>
-
-            <h3 className="mt-3 text-2xl font-black text-[#0d4a30]">
-              O próximo passo deve ser descer ao nível municipal
-            </h3>
-
-            <p className="mt-3 max-w-4xl leading-8 text-slate-700">
-
-              Para o AGROINOVA Angola, uma evolução natural deste observatório
-              é apresentar os dados do Huambo por município, cultura,
-              produção animal, área, produtividade, preços, mercados,
-              cooperativas e infra-estruturas. Isso permitirá transformar a
-              estatística provincial em ferramenta de decisão local.
-
+            <h2 className="mt-3 text-3xl font-black text-slate-900">
+              Informação em preparação
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl leading-7 text-slate-600">
+              Os indicadores florestais serão apresentados após o seu registo,
+              validação e publicação através da página de administração da
+              AGROINOVA ANGOLA.
             </p>
-
           </div>
-
         </section>
-
       )}
-
       {/* =====================================================
           PROJECÇÕES
       ===================================================== */}
