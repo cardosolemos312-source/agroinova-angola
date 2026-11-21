@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -38,9 +38,37 @@ type DadosProvincia = {
   data: string;
 };
 
+type Relacao<T> = T | T[] | null;
+
+type LevantamentoProvincia = {
+  id: string;
+  estado: string;
+  periodo_inicio: string | null;
+  periodo_fim: string | null;
+  campanha: Relacao<{ codigo: string | null; nome: string }>;
+  provincia: Relacao<{ nome: string }>;
+  cultura: Relacao<{ nome: string }>;
+};
+
 type MapaDadosProps = {
   dados: DadosProvincia[];
+  levantamentos: LevantamentoProvincia[];
 };
+
+function obterRelacao<T>(relacao: Relacao<T> | undefined): T | null {
+  if (Array.isArray(relacao)) return relacao[0] ?? null;
+  return relacao ?? null;
+}
+
+function nomeEstadoLevantamento(estado: string) {
+  const estados: Record<string, string> = {
+    planeado: "Planeado",
+    em_curso: "Em curso",
+    concluido: "Concluído",
+  };
+
+  return estados[estado] ?? estado.replace(/_/g, " ");
+}
 
 type GeoJSONAngola = FeatureCollection<
   Geometry,
@@ -86,6 +114,7 @@ function obterCor(percentual: number | null) {
 
 export default function MapaDados({
   dados,
+  levantamentos,
 }: MapaDadosProps) {
   const [geojson, setGeojson] =
     useState<GeoJSONAngola | null>(null);
@@ -153,13 +182,43 @@ export default function MapaDados({
     return mapa;
   }, [dados]);
 
+  const levantamentosPorProvincia = useMemo(() => {
+    const mapa = new Map<string, LevantamentoProvincia[]>();
+
+    levantamentos.forEach((item) => {
+      const provincia = obterRelacao(item.provincia)?.nome;
+
+      if (!provincia) return;
+
+      const chave = normalizarNome(provincia);
+      const existentes = mapa.get(chave) ?? [];
+
+      existentes.push(item);
+      mapa.set(chave, existentes);
+    });
+
+    return mapa;
+  }, [levantamentos]);
+
   const dadoSelecionado = useMemo(() => {
     if (!selecionada) return null;
     return dadosPorProvincia.get(normalizarNome(selecionada)) ?? null;
   }, [selecionada, dadosPorProvincia]);
 
+  const levantamentosSelecionados = useMemo(() => {
+    if (!selecionada) return [];
+
+    return levantamentosPorProvincia.get(
+      normalizarNome(selecionada)
+    ) ?? [];
+  }, [selecionada, levantamentosPorProvincia]);
+
   function obterDado(nome: string) {
     return dadosPorProvincia.get(normalizarNome(nome)) ?? null;
+  }
+
+  function obterLevantamentos(nome: string) {
+    return levantamentosPorProvincia.get(normalizarNome(nome)) ?? [];
   }
   function estiloProvincia(
     feature: Feature<Geometry, PropriedadesProvincia>
@@ -183,10 +242,35 @@ export default function MapaDados({
   ) {
     const nome = obterNomeProvincia(feature);
     const dado = obterDado(nome);
+    const registos = obterLevantamentos(nome);
 
-    const conteudo = dado
-      ? `<strong>${nome}</strong><br/>${dado.valor.toLocaleString("pt-PT")} ${dado.unidade}<br/>Índice relativo: ${dado.percentual?.toLocaleString("pt-PT") ?? "—"}%`
-      : `<strong>${nome}</strong><br/>Sem dados publicados`;
+    const linhas = [`<strong>${nome}</strong>`];
+
+    if (dado) {
+      linhas.push(
+        `${dado.valor.toLocaleString("pt-PT")} ${dado.unidade}`,
+        `Índice relativo: ${dado.percentual?.toLocaleString("pt-PT") ?? "—"}%`
+      );
+    }
+
+    if (registos.length > 0) {
+      linhas.push("<strong>Levantamentos registados:</strong>");
+
+      registos.forEach((item) => {
+        const campanha = obterRelacao(item.campanha)?.nome ?? "Campanha";
+        const cultura = obterRelacao(item.cultura)?.nome ?? "Cultura";
+
+        linhas.push(
+          `${campanha} — ${cultura} (${nomeEstadoLevantamento(item.estado)})`
+        );
+      });
+    }
+
+    if (!dado && registos.length === 0) {
+      linhas.push("Sem dados ou levantamentos registados");
+    }
+
+    const conteudo = linhas.join("<br/>");
 
     layer.bindTooltip(conteudo, {
       sticky: true,
@@ -300,7 +384,7 @@ export default function MapaDados({
             <h3 className="mt-1 text-xl font-black text-emerald-950">
               {selecionada}
             </h3>
-            {dadoSelecionado ? (
+            {dadoSelecionado && (
               <>
                 <p className="mt-1 text-sm font-bold text-emerald-900">
                   {dadoSelecionado.valor.toLocaleString("pt-PT")} {dadoSelecionado.unidade}
@@ -314,10 +398,49 @@ export default function MapaDados({
                   </p>
                 )}
               </>
-            ) : (
+            )}
+
+            {!dadoSelecionado && levantamentosSelecionados.length === 0 && (
               <p className="mt-1 text-sm text-emerald-800">
-                Ainda não existem dados publicados para esta província.
+                Ainda não existem dados ou levantamentos registados para esta província.
               </p>
+            )}
+
+            {levantamentosSelecionados.length > 0 && (
+              <div className="mt-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+                  Levantamentos registados ({levantamentosSelecionados.length})
+                </p>
+
+                <ul className="mt-2 space-y-2">
+                  {levantamentosSelecionados.map((item) => {
+                    const campanha = obterRelacao(item.campanha);
+                    const cultura = obterRelacao(item.cultura);
+
+                    return (
+                      <li
+                        key={item.id}
+                        className="rounded-lg border border-emerald-100 bg-white/70 p-3"
+                      >
+                        <p className="text-sm font-bold text-emerald-950">
+                          {campanha?.nome ?? "Campanha sem nome"}
+                        </p>
+                        <p className="text-xs text-emerald-800">
+                          Cultura: {cultura?.nome ?? "Não indicada"}
+                        </p>
+                        <p className="mt-1 text-xs font-semibold text-emerald-700">
+                          Estado: {nomeEstadoLevantamento(item.estado)}
+                        </p>
+                        {(item.periodo_inicio || item.periodo_fim) && (
+                          <p className="mt-1 text-xs text-slate-600">
+                            Período: {item.periodo_inicio ?? "—"} a {item.periodo_fim ?? "—"}
+                          </p>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             )}
           </div>
           <button

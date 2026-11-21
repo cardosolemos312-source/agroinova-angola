@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
@@ -1568,7 +1568,7 @@ url: fontePrincipal?.url ?? "",
                 <p className="mb-5 text-sm text-slate-500">
                   Consulte os valores e índices percentuais de cada província.
                 </p>
-                <MapaDados dados={dadosProvinciaisGrafico} />
+                <MapaDados dados={dadosProvinciaisGrafico} levantamentos={levantamentosPublicados} />
               </article>
               </div>
             ) : (
@@ -2653,7 +2653,7 @@ url: fontePrincipal?.url ?? "",
 
           <div className="overflow-x-auto rounded-2xl border border-slate-200">
 
-            <div className="grid min-w-[1650px] grid-cols-[250px_120px_130px_130px_100px_120px_120px_120px_120px_140px_200px] gap-4 bg-slate-50 px-5 py-4 text-xs font-black uppercase tracking-wide text-slate-500">
+            <div className="grid min-w-[1500px] grid-cols-[250px_120px_130px_130px_100px_120px_120px_120px_120px_200px] gap-4 bg-slate-50 px-5 py-4 text-xs font-black uppercase tracking-wide text-slate-500">
 
               <span>Indicador</span>
               <span>Valor</span>
@@ -2664,7 +2664,6 @@ url: fontePrincipal?.url ?? "",
               <span>Periodicidade</span>
               <span>Província</span>
               <span>Município</span>
-              <span>Natureza</span>
               <span>Fonte</span>
 
             </div>
@@ -2676,7 +2675,7 @@ url: fontePrincipal?.url ?? "",
                 <button
                   key={item.id}
                   onClick={() => setModal(item)}
-                  className="grid min-w-[1650px] w-full grid-cols-[250px_120px_130px_130px_100px_120px_120px_120px_120px_140px_200px] gap-4 px-5 py-5 text-left transition hover:bg-emerald-50 items-center"
+                  className="grid min-w-[1500px] w-full grid-cols-[250px_120px_130px_130px_100px_120px_120px_120px_120px_200px] gap-4 px-5 py-5 text-left transition hover:bg-emerald-50 items-center"
                 >
 
                   <div className="min-w-0">
@@ -2717,10 +2716,6 @@ url: fontePrincipal?.url ?? "",
                   <span className="text-sm text-slate-600">
                     {item.municipio || "Não informado"}
                   </span>
-
-                  <div>
-                    <BadgeClassificacao tipo={item.classificacao} />
-                  </div>
 
                   <span
                     title={item.fonte || "Não informado"}
@@ -2924,11 +2919,6 @@ url: fontePrincipal?.url ?? "",
                   <span className="rounded-full bg-emerald-400 px-3 py-1 text-xs font-black text-[#062c1d]">
                     {modal.categoria}
                   </span>
-
-                  <BadgeClassificacao
-                    tipo={modal.classificacao}
-                  />
-
                 </div>
 
                 <h2 className="mt-3 text-3xl font-black text-white md:text-4xl">
@@ -3010,35 +3000,17 @@ url: fontePrincipal?.url ?? "",
               </div>
 
               {/* DADOS COMPLETOS DO INDICADOR */}
-              {(modal.codigo ||
-                modal.subcategoria ||
-                modal.formula ||
-                modal.periodicidade ||
-                modal.natureza ||
-                modal.indicadorId ||
-                modal.datasetId) && (
-                <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6">
+              {(modal.subcategoria || modal.periodicidade || modal.formula) && (
+              <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6">
                   <h3 className="text-xs font-black uppercase tracking-widest text-emerald-700">
                     Identificação do indicador
                   </h3>
 
                   <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                    {modal.codigo && (
-                      <div>
-                        <p className="text-xs font-bold text-slate-500">Código</p>
-                        <p className="mt-1 font-semibold text-slate-800">{modal.codigo}</p>
-                      </div>
-                    )}
                     {modal.subcategoria && (
                       <div>
                         <p className="text-xs font-bold text-slate-500">Subcategoria</p>
                         <p className="mt-1 font-semibold text-slate-800">{modal.subcategoria}</p>
-                      </div>
-                    )}
-                    {modal.natureza && (
-                      <div>
-                        <p className="text-xs font-bold text-slate-500">Natureza</p>
-                        <p className="mt-1 font-semibold text-slate-800">{modal.natureza}</p>
                       </div>
                     )}
                     {modal.periodicidade && (
@@ -3051,18 +3023,6 @@ url: fontePrincipal?.url ?? "",
                       <div className="sm:col-span-2">
                         <p className="text-xs font-bold text-slate-500">Fórmula de cálculo</p>
                         <p className="mt-1 whitespace-pre-wrap text-slate-800">{modal.formula}</p>
-                      </div>
-                    )}
-                    {modal.indicadorId && (
-                      <div>
-                        <p className="text-xs font-bold text-slate-500">Identificador</p>
-                        <p className="mt-1 break-all text-sm text-slate-700">{modal.indicadorId}</p>
-                      </div>
-                    )}
-                    {modal.datasetId && (
-                      <div>
-                        <p className="text-xs font-bold text-slate-500">Conjunto de dados</p>
-                        <p className="mt-1 break-all text-sm text-slate-700">{modal.datasetId}</p>
                       </div>
                     )}
                   </div>

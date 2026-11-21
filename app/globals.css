@@ -40,6 +40,30 @@ input {
 }
 
 /* =========================
+   JUSTIFICAÇÃO DOS TEXTOS
+========================= */
+
+main p,
+main li,
+footer p {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+/* Evitar justificação em elementos de interface */
+nav,
+button,
+label,
+input,
+textarea,
+select,
+table,
+.text-left,
+.text-center,
+.text-right {
+  text-align: initial;
+}
+/* =========================
    CONTAINER
 ========================= */
 
