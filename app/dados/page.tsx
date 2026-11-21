@@ -38,12 +38,13 @@ type Categoria =
 
 type Aba =
   | "Visão geral"
+  | "Dados nacionais"
+  | "Dados provinciais"
   | "Agricultura"
   | "Pecuária"
   | "Café & Apicultura"
   | "Florestas"
   | "Huambo"
-  | "2025/26"
   | "Projecções";
 
 type Classificacao =
@@ -248,12 +249,13 @@ const categorias: Categoria[] = [
 
 const abas: { id: Aba; label: string }[] = [
   { id: "Visão geral", label: "Visão geral" },
+  { id: "Dados nacionais", label: "Dados nacionais" },
+  { id: "Dados provinciais", label: "Dados provinciais" },
   { id: "Agricultura", label: "Agricultura" },
   { id: "Pecuária", label: "Pecuária" },
   { id: "Café & Apicultura", label: "Café & Apicultura" },
   { id: "Florestas", label: "Florestas" },
   { id: "Huambo", label: "Huambo" },
-  { id: "2025/26", label: "Campanha 2025/26" },
   { id: "Projecções", label: "Projecções" },
 ];
 
@@ -631,7 +633,7 @@ const variacao =
                   provinciaNome: observacao?.levantamento?.provincia?.nome ?? observacao?.provincia ?? null,
                   municipioId: observacao?.municipio_id ?? null,
                   comunaId: observacao?.comuna_id ?? null,
-                  escala: observacao?.escala ?? null,
+                  escala: observacao?.levantamento_id ? "provincial" : (observacao?.escala ?? item.dataset?.escala ?? null),
                   periodoInicio: observacao?.periodo_inicio ?? observacao?.levantamento?.periodo_inicio ?? null,
                   periodoFim: observacao?.periodo_fim ?? observacao?.levantamento?.periodo_fim ?? null,
                   titulo: item.nome,
@@ -730,16 +732,19 @@ url: fontePrincipal?.url ?? "",
         periodo === "Todos" ||
         item.periodo.includes(periodo);
 
+      const escala = (item.escala ?? "").trim().toLocaleLowerCase("pt-PT");
+
       const pertenceAba =
         aba === "Visão geral" ||
         aba === "Projecções" ||
-        aba === "2025/26" ||
-        (aba === "Café & Apicultura"
+        (aba === "Dados nacionais"
+          ? escala === "nacional"
+          : aba === "Dados provinciais"
+          ? escala === "provincial" || escala === "municipal"
+          : aba === "Café & Apicultura"
           ? item.categoria === "Café" ||
             item.categoria === "Apicultura"
-          : item.categoria === aba);
-
-      const correspondePesquisa =
+          : item.categoria === aba);const correspondePesquisa =
         !termo ||
         [
           item.titulo,
@@ -2339,194 +2344,6 @@ const dadosProvinciaisGrafico = useMemo(() => {
       )}
 
       {/* =====================================================
-          CAMPANHA 2025/26
-      ===================================================== */}
-
-      {aba === "2025/26" && (
-
-        <section className="mx-auto max-w-7xl px-5 py-12 md:px-8">
-
-          <div className="mb-10">
-
-            <div className="inline-flex rounded-full border border-purple-100 bg-purple-50 px-4 py-2 text-xs font-black text-purple-700">
-              CAMPANHA EM EXECU��O
-            </div>
-
-            <h2 className="mt-4 text-4xl font-black">
-              2025/2026
-            </h2>
-
-            <p className="mt-4 max-w-5xl leading-8 text-slate-600">
-
-              Os indicadores desta secção não devem ser tratados como
-              resultados finais da campanha. São dados de execução de
-              programas e iniciativas que ainda precisam de ser acompanhados
-              até �?  conclusão.
-
-            </p>
-
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-
-            <article className="overflow-hidden rounded-3xl bg-white shadow-sm">
-
-              <img
-                src={IMAGENS.trigo}
-                alt="Imagem ilustrativa de trigo"
-                className="h-52 w-full object-cover"
-              />
-
-              <div className="p-6">
-
-                <p className="text-xs font-black uppercase text-purple-700">
-                  Famílias apoiadas
-                </p>
-
-                <p className="mt-2 text-4xl font-black">
-                  6 228
-                </p>
-
-                <p className="mt-3 text-sm leading-6 text-slate-600">
-                  Famílias apoiadas na produção de trigo.
-                </p>
-
-              </div>
-
-            </article>
-
-            <article className="rounded-3xl bg-white p-6 shadow-sm">
-
-              <p className="text-xs font-black uppercase text-purple-700">
-                Semente
-              </p>
-
-              <p className="mt-3 text-4xl font-black">
-                260 t
-              </p>
-
-              <p className="mt-3 text-sm leading-7 text-slate-600">
-                Semente de trigo disponibilizada no programa.
-              </p>
-
-            </article>
-
-            <article className="rounded-3xl bg-[#0d4a30] p-6 text-white">
-
-              <p className="text-xs font-black uppercase text-emerald-200">
-                Área preparada
-              </p>
-
-              <p className="mt-3 text-4xl font-black">
-                1 557 ha
-              </p>
-
-              <p className="mt-3 text-sm leading-7 text-emerald-50/75">
-                �rea preparada no �mbito do programa de trigo.
-              </p>
-
-            </article>
-
-          </div>
-
-          <div className="mt-8 rounded-3xl bg-white p-7 shadow-sm md:p-9">
-
-            <h3 className="text-2xl font-black">
-              Exemplo de execução local
-            </h3>
-
-            <p className="mt-3 max-w-4xl leading-8 text-slate-600">
-
-              Em Sili, no Bié, foi reportada uma área mecanizada de 24
-              hectares, envolvendo 61 famílias e uma expectativa de cerca de
-              30 toneladas de trigo. Este valor é uma previsão local e não
-              deve ser extrapolado para Angola inteira.
-
-            </p>
-
-            <div className="mt-6 grid gap-4 sm:grid-cols-3">
-
-              <div className="rounded-2xl bg-slate-50 p-5">
-
-                <p className="text-xs text-slate-500">
-                  Área
-                </p>
-
-                <p className="mt-2 text-2xl font-black">
-                  24 ha
-                </p>
-
-              </div>
-
-              <div className="rounded-2xl bg-slate-50 p-5">
-
-                <p className="text-xs text-slate-500">
-                  Famílias
-                </p>
-
-                <p className="mt-2 text-2xl font-black">
-                  61
-                </p>
-
-              </div>
-
-              <div className="rounded-2xl bg-slate-50 p-5">
-
-                <p className="text-xs text-slate-500">
-                  Expectativa
-                </p>
-
-                <p className="mt-2 text-2xl font-black">
-                  ≈30 t
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div className="mt-8 rounded-3xl border border-purple-100 bg-purple-50 p-7 md:p-9">
-
-            <h3 className="text-2xl font-black text-purple-900">
-              O que deve ser actualizado quando a campanha terminar?
-            </h3>
-
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-
-              {[
-                "Área efectivamente semeada",
-                "Área efectivamente colhida",
-                "Produção real em toneladas",
-                "Produtividade por hectare",
-                "Custos de produção",
-                "Preço médio recebido pelo produtor",
-                "Número de produtores efectivamente activos",
-                "Volume transformado localmente",
-              ].map((item) => (
-
-                <div
-                  key={item}
-                  className="rounded-2xl border border-purple-100 bg-white p-4"
-                >
-
-                  <p className="font-bold text-slate-700">
-                    {item}
-                  </p>
-
-                </div>
-
-              ))}
-
-            </div>
-
-          </div>
-
-        </section>
-
-      )}
-
-      {/* =====================================================
           PROJECÇÕES
       ===================================================== */}
 
@@ -2643,26 +2460,6 @@ const dadosProvinciaisGrafico = useMemo(() => {
                 onClick={() => setPeriodo(item)}
                 className={`rounded-xl px-4 py-2 text-sm font-black transition ${
                   periodo === item
-                    ? "bg-[#0d4a30] text-white"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                }`}
-              >
-                {item}
-              </button>
-
-            ))}
-
-          </div>
-
-          <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
-
-            {categorias.map((item) => (
-
-              <button
-                key={item}
-                onClick={() => setCategoria(item)}
-                className={`shrink-0 rounded-xl px-4 py-2 text-sm font-black transition ${
-                  categoria === item
                     ? "bg-[#0d4a30] text-white"
                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
