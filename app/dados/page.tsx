@@ -614,6 +614,7 @@ const variacao =
 
                 return {
                   id: `supabase-${item.id}-${observacao?.id ?? index}`,
+                  estado: item.estado ?? null,
                   indicadorId: item.id,
                   codigo: item.codigo ?? null,
                   datasetId: item.dataset_id ?? null,
@@ -660,7 +661,7 @@ const variacao =
                   formula: item.formula ?? null,
                   periodicidade: item.periodicidade ?? null,
                   natureza: natureza ?? null,
-                  estado: item.estado ?? null,
+
                   periodo: periodoItem,
 variacao,
 fonte: textoFontes,
@@ -991,6 +992,8 @@ const dadosProvinciaisGrafico = useMemo(() => {
     const registosValidos = indicadoresPublicados.filter(
       (item) =>
         item.estado === "publicado" &&
+        String(item.escala ?? '').trim().toLowerCase() === 'nacional' &&
+        !item.levantamentoId &&
         item.valorNumerico !== null &&
         item.valorNumerico !== undefined &&
         Number.isFinite(item.valorNumerico)
@@ -998,15 +1001,9 @@ const dadosProvinciaisGrafico = useMemo(() => {
 
     registosValidos.forEach((item) => {
       const chave = JSON.stringify([
-        item.indicadorId ?? item.codigo ?? item.titulo,
-        item.unidade,
         item.categoria,
-        item.culturaId ?? item.culturaNome ?? "",
-        item.provinciaId ?? "",
-        item.municipioId ?? "",
-        item.comunaId ?? "",
-        item.localidade ?? "",
-        item.escala ?? "",
+        item.subcategoria ?? "",
+        item.unidade,
       ]);
 
       const grupo = grupos.get(chave) ?? [];
