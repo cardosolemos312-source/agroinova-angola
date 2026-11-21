@@ -1074,6 +1074,7 @@ const dadosProvinciaisGrafico = useMemo(() => {
           ((valorAtual - valorAnterior) / Math.abs(valorAnterior)) * 100;
 
         return [{
+          indicadorId: atual.indicadorId,
           nome: atual.culturaNome || atual.subcategoria || atual.titulo,
           valor: `${percentagem > 0 ? "+" : ""}${percentagem.toLocaleString("pt-PT", {
             minimumFractionDigits: 1,
@@ -2712,7 +2713,12 @@ const dadosProvinciaisGrafico = useMemo(() => {
 
                 <button
                   key={item.id}
-                  onClick={() => setModal(item)}
+                  onClick={() => setModal({
+                    ...item,
+                    variacao: variacoesHistoricas.find(
+                      (comparacao) => comparacao.indicadorId === item.indicadorId
+                    )?.valor ?? item.variacao,
+                  })}
                   className="grid min-w-[1500px] w-full grid-cols-[250px_120px_130px_130px_100px_120px_120px_120px_120px_200px] gap-4 px-5 py-5 text-left transition hover:bg-emerald-50 items-center"
                 >
 
