@@ -249,7 +249,7 @@ export default function MapaDados({
     if (dado) {
       linhas.push(
         `${dado.valor.toLocaleString("pt-PT")} ${dado.unidade}`,
-        `Índice relativo: ${dado.percentual?.toLocaleString("pt-PT") ?? "—"}%`
+        `Índice relativo: ${dado.percentual?.toLocaleString("pt-PT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? "—"}%`
       );
     }
 
@@ -390,7 +390,7 @@ export default function MapaDados({
                   {dadoSelecionado.valor.toLocaleString("pt-PT")} {dadoSelecionado.unidade}
                 </p>
                 <p className="mt-1 text-sm text-emerald-800">
-                  Índice relativo: {dadoSelecionado.percentual?.toLocaleString("pt-PT") ?? "—"}%
+                  Índice relativo: {dadoSelecionado.percentual?.toLocaleString("pt-PT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? "—"}%
                 </p>
                 {dadoSelecionado.periodo && (
                   <p className="mt-1 text-xs text-emerald-700">

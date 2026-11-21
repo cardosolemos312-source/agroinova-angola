@@ -975,7 +975,7 @@ const dadosProvinciaisGrafico = useMemo(() => {
     ...item,
     percentual:
       maximo > 0
-        ? Number(((item.valor / maximo) * 100).toFixed(1))
+        ? Number(((item.valor / maximo) * 100).toFixed(2))
         : null,
   }));
 }, [indicadoresPublicados, indicadorGraficoAtivo]);
@@ -1567,7 +1567,7 @@ const dadosProvinciaisGrafico = useMemo(() => {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="nome" angle={-35} textAnchor="end" interval={0} height={85} tick={{ fontSize: 11 }} />
                         <YAxis domain={[0, 100]} tickFormatter={(valor) => `${valor}%`} />
-                        <Tooltip formatter={(valor) => [`${Number(valor).toFixed(1)}%`, "Índice relativo"]} />
+                        <Tooltip formatter={(valor) => [`${Number(valor).toFixed(2)}%`, "Índice relativo"]} />
                         <Bar dataKey="percentual" name="Índice relativo" fill="#166534" radius={[7, 7, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
@@ -1589,7 +1589,7 @@ const dadosProvinciaisGrafico = useMemo(() => {
                             {item.valor.toLocaleString("pt-PT")} {item.unidade}
                           </span>
                           <span className="text-xs font-semibold text-slate-500">
-                            {item.percentual?.toLocaleString("pt-PT")}%
+                            {item.percentual?.toLocaleString("pt-PT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
                           </span>
                         </span>
                       </div>
