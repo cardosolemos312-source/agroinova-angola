@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type Area = {
   nome: string;
@@ -366,13 +366,53 @@ export default function Home() {
     },
   ]);
   const [aResponder, setAResponder] = useState(false);
+  const [resultadosMundiais, setResultadosMundiais] = useState<ResultadoPesquisa[]>([]);
+
+  useEffect(() => {
+    const termo = pesquisa.trim();
+
+    if (termo.length < 2) {
+      setResultadosMundiais([]);
+      return;
+    }
+
+    const controlador = new AbortController();
+
+    const temporizador = window.setTimeout(async () => {
+      try {
+        const resposta = await fetch(
+          `/api/pesquisa-mundial?termo=${encodeURIComponent(termo)}`,
+          { signal: controlador.signal }
+        );
+
+        if (!resposta.ok) {
+          throw new Error("Falha na pesquisa mundial.");
+        }
+
+        const dados = await resposta.json();
+
+        setResultadosMundiais(
+          Array.isArray(dados.resultados) ? dados.resultados : []
+        );
+      } catch {
+        if (!controlador.signal.aborted) {
+          setResultadosMundiais([]);
+        }
+      }
+    }, 250);
+
+    return () => {
+      window.clearTimeout(temporizador);
+      controlador.abort();
+    };
+  }, [pesquisa]);
 
   const resultadosFiltrados = useMemo(() => {
     const termo = pesquisa.trim().toLowerCase();
 
     if (!termo) return [];
 
-    const encontrados = resultados.filter((item) => {
+    const encontradosLocais = resultados.filter((item) => {
       const textoPesquisa = [
         item.titulo,
         item.descricao,
@@ -385,8 +425,16 @@ export default function Home() {
       return textoPesquisa.includes(termo);
     });
 
-    return encontrados.slice(0, 10);
-  }, [pesquisa]);
+    const combinados = [...encontradosLocais, ...resultadosMundiais];
+
+    return combinados
+      .filter((item, indice, lista) =>
+        lista.findIndex(
+          (outro) => outro.titulo.toLowerCase() === item.titulo.toLowerCase()
+        ) === indice
+      )
+      .slice(0, 10);
+  }, [pesquisa, resultadosMundiais]);
 
   function pesquisar(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
